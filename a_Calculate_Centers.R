@@ -4,17 +4,14 @@ tar_source("a_Calculate_Centers/src/")
 
 #  -------------
 
-# this collates a few different polygon and point files into a single
-# file of each type as needed for the RS workflow. CLP = Cache La Poudre, 
-# NW = Northern Water.
+# 
 
 # create folder structure
 dir.create("a_Calculate_Centers/mid/")
+dir.create("a_Calculate_Centers/multisurface/")
 dir.create("a_Calculate_Centers/out/")
 dir.create("a_Calculate_Centers/nhd/")
 
-# create an environment object to track dropped waterbodies for multisurface geo
-dropped_wbd_ticker = 0
 
 # create list of targets to perform this task
 a_Calculate_Centers_list <- list(
@@ -46,6 +43,15 @@ a_Calculate_Centers_list <- list(
     packages = "tidyverse"
   ),
   
+  # make an empty text file to store empty NHD Plus HR files when they come up 
+  # in the all_poi_points target.
+  tar_target(
+    name = make_empty_huc_file,
+    command = write_lines("", file.path("a_Calculate_Centers/out/",
+                                        "empty_hucs.txt")),
+    packages = "readr"
+  ),
+  
   # for each HUC4, download the NHDPlusHR waterbody file, subset to lakes/res/
   # impoundments, subset to >= 1ha, and calculate POI for each polygon
   tar_target(
@@ -55,13 +61,15 @@ a_Calculate_Centers_list <- list(
     pattern = map(HUC4_list)
   ),
   
-  # save dropped_wbd_ticker results
-  tar_target(
-    name = dropped_multisurface_wbd,
+  # we'll track the empty hucs file now that it's not empty!
+  tar_file_read(
+    name = empty_hucs_file,
     command = {
       all_poi_points
-      paste0('Total number of dropped multisurface geometries ', dropped_wbd_ticker)
-    }
+      "a_Calculate_Centers/out/empty_hucs.txt"
+    },
+    read = read_lines(!!.x),
+    packages = "readr"
   ),
   
   # collate the csv's into a single feather file for use in pull
