@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 80
----
-
 # lakeSR
 
 Repository to acquire, collate, and baseline QAQC satellite surface reflectance
