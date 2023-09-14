@@ -26,14 +26,13 @@ calculate_AK_poi <- function() {
                                  "NHD_H_Alaska_State_GPKG.gpkg"),
                  layer = 'NHDWaterbody')
   
-  # filter the waterbodies for ftypes of interest. 390 = lake/pond; 436 = res;
-  # 361 = playa
-  wbd <- wbd %>% 
-    filter(ftype %in% c(390, 436, 361)) 
-  
-  # filter for area > 1 hectare (0.01 km^2)
-  wbd <- wbd %>% 
-    filter(areasqkm >= 0.01) 
+ wbd <- wbd %>% 
+  filter(
+    # filter the waterbodies for ftypes of interest. 390 = lake/pond; 436 = res;
+    # 361 = playa
+    ftype %in% c(390, 436, 361),
+    # ...and for area > 1 hectare (0.01 km^2)
+    areasqkm >= 0.01) 
   
   # check for valid geometry and drop z coords (if they exist)
   wbd <- wbd %>% 
