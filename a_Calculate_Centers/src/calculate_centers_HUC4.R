@@ -51,7 +51,7 @@ calculate_centers_HUC4 <- function(HUC4) {
     
     # check for valid geometry and drop z coords (if they exist)
     wbd <- wbd %>% 
-      # there are a few weirdos that are multisurface geometires that {sf} doesn't
+      # there are a few weirdos that are multisurface geometries that {sf} doesn't
       # know what to do with, so we're dropping those. as a note, st_cast() will 
       # not reclassify, nor st_union() for that geometry type. 
       filter(!grepl("SURFACE", st_geometry_type(Shape))) %>% 
