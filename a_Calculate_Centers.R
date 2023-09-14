@@ -121,7 +121,7 @@ a_Calculate_Centers_list <- list(
         # are indicated by VPUIDs that are 8 characters - and there are a few that
         # were concatenated in a previous step, resulting in 18 characters. All 
         # other VPUIDs are either 4, 5, 6, 10, or 11 characters in length.
-        .[nchar(.)==8 | nchar(.) == 18]
+        .[nchar(.) == 8 | nchar(.) == 18]
       NHDHR_poi_points %>% 
         filter(!VPUID %in% incomplete_list)  
     },
