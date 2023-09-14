@@ -1,0 +1,11 @@
+# General R bits that no one wants
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# directory paths that are created in this workflow that we don't need to track
+a_Calculate_Centers/mid/*
+a_Calculate_Centers/out/*
+a_Calculate_Centers/nhd/*
+
