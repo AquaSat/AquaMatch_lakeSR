@@ -32,15 +32,13 @@ calculate_centers_HUC4 <- function(HUC4) {
       bind_rows() %>% 
       st_as_sf() 
     
-    # filter the waterbodies for ftypes of interest. 390 = lake/pond; 436 = res;
-    # 361 = playa
     wbd <- wbd %>% 
-      filter(FTYPE %in% c(390, 436, 361)) 
-    
-    # filter for area > 1 hectare (0.01 km^2)
-    wbd <- wbd %>% 
-      filter(AreaSqKM >= 0.01) 
-    
+         filter(
+        # filter the waterbodies for ftypes of interest. 390 = lake/pond; 436 = res;
+        # 361 = playa 
+             FTYPE %in% c(390, 436, 361),
+       # ...and for area > 1 hectare (0.01 km^2)
+             AreaSqKM >= 0.01) 
     # we're going to count the dropped wbd due to multisurface geometry (not 
     # recognized in sf), but we'll save so we can enumerate later
     multisurface_wbd <- wbd %>% 
