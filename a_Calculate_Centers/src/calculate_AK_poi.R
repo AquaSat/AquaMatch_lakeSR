@@ -1,5 +1,5 @@
 #' @title Calcuate POI center for NHD Best Resolution waterbodies from The 
-#' National Map
+#' National Map for the state of Alaksa
 #' 
 #' @description
 #' for the Best Resolution NHD file for the state of Alaska, download the 
