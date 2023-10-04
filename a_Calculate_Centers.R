@@ -128,12 +128,20 @@ a_Calculate_Centers_list <- list(
     packages = "tidyverse"
   ),
   
-  # now download the AK NHD Best Resolution file from the National Map and 
-  # calculate POI for each WBD
+  # now download the AK NHD Best Resolution file from the National Map 
+  tar_target(
+    name = download_AK_file,
+    command = download_AK()
+  ),
+  
+  # and calculate POI for each WBD
   # run time for this target is ~ 1h
   tar_target(
     name = make_AK_poi_points,
-    command = calculate_AK_poi(),
+    command = {
+      download_AK_file
+      calculate_AK_poi()
+      },
     packages = c("tidyverse", "sf", "polylabelr", "feather")
   ), 
   

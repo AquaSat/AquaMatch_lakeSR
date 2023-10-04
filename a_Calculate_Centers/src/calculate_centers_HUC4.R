@@ -2,7 +2,9 @@
 #' 
 #' @description
 #' for each HUC4, download the HR NHDPlus waterbody file, subset to lakes/res/
-#' impoundments, subset to >= 1ha, and calculate POI for each polygon
+#' impoundments, subset to >= 1ha, and calculate POI for each polygon. POI will 
+#' calculate distance in meters using the UTM coordinate system and the POI as
+#' Latitude/Longitude in WGS84 decimal degrees.
 #' 
 #' @param HUC4 text string; 4-digit huc from NHDPlus
 #' 
@@ -76,26 +78,48 @@ calculate_centers_HUC4 <- function(HUC4) {
         Permanent_Identifier = character(),
         poi_Longitude = numeric(),
         poi_Latitude = numeric(),
-        poi_dist = numeric()
+        poi_dist_m = numeric()
       )
       for (i in 1:length(wbd[[1]])) {
-        coord = wbd[i,] %>% st_coordinates()
+        poi_df  <- poi_df %>% add_row()
+        one_wbd = wbd[i,]
+        # get coordinates to calculate UTM zone
+        coord_for_UTM = one_wbd %>% st_coordinates()
+        mean_x = mean(coord_for_UTM[,1])
+        mean_y = mean(coord_for_UTM[,2])
+        utm_suffix = as.character(ceiling((mean_x + 180) / 6))
+        utm_code = if_else(mean_y >= 0,
+                           paste0('EPSG:326', utm_suffix),
+                           paste0('EPSG:327', utm_suffix))
+        # transform wbd to UTM
+        one_wbd_utm = st_transform(one_wbd, 
+                                   crs = utm_code)
+        # get UTM coordinates
+        coord = one_wbd_utm %>% st_coordinates()
         x = coord[,1]
         y = coord[,2]
-        poly_poi = poi(x,y, precision = 0.00001)
-        poi_df  <- poi_df %>% add_row()
+        # using coordinates, get the poi distance
+        poly_poi = poi(x,y, precision = 0.01)
+        # add info to poi_df
         poi_df$rowid[i] = wbd[i,]$rowid
         poi_df$Permanent_Identifier[i] = as.character(wbd[i,]$Permanent_Identifier)
-        poi_df$poi_Longitude[i] = poly_poi$x
-        poi_df$poi_Latitude[i] = poly_poi$y
-        poi_df$poi_dist[i] = poly_poi$dist
+        poi_df$poi_dist_m[i] = poly_poi$dist
+        # make a point feature and re-calculate decimal degrees in WGS84
+        point = st_point(x = c(as.numeric(poly_poi$x),
+                               as.numeric(poly_poi$y)))
+        point = st_sfc(point, crs = utm_code)
+        point = st_transform(st_sfc(point), crs = 'EPSG:4326')
+                          
+        new_coords = point %>% st_coordinates()
+        poi_df$poi_Longitude[i] = new_coords[,1]
+        poi_df$poi_Latitude[i] = new_coords[,2]
       }
       
       # sometimes there is more than one geometry per PermId. Let's limit this to the 
       # one that is the furthest distance from a shoreline (poi_dist)
       poi_df <- poi_df %>% 
         group_by(Permanent_Identifier) %>% 
-        arrange(desc(poi_dist), .by_group = TRUE) %>% 
+        arrange(desc(poi_dist_m), .by_group = TRUE) %>% 
         slice(1)
       
       # create a simplified df aggregated if there are multiple features for any 
