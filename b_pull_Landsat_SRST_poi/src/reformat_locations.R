@@ -11,14 +11,15 @@
 #' 
 #' 
 reformat_locations <- function(yaml, location_file) {
-  locs <- read_csv(file.path(yaml$data_dir, yaml$location_file))
+  locs <- location_file
   # store yaml info as objects
   lat <- yaml$latitude
   lon <- yaml$longitude
   id <- yaml$unique_id
   # apply objects to tibble
   locs <- locs %>% 
-    rename_with(~c("Latitude", "Longitude", "id"), any_of(c(lat, lon, id)))
+    rename_with(~c("Latitude", "Longitude", "id"), 
+                any_of(c(lat, lon, id)))
   write_csv(locs, "b_pull_Landsat_SRST_poi/in/locs.csv")
   return("b_pull_Landsat_SRST_poi/in/locs.csv")
 }
