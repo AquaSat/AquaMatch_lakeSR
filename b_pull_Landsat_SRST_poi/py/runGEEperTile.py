@@ -4,10 +4,10 @@ import time
 from datetime import date, datetime
 import os 
 import fiona
-from pandas import read_csv
+from pandas import read_csv, read_feather
 
 # get locations and yml from data folder
-yml = read_csv("b_pull_Landsat_SRST_poi/in/yml.csv")
+yml = read_csv("b_pull_Landsat_SRST_poi/mid/yml.csv")
 
 eeproj = yml["ee_proj"][0]
 #initialize GEE
@@ -41,7 +41,8 @@ except AttributeError:
 # get extent info
 extent = yml["extent"][0]
 
-locations = read_csv("b_pull_Landsat_SRST_poi/in/locs.csv")
+locations = read_feather("b_pull_Landsat_SRST_poi/mid/locs.feather")
+
 # convert locations to an eeFeatureCollection
 locs_feature = csv_to_eeFeat(locations, yml["location_crs"][0])
 

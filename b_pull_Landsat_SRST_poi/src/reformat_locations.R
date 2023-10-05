@@ -20,7 +20,7 @@ reformat_locations <- function(yaml, location_file) {
   locs <- locs %>% 
     rename_with(~c("Latitude", "Longitude", "id"), 
                 any_of(c(lat, lon, id)))
-  write_csv(locs, "b_pull_Landsat_SRST_poi/in/locs.csv")
-  return("b_pull_Landsat_SRST_poi/in/locs.csv")
+  write_feather(locs, "b_pull_Landsat_SRST_poi/mid/locs.feather")
+  "b_pull_Landsat_SRST_poi/mid/locs.feather"
 }
 
