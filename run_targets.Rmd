@@ -10,7 +10,7 @@ output:
 # Purpose
 
 This script loads all necessary packages to run the {targets} pipeline for 
-lakeSR then runs it!
+lakeSR then runs it! 
 
 ## Install necessary packages
 
@@ -36,7 +36,8 @@ packages <- c("tidyverse",
               "nhdplusTools",
               "polylabelr",
               "sf",
-              "tigris")
+              "tigris",
+              "reticulate")
 lapply(packages, package_installer)
 ```
 
@@ -55,7 +56,6 @@ tar_make()
 ```{r see_targets_net}
 tar_visnetwork()
 ```
-
 
 ```{r write_mermaid}
 # save the mmd file

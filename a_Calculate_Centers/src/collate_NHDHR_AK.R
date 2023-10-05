@@ -13,7 +13,7 @@ collate_NHDHR_AK <- function(NHDHR_data, AK_best_res_data) {
   NHDHR <- NHDHR_data %>% 
     mutate(data_source = 'NHDPlusHR') %>% 
     # and let's un coerce some of these columns from character to numeric
-    mutate(across(c(AreaSqKM, n_feat, rowid, poi_dist, poi_Latitude, poi_Longitude),
+    mutate(across(c(AreaSqKM, n_feat, rowid, poi_dist_m, poi_Latitude, poi_Longitude),
                   ~ as.numeric(.)))
   # rename columns to match NHDPlusHR data
   AK <- AK_best_res_data %>% 
