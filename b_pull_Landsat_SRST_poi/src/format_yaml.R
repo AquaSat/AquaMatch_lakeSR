@@ -3,21 +3,20 @@
 #' @description 
 #' Function to read in yaml, reformat and pivot for easy use in scripts
 #' 
-#' @param yml_file user-specified file containing configuration details for the
-#' pull.
+#' @param yml yaml file loaded as {target} config_file_poi
 #' @returns filepath for the .csv of the reformatted yaml file. Silently saves 
 #' the .csv in the `b_pull_Landsat_SRST_poi/in` directory path.
 #' 
 #' 
-format_yaml <-  function(yml_file) {
-  yaml <-  read_yaml(yml_file)
+format_yaml <-  function(yml) {
+  yaml <- yml
   # create a nested tibble from the yaml file
   nested <-  map_dfr(names(yaml), 
                      function(x) {
                        tibble(set_name = x,
                               param = yaml[[x]])
                      })
-  # create a new column to contain the nested parameter name and unnest the name
+  # create a new column to contaitn the nested parameter name and unnest the name
   nested$desc <- NA_character_
   unnested <- map_dfr(seq(1:length(nested$param)),
                       function(x) {

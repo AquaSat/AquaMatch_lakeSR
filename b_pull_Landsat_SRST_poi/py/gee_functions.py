@@ -1,4 +1,4 @@
-def csv_to_eeFeat(df, proj):
+def csv_to_eeFeat(df, proj, wrs):
   """Function to create an eeFeature from the location info
 
   Args:
@@ -9,10 +9,12 @@ def csv_to_eeFeat(df, proj):
       ee.FeatureCollection of the points 
   """
   features=[]
-  for i in range(df.shape[0]):
+  for i in (df.index):
     x,y = df.Longitude[i],df.Latitude[i]
     latlong =[x,y]
-    loc_properties = {"system:index":str(df.id[i]), "id":str(df.id[i])}
+    loc_properties = {"system:index": str(df.id[i]), 
+    "id": str(df.id[i]),
+    "wrs": str(wrs)}
     g=ee.Geometry.Point(latlong, proj) 
     feature = ee.Feature(g, loc_properties)
     features.append(feature)

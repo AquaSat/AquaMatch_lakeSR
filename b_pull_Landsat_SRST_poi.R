@@ -12,7 +12,7 @@ dir.create("b_pull_Landsat_SRST_poi/mid/")
 dir.create("b_pull_Landsat_SRST_poi/out/")
 
 # create list of targets to perform this task
-b_pull_Landsat_SRST_poi <- list(
+b_pull_Landsat_SRST_poi_list <- list(
   # read and track the config file
   tar_file_read(
     name = config_file_poi,
@@ -24,12 +24,8 @@ b_pull_Landsat_SRST_poi <- list(
   # load, format, save yml as a csv
   tar_target(
     name = yml_file_poi,
-    command = {
-      # make sure that {targets} runs the config_file target before this target
-      config_file_poi
-      format_yaml(poi_config)
-    },
-    packages = c("yaml", "tidyverse") #for some reason, you have to load TV.
+    command = format_yaml(config_file_poi),
+    packages = c("yaml", "tidyverse")
   ),
 
   # read in and track the formatted yml .csv file
@@ -43,31 +39,56 @@ b_pull_Landsat_SRST_poi <- list(
   # reformat location file for run_GEE_per_tile using the combined_poi_points
   # from the a_Calculate_Centers group
   tar_target(
-    name = ref_locations_poi_file,
+    name = ref_locs_poi_file,
     command = reformat_locations(yml_poi, combined_poi_points),
     packages = c("tidyverse", "feather")
   ),
   
+  # read/track that file
   tar_file_read(
     name = ref_locations_poi,
-    command = ref_locations_poi_file,
+    command = ref_locs_poi_file,
     read = read_feather(!!.x),
     packages = "feather"
   ),
-
+  
   # get WRS tiles
   tar_target(
     name = WRS_tiles_poi,
     command = get_WRS_tiles_poi(ref_locations_poi, yml_poi),
     packages = c("readr", "sf", "feather")
   ),
-
+  
+  # add WRS pathrows to the locations
+  tar_target(
+    name = poi_locs_WRS_file,
+    command = add_WRS_tile_to_locs(WRS_tiles_poi, ref_locations_poi, yml_poi),
+    packages = c("tidyverse", "sf", "feather")
+  ),
+  
+  # track/load that file
+  tar_file_read(
+    name = poi_locs_with_WRS,
+    command = poi_locs_WRS_file,
+    read = read_feather(!!.x),
+    packages = "feather"
+  ),
+  
+  # join back with upstream to get lat/lon
+  tar_target(
+    name = poi_locs_WRS_latlon,
+    command = {
+      full_join(ref_locations_poi, poi_locs_with_WRS) %>% 
+        write_feather(., "b_pull_Landsat_SRST_poi/out/locations_with_WRS2_pathrows_latlon.feather")
+    },
+    packages = c("tidyverse", "feather")
+  ),
+  
   # run the Landsat pull as function per tile
   tar_target(
     name = eeRun_poi,
     command = {
-      yml_poi
-      ref_locations_poi
+      poi_locs_with_WRS
       csv_to_eeFeat
       apply_scale_factors
       dp_buff

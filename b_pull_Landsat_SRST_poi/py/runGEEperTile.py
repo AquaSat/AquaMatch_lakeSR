@@ -41,10 +41,12 @@ except AttributeError:
 # get extent info
 extent = yml["extent"][0]
 
-locations = read_feather("b_pull_Landsat_SRST_poi/mid/locs.feather")
+locations = read_feather("b_pull_Landsat_SRST_poi/out/locations_with_WRS2_pathrows_latlon.feather")
+
+locations_subset = locations.query( "`WRS2_PR` == @tiles")
 
 # convert locations to an eeFeatureCollection
-locs_feature = csv_to_eeFeat(locations, yml["location_crs"][0])
+locs_feature = csv_to_eeFeat(locations_subset, yml["location_crs"][0], tiles)
 
 
 ##############################################
