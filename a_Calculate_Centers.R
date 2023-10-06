@@ -60,7 +60,7 @@ a_Calculate_Centers_list <- list(
   
   # for each HUC4, download the NHDPlusHR waterbody file, subset to lakes/res/
   # impoundments, subset to >= 1ha, and calculate POI for each polygon
-  # run time for this target is ~2.5h
+  # run time for this target is > 3 h
   tar_target(
     name = all_poi_points,
     command = calculate_centers_HUC4(HUC4_list),
@@ -128,9 +128,9 @@ a_Calculate_Centers_list <- list(
     packages = "tidyverse"
   ),
   
-  # now download the AK NHD Best Resolution file from the National Map and 
-  # calculate POI for each WBD
-  # run time for this target is ~ 1h
+  # now download the AK NHD Best Resolution file from the National Map 
+  # and calculate POI for each WBD
+  # run time for this target is > 1h
   tar_target(
     name = make_AK_poi_points,
     command = calculate_AK_poi(),

@@ -2,9 +2,10 @@
 #' National Map for the state of Alaksa
 #' 
 #' @description
-#' for the Best Resolution NHD file for the state of Alaska, download the 
-#' National Map file, subset to lakes/res/impoundments, subset to >= 1ha, and 
-#' calculate POI for each polygon
+#' using the downloaded NHD file subset to lakes/res/impoundments, subset to >= 1ha, and 
+#' calculate POI for each polygon. POI will calculate distance in meters using 
+#' the UTM coordinate system and the POI as Latitude/Longitude in WGS84 decimal 
+#' degrees.
 #' 
 #' @returns silently saves .csv file in mid folder of the POI centers and 
 #' associated WBD metadata
@@ -36,12 +37,9 @@ calculate_AK_poi <- function() {
   
   # check for valid geometry and drop z coords (if they exist)
   wbd <- wbd %>% 
-    # there are a few weirdos that are multisurface geometires that {sf} doesn't
-    # know what to do with, so we're dropping those. as a note, st_cast() will 
-    # not reclassify, nor st_union() for that geometry type. 
-    rowwise() %>% 
     # drop z coordinate for processing ease
     st_zm(drop = T) %>% 
+    rowwise() %>% 
     # make sure the geos are valid
     st_make_valid() %>% 
     # union the geos by feature
@@ -57,26 +55,54 @@ calculate_AK_poi <- function() {
     Permanent_Identifier = character(),
     poi_Longitude = numeric(),
     poi_Latitude = numeric(),
-    poi_dist = numeric()
+    poi_dist_m = numeric()
   )
   for (i in 1:length(wbd[[1]])) {
-    coord = wbd[i,] %>% st_coordinates()
-    x = coord[,1]
-    y = coord[,2]
-    poly_poi = poi(x,y, precision = 0.00001)
     poi_df  <- poi_df %>% add_row()
+    one_wbd <- wbd[i, ]
+    # get coordinates to calculate UTM zone. This is an adaptation of code from
+    # Xiao Yang's code in EE - Yang, Xiao. (2020). Deepest point calculation 
+    # for any given polygon using Google Earth Engine JavaScript API 
+    # (Version v1). Zenodo. https://doi.org/10.5281/zenodo.4136755
+    coord_for_UTM <- one_wbd %>% st_coordinates()
+    mean_x <- mean(coord_for_UTM[,1])
+    mean_y <- mean(coord_for_UTM[,2])
+    # calculate the UTM zone using the mean value of Longitude for the polygon
+    utm_suffix <- as.character(ceiling((mean_x + 180) / 6))
+    utm_code <- if_else(mean_y >= 0,
+                       # EPSG prefix for N hemisphere
+                       paste0('EPSG:326', utm_suffix),
+                       # for S hemisphere
+                       paste0('EPSG:327', utm_suffix))
+    # transform wbd to UTM
+    one_wbd_utm <- st_transform(one_wbd, 
+                               crs = utm_code)
+    # get UTM coordinates
+    coord <- one_wbd_utm %>% st_coordinates()
+    x <- coord[,1]
+    y <- coord[,2]
+    # using coordinates, get the poi distance
+    poly_poi <- poi(x,y, precision = 0.01)
+    # add info to poi_df
     poi_df$rowid[i] = wbd[i,]$rowid
     poi_df$Permanent_Identifier[i] = as.character(wbd[i,]$permanent_identifier)
-    poi_df$poi_Longitude[i] = poly_poi$x
-    poi_df$poi_Latitude[i] = poly_poi$y
-    poi_df$poi_dist[i] = poly_poi$dist
-  }
+    poi_df$poi_dist_m[i] = poly_poi$dist
+    # make a point feature and re-calculate decimal degrees in WGS84
+    point <- st_point(x = c(as.numeric(poly_poi$x),
+                           as.numeric(poly_poi$y)))
+    point <- st_sfc(point, crs = utm_code)
+    point <- st_transform(st_sfc(point), crs = 'EPSG:4326')
+    
+    new_coords <- point %>% st_coordinates()
+    poi_df$poi_Longitude[i] = new_coords[,1]
+    poi_df$poi_Latitude[i] = new_coords[,2]
+    }
     
   # sometimes there is more than one geometry per PermId. Let's limit this to the 
   # one that is the furthest distance from a shoreline (poi_dist)
   poi_df <- poi_df %>% 
     group_by(Permanent_Identifier) %>% 
-    arrange(desc(poi_dist), .by_group = TRUE) %>% 
+    arrange(desc(poi_dist_m), .by_group = TRUE) %>% 
     slice(1)
   
   # create a simplified df aggregated if there are multiple features for any 
