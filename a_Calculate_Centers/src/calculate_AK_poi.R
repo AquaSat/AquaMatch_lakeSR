@@ -59,7 +59,7 @@ calculate_AK_poi <- function() {
   )
   for (i in 1:length(wbd[[1]])) {
     poi_df  <- poi_df %>% add_row()
-    one_wbd <- wbd[i,]
+    one_wbd <- wbd[i, ]
     # get coordinates to calculate UTM zone. This is an adaptation of code from
     # Xiao Yang's code in EE - Yang, Xiao. (2020). Deepest point calculation 
     # for any given polygon using Google Earth Engine JavaScript API 
