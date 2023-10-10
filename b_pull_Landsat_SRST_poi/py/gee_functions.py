@@ -379,7 +379,7 @@ def ref_pull_457_DSWE1(image):
             .updateMask(f.eq(0)) #no snow or clouds
             .updateMask(s.eq(0)) # no SR processing artefacts
             .updateMask(hs.eq(1)) # only illuminated pixels
-          # add these bands back in to create summary statistics without the influence of the DSWE masks:
+            # add these bands back in to create summary statistics without the influence of the DSWE masks:
             .addBands(pCount) 
             .addBands(dswe1)
             .addBands(dswe3)
@@ -541,8 +541,8 @@ def ref_pull_89_DSWE1(image):
           .addBands(pCount) 
           .addBands(dswe1)
           .addBands(dswe3)
-          .addBands(clouds) 
           .addBands(a)
+          .addBands(clouds) 
           .addBands(hs)
           .addBands(h)
           ) 
@@ -555,8 +555,8 @@ def ref_pull_89_DSWE1(image):
     .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["mean_Aerosol", "mean_Blue", "mean_Green", "mean_Red", 
               "mean_Nir", "mean_Swir1", "mean_Swir2", "mean_SurfaceTemp"])), sharedInputs = False)
     .combine(ee.Reducer.kurtosis().unweighted().forEachBand(pixOut.select(["SurfaceTemp"])), outputPrefix = "kurt_", sharedInputs = False)
-    .combine(ee.Reducer.count().unweighted().forEachBand(pixOut.select(["dswe_gt0", "dswe1", "dswe3"])), outputPrefix = "pCount_", sharedInputs = False)
-    .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["clouds", "medHighAero", "hillShadow"])), outputPrefix = "prop_", sharedInputs = False)
+    .combine(ee.Reducer.count().unweighted().forEachBand(pixOut.select(["dswe_gt0", "dswe1", "dswe3", "medHighAero"])), outputPrefix = "pCount_", sharedInputs = False)
+    .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["clouds", "hillShadow"])), outputPrefix = "prop_", sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["hillShade"])), outputPrefix = "mean_", sharedInputs = False)
     )
   # apply combinedReducer to the image collection, mapping over each feature
@@ -575,7 +575,7 @@ def ref_pull_89_DSWE3(image):
   Returns:
       summaries for band data within any given geometry area where the DSWE value is 3
   """
-# process image with the radsat mask
+  # process image with the radsat mask
   r = add_rad_mask(image).select("radsat")
   # process image with cfmask
   f = cf_mask(image).select("cfmask")
@@ -620,8 +620,8 @@ def ref_pull_89_DSWE3(image):
           .addBands(pCount) 
           .addBands(dswe1)
           .addBands(dswe3)
-          .addBands(clouds) 
           .addBands(a)
+          .addBands(clouds) 
           .addBands(hs)
           .addBands(h)
           ) 
@@ -634,8 +634,8 @@ def ref_pull_89_DSWE3(image):
     .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["mean_Aerosol", "mean_Blue", "mean_Green", "mean_Red", 
               "mean_Nir", "mean_Swir1", "mean_Swir2", "mean_SurfaceTemp"])), sharedInputs = False)
     .combine(ee.Reducer.kurtosis().unweighted().forEachBand(pixOut.select(["SurfaceTemp"])), outputPrefix = "kurt_", sharedInputs = False)
-    .combine(ee.Reducer.count().unweighted().forEachBand(pixOut.select(["dswe_gt0", "dswe1", "dswe3"])), outputPrefix = "pCount_", sharedInputs = False)
-    .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["clouds", "medHighAero", "hillShadow"])), outputPrefix = "prop_", sharedInputs = False)
+    .combine(ee.Reducer.count().unweighted().forEachBand(pixOut.select(["dswe_gt0", "dswe1", "dswe3", "medHighAero"])), outputPrefix = "pCount_", sharedInputs = False)
+    .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["clouds", "hillShadow"])), outputPrefix = "prop_", sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["hillShade"])), outputPrefix = "mean_", sharedInputs = False)
     )
   # apply combinedReducer to the image collection, mapping over each feature
