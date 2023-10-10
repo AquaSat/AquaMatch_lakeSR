@@ -340,7 +340,7 @@ def ref_pull_457_DSWE1(image):
   r = add_rad_mask(image).select("radsat")
   # process image with cfmask
   f = cf_mask(image).select("cfmask")
-  # process image with st SR cloud mask
+  # process image with SR cloud mask
   s = sr_cloud_mask(image).select("sr_cloud")
   # where the f mask is > 2 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
   clouds = f.gte(1).rename("clouds")
@@ -379,6 +379,7 @@ def ref_pull_457_DSWE1(image):
             .updateMask(f.eq(0)) #no snow or clouds
             .updateMask(s.eq(0)) # no SR processing artefacts
             .updateMask(hs.eq(1)) # only illuminated pixels
+          # add these bands back in to create summary statistics without the influence of the DSWE masks:
             .addBands(pCount) 
             .addBands(dswe1)
             .addBands(dswe3)
@@ -399,8 +400,7 @@ def ref_pull_457_DSWE1(image):
     .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["clouds", "hillShadow"])), outputPrefix = "prop_", sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["hillShade"])), outputPrefix = "mean_", sharedInputs = False)
     )
-  # Collect median reflectance and occurance values
-  # Make a cloud score, and get the water pixel count
+  # apply combinedReducer to the image collection, mapping over each feature
   lsout = (pixOut.reduceRegions(feat, combinedReducer, 30))
   out = lsout.map(remove_geo)
   return out
@@ -422,7 +422,7 @@ def ref_pull_457_DSWE3(image):
   f = cf_mask(image).select("cfmask")
   # process image with st SR cloud mask
   s = sr_cloud_mask(image).select("sr_cloud")
-  # where the f mask is > 2 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
+  # where the f mask is >= 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
   clouds = f.gte(1).rename("clouds")
   #apply dswe function
   d = DSWE(image).select("dswe")
@@ -447,7 +447,7 @@ def ref_pull_457_DSWE3(image):
                                   "Nir", "Swir1", "Swir2", "SurfaceTemp"],
                                 ["sd_Blue", "sd_Green", "sd_Red", 
                                 "sd_Nir", "sd_Swir1", "sd_Swir2", "sd_SurfaceTemp"]))
-            .addBands(image.select(["Blue", "Green", "Red", "Nir", 
+          .addBands(image.select(["Blue", "Green", "Red", "Nir", 
                                     "Swir1", "Swir2", 
                                     "SurfaceTemp"],
                                   ["mean_Blue", "mean_Green", "mean_Red", "mean_Nir", 
@@ -459,6 +459,7 @@ def ref_pull_457_DSWE3(image):
           .updateMask(f.eq(0)) #no snow or clouds
           .updateMask(s.eq(0)) # no SR processing artefacts
           .updateMask(hs.eq(1)) # only illuminated pixels
+          # add these bands back in to create summary statistics without the influence of the DSWE masks:
           .addBands(pCount) 
           .addBands(dswe1)
           .addBands(dswe3)
@@ -479,8 +480,7 @@ def ref_pull_457_DSWE3(image):
     .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["clouds", "hillShadow"])), outputPrefix = "prop_", sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["hillShade"])), outputPrefix = "mean_", sharedInputs = False)
     )
-  # Collect median reflectance and occurance values
-  # Make a cloud score, and get the water pixel count
+  # apply combinedReducer to the image collection, mapping over each feature
   lsout = (pixOut.reduceRegions(feat, combinedReducer, 30))
   out = lsout.map(remove_geo)
   return out
@@ -500,9 +500,9 @@ def ref_pull_89_DSWE1(image):
   r = add_rad_mask(image).select("radsat")
   # process image with cfmask
   f = cf_mask(image).select("cfmask")
-  # process image with st SR cloud mask
+  # process image with aerosol mask
   a = sr_aerosol(image).select("medHighAero")
-  # where the f mask is > 2 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
+  # where the f mask is >= 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
   clouds = f.gte(1).rename("clouds")
   #apply dswe function
   d = DSWE(image).select("dswe")
@@ -537,10 +537,12 @@ def ref_pull_89_DSWE1(image):
           .updateMask(r.eq(1)) # 1 == no saturated pixels
           .updateMask(f.eq(0)) # no snow or clouds
           .updateMask(hs.eq(1)) # only illuminated pixels
+          # add these bands back in to create summary statistics without the influence of the DSWE masks:
           .addBands(pCount) 
           .addBands(dswe1)
           .addBands(dswe3)
           .addBands(clouds) 
+          .addBands(a)
           .addBands(hs)
           .addBands(h)
           ) 
@@ -554,11 +556,10 @@ def ref_pull_89_DSWE1(image):
               "mean_Nir", "mean_Swir1", "mean_Swir2", "mean_SurfaceTemp"])), sharedInputs = False)
     .combine(ee.Reducer.kurtosis().unweighted().forEachBand(pixOut.select(["SurfaceTemp"])), outputPrefix = "kurt_", sharedInputs = False)
     .combine(ee.Reducer.count().unweighted().forEachBand(pixOut.select(["dswe_gt0", "dswe1", "dswe3"])), outputPrefix = "pCount_", sharedInputs = False)
-    .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["clouds", "hillShadow"])), outputPrefix = "prop_", sharedInputs = False)
+    .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["clouds", "medHighAero", "hillShadow"])), outputPrefix = "prop_", sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["hillShade"])), outputPrefix = "mean_", sharedInputs = False)
     )
-  # Collect median reflectance and occurance values
-  # Make a cloud score, and get the water pixel count
+  # apply combinedReducer to the image collection, mapping over each feature
   lsout = (pixOut.reduceRegions(feat, combinedReducer, 30))
   out = lsout.map(remove_geo)
   return out
@@ -578,9 +579,9 @@ def ref_pull_89_DSWE3(image):
   r = add_rad_mask(image).select("radsat")
   # process image with cfmask
   f = cf_mask(image).select("cfmask")
-  # process image with st SR cloud mask
+  # process image with aerosol mask
   a = sr_aerosol(image).select("medHighAero")
-  # where the f mask is > 2 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
+  # where the f mask is >= 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
   clouds = f.gte(1).rename("clouds")
   #apply dswe function
   d = DSWE(image).select("dswe")
@@ -615,10 +616,12 @@ def ref_pull_89_DSWE3(image):
           .updateMask(r.eq(1)) #1 == no saturated pixels
           .updateMask(f.eq(0)) #no snow or clouds
           .updateMask(hs.eq(1)) # only illuminated pixels
+          # add these bands back in to create summary statistics without the influence of the DSWE masks:
           .addBands(pCount) 
           .addBands(dswe1)
           .addBands(dswe3)
           .addBands(clouds) 
+          .addBands(a)
           .addBands(hs)
           .addBands(h)
           ) 
@@ -632,10 +635,10 @@ def ref_pull_89_DSWE3(image):
               "mean_Nir", "mean_Swir1", "mean_Swir2", "mean_SurfaceTemp"])), sharedInputs = False)
     .combine(ee.Reducer.kurtosis().unweighted().forEachBand(pixOut.select(["SurfaceTemp"])), outputPrefix = "kurt_", sharedInputs = False)
     .combine(ee.Reducer.count().unweighted().forEachBand(pixOut.select(["dswe_gt0", "dswe1", "dswe3"])), outputPrefix = "pCount_", sharedInputs = False)
-    .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["clouds", "hillShadow"])), outputPrefix = "prop_", sharedInputs = False)
+    .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["clouds", "medHighAero", "hillShadow"])), outputPrefix = "prop_", sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted().forEachBand(pixOut.select(["hillShade"])), outputPrefix = "mean_", sharedInputs = False)
     )
-  # Make a cloud score, and get the water pixel count
+  # apply combinedReducer to the image collection, mapping over each feature
   lsout = (pixOut.reduceRegions(feat, combinedReducer, 30))
   out = lsout.map(remove_geo)
   return out

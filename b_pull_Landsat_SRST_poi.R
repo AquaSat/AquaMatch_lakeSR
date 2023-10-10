@@ -78,7 +78,7 @@ b_pull_Landsat_SRST_poi_list <- list(
   tar_target(
     name = poi_locs_WRS_latlon,
     command = {
-      full_join(ref_locations_poi, poi_locs_with_WRS) %>% 
+      full_join(ref_locations_poi, poi_locs_with_WRS) %>%
         write_feather(., "b_pull_Landsat_SRST_poi/out/locations_with_WRS2_pathrows_latlon.feather")
     },
     packages = c("tidyverse", "feather")
