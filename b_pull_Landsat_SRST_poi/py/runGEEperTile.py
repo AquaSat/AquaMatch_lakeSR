@@ -158,7 +158,7 @@ if "site" in extent:
                                             "mean_SurfaceTemp",
                                             "kurt_SurfaceTemp", 
                                             "pCount_dswe_gt0", "pCount_dswe1", "pCount_dswe3", 
-                                            "prop_clouds","prop_medHighAero","prop_hillShadow","mean_hillShade"]))
+                                            "prop_clouds","prop_hillShadow","mean_hillShade"]))
     #Check how many existing tasks are running and take a break of 120 secs if it"s >25 
     maximum_no_of_tasks(10, 120)
     #Send next task.                                        
@@ -185,8 +185,8 @@ if "site" in extent:
                                             "mean_Blue", "mean_Green", "mean_Red", "mean_Nir", "mean_Swir1", "mean_Swir2", 
                                             "mean_SurfaceTemp",
                                             "kurt_SurfaceTemp", 
-                                            "pCount_dswe_gt0", "pCount_dswe1", "pCount_dswe3", 
-                                            "prop_clouds","prop_medHighAero","prop_hillShadow","mean_hillShade"]))
+                                            "pCount_dswe_gt0", "pCount_dswe1", "pCount_dswe3",
+                                            "prop_clouds","prop_hillShadow","mean_hillShade"]))
     #Check how many existing tasks are running and take a break of 120 secs if it"s >25 
     maximum_no_of_tasks(10, 120)
     #Send next task.                                        
@@ -234,8 +234,8 @@ if "site" in extent:
                                             "mean_Aerosol", "mean_Blue", "mean_Green", "mean_Red", "mean_Nir", "mean_Swir1", "mean_Swir2", 
                                             "mean_SurfaceTemp",
                                             "kurt_SurfaceTemp", 
-                                            "pCount_dswe_gt0", "pCount_dswe1", "pCount_dswe3", 
-                                            "prop_clouds","prop_medHighAero","prop_hillShadow","mean_hillShade"]))
+                                            "pCount_dswe_gt0", "pCount_dswe1", "pCount_dswe3","pCount_medHighAero", 
+                                            "prop_clouds","prop_hillShadow","mean_hillShade"]))
     #Check how many existing tasks are running and take a break of 120 secs if it"s >25 
     maximum_no_of_tasks(10, 120)
     #Send next task.                                        
@@ -262,8 +262,8 @@ if "site" in extent:
                                             "mean_Aerosol", "mean_Blue", "mean_Green", "mean_Red", "mean_Nir", "mean_Swir1", "mean_Swir2", 
                                             "mean_SurfaceTemp",
                                             "kurt_SurfaceTemp", 
-                                            "pCount_dswe_gt0", "pCount_dswe1", "pCount_dswe3", 
-                                            "prop_clouds","prop_medHighAero","prop_hillShadow","mean_hillShade"]))
+                                            "pCount_dswe_gt0", "pCount_dswe1", "pCount_dswe3","pCount_medHighAero", 
+                                            "prop_clouds","prop_hillShadow","mean_hillShade"]))
     #Check how many existing tasks are running and take a break of 120 secs if it"s >25 
     maximum_no_of_tasks(10, 120)
     #Send next task.                                        
