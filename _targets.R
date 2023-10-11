@@ -22,7 +22,7 @@ tar_option_set(
 poi_config <- "config_files/config_poi.yml"
 
 # Source targets groups: ---------------------------------------
-# Run the R scripts in the R/ folder with your custom functions:
+# Run the R scripts with custom functions:
 tar_source(files = c(
   "a_Calculate_Centers.R",
   "b_pull_Landsat_SRST_poi.R"
