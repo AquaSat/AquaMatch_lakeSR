@@ -175,7 +175,7 @@ def Ndvi(image):
   return (image.expression("(NIR - RED) / (NIR + RED)", {
     "RED": image.select(["Red"]),
     "NIR": image.select(["Nir"])
-  }))
+  }).rename("ndvi"))
 
 
 def Awesh(image):
@@ -192,7 +192,7 @@ def Awesh(image):
     "Green": image.select(["Green"]),
     "mbsrn": Mbsrn(image).select(["mbsrn"]),
     "Swir2": image.select(["Swir2"])
-  }))
+  }).rename("awesh"))
 
 
 ## The DSWE Function itself    
