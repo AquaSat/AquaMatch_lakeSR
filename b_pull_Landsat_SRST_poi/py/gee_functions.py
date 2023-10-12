@@ -37,16 +37,16 @@ def apply_scale_factors(image):
   return image.addBands(opticalBands, None, True).addBands(thermalBands, None,True)
 
 
-def dp_buff(image):
+def dp_buff(feature):
   """ Buffer ee.FeatureCollection sites from csv_to_eeFeat by user-specified radius
 
   Args:
-      image: ee.Image of an ee.ImageCollection
+      feature: ee.Feature of an ee.FeatureCollection
 
   Returns:
       ee.FeatureCollection of polygons resulting from buffered points
   """
-  return image.buffer(ee.Number.parse(str(buffer)))
+  return feature.buffer(ee.Number.parse(str(buffer)))
 
 
 def add_rad_mask(image):
