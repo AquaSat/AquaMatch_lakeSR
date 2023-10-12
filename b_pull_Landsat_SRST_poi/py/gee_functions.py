@@ -136,7 +136,7 @@ def Mndwi(image):
   return (image.expression("(GREEN - SWIR1) / (GREEN + SWIR1)", {
     "GREEN": image.select(["Green"]),
     "SWIR1": image.select(["Swir1"])
-  }))
+  }).rename("mndwi"))
   
 
 def Mbsrv(image):
