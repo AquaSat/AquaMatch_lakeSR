@@ -284,7 +284,7 @@ def calc_hill_shades(image, geo):
       a band named "hillShade" where values calculated are the hill shade per 
       pixel. output is 0-255. 
   """
-  MergedDEM = ee.Image("users/eeProject/MERIT").clip(geo.buffer(3000))
+  MergedDEM = ee.Image("MERIT/DEM/v1_0_3").clip(geo.buffer(3000));
   hillShade = ee.Terrain.hillshade(MergedDEM, 
     ee.Number(image.get("SUN_AZIMUTH")), 
     ee.Number(image.get("SUN_ELEVATION")))
@@ -303,7 +303,7 @@ def calc_hill_shadows(image, geo):
       a band named "hillShadow" where values calculated are the hill shadow per 
       pixel. output 1 where pixels are illumunated and 0 where they are shadowed.
   """
-  MergedDEM = ee.Image("users/eeProject/MERIT").clip(geo.buffer(3000))
+  MergedDEM = ee.Image("MERIT/DEM/v1_0_3").clip(geo.buffer(3000));
   hillShadow = ee.Terrain.hillShadow(MergedDEM, 
     ee.Number(image.get("SUN_AZIMUTH")),
     ee.Number(90).subtract(image.get("SUN_ELEVATION")), 
