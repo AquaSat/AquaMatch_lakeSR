@@ -23,7 +23,7 @@ get_WRS_tiles_poi <- function(formatted_locations, yaml) {
     WRS_subset <- WRS[locs,]
   } else {
     locs = st_transform(locs, st_crs(WRS))
-    WRS_subset <- WRS[locs,]
+    WRS_subset <- WRS[locs, ]
   }
   # save the file for use later (we don't track this, but need it for the python
   # workflow)
