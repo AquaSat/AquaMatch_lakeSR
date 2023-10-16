@@ -64,7 +64,7 @@ def add_rad_mask(image):
   satQA = image.select("radsat_qa")
   # all must be non-saturated per pixel
   satMask = satQA.eq(0).rename("radsat")
-  return image.addBands(satMask).updateMask(satMask)
+  return image.addBands(satMask)
 
 
 def cf_mask(image):
