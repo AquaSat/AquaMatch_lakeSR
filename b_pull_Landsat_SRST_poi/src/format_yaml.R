@@ -25,7 +25,7 @@ format_yaml <-  function(yml) {
                         nested <- nested %>% 
                           unnest(param) %>% 
                           mutate(param = as.character(param))
-                        nested[x,]
+                        nested[x, ]
                       })
   # re-orient to make it easy to grab necessary info in future functions
   unnested <- unnested %>% 
