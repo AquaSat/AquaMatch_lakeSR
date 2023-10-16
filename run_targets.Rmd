@@ -12,6 +12,10 @@ output:
 This script loads all necessary packages to run the {targets} pipeline for 
 lakeSR then runs it! 
 
+Important note: before rendering this document or running this workflow, you 
+will need to authenticate your Earth Engine credentials in the *zsh* terminal. 
+See the README in this repository for details on this action.
+
 ## Install necessary packages
 
 Define package installer function
@@ -40,6 +44,12 @@ packages <- c("tidyverse",
               "reticulate")
 lapply(packages, package_installer)
 ```
+
+## Authenticate Earth Engine
+
+This workflow requires authentication of your earth engine account. There are 
+additional dependencies listed in the README file as well as links for 
+troubleshooting. 
 
 ## Run the targets pipeline and output a network graph.
 
