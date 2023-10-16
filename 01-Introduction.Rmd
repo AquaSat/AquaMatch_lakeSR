@@ -1,0 +1,5 @@
+# Introduction {-}
+
+**lakeSR** is a component of the **AquaSat** (v2) suite, where satellite surface reflectance data for all lakes in the United States and US Territories greater than 1 hectare are acquired and compiled. 
+
+Currently, **lakeSR** is comprised of the historical Landsat record from 1984 until mid-2023, comprised of the following missions Landsat 4 Thematic Mapper (TM), Landsat 5 TM, Landsat 7 Enhanced Thematic Mapper Plus (ETM+), Landsat 8 Operational Land Imager/Thermal Infrared Sensor (OLI/TIRS), and Landsat 9 OLI/TIRS. **lakeSR** acquires data at central locations ('POIs', points of inaccessibility) and at locations identified with monitoring history from the Water Quality Portal in the **AquaMatch** component of **AquaSat**.
