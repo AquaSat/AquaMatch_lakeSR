@@ -98,7 +98,7 @@ div.csl-indent {
 <li class="chapter" data-level="2" data-path="locations-of-data-acquisition.html"><a href="locations-of-data-acquisition.html"><i class="fa fa-check"></i><b>2</b> Locations of Data Acquisition</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="locations-of-data-acquisition.html"><a href="locations-of-data-acquisition.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>2.1</b> Pole of Inaccessibility</a></li>
-<li class="chapter" data-level="2.2" data-path="locations-of-data-acquisition.html"><a href="locations-of-data-acquisition.html#calc-poi"><i class="fa fa-check"></i><b>2.2</b> Calculation of POI for lakes</a></li>
+<li class="chapter" data-level="2.2" data-path="locations-of-data-acquisition.html"><a href="locations-of-data-acquisition.html#calculation-of-poi-for-lakes"><i class="fa fa-check"></i><b>2.2</b> Calculation of POI for lakes</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="citations.html"><a href="citations.html"><i class="fa fa-check"></i><b>3</b> Citations</a></li>
 </ul>
@@ -120,15 +120,26 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="locations-of-data-acquisition" class="section level1 hasAnchor" number="2">
 <h1><span class="header-section-number">2</span> Locations of Data Acquisition<a href="locations-of-data-acquisition.html#locations-of-data-acquisition" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>see <a href="locations-of-data-acquisition.html#calc-poi">2.2</a></p>
 <p>For the purpose of <strong>AquaSat</strong>, surface reflectance data are acquired at specific, centrally-located points within waterbodies and at locations where there are <em>in situ</em> data. The data acquired at locations where there are <em>in situ</em> data are acquired to create location-specific algorithms using the <strong>AquaMatch</strong> database, which can then be applied to the data collected over the centrally-located point across all waterbodies with surface reflectance data. <strong>AquaSat</strong> does not acquire nor summarize data over the entire waterbody’s surface, as it is computationally impractical for most large lakes that cross multiple satellite path-rows or tiles. We are planning to investigate the variability differences in varying buffer distances and whole-lake acquisition to support this decision. At this time, the buffer used is a 120m radius of any given data acquisition location.</p>
 <div id="pole-of-inaccessibility" class="section level2 hasAnchor" number="2.1">
 <h2><span class="header-section-number">2.1</span> Pole of Inaccessibility<a href="locations-of-data-acquisition.html#pole-of-inaccessibility" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The concept of ‘pole of inaccessibility’ (POI) <span class="citation">(Stefansson 1920)</span> is used to define the geographic center of a circle with the largest circumference within any complex polygon. The foundational principle is used widely to describe the arctic pole of inaccessiblity, that is the point in the northern arctic circle that is the furthest from land, but has also been used to describe the geographic center of landmasses <span class="citation">(Garcia-Castellanos and Lombardo 2007)</span>. For <strong>lakeSR</strong>, we use POI to determine the point in a lake that is furthest from the shoreline using the <code>polylabelr::poi()</code> function <span class="citation">(Larsson 2020)</span>, which calculates a point in space and the radius of the circle used to define the POI.</p>
+<p>The concept of ‘pole of inaccessibility’ (POI) <span class="citation">(<a href="#ref-stefansson1920">Stefansson 1920</a>)</span> is used to define the geographic center of a circle with the largest circumference within any complex polygon. The foundational principle is used widely to describe the arctic pole of inaccessiblity, that is the point in the northern arctic circle that is the furthest from land, but has also been used to describe the geographic center of landmasses <span class="citation">(<a href="#ref-garcia-castellanos2007">Garcia-Castellanos and Lombardo 2007</a>)</span>. For <strong>lakeSR</strong>, we use POI to determine the point in a lake that is furthest from the shoreline using the <code>polylabelr::poi()</code> function <span class="citation">(<a href="#ref-larsson2020">Larsson 2020</a>)</span>, which calculates a point in space and the radius of the circle used to define the POI.</p>
 </div>
-<div id="calc-poi" class="section level2 hasAnchor" number="2.2">
-<h2><span class="header-section-number">2.2</span> Calculation of POI for lakes<a href="locations-of-data-acquisition.html#calc-poi" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="calculation-of-poi-for-lakes" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Calculation of POI for lakes<a href="locations-of-data-acquisition.html#calculation-of-poi-for-lakes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 
+</div>
+</div>
+<h3> Citations<a href="citations.html#citations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-garcia-castellanos2007" class="csl-entry">
+Garcia-Castellanos, Daniel, and Umberto Lombardo. 2007. <span>“Poles of Inaccessibility: A Calculation Algorithm for the Remotest Places on Earth.”</span> <em>Scottish Geographical Journal</em> 123 (3): 227–33. <a href="https://doi.org/10.1080/14702540801897809">https://doi.org/10.1080/14702540801897809</a>.
+</div>
+<div id="ref-larsson2020" class="csl-entry">
+Larsson, Johan. 2020. <em>Polylabelr: Find the Pole of Inaccessibility (Visual Center) of a Polygon</em>. <a href="https://cran.r-project.org/package=polylabelr">https://cran.r-project.org/package=polylabelr</a>.
+</div>
+<div id="ref-stefansson1920" class="csl-entry">
+Stefansson, Vilhjalmur. 1920. <span>“The Region of Maximum Inaccessibility in the Arctic.”</span> <em>Geographical Review</em> 10 (3): 167–72. <a href="https://doi.org/10.2307/207749">https://doi.org/10.2307/207749</a>.
 </div>
 </div>
             </section>
