@@ -1,0 +1,8 @@
+locations-of-data-acquisition
+pole-of-inaccessibility
+calculation-of-poi-for-lakes
+lakesr
+introduction
+section
+citations
+calc-poi
