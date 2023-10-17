@@ -1,5 +1,5 @@
 book_filename: lakeSR-LS-C2-SRST
-rmd_files: ["index.Rmd", 
-"01-Introduction.Rmd", 
-"02-Data_Acquisition_Locations.Rmd",
-"z-Refs.Rmd"]
+rmd_files: ["bookdown/index.Rmd", 
+"bookdown/01-Introduction.Rmd", 
+"bookdown/02-Data_Acquisition_Locations.Rmd",
+"bookdown/z-Refs.Rmd"]
