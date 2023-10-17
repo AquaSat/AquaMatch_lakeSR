@@ -1,0 +1,15 @@
+# Introduction
+
+This {{bookdown}} [@xie2016] outlines the methodology behind the acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories. This product, "**lakeSR**", is a component of the **AquaSat** (v2) suite, an effort to create a database of lake and river water quality observations alongside remote sensing data.
+
+Currently, **lakeSR** is comprised of the historical Landsat record from 1984 until mid-2023, comprised of data from the following missions:
+
+-   Landsat 4 Thematic Mapper (TM)
+-   Landsat 5 TM
+-   Landsat 7 Enhanced Thematic Mapper Plus (ETM+)
+-   Landsat 8 Operational Land Imager/Thermal Infrared Sensor (OLI/TIRS)
+-   Landsat 9 OLI/TIRS
+
+Together the Landsat archive of **lakeSR** is referred to as "_lakeSR-LS_C2_SRST" (**L**and**s**at **C**ollection **2** **S**urface **R**eflectance and **S**urface **T**emperature).
+
+**lakeSR** acquires tabular data summaries of the Level 2 surface reflectance and surface temperature data archive at central locations within a lake and at locations identified with monitoring history from the Water Quality Portal in the **AquaMatch** component of **AquaSat**.

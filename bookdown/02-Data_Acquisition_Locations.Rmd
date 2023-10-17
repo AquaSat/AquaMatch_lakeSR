@@ -1,0 +1,9 @@
+# Locations of Data Acquisition
+
+For the purpose of **AquaSat**, surface reflectance data are acquired at specific, centrally-located points within waterbodies and at locations where there are *in situ* data. The data acquired at locations where there are *in situ* data are acquired to create location-specific algorithms using the **AquaMatch** database, which can then be applied to the data collected over the centrally-located point across all waterbodies with surface reflectance data. **AquaSat** does not acquire nor summarize data over the entire waterbody's surface, as it is computationally impractical for most large lakes that cross multiple satellite path-rows or tiles. We are planning to investigate the variability differences in varying buffer distances and whole-lake acquisition to support this decision. At this time, the buffer used is a 120m radius of any given data acquisition location.
+
+## Pole of Inaccessibility
+
+The concept of 'pole of inaccessibility' (POI) [@stefansson1920] is used to define the geographic center of a circle with the largest circumference within any complex polygon. The foundational principle is used widely to describe the arctic pole of inaccessiblity, that is the point in the northern arctic circle that is the furthest from land, but has also been used to describe the geographic center of landmasses [@garcia-castellanos2007]. For **lakeSR**, we use POI to determine the point in a lake that is furthest from the shoreline using the `polylabelr::poi()` function [@larsson2020], which calculates a point in space and the radius of the circle used to define the POI.
+
+## Calculation of POI for lakes
