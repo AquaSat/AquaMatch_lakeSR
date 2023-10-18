@@ -1,9 +1,67 @@
+```{r r-setup-data-acq, echo=FALSE}
+library(lubridate)
+library(targets)
+library(sf)
+library(leaflet)
+
+withr::with_dir("..", {
+  tar_load(AK_poi_points)
+  tar_load(combined_poi_points)
+})
+```
+
 # Locations of Data Acquisition
 
-For the purpose of **AquaSat**, surface reflectance data are acquired at specific, centrally-located points within waterbodies and at locations where there are *in situ* data. The data acquired at locations where there are *in situ* data are acquired to create location-specific algorithms using the **AquaMatch** database, which can then be applied to the data collected over the centrally-located point across all waterbodies with surface reflectance data. **AquaSat** does not acquire nor summarize data over the entire waterbody's surface, as it is computationally impractical for most large lakes that cross multiple satellite path-rows or tiles. We are planning to investigate the variability differences in varying buffer distances and whole-lake acquisition to support this decision. At this time, the buffer used is a 120m radius of any given data acquisition location.
+For the purpose of **AquaSat**, surface reflectance data are acquired at 
+specific, centrally-located points within waterbodies and at locations where 
+there are *in situ* data. The data acquired at locations where there are 
+*in situ* data are acquired to create location-specific algorithms using the 
+**AquaMatch** database, which can then be applied to the data collected over 
+the centrally-located point across all waterbodies with surface reflectance 
+data. **AquaSat** does not acquire nor summarize data over the entire 
+waterbody's surface, as it is computationally impractical for most large 
+lakes that cross multiple satellite path-rows or tiles. We are planning to 
+investigate the variability differences in varying buffer distances and 
+whole-lake acquisition to support this decision. At this time, the buffer 
+used is a 120m radius of any given data acquisition location.
 
 ## Pole of Inaccessibility
 
-The concept of 'pole of inaccessibility' (POI) [@stefansson1920] is used to define the geographic center of a circle with the largest circumference within any complex polygon. The foundational principle is used widely to describe the arctic pole of inaccessiblity, that is the point in the northern arctic circle that is the furthest from land, but has also been used to describe the geographic center of landmasses [@garcia-castellanos2007]. For **lakeSR**, we use POI to determine the point in a lake that is furthest from the shoreline using the `polylabelr::poi()` function [@larsson2020], which calculates a point in space and the radius of the circle used to define the POI.
+The concept of "pole of inaccessibility" (POI) [@stefansson1920] is used to 
+define the geographic center of a circle with the largest circumference within 
+any complex polygon. The foundational principle is used widely to describe the 
+arctic pole of inaccessiblity, that is the point in the northern arctic circle 
+that is the furthest from land, but has also been used to describe the 
+geographic center of landmasses [@garcia-castellanos2007]. For **lakeSR**, we 
+use POI to determine the point in a lake that is furthest from the shoreline 
+using the `polylabelr::poi()` function [@larsson2020], which calculates a point 
+in space and the radius of the circle used to define the POI.
 
-## Calculation of POI for lakes
+## Lakes included in lakeSR
+
+For **lakeSR**, we use the [NHDPlusHR dataset](https://www.usgs.gov/national-hydrography/nhdplus-high-resolution) for 
+lakes within the conterminous US and US Territories using the `nhdplusTools::download_nhdplushr()` function [@blodgett2023]. All HUC4s were 
+downloaded and processed on `r date(ymd_hms(file.info("../a_Calculate_Centers/mid/poi_centers_huc4_0101.csv")$mtime))` 
+using the most updated version available at the time of download. Because the 
+NHDPlusHR dataset is incomplete for Alaska (see below), we used the NHD Best 
+Resolution File for the state of AK [@usgeologicalsurvey].
+
+```{r NHDPlusHR-status, echo=F, fig.cap="NHDPlusHR dataset availability, courtesy of the USGS."}
+knitr::include_graphics("https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/images/NHDPlusHRStatus_Web_20220707_0.png")
+```
+
+For every HUC4 and the state of Alaska, all waterbodies are limited to those 
+with [FCodes](https://files.hawaii.gov/dbedt/op/gis/data/NHD%20Complete%20FCode%20Attribute%20Value%20List.pdf) 
+belonging to the following groups: 390 (lake/pond), 436 (reservoir), and 361 (playa) 
+and are at least 0.01 km^2^ (1 hectare) in area according to the area value 
+provided in the NHD file. This filtering resulted in `r format(nrow(combined_poi_points), big.mark = ",")` 
+lakes included in our dataset, including `r format(nrow(AK_poi_points), big.mark = ",")` from Alaska.
+
+```{r map-of-lakes, echo=FALSE, fig.cap="Map of POI's included in lakeSR. Note that the polygons shown on the map are not the NHD polygons and may reflect different geometries than those used to define the POI."}
+points <- st_as_sf(combined_poi_points, 
+                   coords = c("poi_Longitude", "poi_Latitude"), 
+                   crs = "EPSG:4326")
+leaflet(data = points) %>% 
+  addTiles(urlTemplate = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png") %>% 
+  addMarkers(clusterOptions = markerClusterOptions())
+```
