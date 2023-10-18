@@ -316,9 +316,6 @@ yml_file_poi|stem|2220ab380b1db704|7de3c590097bc801|7a76b1704d7bf06f|-1755402842
 yml_poi|stem|a26ba6d5ed0ce695|0213505964e05f4c|a54ba50d994207c5|349151757||t19636.7401105788s|49b5fca74495725e|564|rds|local|vector|||0.037||
 yml_poi_file|stem|f36a19edb665044f|b09189f6913ad655|23e13b30652a8607|1052397199|b_pull_Landsat_SRST_poi/mid/yml.csv|t19636.7401078085s|73a5f5604ca1ab33|288|file|local|vector|||0||
 poi_locs_WRS_latlon|stem|c3e959062d7a5e4d|c388b7f8006ae150|ab44ea49dbba7aed|-785901303||t19640.7362783873s|a01ef758954a095a|50695509|rds|local|vector|||4.098||
-eeRun_poi_f98036f2|branch|581355bf828aba97|f14b801db34fed68|b6c41a770331fe31|1719785845||t19641.9048944626s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||8323.015||
-eeRun_poi_befb5204|branch|581355bf828aba97|f14b801db34fed68|53ef15cccbb9df98|695884966||t19641.9301192855s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||2179.421||
-eeRun_poi_a14aaf7a|branch|581355bf828aba97|f14b801db34fed68|39ff77bac5dda323|1477105568||t19641.9511323972s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||1815.53||
 eeRun_poi_afe7c980|branch|581355bf828aba97|f14b801db34fed68|61f0184d3783df60|-1134928778||t19641.9679826928s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||1455.863||
 eeRun_poi_94936dd9|branch|581355bf828aba97|f14b801db34fed68|e7dfadee3a4b31e0|1944636581||t19641.9694885202s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||130.1||
 eeRun_poi_43c717ee|branch|581355bf828aba97|f14b801db34fed68|df6f24e939bb88ec|457872258||t19641.9723850342s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||250.256||
@@ -364,9 +361,10 @@ eeRun_poi_80ec0e95|branch|581355bf828aba97|f14b801db34fed68|93638976bad90749|213
 eeRun_poi_99be2f06|branch|581355bf828aba97|f14b801db34fed68|fcee61ed111194aa|1991277588||t19648.4021994571s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||6062.854||
 eeRun_poi_e78df98d|branch|581355bf828aba97|f14b801db34fed68|83ed163495e93263|1838298628||t19648.5097549756s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||9292.793||
 eeRun_poi_d91ddce5|branch|581355bf828aba97|f14b801db34fed68|9180f2dc0496e864|748089263||t19648.558883458s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||4244.697||
+eeRun_poi_dd8b6dcd|branch|581355bf828aba97|f14b801db34fed68|030d416be9e2cd5d|36120038||t19648.6775225037s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||4995.004||
 calc_hill_shades|function|261db2cc8bcbeb1f|||||||||||||||
 ref_pull_457_DSWE1|function|a4ff5d1c59c73a0c|||||||||||||||
-.Random.seed|object|dbe4d4784d153d9b|||||||||||||||
+.Random.seed|object|893b655ee3b959e8|||||||||||||||
 add_WRS_tile_to_locs|function|c8e5c82abe55051b|||||||||||||||
 ref_pull_457_DSWE3|function|a4ff5d1c59c73a0c|||||||||||||||
 b_pull_Landsat_SRST_poi_list|object|2c8ec2b1a8fd6c3d|||||||||||||||
@@ -398,10 +396,12 @@ collate_NHDHR_AK|function|b9b9c7b8157cc998|||||||||||||||
 a_Calculate_Centers_list|object|950423afeb8ea2cd|||||||||||||||
 sr_cloud_mask|function|a4ff5d1c59c73a0c|||||||||||||||
 dp_buff|function|b818393e5c278ad5|||||||||||||||
-eeRun_poi_dd8b6dcd|branch|581355bf828aba97|f14b801db34fed68|030d416be9e2cd5d|36120038||t19648.6775225037s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||4995.004||
+eeRun_poi_f98036f2|branch|581355bf828aba97|f14b801db34fed68|1d104a5ad997b664|1719785845||t19648.739576603s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||2315.469||
+eeRun_poi_befb5204|branch|581355bf828aba97|f14b801db34fed68|8bcc3f0de4139cbb|695884966||t19648.8098188493s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||6068.924||
+eeRun_poi_a14aaf7a|branch|581355bf828aba97|f14b801db34fed68|6dd0e979360919d5|1477105568||t19648.8408386393s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||2680.107||
 calc_hill_shades|function|261db2cc8bcbeb1f
 ref_pull_457_DSWE1|function|a4ff5d1c59c73a0c
-.Random.seed|object|893b655ee3b959e8
+.Random.seed|object|f6dd8848bdd6a109
 add_WRS_tile_to_locs|function|c8e5c82abe55051b
 ref_pull_457_DSWE3|function|a4ff5d1c59c73a0c
 b_pull_Landsat_SRST_poi_list|object|2c8ec2b1a8fd6c3d
@@ -433,6 +433,3 @@ collate_NHDHR_AK|function|b9b9c7b8157cc998
 a_Calculate_Centers_list|object|950423afeb8ea2cd
 sr_cloud_mask|function|a4ff5d1c59c73a0c
 dp_buff|function|b818393e5c278ad5
-eeRun_poi_f98036f2|branch|581355bf828aba97|f14b801db34fed68|1d104a5ad997b664|1719785845||t19648.739576603s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||2315.469||
-eeRun_poi_befb5204|branch|581355bf828aba97|f14b801db34fed68|8bcc3f0de4139cbb|695884966||t19648.8098188493s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||6068.924||
-eeRun_poi_a14aaf7a|branch|581355bf828aba97|f14b801db34fed68|6dd0e979360919d5|1477105568||t19648.8408386393s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||2680.107||

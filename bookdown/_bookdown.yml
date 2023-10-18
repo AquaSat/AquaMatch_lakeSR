@@ -1,0 +1,6 @@
+book_filename: lakeSR-LS-C2-SRST
+rmd_files: ["index.Rmd", 
+"01-Introduction.Rmd", 
+"02-Data_Acquisition_Locations.Rmd",
+"z-Refs.Rmd"]
+output_dir: "_book"
