@@ -90,7 +90,7 @@ on larger polygons, however the points calculated should be an acceptable proxy
 for pelagic lake conditions. [[Will add additional detail from analysis of
 buffer sizes.]]
 
-## Where to find these decisions employed in the code
+## Implementation
 
 The code for gathering NHD waterbodies and calculating their respective POIs is
 found in {targets} group *a_Calculate_Centers* which is located in the script

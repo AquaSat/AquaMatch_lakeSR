@@ -1,0 +1,9 @@
+fig:NHDPlusHR-status
+fig:a-group-vis
+introduction
+code-architecture
+locations-of-data-acquisition
+pole-of-inaccessibility
+lakes-included-in-lakesr
+implementation
+citations
