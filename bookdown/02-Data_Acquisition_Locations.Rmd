@@ -85,7 +85,7 @@ used to represent all of the locations from which we have lakes. The latitude
 and longitude values of the POI were transformed to decimal degrees in World
 Geodetic System 1984 (WGS84) (EPSG:4326) from UTM easting and northing
 coordinates for use later in the workflow. It is
-important to note that the `poi()` function does not perform particularily well
+important to note that the `poi()` function does not perform particularly well
 on larger polygons, however the points calculated should be an acceptable proxy
 for pelagic lake conditions. [[Will add additional detail from analysis of
 buffer sizes.]]
