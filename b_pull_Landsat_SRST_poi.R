@@ -8,8 +8,10 @@ source_python("b_pull_Landsat_SRST_poi/py/gee_functions.py")
 # in the {targets} group 'a_Calculate_Centers'.
 
 # create folder structure
-dir.create("b_pull_Landsat_SRST_poi/mid/")
-dir.create("b_pull_Landsat_SRST_poi/out/")
+suppressWarnings({
+  dir.create("b_pull_Landsat_SRST_poi/mid/")
+  dir.create("b_pull_Landsat_SRST_poi/out/")
+})
 
 # create list of targets to perform this task
 b_pull_Landsat_SRST_poi_list <- list(

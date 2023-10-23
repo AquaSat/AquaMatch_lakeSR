@@ -1,5 +1,5 @@
 ---
-title: 'lakeSR: Compiled Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories'
+title: 'lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories'
 author: ROSSyndicate
 date: "`r Sys.Date()`"
 documentclass: book

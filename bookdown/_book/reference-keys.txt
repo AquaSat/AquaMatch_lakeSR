@@ -1,7 +1,0 @@
-fig:NHDPlusHR-status
-fig:map-of-lakes
-introduction
-locations-of-data-acquisition
-pole-of-inaccessibility
-lakes-included-in-lakesr
-citations
