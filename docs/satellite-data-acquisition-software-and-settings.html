@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Page not found | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</title>
+  <title>3 Satellite Data Acquisition Software and Settings | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</title>
   <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Page not found | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  <meta property="og:title" content="3 Satellite Data Acquisition Software and Settings | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Page not found | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  <meta name="twitter:title" content="3 Satellite Data Acquisition Software and Settings | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
   
   <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-
+<link rel="prev" href="locations-of-data-acquisition.html"/>
+<link rel="next" href="citations.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -126,19 +126,106 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="page-not-found" class="section level1">
-<h1>Page not found</h1>
-<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
-<p>You may want to try searching to find the page's new location, or use
-the table of contents to find the page you are looking for.</p>
+<div id="satellite-data-acquisition-software-and-settings" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> Satellite Data Acquisition Software and Settings<a href="satellite-data-acquisition-software-and-settings.html#satellite-data-acquisition-software-and-settings" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Currently, all satellite data in <strong>AquaSat</strong> are obtained using the Python API
+for Google Earth Engine (GEE) <span class="citation">(<a href="#ref-gorelick2017">Gorelick et al. 2017</a>)</span>. While the orchestration of data
+acquisition is performed by {targets}, a workflow management program for R, all
+code directly related to GEE data acquisition is written in Python.</p>
+<div id="reticulate-conda-environment" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> {reticulate} Conda Environment<a href="satellite-data-acquisition-software-and-settings.html#reticulate-conda-environment" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>RStudio <span class="citation">(<a href="#ref-positteam2023">Posit team 2023</a>)</span> is an IDE that, alongside the {reticulate} package
+<span class="citation">(<a href="#ref-ushey2023">Ushey, Allaire, and Tang 2023</a>)</span>, facilitates integration of R and Python code within the same
+environment. In <strong>lakeSR</strong>, we use <a href="https://github.com/AquaSat/lakeSR/blob/main/python/pySetup.R">a singular R
+script</a> to set up
+a {reticulate} Conda environment that is invoked at the beginning of a {targets}
+run (lines 8-12 of the
+<a href="https://github.com/AquaSat/lakeSR/blob/main/_targets.R">_targets.R</a> file) to
+be sure that our Python code runs consistently.</p>
+<table>
+<caption>Python and python modules and versions used in **lakeSR**.</caption>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>version</th>
+<th>citation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Python</td>
+<td>3.8.18</td>
+<td>Python Software Foundation, <a href="www.python.org">www.python.org</a></td>
+</tr>
+<tr class="even">
+<td>earthengine-api</td>
+<td>0.1.374</td>
+<td><span class="citation">(<a href="#ref-gorelick2023">Gorelick 2023</a>)</span></td>
+</tr>
+<tr class="odd">
+<td>pandas</td>
+<td>2.0.3</td>
+<td><span class="citation">(<a href="#ref-thepandasdevelopmentteam2023">The pandas development team 2023</a>)</span></td>
+</tr>
+<tr class="even">
+<td>fiona</td>
+<td>1.9.5</td>
+<td><span class="citation">(<a href="#ref-gillies2023">Gillies 2023</a>)</span></td>
+</tr>
+<tr class="odd">
+<td>pyreadr</td>
+<td>0.5.0</td>
+<td><span class="citation">(<a href="#ref-fajardo2023">Fajardo 2023</a>)</span></td>
+</tr>
+<tr class="even">
+<td>pyarrow</td>
+<td>13.0.0</td>
+<td><span class="citation">(<a href="#ref-apachearrowdevelopers2023">Apache Arrow Developers 2023</a>)</span></td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<h3> Citations<a href="citations.html#citations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-apachearrowdevelopers2023" class="csl-entry">
+Apache Arrow Developers. 2023. <em>Pyarrow: Python Library for Apache Arrow</em>. <a href="https://github.com/apache/arrow">https://github.com/apache/arrow</a>.
+</div>
+<div id="ref-fajardo2023" class="csl-entry">
+Fajardo, Otto. 2023. <em>Pyreadr: Reads/Writes r RData and Rds Files into/from Pandas Data Frames</em>. <a href="https://github.com/ofajardo/pyreadr">https://github.com/ofajardo/pyreadr</a>.
+</div>
+<div id="ref-gillies2023" class="csl-entry">
+Gillies, Sean. 2023. <em>Fiona: Read and Write Spatial Data Files</em>.
+</div>
+<div id="ref-gorelick2023" class="csl-entry">
+Gorelick, N. 2023. <em>Earthengine-Api: Earth Engine Python API</em>. Google. <a href="https://github.com/google/earthengine-api">https://github.com/google/earthengine-api</a>.
+</div>
+<div id="ref-gorelick2017" class="csl-entry">
+Gorelick, N, M Hancher, M Dixon, S Ilyushchenko, D Thau, and R Moore. 2017. <span>“Google Earth Engine: Planetary-Scale Geospatial Analysis for Everyone.”</span> <em>Remote Sensing of Environment</em>. <a href="https://doi.org/10.1016/j.rse.2017.06.031">https://doi.org/10.1016/j.rse.2017.06.031</a>.
+</div>
+<div id="ref-positteam2023" class="csl-entry">
+Posit team. 2023. <em>RStudio: Integrated Development Environment for r</em>. Boston, MA: Posit Software, PBC. <a href="http://www.posit.co/">http://www.posit.co/</a>.
+</div>
+<div id="ref-thepandasdevelopmentteam2023" class="csl-entry">
+The pandas development team. 2023. <em>Pandas-Dev/Pandas: Pandas</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.8092754">https://doi.org/10.5281/zenodo.8092754</a>.
+</div>
+<div id="ref-ushey2023" class="csl-entry">
+Ushey, Kevin, J. J. Allaire, and Yuan Tang. 2023. <em>Reticulate: Interface to ’Python’</em>. <a href="https://CRAN.R-project.org/package=reticulate">https://CRAN.R-project.org/package=reticulate</a>.
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-
+<a href="locations-of-data-acquisition.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="citations.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

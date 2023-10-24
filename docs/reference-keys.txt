@@ -7,3 +7,5 @@ pole-of-inaccessibility
 lakes-included-in-lakesr
 implementation
 citations
+satellite-data-acquisition-software-and-settings
+reticulate-conda-environment

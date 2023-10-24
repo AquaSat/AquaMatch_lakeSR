@@ -1,0 +1,39 @@
+---
+editor_options: 
+  markdown: 
+    wrap: 80
+bibliography: references.bib
+---
+
+```{r chunk-opts, echo=FALSE}
+knitr::opts_chunk$set(echo = F, message = F, warning = F, error = FALSE)
+```
+
+# Satellite Data Acquisition Software and Settings
+
+Currently, all satellite data in **AquaSat** are obtained using the Python API
+for Google Earth Engine (GEE) [@gorelick2017]. While the orchestration of data
+acquisition is performed by {targets}, a workflow management program for R, all
+code directly related to GEE data acquisition is written in Python.
+
+## {reticulate} Conda Environment
+
+RStudio [@positteam2023] is an IDE that, alongside the {reticulate} package
+[@ushey2023], facilitates integration of R and Python code within the same
+environment. In **lakeSR**, we use [a singular R
+script](https://github.com/AquaSat/lakeSR/blob/main/python/pySetup.R) to set up
+a {reticulate} Conda environment that is invoked at the beginning of a {targets}
+run (lines 8-12 of the
+[\_targets.R](https://github.com/AquaSat/lakeSR/blob/main/_targets.R) file) to
+be sure that our Python code runs consistently.
+
+|                 | version | citation                                                     |
+|---------------------------|---------------------------|---------------------------|
+| Python          | 3.8.18  | Python Software Foundation, [www.python.org](www.python.org) |
+| earthengine-api | 0.1.374 | [@gorelick2023]                                              |
+| pandas          | 2.0.3   | [@thepandasdevelopmentteam2023]                              |
+| fiona           | 1.9.5   | [@gillies2023]                                               |
+| pyreadr         | 0.5.0   | [@fajardo2023]                                               |
+| pyarrow         | 13.0.0  | [@apachearrowdevelopers2023]                                 |
+
+: Python and python modules and versions used in \*\*lakeSR\*\*.
