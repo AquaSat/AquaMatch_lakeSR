@@ -1,0 +1,151 @@
+---
+editor_options: 
+  markdown: 
+    wrap: 80
+bibliography: references.bib
+---
+
+```{r chunk-opts}
+knitr::opts_chunk$set(echo = F, message = F, warning = F, error = FALSE)
+```
+
+```{r r-setup-data-acq}
+library(tidyverse)
+library(targets)
+library(withr)
+
+with_dir("..", {
+  tar_load(AK_poi_points)
+  tar_load(combined_poi_points)
+})
+```
+
+# Locations of Data Acquisition
+
+As noted in the Introduction (Section \@ref(introduction)), for the purposes of
+**AquaSat**, surface reflectance and surface temperature data are acquired at
+specific, centrally-located points within waterbodies (typically in pelagic
+locations of lakes) and at locations where there are *in situ* data. The data
+acquired at locations where there are *in situ* data are acquired to create
+location-specific algorithms using the **AquaMatch** database, which can then be
+applied to the data collected over the centrally-located point across all
+waterbodies in the **lakeSR** database. **lakeSR** does not acquire nor
+summarize data over the entire waterbody's surface, as it is computationally
+impractical for most large lakes that cross multiple satellite path-rows or
+tiles. We are planning to investigate the variability differences in acquiring
+data over varying buffer distances to support this decision ([GitHub Issue
+#14](https://github.com/rossyndicate/lakeSR/issues/14)). At this time, the
+buffer used is a 120m radius of any given data acquisition location.
+
+## Pole of Inaccessibility
+
+The concept of "pole of inaccessibility" (POI) [@stefansson1920] is used to
+define the geographic center of a circle with the largest circumference within
+any complex polygon. The foundational principle is used widely to describe the
+arctic pole of inaccessiblity, that is the point in the northern arctic circle
+that is the furthest from land, but has also been used to describe the
+geographic center of landmasses [@garcia-castellanos2007]. For **lakeSR**, we
+use POI to determine the point in a lake that is furthest from the shoreline
+using the `polylabelr::poi()` function [@larsson2020], which calculates a point
+in space and the radius of the circle used to define the POI.
+
+## Lakes included in lakeSR
+
+For **lakeSR**, we use the [NHDPlusHR
+dataset](https://www.usgs.gov/national-hydrography/nhdplus-high-resolution) for
+lakes within the conterminous US and US Territories using the
+`nhdplusTools::download_nhdplushr()` function [@blodgett2023]. All HUC4s were
+downloaded and processed on
+`r date(ymd_hms(file.info("../a_Calculate_Centers/mid/poi_centers_huc4_0101.csv")$mtime))`
+using the most updated version available at the time of download. Because the
+NHDPlusHR dataset is incomplete for Alaska (Figure \@ref(fig:NHDPlusHR-status)),
+we used the NHD Best Resolution File for the state of AK [@usgeologicalsurvey].
+
+```{r NHDPlusHR-status, echo=F, fig.cap="NHDPlusHR dataset availability, courtesy of the USGS."}
+knitr::include_graphics("https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/images/NHDPlusHRStatus_Web_20220707_0.png")
+```
+
+For every HUC4 included in the NHDPlusHR dataset and the state of Alaska NHD
+Best Resolution dataset, all waterbodies are limited to those with
+[FCodes](https://files.hawaii.gov/dbedt/op/gis/data/NHD%20Complete%20FCode%20Attribute%20Value%20List.pdf)
+belonging to the following groups: 390 (lake/pond), 436 (reservoir), and 361
+(playa) and are at least 0.01 km^2^ (1 hectare) in area according to the area
+value provided in the NHD file. This filtering resulted in
+`r format(nrow(combined_poi_points), big.mark = ",")` waterbodies included in
+our dataset, including `r format(nrow(AK_poi_points), big.mark = ",")` from
+Alaska.
+
+For each waterbody, the POI and distance-to-shore radius was calculated using
+the `polylabelr::poi()` function. In order to accurately calculate
+distance-to-shore, each waterbody was converted to the proper Universal
+Transverse Mercator (UTM) projection calculated from the mean longitudinal value
+of the polygon vertices prior to applying the `poi()` function. By using the
+point-local UTM projection, we decrease distortion expected from any single CRS
+used to represent all of the locations from which we have lakes. The latitude
+and longitude values of the POI were transformed to decimal degrees in World
+Geodetic System 1984 (WGS84) (EPSG:4326) from UTM easting and northing
+coordinates for use later in the workflow. It is
+important to note that the `poi()` function does not perform particularly well
+on larger polygons, however the points calculated should be an acceptable proxy
+for pelagic lake conditions. [[Will add additional detail from analysis of
+buffer sizes.]]
+
+## Implementation
+
+The code for gathering NHD waterbodies and calculating their respective POIs is
+found in {targets} group *a_Calculate_Centers* which is located in the script
+[a_Calculate_Centers.R](https://github.com/steeleb/lakeSR/blob/main/a_Calculate_Centers.R).
+The network graph (Figure \@ref(fig:a-group-vis)) for this group depicts the
+dependencies between each of the *targets* in this group.
+
+```{r a-group-vis, fig.cap= "Network graph of the *targets* in the a_Calculate_Centers {targets} group."}
+
+with_dir("..", {
+  tar_visnetwork(targets_only = T, label = "branches",
+             names = c(US_state_territories, 
+                       HUC4_dataframe,
+                       HUC4_list,
+                       all_poi_points,
+                       collated_poi_points,
+                       NHDHR_poi_points,
+                       NHDHR_poi_points_noAK,
+                       make_AK_poi_points,
+                       AK_poi_points,
+                       combined_poi_file,
+                       combined_poi_points))
+  })
+```
+
+On a high level, the processing begins by acquiring the polygons of all US
+states and territories using the {tigris} package [@walker2023]
+(*US_state_territories*). These polygons are used to acquire a list HUC4s that
+intersect with each municipal boundary using the `nhdplusTools::get_huc()`
+function (*HUC4_dataframe*), which are then reduced to distinct HUC4's and
+transformed into a vector of HUC4s (*HUC4_list*). As an error-handling measure,
+*empty_hucs_file* is created (not pictured in Figure \@ref(fig:a-group-vis)) to
+collect a list of HUC4s that do not have high resolution files available for
+download (Figure \@ref(fig:NHDPlusHR-status)). The target *all_poi_points* is
+created by calculating POIs for all waterbodies \> 1 hectare and having an FCode
+of 390, 436, or 361 from each HUC4 in the *HUC4_list.* For this target, we use
+the dynamic branching feature to iterate over each item in the *HUC4_list*. See
+the script
+[calculate_centers_HUC4.R](https://github.com/rossyndicate/lakeSR/blob/main/a_Calculate_Centers/src/calculate_centers_HUC4.R)
+for details on the function applied in this target. The output of the
+*all_poi_points* target include multiple *.csv* files - these files are collated
+in the target *all_poi_points*, which outputs a *.feather* file (tracked as
+*NHDHR_poi_points*) containing all the POIs resulting from the NHDPlusHR polygon
+files.
+
+The NHDPlusHR contains a small number of sub-HUC4 waterbodies (specifically a
+few HUC8's and HUC10's) in the state of AK, but to make processing more
+straightforward, POIs from polygons from the NHDPlusHR that were from these
+files were removed (*NHD_poi_points_noAK*). The target *make_AK_poi_points*
+downloads the NHD Best Resolution geopackage and calculates POIs for each
+waterbody polygon of the same size and type as stated previously. (See the
+script
+[calculate_AK_poi.R](https://github.com/rossyndicate/lakeSR/blob/main/a_Calculate_Centers/src/calculate_AK_poi.R))
+The resulting file (tracked as *AK_poi_points*), is combined with the
+*NHD_poi_points_noAK* target to create a harmonized and collated file in the
+target *combined_poi_file* (see
+[collate_NHDHR_AK.R](https://github.com/rossyndicate/lakeSR/blob/main/a_Calculate_Centers/src/collate_NHDHR_AK.R),
+the output file istracked as *combined_poi_points*).

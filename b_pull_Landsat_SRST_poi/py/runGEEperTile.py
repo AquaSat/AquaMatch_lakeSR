@@ -5,6 +5,7 @@ from datetime import date, datetime
 import os 
 import fiona
 from pandas import read_csv, read_feather
+import math
 
 # get locations and yml from data folder
 yml = read_csv("b_pull_Landsat_SRST_poi/mid/yml.csv")
@@ -45,10 +46,6 @@ locations = read_feather("b_pull_Landsat_SRST_poi/out/locations_with_WRS2_pathro
 
 locations_subset = locations.query( "`WRS2_PR` == @tiles")
 
-# convert locations to an eeFeatureCollection
-locs_feature = csv_to_eeFeat(locations_subset, yml["location_crs"][0], tiles)
-
-
 ##############################################
 ##---- CREATING EE FEATURECOLLECTIONS   ----##
 ##############################################
@@ -57,23 +54,33 @@ locs_feature = csv_to_eeFeat(locations_subset, yml["location_crs"][0], tiles)
 wrs = (ee.FeatureCollection("projects/ee-ls-c2-srst/assets/WRS2_descending")
   .filterMetadata("PR", "equals", tiles))
 
+# store path and row for subsetting the stacks so there is not overlap between PR pulls
+w_p = int(str(tiles)[0:3])
+w_r = int(str(tiles)[3:6])
+
 #grab images and apply scaling factors
 l7 = (ee.ImageCollection("LANDSAT/LE07/C02/T1_L2")
     .map(apply_scale_factors)
     .filter(ee.Filter.lt("CLOUD_COVER", ee.Number.parse(str(cloud_thresh))))
-    .filterDate(yml_start, yml_end))
+    .filterDate(yml_start, yml_end)
+    .filter(ee.Filter.eq("WRS_PATH", w_p))
+    .filter(ee.Filter.eq("WRS_ROW", w_r)))
 l5 = (ee.ImageCollection("LANDSAT/LT05/C02/T1_L2")
     .map(apply_scale_factors)
     .filter(ee.Filter.lt("CLOUD_COVER", ee.Number.parse(str(cloud_thresh))))
-    .filterDate(yml_start, yml_end))
+    .filterDate(yml_start, yml_end)
+    .filter(ee.Filter.eq("WRS_PATH", w_p))
+    .filter(ee.Filter.eq("WRS_ROW", w_r)))
 l4 = (ee.ImageCollection("LANDSAT/LT04/C02/T1_L2")
     .map(apply_scale_factors)
     .filter(ee.Filter.lt("CLOUD_COVER", ee.Number.parse(str(cloud_thresh))))
-    .filterDate(yml_start, yml_end))
+    .filterDate(yml_start, yml_end)
+    .filter(ee.Filter.eq("WRS_PATH", w_p))
+    .filter(ee.Filter.eq("WRS_ROW", w_r)))
     
 # merge collections by image processing groups
 ls457 = (ee.ImageCollection(l4.merge(l5).merge(l7))
-    .filterBounds(wrs))  
+    .filterBounds(wrs))
     
 # existing band names
 bn457 = (["SR_B1", "SR_B2", "SR_B3", "SR_B4", "SR_B5", "SR_B7", 
@@ -95,11 +102,15 @@ ls457 = ls457.select(bn457, bns457)
 l8 = (ee.ImageCollection("LANDSAT/LC08/C02/T1_L2")
     .map(apply_scale_factors)
     .filter(ee.Filter.lt("CLOUD_COVER", ee.Number.parse(str(cloud_thresh))))
-    .filterDate(yml_start, yml_end))
+    .filterDate(yml_start, yml_end)
+    .filter(ee.Filter.eq("WRS_PATH", w_p))
+    .filter(ee.Filter.eq("WRS_ROW", w_r)))
 l9 = (ee.ImageCollection("LANDSAT/LC09/C02/T1_L2")
     .map(apply_scale_factors)
     .filter(ee.Filter.lt("CLOUD_COVER", ee.Number.parse(str(cloud_thresh))))
-    .filterDate(yml_start, yml_end))
+    .filterDate(yml_start, yml_end)
+    .filter(ee.Filter.eq("WRS_PATH", w_p))
+    .filter(ee.Filter.eq("WRS_ROW", w_r)))
 
 # merge collections by image processing groups
 ls89 = ee.ImageCollection(l8.merge(l9)).filterBounds(wrs)  
@@ -119,163 +130,215 @@ bns89 = (["Aerosol","Blue", "Green", "Red", "Nir", "Swir1", "Swir2",
 # rename bands  
 ls89 = ls89.select(bn89, bns89)
 
+# need to break up locations into smaller groups for export
+for loc_10k in range(math.ceil(len(locations_subset)/10000)):
+  locs_10k = locations_subset[loc_10k * 100000:(loc_10k + 1) * 10000]
 
-##########################################
-##---- LANDSAT 457 SITE ACQUISITION ----##
-##########################################
+  # convert locations to an eeFeatureCollection
+  locs_feature = csv_to_eeFeat(locs_10k, yml["location_crs"][0], tiles)
 
-## run the pull for LS457
-if "site" in extent:
+  ##########################################
+  ##---- LANDSAT 457 SITE ACQUISITION ----##
+  ##########################################
   
-  geo = wrs.geometry()
-  
-  ## get locs feature and buffer ##
-  feat = (locs_feature
-    .filterBounds(geo)
-    .map(dp_buff))
-      
-  ## process 457 stack
-  #snip the ls data by the geometry of the location points    
-  locs_stack_ls457 = ls457.filterBounds(feat.geometry()) 
-  
-  # map the refpull function across the "stack", flatten to an array
-  if "1" in dswe:
-    print("Starting Landsat 4, 5, 7 DSWE1 acquisition for site locations at tile " + str(tiles))
-    locs_out_457_D1 = locs_stack_ls457.map(ref_pull_457_DSWE1).flatten()
-    locs_out_457_D1 = locs_out_457_D1.filter(ee.Filter.notNull(["med_Blue"]))
-    locs_srname_457_D1 = proj+"_point_LS457_C2_SRST_DSWE1_"+str(tiles)+"_v"+str(date.today())
-    locs_dataOut_457_D1 = (ee.batch.Export.table.toDrive(collection = locs_out_457_D1,
-                                            description = locs_srname_457_D1,
-                                            folder = proj_folder,
-                                            fileFormat = "csv",
-                                            selectors = ["system:index",
-                                            "med_Blue", "med_Green", "med_Red", "med_Nir", "med_Swir1", "med_Swir2", 
-                                            "med_SurfaceTemp", "med_temp_qa", "med_atran", "med_drad", "med_emis",
-                                            "med_emsd", "med_trad", "med_urad",
-                                            "min_SurfaceTemp", "min_cloud_dist",
-                                            "sd_Blue", "sd_Green", "sd_Red", "sd_Nir", "sd_Swir1", "sd_Swir2", "sd_SurfaceTemp",
-                                            "mean_Blue", "mean_Green", "mean_Red", "mean_Nir", "mean_Swir1", "mean_Swir2", 
-                                            "mean_SurfaceTemp",
-                                            "kurt_SurfaceTemp", 
-                                            "pCount_dswe_gt0", "pCount_dswe1", "pCount_dswe3", 
-                                            "prop_clouds","prop_hillShadow","mean_hillShade"]))
-    #Check how many existing tasks are running and take a break of 120 secs if it"s >25 
-    maximum_no_of_tasks(10, 120)
-    #Send next task.                                        
-    locs_dataOut_457_D1.start()
-    print("Completed Landsat 4, 5, 7 DSWE 1 stack acquisitions for site location at tile " + str(tiles))
-  
-  else: print("Not configured to acquire DSWE 1 stack for Landsat 4, 5, 7 for sites.")
-  
-  if "3" in dswe:
-    print("Starting Landsat 4, 5, 7 DSWE3 acquisition for site locations at tile " + str(tiles))
-    locs_out_457_D3 = locs_stack_ls457.map(ref_pull_457_DSWE3).flatten()
-    locs_out_457_D3 = locs_out_457_D3.filter(ee.Filter.notNull(["med_Blue"]))
-    locs_srname_457_D3 = proj+"_point_LS457_C2_SRST_DSWE3_"+str(tiles)+"_v"+str(date.today())
-    locs_dataOut_457_D3 = (ee.batch.Export.table.toDrive(collection = locs_out_457_D3,
-                                            description = locs_srname_457_D3,
-                                            folder = proj_folder,
-                                            fileFormat = "csv",
-                                            selectors = ["system:index",
-                                            "med_Blue", "med_Green", "med_Red", "med_Nir", "med_Swir1", "med_Swir2", 
-                                            "med_SurfaceTemp", "med_temp_qa", "med_atran", "med_drad", "med_emis",
-                                            "med_emsd", "med_trad", "med_urad",
-                                            "min_SurfaceTemp", "min_cloud_dist",
-                                            "sd_Blue", "sd_Green", "sd_Red", "sd_Nir", "sd_Swir1", "sd_Swir2", "sd_SurfaceTemp",
-                                            "mean_Blue", "mean_Green", "mean_Red", "mean_Nir", "mean_Swir1", "mean_Swir2", 
-                                            "mean_SurfaceTemp",
-                                            "kurt_SurfaceTemp", 
-                                            "pCount_dswe_gt0", "pCount_dswe1", "pCount_dswe3",
-                                            "prop_clouds","prop_hillShadow","mean_hillShade"]))
-    #Check how many existing tasks are running and take a break of 120 secs if it"s >25 
-    maximum_no_of_tasks(10, 120)
-    #Send next task.                                        
-    locs_dataOut_457_D3.start()
-    print("Completed Landsat 4, 5, 7 DSWE 3 stack acquisitions for site location at tile " + str(tiles))
-  
-  else: print("Not configured to acquire DSWE 3 stack for Landsat 4, 5, 7 for sites.")
-
-else: 
-  print("No sites to extract Landsat 4, 5, 7 at " + str(tiles))
-
-
-
-#########################################
-##---- LANDSAT 89 SITE ACQUISITION ----##
-#########################################
-
-if "site" in extent:
-
-  geo = wrs.geometry()
-  
-  ## get locs feature and buffer ##
-  feat = (locs_feature
-    .filterBounds(geo)
-    .map(dp_buff))
-  
-  # snip the ls data by the geometry of the location points    
-  locs_stack_ls89 = ls89.filterBounds(feat.geometry()) 
-  
-  if "1" in dswe:
-    print("Starting Landsat 8, 9 DSWE1 acquisition for site locations at tile " + str(tiles))
-    locs_out_89_D1 = locs_stack_ls89.map(ref_pull_89_DSWE1).flatten()
-    locs_out_89_D1 = locs_out_89_D1.filter(ee.Filter.notNull(["med_Blue"]))
-    locs_srname_89_D1 = proj+"_point_LS89_C2_SRST_DSWE1_"+str(tiles)+"_v"+str(date.today())
-    locs_dataOut_89_D1 = (ee.batch.Export.table.toDrive(collection = locs_out_89_D1,
-                                            description = locs_srname_89_D1,
-                                            folder = proj_folder,
-                                            fileFormat = "csv",
-                                            selectors = ["system:index",
-                                            "med_Aerosol", "med_Blue", "med_Green", "med_Red", "med_Nir", "med_Swir1", "med_Swir2", 
-                                            "med_SurfaceTemp", "med_temp_qa", "med_atran", "med_drad", "med_emis",
-                                            "med_emsd", "med_trad", "med_urad",
-                                            "min_SurfaceTemp", "min_cloud_dist",
-                                            "sd_Aerosol", "sd_Blue", "sd_Green", "sd_Red", "sd_Nir", "sd_Swir1", "sd_Swir2", "sd_SurfaceTemp",
-                                            "mean_Aerosol", "mean_Blue", "mean_Green", "mean_Red", "mean_Nir", "mean_Swir1", "mean_Swir2", 
-                                            "mean_SurfaceTemp",
-                                            "kurt_SurfaceTemp", 
-                                            "pCount_dswe_gt0", "pCount_dswe1", "pCount_dswe3","pCount_medHighAero", 
-                                            "prop_clouds","prop_hillShadow","mean_hillShade"]))
-    #Check how many existing tasks are running and take a break of 120 secs if it"s >25 
-    maximum_no_of_tasks(10, 120)
-    #Send next task.                                        
-    locs_dataOut_89_D1.start()
-    print("Completed Landsat 8, 9 DSWE 1 stack acquisitions for site location at tile " + str(tiles))
-  
-  else: print("Not configured to acquire DSWE 1 stack for Landsat 8, 9 for sites.")
-  
-  if "3" in dswe:
-    print("Starting Landsat 8, 9 DSWE3 acquisition for site locations at tile " + str(tiles))
-    locs_out_89_D3 = locs_stack_ls89.map(ref_pull_89_DSWE3).flatten()
-    locs_out_89_D3 = locs_out_89_D3.filter(ee.Filter.notNull(["med_Blue"]))
-    locs_srname_89_D3 = proj+"_point_LS89_C2_SRST_DSWE3_"+str(tiles)+"_v"+str(date.today())
-    locs_dataOut_89_D3 = (ee.batch.Export.table.toDrive(collection = locs_out_89_D3,
-                                            description = locs_srname_89_D3,
-                                            folder = proj_folder,
-                                            fileFormat = "csv",
-                                            selectors = ["system:index",
-                                            "med_Aerosol", "med_Blue", "med_Green", "med_Red", "med_Nir", "med_Swir1", "med_Swir2", 
-                                            "med_SurfaceTemp", "med_temp_qa", "med_atran", "med_drad", "med_emis",
-                                            "med_emsd", "med_trad", "med_urad",
-                                            "min_SurfaceTemp", "min_cloud_dist",
-                                            "sd_Aerosol", "sd_Blue", "sd_Green", "sd_Red", "sd_Nir", "sd_Swir1", "sd_Swir2", "sd_SurfaceTemp",
-                                            "mean_Aerosol", "mean_Blue", "mean_Green", "mean_Red", "mean_Nir", "mean_Swir1", "mean_Swir2", 
-                                            "mean_SurfaceTemp",
-                                            "kurt_SurfaceTemp", 
-                                            "pCount_dswe_gt0", "pCount_dswe1", "pCount_dswe3","pCount_medHighAero", 
-                                            "prop_clouds","prop_hillShadow","mean_hillShade"]))
-    #Check how many existing tasks are running and take a break of 120 secs if it"s >25 
-    maximum_no_of_tasks(10, 120)
-    #Send next task.                                        
-    locs_dataOut_89_D3.start()
-    print("Completed Landsat 8, 9 DSWE 3 stack acquisitions for site location at tile " + str(tiles))
+  ## run the pull for LS457
+  if "site" in extent:
     
-  else: print("Not configured to acquire DSWE 3 stack for Landsat 8,9 for sites.")
-
-else: print("No sites to extract Landsat 8, 9 at tile " + str(tiles))
- 
- 
-
+    geo = wrs.geometry()
+    
+    ## get locs feature and buffer ##
+    feat = (locs_feature
+      .filterBounds(geo)
+      .map(dp_buff))
+    
+    ## process 457 stack
+    #snip the ls data by the geometry of the location points    
+    locs_stack_ls457 = ls457.filterBounds(feat.geometry()) 
+    
+    # map the refpull function across the "stack", flatten to an array
+    if "1" in dswe:
+      print("Starting Landsat 4, 5, 7 DSWE1 acquisition for site locations at tile "
+        + str(tiles)
+        + " and location subset "
+        + str(loc_10k))
+      locs_out_457_D1 = locs_stack_ls457.map(ref_pull_457_DSWE1).flatten()
+      locs_out_457_D1 = locs_out_457_D1.filter(ee.Filter.notNull(["med_Blue"]))
+      locs_srname_457_D1 = (proj 
+        + "_point_LS457_C2_SRST_DSWE1_" 
+        + str(tiles)
+        + "_" + str(loc_10k)
+        +"_v" + str(date.today()))
+      locs_dataOut_457_D1 = (ee.batch.Export.table.toDrive(collection = locs_out_457_D1,
+                                              description = locs_srname_457_D1,
+                                              folder = proj_folder,
+                                              fileFormat = "csv",
+                                              selectors = ["system:index",
+                                              "med_Blue", "med_Green", "med_Red", "med_Nir", "med_Swir1", "med_Swir2", 
+                                              "med_SurfaceTemp", "med_temp_qa", "med_atran", "med_drad", "med_emis",
+                                              "med_emsd", "med_trad", "med_urad",
+                                              "min_SurfaceTemp", "min_cloud_dist",
+                                              "sd_Blue", "sd_Green", "sd_Red", "sd_Nir", "sd_Swir1", "sd_Swir2", "sd_SurfaceTemp",
+                                              "mean_Blue", "mean_Green", "mean_Red", "mean_Nir", "mean_Swir1", "mean_Swir2", 
+                                              "mean_SurfaceTemp",
+                                              "kurt_SurfaceTemp", 
+                                              "pCount_dswe_gt0", "pCount_dswe1", "pCount_dswe3", 
+                                              "prop_clouds","prop_hillShadow","mean_hillShade"]))
+      #Check how many existing tasks are running and take a break of 120 secs if it's >10 
+      maximum_no_of_tasks(10, 120)
+      #Send next task.                                        
+      locs_dataOut_457_D1.start()
+      print("Completed Landsat 4, 5, 7 DSWE 1 stack acquisitions for site location at tile "
+        + str(tiles)
+        + " and location subset "
+        + str(loc_10k))
+    
+    else: print("Not configured to acquire DSWE 1 stack for Landsat 4, 5, 7 for sites at this location subset.")
+    
+    if "3" in dswe:
+      print("Starting Landsat 4, 5, 7 DSWE3 acquisition for site locations at tile " 
+        + str(tiles)        
+        + " and location subset "
+        + str(loc_10k))
+      locs_out_457_D3 = locs_stack_ls457.map(ref_pull_457_DSWE3).flatten()
+      locs_out_457_D3 = locs_out_457_D3.filter(ee.Filter.notNull(["med_Blue"]))
+      locs_srname_457_D3 = (proj
+        + "_point_LS457_C2_SRST_DSWE3_" 
+        + str(tiles)
+        + "_" + str(loc_10k)
+        +"_v" + str(date.today()))
+      locs_dataOut_457_D3 = (ee.batch.Export.table.toDrive(collection = locs_out_457_D3,
+                                              description = locs_srname_457_D3,
+                                              folder = proj_folder,
+                                              fileFormat = "csv",
+                                              selectors = ["system:index",
+                                              "med_Blue", "med_Green", "med_Red", "med_Nir", "med_Swir1", "med_Swir2", 
+                                              "med_SurfaceTemp", "med_temp_qa", "med_atran", "med_drad", "med_emis",
+                                              "med_emsd", "med_trad", "med_urad",
+                                              "min_SurfaceTemp", "min_cloud_dist",
+                                              "sd_Blue", "sd_Green", "sd_Red", "sd_Nir", "sd_Swir1", "sd_Swir2", "sd_SurfaceTemp",
+                                              "mean_Blue", "mean_Green", "mean_Red", "mean_Nir", "mean_Swir1", "mean_Swir2", 
+                                              "mean_SurfaceTemp",
+                                              "kurt_SurfaceTemp", 
+                                              "pCount_dswe_gt0", "pCount_dswe1", "pCount_dswe3",
+                                              "prop_clouds","prop_hillShadow","mean_hillShade"]))
+      #Check how many existing tasks are running and take a break of 120 secs if it's >10 
+      maximum_no_of_tasks(10, 120)
+      #Send next task.                                        
+      locs_dataOut_457_D3.start()
+      print("Completed Landsat 4, 5, 7 DSWE 3 stack acquisitions for site location at tile "
+        + str(tiles)
+        + " and location subset "
+        + str(loc_10k))
+    
+    else: print("Not configured to acquire DSWE 3 stack for Landsat 4, 5, 7 for sites at this location subset.")
+  
+  else: 
+    print("No sites to extract Landsat 4, 5, 7 at "
+      + str(tiles)
+      + 'and location subset '
+      + str(loc_10k))
+  
+  
+  
+  #########################################
+  ##---- LANDSAT 89 SITE ACQUISITION ----##
+  #########################################
+  
+  if "site" in extent:
+  
+    geo = wrs.geometry()
+    
+    ## get locs feature and buffer ##
+    feat = (locs_feature
+      .filterBounds(geo)
+      .map(dp_buff))
+    
+    # snip the ls data by the geometry of the location points    
+    locs_stack_ls89 = ls89.filterBounds(feat.geometry()) 
+    
+    if "1" in dswe:
+      print("Starting Landsat 8, 9 DSWE1 acquisition for site locations at tile "
+        + str(tiles)
+        + " and location subset "
+        + str(loc_10k))
+      locs_out_89_D1 = locs_stack_ls89.map(ref_pull_89_DSWE1).flatten()
+      locs_out_89_D1 = locs_out_89_D1.filter(ee.Filter.notNull(["med_Blue"]))
+      locs_srname_89_D1 = (proj
+        + "_point_LS89_C2_SRST_DSWE1_"
+        + str(tiles)
+        + "_" + str(loc_10k)
+        + "_v" + str(date.today()))
+      locs_dataOut_89_D1 = (ee.batch.Export.table.toDrive(collection = locs_out_89_D1,
+                                              description = locs_srname_89_D1,
+                                              folder = proj_folder,
+                                              fileFormat = "csv",
+                                              selectors = ["system:index",
+                                              "med_Aerosol", "med_Blue", "med_Green", "med_Red", "med_Nir", "med_Swir1", "med_Swir2", 
+                                              "med_SurfaceTemp", "med_temp_qa", "med_atran", "med_drad", "med_emis",
+                                              "med_emsd", "med_trad", "med_urad",
+                                              "min_SurfaceTemp", "min_cloud_dist",
+                                              "sd_Aerosol", "sd_Blue", "sd_Green", "sd_Red", "sd_Nir", "sd_Swir1", "sd_Swir2", "sd_SurfaceTemp",
+                                              "mean_Aerosol", "mean_Blue", "mean_Green", "mean_Red", "mean_Nir", "mean_Swir1", "mean_Swir2", 
+                                              "mean_SurfaceTemp",
+                                              "kurt_SurfaceTemp", 
+                                              "pCount_dswe_gt0", "pCount_dswe1", "pCount_dswe3","pCount_medHighAero", 
+                                              "prop_clouds","prop_hillShadow","mean_hillShade"]))
+      #Check how many existing tasks are running and take a break of 120 secs if it's >10 
+      maximum_no_of_tasks(10, 120)
+      #Send next task.                                        
+      locs_dataOut_89_D1.start()
+      print("Completed Landsat 8, 9 DSWE 1 stack acquisitions for site location at tile " 
+        + str(tiles)
+        + " and location subset "
+        + str(loc_10k))
+    
+    else: print("Not configured to acquire DSWE 1 stack for Landsat 8, 9 for sites at this location subset.")
+    
+    if "3" in dswe:
+      print("Starting Landsat 8, 9 DSWE3 acquisition for site locations at tile "
+        + str(tiles)
+        + " and location subset "
+        + str(loc_10k))
+      locs_out_89_D3 = locs_stack_ls89.map(ref_pull_89_DSWE3).flatten()
+      locs_out_89_D3 = locs_out_89_D3.filter(ee.Filter.notNull(["med_Blue"]))
+      locs_srname_89_D3 = (proj
+        + "_point_LS89_C2_SRST_DSWE3_"
+        + str(tiles)
+        + "_" + str(loc_10k)
+        + "_v" + str(date.today()))
+      locs_dataOut_89_D3 = (ee.batch.Export.table.toDrive(collection = locs_out_89_D3,
+                                              description = locs_srname_89_D3,
+                                              folder = proj_folder,
+                                              fileFormat = "csv",
+                                              selectors = ["system:index",
+                                              "med_Aerosol", "med_Blue", "med_Green", "med_Red", "med_Nir", "med_Swir1", "med_Swir2", 
+                                              "med_SurfaceTemp", "med_temp_qa", "med_atran", "med_drad", "med_emis",
+                                              "med_emsd", "med_trad", "med_urad",
+                                              "min_SurfaceTemp", "min_cloud_dist",
+                                              "sd_Aerosol", "sd_Blue", "sd_Green", "sd_Red", "sd_Nir", "sd_Swir1", "sd_Swir2", "sd_SurfaceTemp",
+                                              "mean_Aerosol", "mean_Blue", "mean_Green", "mean_Red", "mean_Nir", "mean_Swir1", "mean_Swir2", 
+                                              "mean_SurfaceTemp",
+                                              "kurt_SurfaceTemp", 
+                                              "pCount_dswe_gt0", "pCount_dswe1", "pCount_dswe3","pCount_medHighAero", 
+                                              "prop_clouds","prop_hillShadow","mean_hillShade"]))
+      #Check how many existing tasks are running and take a break of 120 secs if it's >10 
+      maximum_no_of_tasks(10, 120)
+      #Send next task.                                        
+      locs_dataOut_89_D3.start()
+      print("Completed Landsat 8, 9 DSWE 3 stack acquisitions for site location at tile "
+        + str(tiles) 
+        + " and location subset "
+        + str(loc_10k))
+      
+    else: print("Not configured to acquire DSWE 3 stack for Landsat 8,9 for sites at this location subset.")
+  
+  else: print("No sites to extract Landsat 8, 9 at tile " 
+          + str(tiles)
+          + " and location subset "
+          + str(loc_10k))
+   
+   
+  
 ##############################################
 ##---- LANDSAT 457 METADATA ACQUISITION ----##
 ##############################################
@@ -289,7 +352,7 @@ meta_dataOut_457 = (ee.batch.Export.table.toDrive(collection = ls457,
                                         folder = proj_folder,
                                         fileFormat = "csv"))
 
-#Check how many existing tasks are running and take a break of 120 secs if it"s >25 
+#Check how many existing tasks are running and take a break of 120 secs if it's >10 
 maximum_no_of_tasks(10, 120)
 #Send next task.                                        
 meta_dataOut_457.start()
@@ -310,7 +373,7 @@ meta_dataOut_89 = (ee.batch.Export.table.toDrive(collection = ls89,
                                         folder = proj_folder,
                                         fileFormat = "csv"))
 
-#Check how many existing tasks are running and take a break of 120 secs if it"s >25 
+#Check how many existing tasks are running and take a break of 120 secs if it's >10 
 maximum_no_of_tasks(10, 120)
 #Send next task.                                        
 meta_dataOut_89.start()
@@ -339,4 +402,4 @@ with open(("b_pull_Landsat_SRST_poi/out/L457_stack_ids_v"+str(date.today())+".tx
         # write each item on a new line
         fp.write("%s\n" % id)
     print("Done")
-    
+      

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</title>
+  <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  
+  <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  
+
+<meta name="author" content="ROSSyndicate" />
+
+
+<meta name="date" content="2023-10-23" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+<link rel="next" href="locations-of-data-acquisition.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<link href="libs/vis-9.1.0/vis-network.min.css" rel="stylesheet" />
+<script src="libs/vis-9.1.0/vis-network.min.js"></script>
+<script src="libs/visNetwork-binding-2.1.2/visNetwork.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#code-architecture"><i class="fa fa-check"></i><b>1.1</b> Code Architecture</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="locations-of-data-acquisition.html"><a href="locations-of-data-acquisition.html"><i class="fa fa-check"></i><b>2</b> Locations of Data Acquisition</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="locations-of-data-acquisition.html"><a href="locations-of-data-acquisition.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>2.1</b> Pole of Inaccessibility</a></li>
+<li class="chapter" data-level="2.2" data-path="locations-of-data-acquisition.html"><a href="locations-of-data-acquisition.html#lakes-included-in-lakesr"><i class="fa fa-check"></i><b>2.2</b> Lakes included in lakeSR</a></li>
+<li class="chapter" data-level="2.3" data-path="locations-of-data-acquisition.html"><a href="locations-of-data-acquisition.html#implementation"><i class="fa fa-check"></i><b>2.3</b> Implementation</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="citations.html"><a href="citations.html"><i class="fa fa-check"></i><b>3</b> Citations</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</h1>
+<p class="author"><em>ROSSyndicate</em></p>
+<p class="date"><em>2023-10-23</em></p>
+</div>
+<div id="introduction" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">1</span> Introduction<a href="introduction.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This bookdown document <span class="citation">(<a href="#ref-xie2016">Xie 2016</a>)</span> explains the methodology we use in the acquisition and
+compilation of satellite surface reflectance and surface temperature data for
+all lakes in the United States and US Territories. This product, “<strong>lakeSR</strong>”,
+is a component of the <strong>AquaSat</strong> (v2) suite, an effort to create a database of
+lake and river water quality observations alongside remote sensing data.</p>
+<p>Currently, <strong>lakeSR</strong> is comprised of the historical Landsat record from 1984
+until mid-2023, comprised of data from the following missions:</p>
+<ul>
+<li>Landsat 4 Thematic Mapper (TM)</li>
+<li>Landsat 5 TM</li>
+<li>Landsat 7 Enhanced Thematic Mapper Plus (ETM+)</li>
+<li>Landsat 8 Operational Land Imager/Thermal Infrared Sensor (OLI/TIRS)</li>
+<li>Landsat 9 OLI/TIRS</li>
+</ul>
+<p>Together the Landsat archive of <strong>lakeSR</strong> is referred to as
+“<em>lakeSR-LS_C2_SRST</em>” (<strong>L</strong>and<strong>s</strong>at <strong>C</strong>ollection <strong>2</strong> <strong>S</strong>urface
+<strong>R</strong>eflectance and <strong>S</strong>urface <strong>T</strong>emperature). There will be additional
+satellite data incorporated into the <strong>lakeSR</strong> product in the future.</p>
+<p><strong>lakeSR</strong> acquires tabular data summaries of satellite-derived surface
+reflectance and surface temperature data at central locations within a lake and
+at locations identified with monitoring records from the Water Quality Portal
+from the <strong>AquaMatch</strong> component of <strong>AquaSat</strong>.</p>
+<div id="code-architecture" class="section level2 hasAnchor" number="1.1">
+<h2><span class="header-section-number">1.1</span> Code Architecture<a href="introduction.html#code-architecture" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><strong>lakeSR</strong> is built on the {targets} workflow management system for R
+<span class="citation">(<a href="#ref-landau2021">Landau 2021</a>)</span>. The {targets} architecture is based on lists of functions
+performed in a specific order, each function called a <em>target</em>. The primary
+benefit of {targets} workflows is that code is only run if a target, a target’s
+code, or a target’s dependencies have changed (or become “outdated” in {targets}
+speak).</p>
+<p><strong>lakeSR</strong> is broken down into functional groups of targets, listed below with a
+brief summary about what task(s) each group completes.</p>
+<p><strong>a_Calculate_Centers</strong>:</p>
+<p>This {targets} list calculates “Pole of Inaccessibility” (POI) for all lakes, ponds,
+reservoirs, and playas greater than 1 hectare
+in surface area using the NHDPlusHR polygons using the {nhdplusTools} package
+and the <code>poi()</code> function in the {polylabelr} package. For all waterbodies in
+Alaska, POI were calculated based on the NHD Best Resolution file for the entire
+state because the NHDPlusHR is not complete for AK. <strong>Note</strong>: this group of
+targets will take up to 4h to complete.</p>
+<p>See Section <a href="locations-of-data-acquisition.html#locations-of-data-acquisition">2</a> for additional background and
+detailed methodology.</p>
+<p><strong>b_pull_Landsat_SRST_poi</strong>:</p>
+<p>This {targets} group uses the config file <code>config_files/config_poi.yml</code> and the
+Chebyshev Center points created in the <code>a_Calculate_Centers</code> group to pull
+Landsat Collection 2 Surface Reflectance and Surface Temperature using the GEE
+API. In this group, we use the most strict LS4-7 pixel filters which include the
+<code>sr_cloud_mask</code> filter. This filter is a conservative filter, removing artefacts
+from upstream products that are used to create the SR product. This group of
+targets ends with a branched target that maps over each of the WRS2 path rows
+that intersect with the points. <strong>Note</strong>: this group of targets takes a very,
+very long time, averaging about 1 hour per path-row branch. There are just under
+800 path rows executed in this branch.</p>
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="introduction.html#cb1-1" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> F, <span class="at">message =</span> F, <span class="at">warning =</span> F, <span class="at">error =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+</div>
+</div>
+<h3> Citations<a href="citations.html#citations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-landau2021" class="csl-entry">
+Landau, William Michael. 2021. <span>“The Targets r Package: A Dynamic Make-Like Function-Oriented Pipeline Toolkit for Reproducibility and High-Performance Computing.”</span> <em>Journal of Open Source Software</em> 6 (57): 2959. <a href="https://doi.org/10.21105/joss.02959">https://doi.org/10.21105/joss.02959</a>.
+</div>
+<div id="ref-xie2016" class="csl-entry">
+Xie, Yihui. 2016. <em>Bookdown: Authoring Books and Technical Documents with r Markdown</em>. Boca Raton, Florida: Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/bookdown">https://bookdown.org/yihui/bookdown</a>.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="locations-of-data-acquisition.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

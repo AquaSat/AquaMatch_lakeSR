@@ -13,10 +13,12 @@ tar_source("a_Calculate_Centers/src/")
 # targets will take up to 4h to complete.
 
 # create folder structure
-dir.create("a_Calculate_Centers/mid/")
-dir.create("a_Calculate_Centers/multisurface/")
-dir.create("a_Calculate_Centers/out/")
-dir.create("a_Calculate_Centers/nhd/")
+suppressWarnings({
+  dir.create("a_Calculate_Centers/mid/")
+  dir.create("a_Calculate_Centers/multisurface/")
+  dir.create("a_Calculate_Centers/out/")
+  dir.create("a_Calculate_Centers/nhd/")
+})
 
 
 # create list of targets to perform this task
