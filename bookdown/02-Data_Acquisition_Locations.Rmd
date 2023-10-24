@@ -94,7 +94,7 @@ buffer sizes.]]
 
 The code for gathering NHD waterbodies and calculating their respective POIs is
 found in {targets} group *a_Calculate_Centers* which is located in the script
-[a_Calculate_Centers.R](https://github.com/steeleb/lakeSR/blob/main/a_Calculate_Centers.R).
+[a_Calculate_Centers.R](https://github.com/aquasat/lakeSR/blob/main/a_Calculate_Centers.R).
 The network graph (Figure \@ref(fig:a-group-vis)) for this group depicts the
 dependencies between each of the *targets* in this group.
 
@@ -129,7 +129,7 @@ created by calculating POIs for all waterbodies \> 1 hectare and having an FCode
 of 390, 436, or 361 from each HUC4 in the *HUC4_list.* For this target, we use
 the dynamic branching feature to iterate over each item in the *HUC4_list*. See
 the script
-[calculate_centers_HUC4.R](https://github.com/rossyndicate/lakeSR/blob/main/a_Calculate_Centers/src/calculate_centers_HUC4.R)
+[calculate_centers_HUC4.R](https://github.com/aquasat/lakeSR/blob/main/a_Calculate_Centers/src/calculate_centers_HUC4.R)
 for details on the function applied in this target. The output of the
 *all_poi_points* target include multiple *.csv* files - these files are collated
 in the target *all_poi_points*, which outputs a *.feather* file (tracked as
@@ -143,9 +143,9 @@ files were removed (*NHD_poi_points_noAK*). The target *make_AK_poi_points*
 downloads the NHD Best Resolution geopackage and calculates POIs for each
 waterbody polygon of the same size and type as stated previously. (See the
 script
-[calculate_AK_poi.R](https://github.com/rossyndicate/lakeSR/blob/main/a_Calculate_Centers/src/calculate_AK_poi.R))
+[calculate_AK_poi.R](https://github.com/aquasat/lakeSR/blob/main/a_Calculate_Centers/src/calculate_AK_poi.R))
 The resulting file (tracked as *AK_poi_points*), is combined with the
 *NHD_poi_points_noAK* target to create a harmonized and collated file in the
 target *combined_poi_file* (see
-[collate_NHDHR_AK.R](https://github.com/rossyndicate/lakeSR/blob/main/a_Calculate_Centers/src/collate_NHDHR_AK.R),
+[collate_NHDHR_AK.R](https://github.com/aquasat/lakeSR/blob/main/a_Calculate_Centers/src/collate_NHDHR_AK.R),
 the output file istracked as *combined_poi_points*).
