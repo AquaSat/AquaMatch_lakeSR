@@ -1,15 +1,11 @@
 ---
-editor_options: 
-  markdown: 
+editor_options:
+  markdown:
     wrap: 80
 bibliography: references.bib
 ---
 
-```{r chunk-opts, echo=FALSE}
-knitr::opts_chunk$set(echo = F, message = F, warning = F, error = FALSE)
-```
-
-# Satellite Data Acquisition Software and Settings
+# Satellite Data Acquisition Software and Settings {#software-settings}
 
 Currently, all satellite data in **AquaSat** are obtained using the Python API
 for Google Earth Engine (GEE) [@gorelick2017]. While the orchestration of data
@@ -27,13 +23,57 @@ run (lines 8-12 of the
 [\_targets.R](https://github.com/AquaSat/lakeSR/blob/main/_targets.R) file) to
 be sure that our Python code runs consistently.
 
-|                 | version | citation                                                     |
-|---------------------------|---------------------------|---------------------------|
-| Python          | 3.8.18  | Python Software Foundation, [www.python.org](www.python.org) |
-| earthengine-api | 0.1.374 | [@gorelick2023]                                              |
-| pandas          | 2.0.3   | [@thepandasdevelopmentteam2023]                              |
-| fiona           | 1.9.5   | [@gillies2023]                                               |
-| pyreadr         | 0.5.0   | [@fajardo2023]                                               |
-| pyarrow         | 13.0.0  | [@apachearrowdevelopers2023]                                 |
+| Software/Py Module | version | citation                                                     |
+|---------------------|:-----------:|--------------------------------------------|
+| Python             | 3.8.18  | Python Software Foundation, [www.python.org](www.python.org) |
+| earthengine-api    | 0.1.374 | [@gorelick2023]                                              |
+| pandas             |  2.0.3  | [@thepandasdevelopmentteam2023]                              |
+| fiona              |  1.9.5  | [@gillies2023]                                               |
+| pyreadr            |  0.5.0  | [@fajardo2023]                                               |
+| pyarrow            | 13.0.0  | [@apachearrowdevelopers2023]                                 |
 
 : Python and python modules and versions used in \*\*lakeSR\*\*.
+
+## Google Earth Engine Setup
+
+### Create a GEE account
+
+Creation of a GEE is easy and free. Click 'Get Started' at the far right side of
+the [earthengine.google.com](https://earthengine.google.com) webpage to create
+an account:
+
+[![Header of earthengine.google.com with link to create a GEE account
+highlighted in the red box to the
+right.](images/Screenshot 2023-10-25 at 11.56.29 AM.png)](https://earthengine.google.com)
+
+### gcloud CLI
+
+This workflow requires the installation and initiation of [gcloud
+CLI](https://cloud.google.com/sdk/gcloud), a command-line tool set for accessing
+Google Cloud Resources. All settings for **lakeSR** are default `gcloud`
+configurations using a singular GEE project.
+
+### GEE Authentication
+
+Once `gcloud` is installed and initialized and the Conda environment is set up,
+you can authenticate your GEE instance. For this workflow, this is completed in
+the terminal and manually authenticating within the browser. See the
+`run_targets.Rmd` file for directions to complete this task.
+
+### GEE project setting
+
+**lakeSR** is run in a specific GEE project associated with our authenticated
+account. If you wish to re-run this code as written, you will not have proper
+access because the code refers to our specific GEE project (each of the yaml
+files in the `config_files` folder point to this within the `ee_proj` setting.
+You will need to update this with your desired GEE project. If you are new to
+GEE, go to [code.earthengine.google.com](https://code.earthengine.google.com)
+and enter the project name listed in the top right hand corner of your screen:
+
+[![Header of code.earthengine.google.com with current Earth Engine project
+highlighted in the red box to the
+right.](images/Screenshot 2023-10-25 at 11.34.08 AM.png)](https://code.earthengine.com)
+
+Alternatively, you can create an GEE project for this task in the dropdown menu
+accessed by clicking on the icon to the right of the highlighted box in the
+figure above.
