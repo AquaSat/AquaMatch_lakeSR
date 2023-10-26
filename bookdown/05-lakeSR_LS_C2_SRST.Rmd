@@ -1,0 +1,78 @@
+---
+editor_options:
+  markdown:
+    wrap: 80
+bibliography: references.bib
+---
+
+# lakeSR-LS_C2_SRST Data Product {#LS-C2-SRST}
+
+The **lakeSR-LS_C2_SRST** data product is a set of tabular datasets,
+representing either the SR and ST data summarized for the POI location which is
+meant to represent pelagic conditions at a given waterbody (identified by its
+NHD Permanent Identifier, see Section \@ref(locs-data-acq)) or representing the
+SR and ST data summarized for any sampling location(s) within a waterbody
+detected in the WQP in the early stages of **AquaMatch**. Both types of data
+contain "full stacks" of the Landsat Collection 2 record - that is, all
+summarized Landsat data available from all Landsat missions.
+
+## Overview
+
+At a high level, the workflow for data acquisition is as follows:
+
+1.  read in and format the yaml configuration file for the GEE run
+
+    -   for POI: completed in `config_file_poi`, `yml_file_poi`, `yml_poi`
+
+2.  reformat the locations file for the GEE run
+
+    -   for POI: completed in `ref_locs_poi_file`, `ref_locations_poi`
+
+3.  determine the WRS-2 path rows (or 'tiles') that intersect with the locations
+    file
+
+    -   for POI: completed in `WRS_tiles_poi`
+
+4.  add the WRS-2 path rows to the reformatted locations file for quicker
+    processing
+
+    -   for POI: completed in `poi_locs_WRS_file`, `poi_locs_WRS`,
+        `poi_locs_WRS_latlon`
+
+5.  iteratively run the GEE script per WRS-2 tile
+
+    -   for POI: completed in `eeRun_poi`
+
+6.  check to see that all tasks are complete in GEE before moving to next step
+
+    -   for POI: completed in `poi_tasks_complete`
+
+```{r b-group-vis, fig.cap= "Network graph of the *targets* in the b_pull_Landsat_SRST_poi {targets} group. Not pictured in graph: `config_file_poi`, `yml_file_poi`, `poi_locs_WRS_latlon`."}
+
+with_dir("..", {
+  tar_visnetwork(targets_only = T, 
+                 shortcut = T,
+                 label = "branches",
+                 names = c("yml_file_poi",
+                           "yml_poi_file",
+                           "yml_poi",
+                           "yml_poi", 
+                           "ref_locs_poi_file",
+                           "ref_locations_poi",
+                           "WRS_tiles_poi",
+                           "poi_locs_WRS_file",
+                           "poi_locs_with_WRS",
+                           "poi_locs_WRS_latlon",
+                           "eeRun_poi",
+                           "poi_tasks_complete"))
+  })
+```
+
+## Data Acquisition Script
+
+The data acquisition pipeline for POIs and sampling locations for the
+**lakeSR-LS_C2_SRST** data product is the same, but the pipeline is initialized
+with two different yaml configuration files. This section will walk through the
+code in `b_pull_Landsat_SRST_poi/py/runGEEperTile.py` and the functions called
+in that code which are stored in `b_pull_Landsat_SRST_poi/py/GEE_functions.py`.
+

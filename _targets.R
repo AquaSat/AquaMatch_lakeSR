@@ -19,7 +19,7 @@ tar_option_set(
 
 # Point to config files: ---------------------------------------
 
-poi_config <- "config_files/config_poi.yml"
+poi_config <- "b_pull_Landsat_SRST_poi/config_files/config_poi.yml"
 
 # Source targets groups: ---------------------------------------
 # Run the R scripts with custom functions:

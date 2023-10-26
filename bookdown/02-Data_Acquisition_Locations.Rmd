@@ -20,7 +20,7 @@ with_dir("..", {
 })
 ```
 
-# Locations of Data Acquisition
+# Locations of Data Acquisition {#locs-data-acq}
 
 As noted in the Introduction (Section \@ref(introduction)), for the purposes of
 **AquaSat**, surface reflectance and surface temperature data are acquired at

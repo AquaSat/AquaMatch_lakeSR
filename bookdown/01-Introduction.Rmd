@@ -55,8 +55,8 @@ based on the NHD Best Resolution file for the entire state because the NHDPlusHR
 is not complete for AK. **Note**: this group of targets will take up to 4h to
 complete.
 
-See Section \@ref(locations-of-data-acquisition) for additional background and
-detailed methodology.
+See Section \@ref(locs-data-acq) for additional background and detailed
+methodology.
 
 **b_pull_Landsat_SRST_poi**:
 
@@ -70,6 +70,9 @@ group of targets ends with a branched target that maps over each of the WRS2
 path rows that intersect with the points. **Note**: this group of targets takes
 a very, very long time, averaging about 1 hour per path-row branch. There are
 just under 800 path rows executed in this branch.
+
+See Section \@ref(LS-C2-SRST) for additional background and detailed
+methodology.
 
 ## Running the code within this repository
 

@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2023-10-24" />
+<meta name="date" content="2023-10-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="introduction.html"/>
-<link rel="next" href="citations.html"/>
+<link rel="next" href="software-settings.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -58,70 +58,6 @@
 <script src="libs/visNetwork-binding-2.1.2/visNetwork.js"></script>
 
 
-<style type="text/css">
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-</style>
 
 <style type="text/css">
   
@@ -165,14 +101,45 @@ div.csl-indent {
 <li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
 <ul>
 <li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#code-architecture"><i class="fa fa-check"></i><b>1.1</b> Code Architecture</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#running-the-code-within-this-repository"><i class="fa fa-check"></i><b>1.2</b> Running the code within this repository</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="locations-of-data-acquisition.html"><a href="locations-of-data-acquisition.html"><i class="fa fa-check"></i><b>2</b> Locations of Data Acquisition</a>
+<li class="chapter" data-level="2" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>2</b> Locations of Data Acquisition</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="locations-of-data-acquisition.html"><a href="locations-of-data-acquisition.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>2.1</b> Pole of Inaccessibility</a></li>
-<li class="chapter" data-level="2.2" data-path="locations-of-data-acquisition.html"><a href="locations-of-data-acquisition.html#lakes-included-in-lakesr"><i class="fa fa-check"></i><b>2.2</b> Lakes included in lakeSR</a></li>
-<li class="chapter" data-level="2.3" data-path="locations-of-data-acquisition.html"><a href="locations-of-data-acquisition.html#implementation"><i class="fa fa-check"></i><b>2.3</b> Implementation</a></li>
+<li class="chapter" data-level="2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>2.1</b> Pole of Inaccessibility</a></li>
+<li class="chapter" data-level="2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#lakes-included-in-lakesr"><i class="fa fa-check"></i><b>2.2</b> Lakes included in lakeSR</a></li>
+<li class="chapter" data-level="2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#implementation"><i class="fa fa-check"></i><b>2.3</b> Implementation</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="citations.html"><a href="citations.html"><i class="fa fa-check"></i><b>3</b> Citations</a></li>
+<li class="chapter" data-level="3" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>3</b> Satellite Data Acquisition Software and Settings</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="software-settings.html"><a href="software-settings.html#reticulate-conda-environment"><i class="fa fa-check"></i><b>3.1</b> {reticulate} Conda Environment</a></li>
+<li class="chapter" data-level="3.2" data-path="software-settings.html"><a href="software-settings.html#google-earth-engine-setup"><i class="fa fa-check"></i><b>3.2</b> Google Earth Engine Setup</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="software-settings.html"><a href="software-settings.html#create-a-gee-account"><i class="fa fa-check"></i><b>3.2.1</b> Create a GEE account</a></li>
+<li class="chapter" data-level="3.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud-cli"><i class="fa fa-check"></i><b>3.2.2</b> gcloud CLI</a></li>
+<li class="chapter" data-level="3.2.3" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>3.2.3</b> GEE Authentication</a></li>
+<li class="chapter" data-level="3.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-project-setting"><i class="fa fa-check"></i><b>3.2.4</b> GEE project setting</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><i class="fa fa-check"></i><b>4</b> Landsat Collection 2 Surface Reflectance and Surface Temperature</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#background-information"><i class="fa fa-check"></i><b>4.1</b> Background Information</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#spectral-response"><i class="fa fa-check"></i><b>4.1.1</b> Spectral Response</a></li>
+<li class="chapter" data-level="4.1.2" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#sensor-resolution"><i class="fa fa-check"></i><b>4.1.2</b> Sensor Resolution</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#surface-reflectance-product"><i class="fa fa-check"></i><b>4.2</b> Surface Reflectance Product</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#sr-atmospheric-processing"><i class="fa fa-check"></i><b>4.2.1</b> SR Atmospheric Processing</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#surface-temperature"><i class="fa fa-check"></i><b>4.3</b> Surface Temperature</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> lakeSR-LS_C2_SRST Data Product</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#overview"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#data-acquisition-script"><i class="fa fa-check"></i><b>5.2</b> Data Acquisition Script</a></li>
+<li class="chapter" data-level="5.3" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#section"><i class="fa fa-check"></i><b>5.3</b> </a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="citations.html"><a href="citations.html"><i class="fa fa-check"></i><b>6</b> Citations</a></li>
 </ul>
 
       </nav>
@@ -190,8 +157,8 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="locations-of-data-acquisition" class="section level1 hasAnchor" number="2">
-<h1><span class="header-section-number">2</span> Locations of Data Acquisition<a href="locations-of-data-acquisition.html#locations-of-data-acquisition" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="locs-data-acq" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">2</span> Locations of Data Acquisition<a href="locs-data-acq.html#locs-data-acq" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>As noted in the Introduction (Section <a href="introduction.html#introduction">1</a>), for the purposes of
 <strong>AquaSat</strong>, surface reflectance and surface temperature data are acquired at
 specific, centrally-located points within waterbodies (typically in pelagic
@@ -207,7 +174,7 @@ data over varying buffer distances to support this decision (<a href="https://gi
 #14</a>). At this time, the
 buffer used is a 120m radius of any given data acquisition location.</p>
 <div id="pole-of-inaccessibility" class="section level2 hasAnchor" number="2.1">
-<h2><span class="header-section-number">2.1</span> Pole of Inaccessibility<a href="locations-of-data-acquisition.html#pole-of-inaccessibility" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">2.1</span> Pole of Inaccessibility<a href="locs-data-acq.html#pole-of-inaccessibility" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The concept of “pole of inaccessibility” (POI) <span class="citation">(<a href="#ref-stefansson1920">Stefansson 1920</a>)</span> is used to
 define the geographic center of a circle with the largest circumference within
 any complex polygon. The foundational principle is used widely to describe the
@@ -219,7 +186,7 @@ using the <code>polylabelr::poi()</code> function <span class="citation">(<a hre
 in space and the radius of the circle used to define the POI.</p>
 </div>
 <div id="lakes-included-in-lakesr" class="section level2 hasAnchor" number="2.2">
-<h2><span class="header-section-number">2.2</span> Lakes included in lakeSR<a href="locations-of-data-acquisition.html#lakes-included-in-lakesr" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">2.2</span> Lakes included in lakeSR<a href="locs-data-acq.html#lakes-included-in-lakesr" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>For <strong>lakeSR</strong>, we use the <a href="https://www.usgs.gov/national-hydrography/nhdplus-high-resolution">NHDPlusHR
 dataset</a> for
 lakes within the conterminous US and US Territories using the
@@ -227,7 +194,7 @@ lakes within the conterminous US and US Territories using the
 downloaded and processed on
 2023-10-05
 using the most updated version available at the time of download. Because the
-NHDPlusHR dataset is incomplete for Alaska (Figure <a href="locations-of-data-acquisition.html#fig:NHDPlusHR-status">2.1</a>),
+NHDPlusHR dataset is incomplete for Alaska (Figure <a href="locs-data-acq.html#fig:NHDPlusHR-status">2.1</a>),
 we used the NHD Best Resolution File for the state of AK <span class="citation">(<a href="#ref-usgeologicalsurvey">US Geological Survey, n.d.</a>)</span>.</p>
 <div class="figure"><span style="display:block;" id="fig:NHDPlusHR-status"></span>
 <img src="https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/images/NHDPlusHRStatus_Web_20220707_0.png" alt="NHDPlusHR dataset availability, courtesy of the USGS."  />
@@ -260,15 +227,41 @@ for pelagic lake conditions. [[Will add additional detail from analysis of
 buffer sizes.]]</p>
 </div>
 <div id="implementation" class="section level2 hasAnchor" number="2.3">
-<h2><span class="header-section-number">2.3</span> Implementation<a href="locations-of-data-acquisition.html#implementation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">2.3</span> Implementation<a href="locs-data-acq.html#implementation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The code for gathering NHD waterbodies and calculating their respective POIs is
 found in {targets} group <em>a_Calculate_Centers</em> which is located in the script
 <a href="https://github.com/aquasat/lakeSR/blob/main/a_Calculate_Centers.R">a_Calculate_Centers.R</a>.
-The network graph (Figure <a href="locations-of-data-acquisition.html#fig:a-group-vis">2.2</a>) for this group depicts the
+The network graph (Figure <a href="locs-data-acq.html#fig:a-group-vis">2.2</a>) for this group depicts the
 dependencies between each of the <em>targets</em> in this group.</p>
+<pre><code>## 
+-
+
+\
+
+|
+
+/
+
+-
+
+\
+
+|
+
+/
+
+-
+
+\
+
+|
+
+/
+
+ </code></pre>
 <div class="figure"><span style="display:block;" id="fig:a-group-vis"></span>
-<div class="visNetwork html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-ae5a25d1fcbd06f0c365" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-ae5a25d1fcbd06f0c365">{"x":{"nodes":{"name":["AK_poi_points","AK_poi_points_file","all_poi_points","collated_poi_points","combined_poi_file","combined_poi_points","combined_poi_points_file","HUC4_dataframe","HUC4_list","make_AK_poi_points","NHDHR_poi_points","NHDHR_poi_points_file","NHDHR_poi_points_noAK","US_states_territories"],"type":["stem","stem","pattern","stem","stem","stem","stem","pattern","stem","stem","stem","stem","stem","stem"],"status":["uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate"],"seconds":[0.118,0,17774.569,5.491000000000001,3.398,1.173,0,153.607,0.001,5105.006,1.458,0,0.078,2.387],"bytes":[15021515,58430672,9636,35769413,118,46016845,182825024,72474,539,44,35769223,146212232,34437284,10715978],"branches":[null,null,229,null,null,null,null,56,null,null,null,null,null,null],"label":["AK_poi_points","AK_poi_points_file","all_poi_points\n229 branches","collated_poi_points","combined_poi_file","combined_poi_points","combined_poi_points_file","HUC4_dataframe\n56 branches","HUC4_list","make_AK_poi_points","NHDHR_poi_points","NHDHR_poi_points_file","NHDHR_poi_points_noAK","US_states_territories"],"color":["#354823","#354823","#354823","#354823","#354823","#354823","#354823","#354823","#354823","#354823","#354823","#354823","#354823","#354823"],"id":["AK_poi_points","AK_poi_points_file","all_poi_points","collated_poi_points","combined_poi_file","combined_poi_points","combined_poi_points_file","HUC4_dataframe","HUC4_list","make_AK_poi_points","NHDHR_poi_points","NHDHR_poi_points_file","NHDHR_poi_points_noAK","US_states_territories"],"level":[3,2,4,5,9,11,10,2,3,1,7,6,8,1],"shape":["dot","dot","square","dot","dot","dot","dot","square","dot","dot","dot","dot","dot","dot"]},"edges":{"from":["NHDHR_poi_points","US_states_territories","make_AK_poi_points","AK_poi_points","NHDHR_poi_points_noAK","HUC4_dataframe","NHDHR_poi_points_file","combined_poi_file","collated_poi_points","HUC4_list","all_poi_points","AK_poi_points_file","combined_poi_points_file"],"to":["NHDHR_poi_points_noAK","HUC4_dataframe","AK_poi_points_file","combined_poi_file","combined_poi_file","HUC4_list","NHDHR_poi_points","combined_poi_points_file","NHDHR_poi_points_file","all_poi_points","collated_poi_points","AK_poi_points","combined_poi_points"],"arrows":["to","to","to","to","to","to","to","to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":{"type":"cubicBezier","forceDirection":"horizontal"}},"physics":{"stabilization":false},"interaction":{"zoomSpeed":1},"layout":{"hierarchical":{"enabled":true,"direction":"LR"}}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:20px;text-align:center;"},"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":{"from":1,"to":1},"algorithm":"hierarchical","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":true,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"},"legend":{"width":0.2,"useGroups":false,"position":"right","ncol":1,"stepX":100,"stepY":100,"zoom":true,"nodes":{"label":["Up to date","Stem","Pattern"],"color":["#354823","#899DA4","#899DA4"],"shape":["dot","dot","square"]},"nodesToDataframe":true},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);"},"evals":[],"jsHooks":[]}</script>
+<div class="visNetwork html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-759ee84a321c54c80fdf" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-759ee84a321c54c80fdf">{"x":{"nodes":{"name":["AK_poi_points","AK_poi_points_file","all_poi_points","collated_poi_points","combined_poi_file","combined_poi_points","combined_poi_points_file","HUC4_dataframe","HUC4_list","make_AK_poi_points","NHDHR_poi_points","NHDHR_poi_points_file","NHDHR_poi_points_noAK","US_states_territories"],"type":["stem","stem","pattern","stem","stem","stem","stem","pattern","stem","stem","stem","stem","stem","stem"],"status":["uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate"],"seconds":[0.118,0,17774.569,5.491000000000001,3.398,1.173,0,153.607,0.001,5105.006,1.458,0,0.078,2.387],"bytes":[15021515,58430672,9636,35769413,118,46016845,182825024,72474,539,44,35769223,146212232,34437284,10715978],"branches":[null,null,229,null,null,null,null,56,null,null,null,null,null,null],"label":["AK_poi_points","AK_poi_points_file","all_poi_points\n229 branches","collated_poi_points","combined_poi_file","combined_poi_points","combined_poi_points_file","HUC4_dataframe\n56 branches","HUC4_list","make_AK_poi_points","NHDHR_poi_points","NHDHR_poi_points_file","NHDHR_poi_points_noAK","US_states_territories"],"color":["#354823","#354823","#354823","#354823","#354823","#354823","#354823","#354823","#354823","#354823","#354823","#354823","#354823","#354823"],"id":["AK_poi_points","AK_poi_points_file","all_poi_points","collated_poi_points","combined_poi_file","combined_poi_points","combined_poi_points_file","HUC4_dataframe","HUC4_list","make_AK_poi_points","NHDHR_poi_points","NHDHR_poi_points_file","NHDHR_poi_points_noAK","US_states_territories"],"level":[3,2,4,5,9,11,10,2,3,1,7,6,8,1],"shape":["dot","dot","square","dot","dot","dot","dot","square","dot","dot","dot","dot","dot","dot"]},"edges":{"from":["HUC4_dataframe","collated_poi_points","AK_poi_points","NHDHR_poi_points_noAK","all_poi_points","NHDHR_poi_points_file","make_AK_poi_points","combined_poi_points_file","combined_poi_file","HUC4_list","US_states_territories","NHDHR_poi_points","AK_poi_points_file"],"to":["HUC4_list","NHDHR_poi_points_file","combined_poi_file","combined_poi_file","collated_poi_points","NHDHR_poi_points","AK_poi_points_file","combined_poi_points","combined_poi_points_file","all_poi_points","HUC4_dataframe","NHDHR_poi_points_noAK","AK_poi_points"],"arrows":["to","to","to","to","to","to","to","to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":{"type":"cubicBezier","forceDirection":"horizontal"}},"physics":{"stabilization":false},"interaction":{"zoomSpeed":1},"layout":{"hierarchical":{"enabled":true,"direction":"LR"}}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:20px;text-align:center;"},"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":{"from":1,"to":1},"algorithm":"hierarchical","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":true,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"},"legend":{"width":0.2,"useGroups":false,"position":"right","ncol":1,"stepX":100,"stepY":100,"zoom":true,"nodes":{"label":["Up to date","Stem","Pattern"],"color":["#354823","#899DA4","#899DA4"],"shape":["dot","dot","square"]},"nodesToDataframe":true},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);"},"evals":[],"jsHooks":[]}</script>
 <p class="caption">
 Figure 2.2: Network graph of the <em>targets</em> in the a_Calculate_Centers {targets} group.
 </p>
@@ -279,9 +272,9 @@ states and territories using the {tigris} package <span class="citation">(<a hre
 intersect with each municipal boundary using the <code>nhdplusTools::get_huc()</code>
 function (<em>HUC4_dataframe</em>), which are then reduced to distinct HUC4’s and
 transformed into a vector of HUC4s (<em>HUC4_list</em>). As an error-handling measure,
-<em>empty_hucs_file</em> is created (not pictured in Figure <a href="locations-of-data-acquisition.html#fig:a-group-vis">2.2</a>) to
+<em>empty_hucs_file</em> is created (not pictured in Figure <a href="locs-data-acq.html#fig:a-group-vis">2.2</a>) to
 collect a list of HUC4s that do not have high resolution files available for
-download (Figure <a href="locations-of-data-acquisition.html#fig:NHDPlusHR-status">2.1</a>). The target <em>all_poi_points</em> is
+download (Figure <a href="locs-data-acq.html#fig:NHDPlusHR-status">2.1</a>). The target <em>all_poi_points</em> is
 created by calculating POIs for all waterbodies &gt; 1 hectare and having an FCode
 of 390, 436, or 361 from each HUC4 in the <em>HUC4_list.</em> For this target, we use
 the dynamic branching feature to iterate over each item in the <em>HUC4_list</em>. See
@@ -304,7 +297,7 @@ The resulting file (tracked as <em>AK_poi_points</em>), is combined with the
 <em>NHD_poi_points_noAK</em> target to create a harmonized and collated file in the
 target <em>combined_poi_file</em> (see
 <a href="https://github.com/aquasat/lakeSR/blob/main/a_Calculate_Centers/src/collate_NHDHR_AK.R">collate_NHDHR_AK.R</a>,
-the output file istracked as <em>combined_poi_points</em>).</p>
+the output file is tracked as <em>combined_poi_points</em>).</p>
 
 </div>
 </div>
@@ -335,7 +328,7 @@ Walker, Kyle. 2023. <em>Tigris: Load Census TIGER/Line Shapefiles</em>. <a href=
         </div>
       </div>
 <a href="introduction.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="citations.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="software-settings.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

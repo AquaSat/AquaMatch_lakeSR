@@ -31,19 +31,19 @@ of Landsat missions 4 through 9 and spans more than 40 years.
 | t.gsfc.nasa.gov/sat |                 |                 |                   |
 | ellites/landsat-5/) |                 |                 |                   |
 +---------------------+-----------------+-----------------+-------------------+
-| [Landsat 7          | 1999-04-15      | 2022-04-06      |                   |
+| [Landsat 7          | 1999-04-15      | 2022-04-06      | N/A               |
 | E                   |                 |                 |                   |
 | TM+](https://landsa |                 |                 |                   |
 | t.gsfc.nasa.gov/sat |                 |                 |                   |
 | ellites/landsat-7/) |                 |                 |                   |
 +---------------------+-----------------+-----------------+-------------------+
-| [Landsat 8          | 2013-02-11      |                 |                   |
+| [Landsat 8          | 2013-02-11      | N/A             | N/A               |
 | OLI/T               |                 |                 |                   |
 | IRS](https://landsa |                 |                 |                   |
 | t.gsfc.nasa.gov/sat |                 |                 |                   |
 | ellites/landsat-8/) |                 |                 |                   |
 +---------------------+-----------------+-----------------+-------------------+
-| [Landsat 9          | 2021-09-27      |                 |                   |
+| [Landsat 9          | 2021-09-27      | N/A             | N/A               |
 | OLI-2/TIR           |                 |                 |                   |
 | S-2](https://landsa |                 |                 |                   |
 | t.gsfc.nasa.gov/sat |                 |                 |                   |
@@ -133,7 +133,7 @@ follows:
 > the \<76 degrees Solar Zenith Angle constraint and include the required
 > auxiliary data inputs to generate a scientifically viable product.*
 
-### Atmospheric Processing
+### SR Atmospheric Processing
 
 The SR product for Landsat 4-7 is calculated using the Land Ecosystem
 Distrubance Adaptive Procesing System (LEDAPS) [@schmidt2013] and Landsat 8 and
@@ -158,6 +158,5 @@ The Landsat Collection 2 Surface Temperature (ST) product is calculated using a
 single-channel algorithm [@cook2014a; @cook2014b] to convert the thermal band
 data to temperature estimates in degrees Kelvin. These data are considered
 interoperable over space and time with few differences in the ST algorithm
-product within Collection 2.
-
-## Data acquisition
+product within Collection 2, with the acknowledgement of the
+previously-documented spectral and radiometric resolution differences.
