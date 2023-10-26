@@ -25,5 +25,8 @@ surface-temperature
 LS-C2-SRST
 overview
 data-acquisition-script
-section
+setup
+collating-earth-engine-objects-for-extraction
+payload-handling
+creating-an-ee.featurecollection-from-a-dataframe
 citations
