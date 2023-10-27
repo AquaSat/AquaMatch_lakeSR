@@ -4,6 +4,7 @@ def csv_to_eeFeat(df, proj, wrs):
   Args:
       df: point locations .csv file with Latitude and Longitude
       proj: CRS projection of the points
+      wrs: current tile
 
   Returns:
       ee.FeatureCollection of the points 
@@ -278,7 +279,7 @@ def calc_hill_shades(image, geo):
 
   Args:
       image: ee.Image of an ee.ImageCollection
-      geo: geometry of the WRS tile as wrs.geometry() in script
+      geo: geometry of the feature as feat.geometry() in script
 
   Returns:
       a band named "hillShade" where values calculated are the hill shade per 
@@ -297,7 +298,7 @@ def calc_hill_shadows(image, geo):
   
   Args:
       image: ee.Image of an ee.ImageCollection
-      geo: geometry of the WRS tile as wrs.geometry() in script
+      geo: geometry of the feature tile as feat.geometry() in script
   
   Returns:
       a band named "hillShadow" where values calculated are the hill shadow per 
@@ -351,9 +352,9 @@ def ref_pull_457_DSWE1(image):
   # band where dswe is 3 and apply all masks
   dswe3 = d.eq(3).rename("dswe3").updateMask(f.eq(0)).updateMask(r.eq(1)).updateMask(s.eq(0)).selfMask()
   #calculate hillshade
-  h = calc_hill_shades(image, wrs.geometry()).select("hillShade")
+  h = calc_hill_shades(image, feat.geometry()).select("hillShade")
   #calculate hillshadow
-  hs = calc_hill_shadows(image, wrs.geometry()).select("hillShadow")
+  hs = calc_hill_shadows(image, feat.geometry()).select("hillShadow")
   
   pixOut = (image.select(["Blue", "Green", "Red", "Nir", "Swir1", "Swir2", 
                         "SurfaceTemp", "temp_qa", "ST_ATRAN", "ST_DRAD", "ST_EMIS",
@@ -431,9 +432,9 @@ def ref_pull_457_DSWE3(image):
   # band where dswe is 3 and apply all masks
   dswe3 = d.eq(3).rename("dswe3").updateMask(f.eq(0)).updateMask(r.eq(1)).updateMask(s.eq(0)).selfMask()
   #calculate hillshade
-  h = calc_hill_shades(image, wrs.geometry()).select("hillShade")
+  h = calc_hill_shades(image, feat.geometry()).select("hillShade")
   #calculate hillshadow
-  hs = calc_hill_shadows(image, wrs.geometry()).select("hillShadow")
+  hs = calc_hill_shadows(image, feat.geometry()).select("hillShadow")
   
   pixOut = (image.select(["Blue", "Green", "Red", "Nir", "Swir1", "Swir2", 
                       "SurfaceTemp", "temp_qa", "ST_ATRAN", "ST_DRAD", "ST_EMIS",
@@ -511,9 +512,9 @@ def ref_pull_89_DSWE1(image):
   # band where dswe is 3 and apply all masks
   dswe3 = d.eq(3).rename("dswe3").updateMask(f.eq(0)).updateMask(r.eq(1)).selfMask()
   #calculate hillshade
-  h = calc_hill_shades(image, wrs.geometry()).select("hillShade")
+  h = calc_hill_shades(image, feat.geometry()).select("hillShade")
   #calculate hillshadow
-  hs = calc_hill_shadows(image, wrs.geometry()).select("hillShadow")
+  hs = calc_hill_shadows(image, feat.geometry()).select("hillShadow")
   pixOut = (image.select(["Aerosol", "Blue", "Green", "Red", "Nir", "Swir1", "Swir2", 
                       "SurfaceTemp", "temp_qa", "ST_ATRAN", "ST_DRAD", "ST_EMIS",
                       "ST_EMSD", "ST_TRAD", "ST_URAD"],
@@ -590,9 +591,9 @@ def ref_pull_89_DSWE3(image):
   # band where dswe is 3 and apply all masks
   dswe3 = d.eq(3).rename("dswe3").updateMask(f.eq(0)).updateMask(r.eq(1)).selfMask()
   #calculate hillshade
-  h = calc_hill_shades(image, wrs.geometry()).select("hillShade")
+  h = calc_hill_shades(image, feat.geometry()).select("hillShade")
   #calculate hillshadow
-  hs = calc_hill_shadows(image, wrs.geometry()).select("hillShadow")
+  hs = calc_hill_shadows(image, feat.geometry()).select("hillShadow")
   pixOut = (image.select(["Aerosol", "Blue", "Green", "Red", "Nir", "Swir1", "Swir2", 
                       "SurfaceTemp", "temp_qa", "ST_ATRAN", "ST_DRAD", "ST_EMIS",
                       "ST_EMSD", "ST_TRAD", "ST_URAD"],

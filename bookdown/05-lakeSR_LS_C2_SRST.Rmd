@@ -84,7 +84,7 @@ variables (lines 13-41), read in the text file that stores the current tile
 `poi_locs_WRS_latlon` then subset it for locations that are within the current
 tile (lines 47-50).
 
-### Collating Earth Engine objects for extraction 
+### Collating Earth Engine objects for extraction
 
 The next section of code (lines 52-129) collates the Landsat stacks and formats
 them for data extraction.

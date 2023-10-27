@@ -144,7 +144,7 @@ for loc_10k in range(math.ceil(len(locations_subset)/10000)):
     
     ## get locs feature and buffer ##
     feat = locs_feature.map(dp_buff)
-    
+
     # map the refpull function across the "stack", flatten to an array
     if "1" in dswe:
       print("Starting Landsat 4, 5, 7 DSWE1 acquisition for site locations at tile "
