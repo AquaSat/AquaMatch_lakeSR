@@ -316,9 +316,6 @@ yml_file_poi|stem|2220ab380b1db704|7de3c590097bc801|7a76b1704d7bf06f|-1755402842
 yml_poi|stem|a26ba6d5ed0ce695|0213505964e05f4c|a54ba50d994207c5|349151757||t19636.7401105788s|49b5fca74495725e|564|rds|local|vector|||0.037||
 yml_poi_file|stem|f36a19edb665044f|b09189f6913ad655|23e13b30652a8607|1052397199|b_pull_Landsat_SRST_poi/mid/yml.csv|t19636.7401078085s|73a5f5604ca1ab33|288|file|local|vector|||0||
 poi_locs_WRS_latlon|stem|c3e959062d7a5e4d|c388b7f8006ae150|ab44ea49dbba7aed|-785901303||t19640.7362783873s|a01ef758954a095a|50695509|rds|local|vector|||4.098||
-eeRun_poi_4e60b9af|branch|581355bf828aba97|f14b801db34fed68|0aded941850be909|-320903254||t19650.680373195s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||11.654||
-eeRun_poi_fcfff2f8|branch|581355bf828aba97|f14b801db34fed68|049ec55fbe932db7|1484327009||t19650.6804847437s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||9.634||
-eeRun_poi_dc47156e|branch|581355bf828aba97|f14b801db34fed68|2a1ea878617b08e0|900111358||t19650.6838102481s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||12.606||
 eeRun_poi_88cbb2aa|branch|581355bf828aba97|f14b801db34fed68|05bbaebf6dd40ea4|-657620297||t19650.6839791725s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||14.592||
 eeRun_poi_69a76858|branch|581355bf828aba97|f14b801db34fed68|853779eb79a2d106|-1101181859||t19650.691153002s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||18.008||
 eeRun_poi_4a0b41d9|branch|581355bf828aba97|f14b801db34fed68|ffeecf879e52eca3|-1552493328||t19650.7094877317s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||1584.117||
@@ -770,7 +767,7 @@ eeRun_poi_f24f436f|branch|581355bf828aba97|f14b801db34fed68|726f72632a2b016b|-15
 config_file_poi_file|stem|b38666ddfa4bdbfe|0bb2c6e0933d3709|4742dcb1971cb740|-1608815738|b_pull_Landsat_SRST_poi/config_files/config_poi.yml|t19650.852349229s|bf03fedf04205ae6|2073|file|local|vector|||0.003||
 calc_hill_shades|function|261db2cc8bcbeb1f|||||||||||||||
 ref_pull_457_DSWE1|function|a4ff5d1c59c73a0c|||||||||||||||
-.Random.seed|object|ddfb27c6af103e31|||||||||||||||
+.Random.seed|object|05087e951e8e8a82|||||||||||||||
 add_WRS_tile_to_locs|function|c8e5c82abe55051b|||||||||||||||
 ref_pull_457_DSWE3|function|a4ff5d1c59c73a0c|||||||||||||||
 b_pull_Landsat_SRST_poi_list|object|a88941e7fe083e3e|||||||||||||||
@@ -802,9 +799,12 @@ collate_NHDHR_AK|function|b9b9c7b8157cc998|||||||||||||||
 a_Calculate_Centers_list|object|950423afeb8ea2cd|||||||||||||||
 sr_cloud_mask|function|a4ff5d1c59c73a0c|||||||||||||||
 dp_buff|function|b818393e5c278ad5|||||||||||||||
+eeRun_poi_4e60b9af|branch|581355bf828aba97|5ceabac4e615537d|6567b8fbb7748367|-320903254||t19657.675937332s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||21.911||
+eeRun_poi_fcfff2f8|branch|581355bf828aba97|5ceabac4e615537d|500fbc2acbf8f83c|1484327009||t19657.6761615032s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||19.365||
+eeRun_poi_dc47156e|branch|581355bf828aba97|5ceabac4e615537d|6bbf9f46b2453054|900111358||t19657.6764043914s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||20.982||
 calc_hill_shades|function|261db2cc8bcbeb1f
 ref_pull_457_DSWE1|function|a4ff5d1c59c73a0c
-.Random.seed|object|68291627fd97319d
+.Random.seed|object|dc0b20580b957266
 add_WRS_tile_to_locs|function|c8e5c82abe55051b
 ref_pull_457_DSWE3|function|a4ff5d1c59c73a0c
 b_pull_Landsat_SRST_poi_list|object|a88941e7fe083e3e
@@ -836,5 +836,5 @@ collate_NHDHR_AK|function|b9b9c7b8157cc998
 a_Calculate_Centers_list|object|950423afeb8ea2cd
 sr_cloud_mask|function|a4ff5d1c59c73a0c
 dp_buff|function|b818393e5c278ad5
-eeRun_poi_4e60b9af|branch|581355bf828aba97|5ceabac4e615537d|6567b8fbb7748367|-320903254||t19657.6563188277s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||21.719||
-eeRun_poi_fcfff2f8|branch|581355bf828aba97|5ceabac4e615537d|500fbc2acbf8f83c|1484327009||t19657.6565494553s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||19.922||
+eeRun_poi_88cbb2aa|branch|581355bf828aba97|5ceabac4e615537d|20eae82393e304fb|-657620297||t19657.6790627389s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||27.213||
+eeRun_poi_69a76858|branch|581355bf828aba97|5ceabac4e615537d|ff4be1cb290151ff|-1101181859||t19657.679400819s|a1c456b03adbfbf8|44|rds|local|vector|eeRun_poi||29.207||

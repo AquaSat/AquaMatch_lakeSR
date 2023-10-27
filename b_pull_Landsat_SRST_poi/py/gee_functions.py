@@ -355,7 +355,12 @@ def ref_pull_457_DSWE1(image):
   h = calc_hill_shades(image, feat.geometry()).select("hillShade")
   #calculate hillshadow
   hs = calc_hill_shadows(image, feat.geometry()).select("hillShadow")
-  
+  img_mask = (d.eq(1) # only high confidence water
+            .updateMask(r.eq(1)) #1 == no saturated pixels
+            .updateMask(f.eq(0)) #no snow or clouds
+            .updateMask(s.eq(0)) # no SR processing artefacts
+            .updateMask(hs.eq(1)) # only illuminated pixels
+            .selfMask())
   pixOut = (image.select(["Blue", "Green", "Red", "Nir", "Swir1", "Swir2", 
                         "SurfaceTemp", "temp_qa", "ST_ATRAN", "ST_DRAD", "ST_EMIS",
                         "ST_EMSD", "ST_TRAD", "ST_URAD"],
@@ -375,11 +380,7 @@ def ref_pull_457_DSWE1(image):
                                   "mean_Swir1", "mean_Swir2", 
                                   "mean_SurfaceTemp"]))
             .addBands(image.select(["SurfaceTemp"]))
-            .updateMask(d.eq(1)) # only high confidence water
-            .updateMask(r.eq(1)) #1 == no saturated pixels
-            .updateMask(f.eq(0)) #no snow or clouds
-            .updateMask(s.eq(0)) # no SR processing artefacts
-            .updateMask(hs.eq(1)) # only illuminated pixels
+            .updateMask(img_mask.eq(1))
             # add these bands back in to create summary statistics without the influence of the DSWE masks:
             .addBands(pCount) 
             .addBands(dswe1)
@@ -435,7 +436,12 @@ def ref_pull_457_DSWE3(image):
   h = calc_hill_shades(image, feat.geometry()).select("hillShade")
   #calculate hillshadow
   hs = calc_hill_shadows(image, feat.geometry()).select("hillShadow")
-  
+  img_maks = (d.eq(3) # only vegetated water
+          .updateMask(r.eq(1)) #1 == no saturated pixels
+          .updateMask(f.eq(0)) #no snow or clouds
+          .updateMask(s.eq(0)) # no SR processing artefacts
+          .updateMask(hs.eq(1)) # only illuminated pixels
+          .selfMask())
   pixOut = (image.select(["Blue", "Green", "Red", "Nir", "Swir1", "Swir2", 
                       "SurfaceTemp", "temp_qa", "ST_ATRAN", "ST_DRAD", "ST_EMIS",
                       "ST_EMSD", "ST_TRAD", "ST_URAD"],
@@ -455,11 +461,7 @@ def ref_pull_457_DSWE3(image):
                                   "mean_Swir1", "mean_Swir2", 
                                   "mean_SurfaceTemp"]))
           .addBands(image.select(["SurfaceTemp"]))
-          .updateMask(d.eq(1)) # only high confidence water
-          .updateMask(r.eq(1)) #1 == no saturated pixels
-          .updateMask(f.eq(0)) #no snow or clouds
-          .updateMask(s.eq(0)) # no SR processing artefacts
-          .updateMask(hs.eq(1)) # only illuminated pixels
+          .updateMask(img_mask.eq(1))
           # add these bands back in to create summary statistics without the influence of the DSWE masks:
           .addBands(pCount) 
           .addBands(dswe1)
@@ -515,6 +517,11 @@ def ref_pull_89_DSWE1(image):
   h = calc_hill_shades(image, feat.geometry()).select("hillShade")
   #calculate hillshadow
   hs = calc_hill_shadows(image, feat.geometry()).select("hillShadow")
+  img_mask = (d.eq(1) # only confident water
+          .updateMask(r.eq(1)) # 1 == no saturated pixels
+          .updateMask(f.eq(0)) # no snow or clouds
+          .updateMask(hs.eq(1)) # only illuminated pixels
+          .selfMask())
   pixOut = (image.select(["Aerosol", "Blue", "Green", "Red", "Nir", "Swir1", "Swir2", 
                       "SurfaceTemp", "temp_qa", "ST_ATRAN", "ST_DRAD", "ST_EMIS",
                       "ST_EMSD", "ST_TRAD", "ST_URAD"],
@@ -534,10 +541,7 @@ def ref_pull_89_DSWE1(image):
                                 "mean_Swir1", "mean_Swir2", 
                                 "mean_SurfaceTemp"]))
           .addBands(image.select(["SurfaceTemp"]))
-          .updateMask(d.eq(3)) # only vegetated water
-          .updateMask(r.eq(1)) # 1 == no saturated pixels
-          .updateMask(f.eq(0)) # no snow or clouds
-          .updateMask(hs.eq(1)) # only illuminated pixels
+          .updateMask(img_mask.eq(1))
           # add these bands back in to create summary statistics without the influence of the DSWE masks:
           .addBands(pCount) 
           .addBands(dswe1)
@@ -594,6 +598,11 @@ def ref_pull_89_DSWE3(image):
   h = calc_hill_shades(image, feat.geometry()).select("hillShade")
   #calculate hillshadow
   hs = calc_hill_shadows(image, feat.geometry()).select("hillShadow")
+  img_mask = (d.eq(3) # only vegetated water
+          .updateMask(r.eq(1)) #1 == no saturated pixels
+          .updateMask(f.eq(0)) #no snow or clouds
+          .updateMask(hs.eq(1)) # only illuminated pixels
+          .selfMask())
   pixOut = (image.select(["Aerosol", "Blue", "Green", "Red", "Nir", "Swir1", "Swir2", 
                       "SurfaceTemp", "temp_qa", "ST_ATRAN", "ST_DRAD", "ST_EMIS",
                       "ST_EMSD", "ST_TRAD", "ST_URAD"],
@@ -613,10 +622,7 @@ def ref_pull_89_DSWE3(image):
                                 "mean_Swir1", "mean_Swir2", 
                                 "mean_SurfaceTemp"]))
           .addBands(image.select(["SurfaceTemp"]))
-          .updateMask(d.eq(3)) # only vegetated water
-          .updateMask(r.eq(1)) #1 == no saturated pixels
-          .updateMask(f.eq(0)) #no snow or clouds
-          .updateMask(hs.eq(1)) # only illuminated pixels
+          .updateMask(img_mask.eq(1))
           # add these bands back in to create summary statistics without the influence of the DSWE masks:
           .addBands(pCount) 
           .addBands(dswe1)
