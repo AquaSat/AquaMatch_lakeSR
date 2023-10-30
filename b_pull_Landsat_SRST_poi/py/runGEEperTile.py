@@ -130,7 +130,7 @@ ls89 = ls89.select(bn89, bns89)
 
 # need to break up locations into smaller groups for export
 for loc_10k in range(math.ceil(len(locations_subset)/10000)):
-  locs_10k = locations_subset[loc_10k * 100000:(loc_10k + 1) * 10000]
+  locs_10k = locations_subset[loc_10k * 10000:((loc_10k + 1) * 10000)]
 
   # convert locations to an eeFeatureCollection
   locs_feature = csv_to_eeFeat(locs_10k, yml["location_crs"][0], tiles)
