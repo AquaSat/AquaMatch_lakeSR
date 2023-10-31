@@ -14,10 +14,6 @@ eeproj = yml["ee_proj"][0]
 #initialize GEE
 ee.Initialize(project = eeproj)
 
-# get current tile
-with open("b_pull_Landsat_SRST_poi/out/current_tile.txt", "r") as file:
-  tiles = file.read()
-
 # get EE/Google settings from yml file
 proj = yml["proj"][0]
 proj_folder = yml["proj_folder"][0]
@@ -26,6 +22,7 @@ proj_folder = yml["proj_folder"][0]
 yml_start = yml["start_date"][0]
 yml_end = yml["end_date"][0]
 
+# set yml_end as date
 if yml_end == "today":
   yml_end = date.today().strftime("%Y-%m-%d")
 
@@ -34,6 +31,7 @@ buffer = yml["site_buffer"][0]
 cloud_filt = yml["cloud_filter"][0]
 cloud_thresh = yml["cloud_thresh"][0]
 
+# get and format dswe value
 try: 
   dswe = yml["DSWE_setting"][0].astype(str)
 except AttributeError: 
@@ -42,17 +40,18 @@ except AttributeError:
 # get extent info
 extent = yml["extent"][0]
 
-locations = read_feather("b_pull_Landsat_SRST_poi/out/locations_with_WRS2_pathrows_latlon.feather")
+# get current tile
+with open("b_pull_Landsat_SRST_poi/out/current_tile.txt", "r") as file:
+  tiles = file.read()
 
+# read in locations file
+locations = read_feather("b_pull_Landsat_SRST_poi/out/locations_with_WRS2_pathrows_latlon.feather")
+# and subset for the current tile
 locations_subset = locations.query( "`WRS2_PR` == @tiles")
 
 ##############################################
 ##---- CREATING EE FEATURECOLLECTIONS   ----##
 ##############################################
-
-
-wrs = (ee.FeatureCollection("projects/ee-ls-c2-srst/assets/WRS2_descending")
-  .filterMetadata("PR", "equals", tiles))
 
 # store path and row for subsetting the stacks so there is not overlap between PR pulls
 w_p = int(str(tiles)[0:3])
@@ -60,27 +59,26 @@ w_r = int(str(tiles)[3:6])
 
 #grab images and apply scaling factors
 l7 = (ee.ImageCollection("LANDSAT/LE07/C02/T1_L2")
-    .map(apply_scale_factors)
     .filter(ee.Filter.lt("CLOUD_COVER", ee.Number.parse(str(cloud_thresh))))
     .filterDate(yml_start, yml_end)
     .filter(ee.Filter.eq("WRS_PATH", w_p))
-    .filter(ee.Filter.eq("WRS_ROW", w_r)))
+    .filter(ee.Filter.eq("WRS_ROW", w_r))
+    .map(apply_scale_factors))
 l5 = (ee.ImageCollection("LANDSAT/LT05/C02/T1_L2")
-    .map(apply_scale_factors)
     .filter(ee.Filter.lt("CLOUD_COVER", ee.Number.parse(str(cloud_thresh))))
     .filterDate(yml_start, yml_end)
     .filter(ee.Filter.eq("WRS_PATH", w_p))
-    .filter(ee.Filter.eq("WRS_ROW", w_r)))
+    .filter(ee.Filter.eq("WRS_ROW", w_r))
+    .map(apply_scale_factors))
 l4 = (ee.ImageCollection("LANDSAT/LT04/C02/T1_L2")
-    .map(apply_scale_factors)
     .filter(ee.Filter.lt("CLOUD_COVER", ee.Number.parse(str(cloud_thresh))))
     .filterDate(yml_start, yml_end)
     .filter(ee.Filter.eq("WRS_PATH", w_p))
-    .filter(ee.Filter.eq("WRS_ROW", w_r)))
+    .filter(ee.Filter.eq("WRS_ROW", w_r))
+    .map(apply_scale_factors))
     
 # merge collections by image processing groups
-ls457 = (ee.ImageCollection(l4.merge(l5).merge(l7))
-    .filterBounds(wrs))
+ls457 = ee.ImageCollection(l4.merge(l5).merge(l7))
     
 # existing band names
 bn457 = (["SR_B1", "SR_B2", "SR_B3", "SR_B4", "SR_B5", "SR_B7", 
@@ -100,20 +98,20 @@ ls457 = ls457.select(bn457, bns457)
 
 #grab images and apply scaling factors
 l8 = (ee.ImageCollection("LANDSAT/LC08/C02/T1_L2")
-    .map(apply_scale_factors)
     .filter(ee.Filter.lt("CLOUD_COVER", ee.Number.parse(str(cloud_thresh))))
     .filterDate(yml_start, yml_end)
     .filter(ee.Filter.eq("WRS_PATH", w_p))
-    .filter(ee.Filter.eq("WRS_ROW", w_r)))
+    .filter(ee.Filter.eq("WRS_ROW", w_r))
+    .map(apply_scale_factors))
 l9 = (ee.ImageCollection("LANDSAT/LC09/C02/T1_L2")
-    .map(apply_scale_factors)
     .filter(ee.Filter.lt("CLOUD_COVER", ee.Number.parse(str(cloud_thresh))))
     .filterDate(yml_start, yml_end)
     .filter(ee.Filter.eq("WRS_PATH", w_p))
-    .filter(ee.Filter.eq("WRS_ROW", w_r)))
+    .filter(ee.Filter.eq("WRS_ROW", w_r))
+    .map(apply_scale_factors))
 
 # merge collections by image processing groups
-ls89 = ee.ImageCollection(l8.merge(l9)).filterBounds(wrs)  
+ls89 = ee.ImageCollection(l8.merge(l9))
     
 # existing band names
 bn89 = (["SR_B1", "SR_B2", "SR_B3", "SR_B4", "SR_B5", "SR_B6", "SR_B7", 
@@ -132,7 +130,7 @@ ls89 = ls89.select(bn89, bns89)
 
 # need to break up locations into smaller groups for export
 for loc_10k in range(math.ceil(len(locations_subset)/10000)):
-  locs_10k = locations_subset[loc_10k * 100000:(loc_10k + 1) * 10000]
+  locs_10k = locations_subset[loc_10k * 10000:((loc_10k + 1) * 10000)]
 
   # convert locations to an eeFeatureCollection
   locs_feature = csv_to_eeFeat(locs_10k, yml["location_crs"][0], tiles)
@@ -144,24 +142,16 @@ for loc_10k in range(math.ceil(len(locations_subset)/10000)):
   ## run the pull for LS457
   if "site" in extent:
     
-    geo = wrs.geometry()
-    
     ## get locs feature and buffer ##
-    feat = (locs_feature
-      .filterBounds(geo)
-      .map(dp_buff))
-    
-    ## process 457 stack
-    #snip the ls data by the geometry of the location points    
-    locs_stack_ls457 = ls457.filterBounds(feat.geometry()) 
-    
+    feat = locs_feature.map(dp_buff)
+
     # map the refpull function across the "stack", flatten to an array
     if "1" in dswe:
       print("Starting Landsat 4, 5, 7 DSWE1 acquisition for site locations at tile "
         + str(tiles)
         + " and location subset "
         + str(loc_10k))
-      locs_out_457_D1 = locs_stack_ls457.map(ref_pull_457_DSWE1).flatten()
+      locs_out_457_D1 = ls457.map(ref_pull_457_DSWE1).flatten()
       locs_out_457_D1 = locs_out_457_D1.filter(ee.Filter.notNull(["med_Blue"]))
       locs_srname_457_D1 = (proj 
         + "_point_LS457_C2_SRST_DSWE1_" 
@@ -199,7 +189,7 @@ for loc_10k in range(math.ceil(len(locations_subset)/10000)):
         + str(tiles)        
         + " and location subset "
         + str(loc_10k))
-      locs_out_457_D3 = locs_stack_ls457.map(ref_pull_457_DSWE3).flatten()
+      locs_out_457_D3 = ls457.map(ref_pull_457_DSWE3).flatten()
       locs_out_457_D3 = locs_out_457_D3.filter(ee.Filter.notNull(["med_Blue"]))
       locs_srname_457_D3 = (proj
         + "_point_LS457_C2_SRST_DSWE3_" 
@@ -246,22 +236,15 @@ for loc_10k in range(math.ceil(len(locations_subset)/10000)):
   
   if "site" in extent:
   
-    geo = wrs.geometry()
-    
     ## get locs feature and buffer ##
-    feat = (locs_feature
-      .filterBounds(geo)
-      .map(dp_buff))
-    
-    # snip the ls data by the geometry of the location points    
-    locs_stack_ls89 = ls89.filterBounds(feat.geometry()) 
+    feat = locs_feature.map(dp_buff)
     
     if "1" in dswe:
       print("Starting Landsat 8, 9 DSWE1 acquisition for site locations at tile "
         + str(tiles)
         + " and location subset "
         + str(loc_10k))
-      locs_out_89_D1 = locs_stack_ls89.map(ref_pull_89_DSWE1).flatten()
+      locs_out_89_D1 = ls89.map(ref_pull_89_DSWE1).flatten()
       locs_out_89_D1 = locs_out_89_D1.filter(ee.Filter.notNull(["med_Blue"]))
       locs_srname_89_D1 = (proj
         + "_point_LS89_C2_SRST_DSWE1_"
@@ -299,7 +282,7 @@ for loc_10k in range(math.ceil(len(locations_subset)/10000)):
         + str(tiles)
         + " and location subset "
         + str(loc_10k))
-      locs_out_89_D3 = locs_stack_ls89.map(ref_pull_89_DSWE3).flatten()
+      locs_out_89_D3 = ls89.map(ref_pull_89_DSWE3).flatten()
       locs_out_89_D3 = locs_out_89_D3.filter(ee.Filter.notNull(["med_Blue"]))
       locs_srname_89_D3 = (proj
         + "_point_LS89_C2_SRST_DSWE3_"
@@ -337,8 +320,7 @@ for loc_10k in range(math.ceil(len(locations_subset)/10000)):
           + " and location subset "
           + str(loc_10k))
    
-   
-  
+
 ##############################################
 ##---- LANDSAT 457 METADATA ACQUISITION ----##
 ##############################################

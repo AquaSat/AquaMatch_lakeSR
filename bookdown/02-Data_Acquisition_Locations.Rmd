@@ -5,7 +5,7 @@ editor_options:
 bibliography: references.bib
 ---
 
-```{r chunk-opts}
+```{r chunk-opts, echo=FALSE}
 knitr::opts_chunk$set(echo = F, message = F, warning = F, error = FALSE)
 ```
 
@@ -20,7 +20,7 @@ with_dir("..", {
 })
 ```
 
-# Locations of Data Acquisition
+# Locations of Data Acquisition {#locs-data-acq}
 
 As noted in the Introduction (Section \@ref(introduction)), for the purposes of
 **AquaSat**, surface reflectance and surface temperature data are acquired at
@@ -148,4 +148,4 @@ The resulting file (tracked as *AK_poi_points*), is combined with the
 *NHD_poi_points_noAK* target to create a harmonized and collated file in the
 target *combined_poi_file* (see
 [collate_NHDHR_AK.R](https://github.com/aquasat/lakeSR/blob/main/a_Calculate_Centers/src/collate_NHDHR_AK.R),
-the output file istracked as *combined_poi_points*).
+the output file is tracked as *combined_poi_points*).

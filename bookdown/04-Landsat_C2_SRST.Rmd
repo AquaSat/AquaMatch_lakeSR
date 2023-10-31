@@ -1,0 +1,162 @@
+---
+editor_options: 
+  markdown: 
+    wrap: 80
+bibliography: references.bib
+---
+
+# Landsat Collection 2 Surface Reflectance and Surface Temperature 
+
+## Background Information
+
+*The information presented in this section originates from the [NASA Landsat
+Science website](https://landsat.gsfc.nasa.gov/) and has been summarized here
+for the purpose of providing background information about the Landsat archive
+relevant to the creation and use of **lakeSR***.
+
+The Landsat archive of multispectral and thermal data in **lakeSR** is composed
+of Landsat missions 4 through 9 and spans more than 40 years.
+
++---------------------+-----------------+-----------------+-------------------+
+| Mission             | Launch Date     | End of Science  | Decommission Date |
+|                     |                 | Mission         |                   |
++=====================+:===============:+:===============:+:=================:+
+| [Landsat 4          | 1982-07-16      | 1993-12-14      | 2001-06-15        |
+| TM](https://landsa  |                 |                 |                   |
+| t.gsfc.nasa.gov/sat |                 |                 |                   |
+| ellites/landsat-4/) |                 |                 |                   |
++---------------------+-----------------+-----------------+-------------------+
+| [Landsat 5          | 1984-03-01      | 2011-11-18      | 2013-06-05        |
+| TM](https://landsa  |                 |                 |                   |
+| t.gsfc.nasa.gov/sat |                 |                 |                   |
+| ellites/landsat-5/) |                 |                 |                   |
++---------------------+-----------------+-----------------+-------------------+
+| [Landsat 7          | 1999-04-15      | 2022-04-06      | N/A               |
+| E                   |                 |                 |                   |
+| TM+](https://landsa |                 |                 |                   |
+| t.gsfc.nasa.gov/sat |                 |                 |                   |
+| ellites/landsat-7/) |                 |                 |                   |
++---------------------+-----------------+-----------------+-------------------+
+| [Landsat 8          | 2013-02-11      | N/A             | N/A               |
+| OLI/T               |                 |                 |                   |
+| IRS](https://landsa |                 |                 |                   |
+| t.gsfc.nasa.gov/sat |                 |                 |                   |
+| ellites/landsat-8/) |                 |                 |                   |
++---------------------+-----------------+-----------------+-------------------+
+| [Landsat 9          | 2021-09-27      | N/A             | N/A               |
+| OLI-2/TIR           |                 |                 |                   |
+| S-2](https://landsa |                 |                 |                   |
+| t.gsfc.nasa.gov/sat |                 |                 |                   |
+| ellites/landsat-9/) |                 |                 |                   |
++---------------------+-----------------+-----------------+-------------------+
+
+The image record for Landsat 4 is not consistent nor robust due to a data
+transmitter failure early in service. Landsat 6 did not achieve orbit.
+
+### Spectral Response
+
+While the nominal bands for each of the missions within the archive is
+relatively consistent (with the addition of an Aerosol band beginning Landsat
+8), the precise spectral response for each nominal band shifted beginning with
+Landsat 8 OLI/TIRS:
+
++--------+-------+-------+-------+-------+-------+-------+-------+-------+
+| S      | Ae    | Blue  | Green | Red   | Near  | Short | Short | Th    |
+| ensors | rosol |       |       |       | Inf   | Wave  | Wave  | ermal |
+|        |       |       |       |       | rared | Inf   | Inf   |       |
+|        |       |       |       |       | (NIR) | rared | rared |       |
+|        |       |       |       |       |       | 1     | 2     |       |
+|        |       |       |       |       |       | (SWIR | (SWIR |       |
+|        |       |       |       |       |       | 1)    | 2)    |       |
++========+=======+=======+=======+=======+=======+=======+=======+=======+
+| TM     | N/A   | 0.45  | 0.52  | 0.63  | 0.77  | 1.55  | 2.08  | 1     |
+|        |       | -0.52 | -0.60 | -0.69 | -0.90 | -1.75 | -2.35 | 0.40- |
+| ETM+   |       | μm    | μm    | μm    | μm    | μm    | μm    | 12.50 |
+|        |       |       |       |       |       |       |       | μm    |
++--------+-------+-------+-------+-------+-------+-------+-------+-------+
+| OL     | 0     | 0     | 0     | 0     | 0     | 1     | 2     | 10    |
+| I/TIRS | .435- | .452- | .533- | .636- | .851- | .566- | .107- | .60-1 |
+|        | 0.451 | 0.512 | 0.590 | 0.673 | 0.879 | 1.651 | 2.294 | 1.19, |
+| OLI-2/ | μm    | μm    | μm    | μm    | μm    | μm    | μm    | 1     |
+| TIRS-2 |       |       |       |       |       |       |       | 1.50- |
+|        |       |       |       |       |       |       |       | 12.51 |
+|        |       |       |       |       |       |       |       | μm    |
++--------+-------+-------+-------+-------+-------+-------+-------+-------+
+
+### Sensor Resolution
+
+The spatial resolution of the Level 1 data has not changed for optical bands
+(Aerosol, RGB, NIR, SWIR) but has varied over the history for thermal data:
+
++---------------------------+-----------------------------+-------------------+
+| Sensors                   | Optical Bands               | Thermal Bands     |
++===========================+=============================+===================+
+| TM                        | 30                          | 120               |
++---------------------------+-----------------------------+-------------------+
+| ETM+                      | 30                          | 60                |
++---------------------------+-----------------------------+-------------------+
+| OLI/TIRS                  | 30                          | 100               |
+|                           |                             |                   |
+| OLI-2/TIRS-2              |                             |                   |
++---------------------------+-----------------------------+-------------------+
+
+All Collection 2 Level 2 Surface Reflectance and Surface Temperature data have
+been resampled to 30m.
+
+Alongside the pixel resolution of the sensors is the radiometric resolution at
+which the data are stored. TM and ETM+ data are stored as 8-bit data products,
+OLI data are quantitized to 12 bits and Landsat 9 to 14 bits. This equates to
+256 shades per band for Landsat 4-7, 4,096 shades for Landsat 8 and 16,384
+shades for Landsat 9, where higher numbers allow for greater precision of
+measurement in a given band. All Collection 2 Level 2 Surface Reflectance and
+Surface Temperature data have been rescaled to 16 bits.
+
+## Surface Reflectance Product
+
+*The information presented in this section originates from the [USGS Landsat
+Collection 2 Surface
+Reflectance](https://www.usgs.gov/landsat-missions/landsat-surface-reflectance)
+product page and has been summarized here for the purpose of providing
+background information about the Landsat archive relevant to the creation and
+use of **lakeSR***.
+
+The Landsat Collection 2 Surface Reflectance (SR) product is a Level 2 data
+product that has been atmospherically corrected from the Level 1 Top of
+Atmosphere product using a myriad of inputs to create a reasonably consistent
+data product across space and time. The USGS EROS describes the SR product as
+follows:
+
+> *Surface reflectance improves comparison between multiple images over the same
+> region by accounting for atmospheric effects such as aerosol scattering and
+> thin clouds, which can help in the detection and characterization of Earth
+> surface change. Surface reflectance is generated from Level-1 inputs that meet
+> the \<76 degrees Solar Zenith Angle constraint and include the required
+> auxiliary data inputs to generate a scientifically viable product.*
+
+### SR Atmospheric Processing
+
+The SR product for Landsat 4-7 is calculated using the Land Ecosystem
+Distrubance Adaptive Procesing System (LEDAPS) [@schmidt2013] and Landsat 8 and
+9 SR data are calculated using the Land Surface Reflectance Code (LaSRC)
+algorithm [@vermote2018]. The two algorithms are functionally different, but the
+outcome is the same: a consistently-processed surface reflectance product that
+is available worldwide. See the table under section heading ['Differences in
+Surface Reflectance Processing Algorithms' on the USGS Landsat C2
+website](https://www.usgs.gov/landsat-missions/landsat-collection-2-surface-reflectance)
+for details.
+
+## Surface Temperature
+
+*The information presented in this section originates from the [USGS Landsat
+Collection 2 Surface
+Temperature](https://www.usgs.gov/landsat-missions/landsat-collection-2-surface-temperature)
+product page and has been summarized here for the purpose of providing
+background information about the Landsat archive relevant to the creation and
+use of **lakeSR***.
+
+The Landsat Collection 2 Surface Temperature (ST) product is calculated using a
+single-channel algorithm [@cook2014a; @cook2014b] to convert the thermal band
+data to temperature estimates in degrees Kelvin. These data are considered
+interoperable over space and time with few differences in the ST algorithm
+product within Collection 2, with the acknowledgement of the
+previously-documented spectral and radiometric resolution differences.

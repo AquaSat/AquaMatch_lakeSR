@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>5 lakeSR-LS_C2_SRST Data Product | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</title>
+  <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="5 lakeSR-LS_C2_SRST Data Product | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="5 lakeSR-LS_C2_SRST Data Product | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  
+  <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  
+
+<meta name="author" content="ROSSyndicate" />
+
+
+<meta name="date" content="2023-10-26" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="landsat-collection-2-surface-reflectance-and-surface-temperature.html"/>
+<link rel="next" href="citations.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<link href="libs/vis-9.1.0/vis-network.min.css" rel="stylesheet" />
+<script src="libs/vis-9.1.0/vis-network.min.js"></script>
+<script src="libs/visNetwork-binding-2.1.2/visNetwork.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#code-architecture"><i class="fa fa-check"></i><b>1.1</b> Code Architecture</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#running-the-code-within-this-repository"><i class="fa fa-check"></i><b>1.2</b> Running the code within this repository</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>2</b> Locations of Data Acquisition</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>2.1</b> Pole of Inaccessibility</a></li>
+<li class="chapter" data-level="2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#lakes-included-in-lakesr"><i class="fa fa-check"></i><b>2.2</b> Lakes included in lakeSR</a></li>
+<li class="chapter" data-level="2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#implementation"><i class="fa fa-check"></i><b>2.3</b> Implementation</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>3</b> Satellite Data Acquisition Software and Settings</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="software-settings.html"><a href="software-settings.html#reticulate-conda-environment"><i class="fa fa-check"></i><b>3.1</b> {reticulate} Conda Environment</a></li>
+<li class="chapter" data-level="3.2" data-path="software-settings.html"><a href="software-settings.html#google-earth-engine-setup"><i class="fa fa-check"></i><b>3.2</b> Google Earth Engine Setup</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="software-settings.html"><a href="software-settings.html#create-a-gee-account"><i class="fa fa-check"></i><b>3.2.1</b> Create a GEE account</a></li>
+<li class="chapter" data-level="3.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud-cli"><i class="fa fa-check"></i><b>3.2.2</b> gcloud CLI</a></li>
+<li class="chapter" data-level="3.2.3" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>3.2.3</b> GEE Authentication</a></li>
+<li class="chapter" data-level="3.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-project-setting"><i class="fa fa-check"></i><b>3.2.4</b> GEE project setting</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><i class="fa fa-check"></i><b>4</b> Landsat Collection 2 Surface Reflectance and Surface Temperature</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#background-information"><i class="fa fa-check"></i><b>4.1</b> Background Information</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#spectral-response"><i class="fa fa-check"></i><b>4.1.1</b> Spectral Response</a></li>
+<li class="chapter" data-level="4.1.2" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#sensor-resolution"><i class="fa fa-check"></i><b>4.1.2</b> Sensor Resolution</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#surface-reflectance-product"><i class="fa fa-check"></i><b>4.2</b> Surface Reflectance Product</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#sr-atmospheric-processing"><i class="fa fa-check"></i><b>4.2.1</b> SR Atmospheric Processing</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#surface-temperature"><i class="fa fa-check"></i><b>4.3</b> Surface Temperature</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> lakeSR-LS_C2_SRST Data Product</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#overview"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#data-acquisition-script"><i class="fa fa-check"></i><b>5.2</b> Data Acquisition Script</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#setup"><i class="fa fa-check"></i><b>5.2.1</b> Setup</a></li>
+<li class="chapter" data-level="5.2.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#collating-earth-engine-objects-for-extraction"><i class="fa fa-check"></i><b>5.2.2</b> Collating Earth Engine objects for extraction</a></li>
+<li class="chapter" data-level="5.2.3" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#payload-handling"><i class="fa fa-check"></i><b>5.2.3</b> Payload handling</a></li>
+<li class="chapter" data-level="5.2.4" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#creating-an-ee.featurecollection-from-a-dataframe"><i class="fa fa-check"></i><b>5.2.4</b> Creating an ee.FeatureCollection from a dataframe</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="citations.html"><a href="citations.html"><i class="fa fa-check"></i><b>6</b> Citations</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="LS-C2-SRST" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">5</span> lakeSR-LS_C2_SRST Data Product<a href="LS-C2-SRST.html#LS-C2-SRST" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The <strong>lakeSR-LS_C2_SRST</strong> data product is a set of tabular datasets,
+representing either the SR and ST data summarized for the POI location which is
+meant to represent pelagic conditions at a given waterbody (identified by its
+NHD Permanent Identifier, see Section <a href="locs-data-acq.html#locs-data-acq">2</a>) or representing the
+SR and ST data summarized for any sampling location(s) within a waterbody
+detected in the WQP in the early stages of <strong>AquaMatch</strong>. Both types of data
+contain “full stacks” of the Landsat Collection 2 record - that is, all
+summarized Landsat data available from all Landsat missions.</p>
+<div id="overview" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Overview<a href="LS-C2-SRST.html#overview" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>At a high level, the workflow for data acquisition is as follows:</p>
+<ol style="list-style-type: decimal">
+<li><p>read in and format the yaml configuration file for the GEE run</p>
+<ul>
+<li>for POI: completed in <code>config_file_poi</code>, <code>yml_file_poi</code>, <code>yml_poi</code></li>
+</ul></li>
+<li><p>reformat the locations file for the GEE run using the configuration file</p>
+<ul>
+<li>for POI: completed in <code>ref_locs_poi_file</code>, <code>ref_locations_poi</code></li>
+</ul></li>
+<li><p>determine the WRS-2 path rows (or ‘tiles’) that intersect with the locations
+file</p>
+<ul>
+<li>for POI: completed in <code>WRS_tiles_poi</code></li>
+</ul></li>
+<li><p>add the WRS-2 path rows to the reformatted locations file for quicker
+processing</p>
+<ul>
+<li>for POI: completed in <code>poi_locs_WRS_file</code>, <code>poi_locs_WRS</code>,
+<code>poi_locs_WRS_latlon</code></li>
+</ul></li>
+<li><p>iteratively run the GEE script per WRS-2 tile</p>
+<ul>
+<li>for POI: completed in <code>eeRun_poi</code></li>
+</ul></li>
+<li><p>check to see that all tasks are complete in GEE before moving to next step</p>
+<ul>
+<li>for POI: completed in <code>poi_tasks_complete</code></li>
+</ul></li>
+</ol>
+<pre><code>## 
+-
+
+\
+
+|
+
+/
+
+-
+
+\
+
+|
+
+/
+
+-
+
+\
+
+|
+
+/
+
+-
+
+\
+
+|
+
+ </code></pre>
+<div class="figure"><span style="display:block;" id="fig:b-group-vis"></span>
+<div class="visNetwork html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-e1c60a347e87f3530892" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-e1c60a347e87f3530892">{"x":{"nodes":{"name":["poi_locs_with_WRS","poi_locs_WRS_file","poi_locs_WRS_latlon","ref_locations_poi","ref_locs_poi_file","WRS_tiles_poi","yml_file_poi","yml_poi","yml_poi_file","poi_tasks_complete","eeRun_poi"],"type":["stem","stem","stem","stem","stem","stem","stem","stem","stem","stem","pattern"],"status":["uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","uptodate","outdated","started"],"seconds":[2.032,3008.36,4.098,1.077,0.134,154.443,0.366,0.037,0,null,null],"bytes":[58211361,115,50695509,46016835,93,1944,88,564,288,null,null],"branches":[null,null,null,null,null,null,null,null,null,null,null],"label":["poi_locs_with_WRS","poi_locs_WRS_file","poi_locs_WRS_latlon","ref_locations_poi","ref_locs_poi_file","WRS_tiles_poi","yml_file_poi","yml_poi","yml_poi_file","poi_tasks_complete","eeRun_poi"],"color":["#354823","#354823","#354823","#354823","#354823","#354823","#354823","#354823","#354823","#78B7C5","#DC863B"],"id":["poi_locs_with_WRS","poi_locs_WRS_file","poi_locs_WRS_latlon","ref_locations_poi","ref_locs_poi_file","WRS_tiles_poi","yml_file_poi","yml_poi","yml_poi_file","poi_tasks_complete","eeRun_poi"],"level":[1,5,2,1,4,4,1,3,2,6,5],"shape":["dot","dot","dot","dot","dot","dot","dot","dot","dot","dot","square"]},"edges":{"from":["eeRun_poi","yml_poi_file","ref_locations_poi","yml_poi","yml_file_poi","ref_locations_poi","WRS_tiles_poi","yml_poi","poi_locs_WRS_latlon","WRS_tiles_poi","yml_poi","poi_locs_with_WRS","ref_locations_poi"],"to":["poi_tasks_complete","yml_poi","WRS_tiles_poi","WRS_tiles_poi","yml_poi_file","poi_locs_WRS_file","poi_locs_WRS_file","poi_locs_WRS_file","eeRun_poi","eeRun_poi","ref_locs_poi_file","poi_locs_WRS_latlon","poi_locs_WRS_latlon"],"arrows":["to","to","to","to","to","to","to","to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":{"type":"cubicBezier","forceDirection":"horizontal"}},"physics":{"stabilization":false},"interaction":{"zoomSpeed":1},"layout":{"hierarchical":{"enabled":true,"direction":"LR"}}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:20px;text-align:center;"},"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":{"from":1,"to":1},"algorithm":"hierarchical","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":true,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"},"legend":{"width":0.2,"useGroups":false,"position":"right","ncol":1,"stepX":100,"stepY":100,"zoom":true,"nodes":{"label":["Up to date","Outdated","Started","Stem","Pattern"],"color":["#354823","#78B7C5","#DC863B","#899DA4","#899DA4"],"shape":["dot","dot","dot","dot","square"]},"nodesToDataframe":true},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);"},"evals":[],"jsHooks":[]}</script>
+<p class="caption">
+Figure 5.1: Network graph of the <em>targets</em> in the b_pull_Landsat_SRST_poi {targets} group.
+</p>
+</div>
+</div>
+<div id="data-acquisition-script" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Data Acquisition Script<a href="LS-C2-SRST.html#data-acquisition-script" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The data acquisition pipeline for POIs and sampling locations for the
+<strong>lakeSR-LS_C2_SRST</strong> data product is the same, but the pipeline is initialized
+with two different yaml configuration files. This section will walk through the
+code in <code>b_pull_Landsat_SRST_poi/py/runGEEperTile.py</code>.</p>
+<div id="setup" class="section level3 hasAnchor" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> Setup<a href="LS-C2-SRST.html#setup" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The first 50 lines of the <code>runGEEperTile.py</code> file import Python modules (lines
+2-8), read in the formatted configuration file (line 11) and assign environment
+variables (lines 13-41), read in the text file that stores the current tile
+(lines 43-45) created by the <code>run_GEE_per_tile()</code> function called in the
+<code>eeRun_poi</code> target), and read in the locations file created in the target
+<code>poi_locs_WRS_latlon</code> then subset it for locations that are within the current
+tile (lines 47-50).</p>
+</div>
+<div id="collating-earth-engine-objects-for-extraction" class="section level3 hasAnchor" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> Collating Earth Engine objects for extraction<a href="LS-C2-SRST.html#collating-earth-engine-objects-for-extraction" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The next section of code (lines 52-129) collates the Landsat stacks and formats
+them for data extraction.</p>
+<p>Each Earth Engine Image Collection (<code>ee.ImageCollection</code> in the script) for each
+Landsat mission is filtered for total cloud cover in the scene (<code>CLOUD_COVER</code>,
+set at &lt;90%), the date range of interest (all images until 2023-07-01), the
+current <code>tile</code> path and row value, and then unscaled from the digital number
+(DN) values that the data are stored in. Below is a code chunk as an example of
+this process for Landsat 7 (lines 61-66). Note that <code>cloud_thresh</code>, <code>yml_start</code>,
+<code>yml_end</code> are configuration settings, <code>w_p</code> and <code>w_r</code> represent the current
+<em>path</em> and <em>row</em> of the WRS-2 tile.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="LS-C2-SRST.html#cb3-1" tabindex="-1"></a>l7 <span class="op">=</span> (ee.ImageCollection(<span class="st">&quot;LANDSAT/LE07/C02/T1_L2&quot;</span>)</span>
+<span id="cb3-2"><a href="LS-C2-SRST.html#cb3-2" tabindex="-1"></a>    .<span class="bu">filter</span>(ee.Filter.lt(<span class="st">&quot;CLOUD_COVER&quot;</span>, ee.Number.parse(<span class="bu">str</span>(cloud_thresh))))</span>
+<span id="cb3-3"><a href="LS-C2-SRST.html#cb3-3" tabindex="-1"></a>    .filterDate(yml_start, yml_end)</span>
+<span id="cb3-4"><a href="LS-C2-SRST.html#cb3-4" tabindex="-1"></a>    .<span class="bu">filter</span>(ee.Filter.eq(<span class="st">&quot;WRS_PATH&quot;</span>, w_p))</span>
+<span id="cb3-5"><a href="LS-C2-SRST.html#cb3-5" tabindex="-1"></a>    .<span class="bu">filter</span>(ee.Filter.eq(<span class="st">&quot;WRS_ROW&quot;</span>, w_r))</span>
+<span id="cb3-6"><a href="LS-C2-SRST.html#cb3-6" tabindex="-1"></a>    .<span class="bu">map</span>(apply_scale_factors))</span></code></pre></div>
+<p>The function <code>apply_scale_factors()</code> is a prescribed function which is
+consistent across all Landsat Collection 2 Level 2 SR and ST products to
+transform the DN to remote sensing reflectance (Rrs) values with the following
+function:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="LS-C2-SRST.html#cb4-1" tabindex="-1"></a><span class="kw">def</span> apply_scale_factors(image):</span>
+<span id="cb4-2"><a href="LS-C2-SRST.html#cb4-2" tabindex="-1"></a>  <span class="co">&quot;&quot;&quot; Applies scaling factors for Landsat Collection 2 surface reflectance </span></span>
+<span id="cb4-3"><a href="LS-C2-SRST.html#cb4-3" tabindex="-1"></a><span class="co">  and surface temperature products</span></span>
+<span id="cb4-4"><a href="LS-C2-SRST.html#cb4-4" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="LS-C2-SRST.html#cb4-5" tabindex="-1"></a><span class="co">  Args:</span></span>
+<span id="cb4-6"><a href="LS-C2-SRST.html#cb4-6" tabindex="-1"></a><span class="co">      image: one ee.Image of an ee.ImageCollection</span></span>
+<span id="cb4-7"><a href="LS-C2-SRST.html#cb4-7" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="LS-C2-SRST.html#cb4-8" tabindex="-1"></a><span class="co">  Returns:</span></span>
+<span id="cb4-9"><a href="LS-C2-SRST.html#cb4-9" tabindex="-1"></a><span class="co">      ee.Image with band values overwritten by scaling factors</span></span>
+<span id="cb4-10"><a href="LS-C2-SRST.html#cb4-10" tabindex="-1"></a><span class="co">  &quot;&quot;&quot;</span></span>
+<span id="cb4-11"><a href="LS-C2-SRST.html#cb4-11" tabindex="-1"></a>  opticalBands <span class="op">=</span> image.select(<span class="st">&quot;SR_B.&quot;</span>).multiply(<span class="fl">0.0000275</span>).add(<span class="op">-</span><span class="fl">0.2</span>)</span>
+<span id="cb4-12"><a href="LS-C2-SRST.html#cb4-12" tabindex="-1"></a>  thermalBands <span class="op">=</span> image.select(<span class="st">&quot;ST_B.*&quot;</span>).multiply(<span class="fl">0.00341802</span>).add(<span class="fl">149.0</span>)</span>
+<span id="cb4-13"><a href="LS-C2-SRST.html#cb4-13" tabindex="-1"></a>  <span class="cf">return</span> image.addBands(opticalBands, <span class="va">None</span>, <span class="va">True</span>).addBands(thermalBands, <span class="va">None</span>,<span class="va">True</span>)</span></code></pre></div>
+<p>The resulting Landsat 4-7 collections are collated into a single
+ee.ImageCollection (line 81), and bands are renamed for continuity (lines
+83-96). The same is done for Landsat 8 and 9 (lines 99-129). These two
+ee.ImageCollections are handled separately, as the pixel-level metadata within
+the scenes from these missions is slightly different and processing must be
+completed separately.</p>
+</div>
+<div id="payload-handling" class="section level3 hasAnchor" number="5.2.3">
+<h3><span class="header-section-number">5.2.3</span> Payload handling<a href="LS-C2-SRST.html#payload-handling" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Because GEE is a free service, there are limits to the total size of a task sent
+to GEE for completion. For this reason, tasks are sent to GEE in 10k location
+increments per tile (for-loop encompassing lines 132-321). This is an additional
+step that is taken in addition to processing per tile to avoid failed tasks.</p>
+</div>
+<div id="creating-an-ee.featurecollection-from-a-dataframe" class="section level3 hasAnchor" number="5.2.4">
+<h3><span class="header-section-number">5.2.4</span> Creating an ee.FeatureCollection from a dataframe<a href="LS-C2-SRST.html#creating-an-ee.featurecollection-from-a-dataframe" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="citations.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

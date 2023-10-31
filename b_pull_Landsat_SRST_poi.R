@@ -90,7 +90,7 @@ b_pull_Landsat_SRST_poi_list <- list(
   tar_target(
     name = eeRun_poi,
     command = {
-      poi_locs_with_WRS
+      poi_locs_WRS_latlon
       csv_to_eeFeat
       apply_scale_factors
       dp_buff
@@ -115,6 +115,17 @@ b_pull_Landsat_SRST_poi_list <- list(
       run_GEE_per_tile(WRS_tiles_poi)
     },
     pattern = map(WRS_tiles_poi),
+    packages = "reticulate"
+  ),
+  
+  # check to see that all tasks are complete! This target will run until all
+  # cued GEE tasks from the previous target are complete.
+  tar_target(
+    name = poi_tasks_complete,
+    command = {
+      eeRun_poi
+      source_python("b_pull_Landsat_SRST_poi/py/poi_wait_for_completion.py")
+    },
     packages = "reticulate"
   )
 )

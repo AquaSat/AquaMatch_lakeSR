@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</title>
+  <title>3 Satellite Data Acquisition Software and Settings | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</title>
   <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  <meta property="og:title" content="3 Satellite Data Acquisition Software and Settings | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  <meta name="twitter:title" content="3 Satellite Data Acquisition Software and Settings | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
   
   <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="locs-data-acq.html"/>
+<link rel="prev" href="locs-data-acq.html"/>
+<link rel="next" href="landsat-collection-2-surface-reflectance-and-surface-temperature.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -226,90 +226,135 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</h1>
-<p class="author"><em>ROSSyndicate</em></p>
-<p class="date"><em>2023-10-26</em></p>
+<div id="software-settings" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> Satellite Data Acquisition Software and Settings<a href="software-settings.html#software-settings" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Currently, all satellite data in <strong>AquaSat</strong> are obtained using the Python API
+for Google Earth Engine (GEE) <span class="citation">(<a href="#ref-gorelick2017">Gorelick et al. 2017</a>)</span>. While the orchestration of data
+acquisition is performed by {targets}, a workflow management program for R, all
+code directly related to GEE data acquisition is written in Python.</p>
+<div id="reticulate-conda-environment" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> {reticulate} Conda Environment<a href="software-settings.html#reticulate-conda-environment" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>RStudio <span class="citation">(<a href="#ref-positteam2023">Posit team 2023</a>)</span> is an IDE that, alongside the {reticulate} package
+<span class="citation">(<a href="#ref-ushey2023">Ushey, Allaire, and Tang 2023</a>)</span>, facilitates integration of R and Python code within the same
+environment. In <strong>lakeSR</strong>, we use <a href="https://github.com/AquaSat/lakeSR/blob/main/python/pySetup.R">a singular R
+script</a> to set up
+a {reticulate} Conda environment that is invoked at the beginning of a {targets}
+run (lines 8-12 of the
+<a href="https://github.com/AquaSat/lakeSR/blob/main/_targets.R">_targets.R</a> file) to
+be sure that our Python code runs consistently.</p>
+<table>
+<caption>Python and python modules and versions used in **lakeSR**.</caption>
+<colgroup>
+<col width="26%" />
+<col width="16%" />
+<col width="56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Software/Py Module</th>
+<th align="center">version</th>
+<th>citation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Python</td>
+<td align="center">3.8.18</td>
+<td>Python Software Foundation, <a href="www.python.org">www.python.org</a></td>
+</tr>
+<tr class="even">
+<td>earthengine-api</td>
+<td align="center">0.1.374</td>
+<td><span class="citation">(<a href="#ref-gorelick2023">Gorelick 2023</a>)</span></td>
+</tr>
+<tr class="odd">
+<td>pandas</td>
+<td align="center">2.0.3</td>
+<td><span class="citation">(<a href="#ref-thepandasdevelopmentteam2023">The pandas development team 2023</a>)</span></td>
+</tr>
+<tr class="even">
+<td>fiona</td>
+<td align="center">1.9.5</td>
+<td><span class="citation">(<a href="#ref-gillies2023">Gillies 2023</a>)</span></td>
+</tr>
+<tr class="odd">
+<td>pyreadr</td>
+<td align="center">0.5.0</td>
+<td><span class="citation">(<a href="#ref-fajardo2023">Fajardo 2023</a>)</span></td>
+</tr>
+<tr class="even">
+<td>pyarrow</td>
+<td align="center">13.0.0</td>
+<td><span class="citation">(<a href="#ref-apachearrowdevelopers2023">Apache Arrow Developers 2023</a>)</span></td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="introduction" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">1</span> Introduction<a href="introduction.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>This bookdown document <span class="citation">(<a href="#ref-xie2016">Xie 2016</a>)</span> explains the methodology we use in the
-acquisition and compilation of satellite surface reflectance and surface
-temperature data for all lakes in the United States and US Territories. This
-product, “<strong>lakeSR</strong>”, is a component of the <strong>AquaSat</strong> (v2) suite, an effort
-to create a database of lake and river water quality observations alongside
-remote sensing data.</p>
-<p>Currently, <strong>lakeSR</strong> is comprised of the historical Landsat record from 1984
-until mid-2023, comprised of data from the following missions:</p>
-<ul>
-<li>Landsat 4 Thematic Mapper (TM)</li>
-<li>Landsat 5 TM</li>
-<li>Landsat 7 Enhanced Thematic Mapper Plus (ETM+)</li>
-<li>Landsat 8 Operational Land Imager/Thermal Infrared Sensor (OLI/TIRS)</li>
-<li>Landsat 9 OLI/TIRS</li>
-</ul>
-<p>Together the Landsat archive of <strong>lakeSR</strong> is referred to as
-“<em>lakeSR-LS_C2_SRST</em>” (<strong>L</strong>and<strong>s</strong>at <strong>C</strong>ollection <strong>2</strong> <strong>S</strong>urface
-<strong>R</strong>eflectance and <strong>S</strong>urface <strong>T</strong>emperature). There will be additional
-satellite data incorporated into the <strong>lakeSR</strong> product in the future.</p>
-<p><strong>lakeSR</strong> acquires tabular data summaries of satellite-derived surface
-reflectance and surface temperature data at central locations within a lake and
-at locations identified with monitoring records from the Water Quality Portal
-from the <strong>AquaMatch</strong> component of <strong>AquaSat</strong>.</p>
-<div id="code-architecture" class="section level2 hasAnchor" number="1.1">
-<h2><span class="header-section-number">1.1</span> Code Architecture<a href="introduction.html#code-architecture" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><strong>lakeSR</strong> is built on the {targets} workflow management system for R
-<span class="citation">(<a href="#ref-landau2021">Landau 2021</a>)</span>. The {targets} architecture is based on lists of functions
-performed in a specific order, each function called a <em>target</em>. The primary
-benefit of {targets} workflows is that code is only run if a target, a target’s
-code, or a target’s dependencies have changed (or become “outdated” in {targets}
-speak).</p>
-<p><strong>lakeSR</strong> is broken down into functional groups of targets, listed below with a
-brief summary about what task(s) each group completes.</p>
-<p><strong>a_Calculate_Centers</strong>:</p>
-<p>This {targets} list calculates “Pole of Inaccessibility” (POI) for all lakes,
-ponds, reservoirs, and playas greater than 1 hectare in surface area using the
-NHDPlusHR polygons using the {nhdplusTools} package and the <code>poi()</code> function in
-the {polylabelr} package. For all waterbodies in Alaska, POI were calculated
-based on the NHD Best Resolution file for the entire state because the NHDPlusHR
-is not complete for AK. <strong>Note</strong>: this group of targets will take up to 4h to
-complete.</p>
-<p>See Section <a href="locs-data-acq.html#locs-data-acq">2</a> for additional background and detailed
-methodology.</p>
-<p><strong>b_pull_Landsat_SRST_poi</strong>:</p>
-<p>This {targets} group uses the config file <code>config_files/config_poi.yml</code> and the
-“Pole of Inaccessibility” points created in the <code>a_Calculate_Centers</code> group to
-pull Landsat Collection 2 Surface Reflectance and Surface Temperature using the
-GEE API. In this group, we use the most strict LS4-7 pixel filters which include
-the <code>sr_cloud_mask</code> filter. This filter is a conservative filter, removing
-artefacts from upstream products that are used to create the SR product. This
-group of targets ends with a branched target that maps over each of the WRS2
-path rows that intersect with the points. <strong>Note</strong>: this group of targets takes
-a very, very long time, averaging about 1 hour per path-row branch. There are
-just under 800 path rows executed in this branch.</p>
-<p>See Section <a href="LS-C2-SRST.html#LS-C2-SRST">5</a> for additional background and detailed
-methodology.</p>
+<div id="google-earth-engine-setup" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Google Earth Engine Setup<a href="software-settings.html#google-earth-engine-setup" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="create-a-gee-account" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Create a GEE account<a href="software-settings.html#create-a-gee-account" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Creation of a GEE is easy and free. Click ‘Get Started’ at the far right side of
+the <a href="https://earthengine.google.com">earthengine.google.com</a> webpage to create
+an account:</p>
+<p><a href="https://earthengine.google.com"><img src="images/Screenshot%202023-10-25%20at%2011.56.29%20AM.png" alt="Header of earthengine.google.com with link to create a GEE account highlighted in the red box to the right." /></a></p>
 </div>
-<div id="running-the-code-within-this-repository" class="section level2 hasAnchor" number="1.2">
-<h2><span class="header-section-number">1.2</span> Running the code within this repository<a href="introduction.html#running-the-code-within-this-repository" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>If you have followed all of the set up instructions, including those outlined in
-Section <a href="software-settings.html#software-settings">3</a>, the code within this repository can be
-triggered by running the <code>run_targets.Rmd</code> file with the rProj file <code>lakeSR</code>
-open in your RStudio console. If you do not wish to re-run the entirety of the
-{targets} workflow, we encourage you to download the <code>lakeSR_targets.zip</code> file
-<strong>[[NOTE: will need to zip this later and/or add to the data release]]</strong>, rename
-it _targets and copy it into the root directory of this repository, overwriting
-the existing <code>_targets</code> folder and contents.</p>
+<div id="gcloud-cli" class="section level3 hasAnchor" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> gcloud CLI<a href="software-settings.html#gcloud-cli" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>This workflow requires the installation and initiation of <a href="https://cloud.google.com/sdk/gcloud">gcloud
+CLI</a>, a command-line tool set for accessing
+Google Cloud Resources. All settings for <strong>lakeSR</strong> are default <code>gcloud</code>
+configurations using a singular GEE project.</p>
+</div>
+<div id="gee-authentication" class="section level3 hasAnchor" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> GEE Authentication<a href="software-settings.html#gee-authentication" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Once <code>gcloud</code> is installed and initialized and the Conda environment is set up,
+you can authenticate your GEE instance. For this workflow, this is completed in
+the terminal and manually authenticating within the browser. See the
+<code>run_targets.Rmd</code> file for directions to complete this task.</p>
+</div>
+<div id="gee-project-setting" class="section level3 hasAnchor" number="3.2.4">
+<h3><span class="header-section-number">3.2.4</span> GEE project setting<a href="software-settings.html#gee-project-setting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>lakeSR</strong> is run in a specific GEE project associated with our authenticated
+account. If you wish to re-run this code as written, you will not have proper
+access because the code refers to our specific GEE project (each of the yaml
+files in the <code>config_files</code> folder point to this within the <code>ee_proj</code> setting.
+You will need to update this with your desired GEE project. If you are new to
+GEE, go to <a href="https://code.earthengine.google.com">code.earthengine.google.com</a>
+and enter the project name listed in the top right hand corner of your screen:</p>
+<p><a href="https://code.earthengine.com"><img src="images/Screenshot%202023-10-25%20at%2011.34.08%20AM.png" alt="Header of code.earthengine.google.com with current Earth Engine project highlighted in the red box to the right." /></a></p>
+<p>Alternatively, you can create an GEE project for this task in the dropdown menu
+accessed by clicking on the icon to the right of the highlighted box in the
+figure above.</p>
 
+</div>
 </div>
 </div>
 <h3> Citations<a href="citations.html#citations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-landau2021" class="csl-entry">
-Landau, William Michael. 2021. <span>“The Targets r Package: A Dynamic Make-Like Function-Oriented Pipeline Toolkit for Reproducibility and High-Performance Computing.”</span> <em>Journal of Open Source Software</em> 6 (57): 2959. <a href="https://doi.org/10.21105/joss.02959">https://doi.org/10.21105/joss.02959</a>.
+<div id="ref-apachearrowdevelopers2023" class="csl-entry">
+Apache Arrow Developers. 2023. <em>Pyarrow: Python Library for Apache Arrow</em>. <a href="https://github.com/apache/arrow">https://github.com/apache/arrow</a>.
 </div>
-<div id="ref-xie2016" class="csl-entry">
-Xie, Yihui. 2016. <em>Bookdown: Authoring Books and Technical Documents with r Markdown</em>. Boca Raton, Florida: Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/bookdown">https://bookdown.org/yihui/bookdown</a>.
+<div id="ref-fajardo2023" class="csl-entry">
+Fajardo, Otto. 2023. <em>Pyreadr: Reads/Writes r RData and Rds Files into/from Pandas Data Frames</em>. <a href="https://github.com/ofajardo/pyreadr">https://github.com/ofajardo/pyreadr</a>.
+</div>
+<div id="ref-gillies2023" class="csl-entry">
+Gillies, Sean. 2023. <em>Fiona: Read and Write Spatial Data Files</em>.
+</div>
+<div id="ref-gorelick2023" class="csl-entry">
+Gorelick, N. 2023. <em>Earthengine-Api: Earth Engine Python API</em>. Google. <a href="https://github.com/google/earthengine-api">https://github.com/google/earthengine-api</a>.
+</div>
+<div id="ref-gorelick2017" class="csl-entry">
+Gorelick, N, M Hancher, M Dixon, S Ilyushchenko, D Thau, and R Moore. 2017. <span>“Google Earth Engine: Planetary-Scale Geospatial Analysis for Everyone.”</span> <em>Remote Sensing of Environment</em>. <a href="https://doi.org/10.1016/j.rse.2017.06.031">https://doi.org/10.1016/j.rse.2017.06.031</a>.
+</div>
+<div id="ref-positteam2023" class="csl-entry">
+Posit team. 2023. <em>RStudio: Integrated Development Environment for r</em>. Boston, MA: Posit Software, PBC. <a href="http://www.posit.co/">http://www.posit.co/</a>.
+</div>
+<div id="ref-thepandasdevelopmentteam2023" class="csl-entry">
+The pandas development team. 2023. <em>Pandas-Dev/Pandas: Pandas</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.8092754">https://doi.org/10.5281/zenodo.8092754</a>.
+</div>
+<div id="ref-ushey2023" class="csl-entry">
+Ushey, Kevin, J. J. Allaire, and Yuan Tang. 2023. <em>Reticulate: Interface to ’Python’</em>. <a href="https://CRAN.R-project.org/package=reticulate">https://CRAN.R-project.org/package=reticulate</a>.
 </div>
 </div>
             </section>
@@ -317,8 +362,8 @@ Xie, Yihui. 2016. <em>Bookdown: Authoring Books and Technical Documents with r M
           </div>
         </div>
       </div>
-
-<a href="locs-data-acq.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="locs-data-acq.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
