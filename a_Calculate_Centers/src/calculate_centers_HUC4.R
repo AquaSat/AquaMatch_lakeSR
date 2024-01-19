@@ -28,27 +28,33 @@ calculate_centers_HUC4 <- function(HUC4) {
                 file.path("a_Calculate_Centers/out/",
                           "empty_hucs.txt"))
   } else { # otherwise, go through the process of calculaitng centers
-  
+    
     # open the NHDWaterbody layer, coerce to a {sf} object
     wbd <- get_nhdplushr(fp, layers = "NHDWaterbody") %>%
       bind_rows() %>% 
       st_as_sf() 
     
     wbd <- wbd %>% 
-         filter(
+      filter(
         # filter the waterbodies for ftypes of interest. 390 = lake/pond; 436 = res;
         # 361 = playa 
-             FTYPE %in% c(390, 436, 361),
-       # ...and for area > 1 hectare (0.01 km^2)
-             AreaSqKM >= 0.01) 
+        FTYPE %in% c(390, 436, 361),
+        # ...and for area > 1 hectare (0.01 km^2)
+        AreaSqKM >= 0.01) 
+    # subset smaller lakes/ponds that are characterized as intermittent
+    intermittent <- wbd %>% 
+      filter(AreaSqKM < 0.04,
+             FCODE %in% c(39001, 39005, 39006))
+    # remove from dataset
+    wbd <- anti_join(wbd, intermittent)
     # we're going to count the dropped wbd due to multisurface geometry (not 
     # recognized in sf), but we'll save so we can enumerate later
     multisurface_wbd <- wbd %>% 
       filter(grepl("SURFACE", st_geometry_type(Shape)))
     if (nrow(multisurface_wbd) > 0) {
       st_write(multisurface_wbd, file.path("a_Calculate_Centers/multisurface/",
-                                          paste0("dropped_multisurface_geo_",
-                                                 HUC4, ".gpkg")))
+                                           paste0("dropped_multisurface_geo_",
+                                                  HUC4, ".gpkg")))
     }
     
     # check for valid geometry and drop z coords (if they exist)
@@ -93,13 +99,13 @@ calculate_centers_HUC4 <- function(HUC4) {
         # calculate the UTM zone using the mean value of Longitude for the polygon
         utm_suffix <- as.character(ceiling((mean_x + 180) / 6))
         utm_code <- if_else(mean_y >= 0,
-                           # EPSG prefix for N hemisphere
-                           paste0('EPSG:326', utm_suffix),
-                           # for S hemisphere
-                           paste0('EPSG:327', utm_suffix))
+                            # EPSG prefix for N hemisphere
+                            paste0('EPSG:326', utm_suffix),
+                            # for S hemisphere
+                            paste0('EPSG:327', utm_suffix))
         # transform wbd to UTM
         one_wbd_utm <- st_transform(one_wbd, 
-                                   crs = utm_code)
+                                    crs = utm_code)
         # get UTM coordinates
         coord <- one_wbd_utm %>% st_coordinates()
         x <- coord[,1]
@@ -112,10 +118,10 @@ calculate_centers_HUC4 <- function(HUC4) {
         poi_df$poi_dist_m[i] = poly_poi$dist
         # make a point feature and re-calculate decimal degrees in WGS84
         point <- st_point(x = c(as.numeric(poly_poi$x),
-                               as.numeric(poly_poi$y)))
+                                as.numeric(poly_poi$y)))
         point <- st_sfc(point, crs = utm_code)
         point <- st_transform(st_sfc(point), crs = 'EPSG:4326')
-                          
+        
         new_coords <- point %>% st_coordinates()
         poi_df$poi_Longitude[i] = new_coords[,1]
         poi_df$poi_Latitude[i] = new_coords[,2]
@@ -136,7 +142,7 @@ calculate_centers_HUC4 <- function(HUC4) {
         summarise(AreaSqKM = sum(AreaSqKM, na.rm = TRUE),
                   n_feat = n(),
                   across(all_of(c("GNIS_ID", "GNIS_Name", "REACHCODE",
-                         "FTYPE", "FCODE", "COMID", "VPUID")),
+                                  "FTYPE", "FCODE", "COMID", "VPUID")),
                          ~ toString(unique(.))))
       
       # join back in with all the info from the wbd file
@@ -164,11 +170,11 @@ calculate_centers_HUC4 <- function(HUC4) {
                                    paste0("poi_centers_huc4_", HUC4, ".csv")))
     }
   }
-    
+  
   # clean up workspace for quicker processing
   # remove the fp and all contents completely before next HUC4
   unlink(fp, recursive = T, force = T, expand = T)
   # and clear unused mem
   rm(wbd, poi_geo, poi_df)
-
+  
 }

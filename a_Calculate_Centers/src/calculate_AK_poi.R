@@ -24,16 +24,25 @@ calculate_AK_poi <- function() {
   
   # open the NHDWaterbody layer, coerce to a {sf} object
   wbd <- st_read(file.path("a_Calculate_Centers/nhd/",
-                                 "NHD_H_Alaska_State_GPKG.gpkg"),
+                           "NHD_H_Alaska_State_GPKG.gpkg"),
                  layer = 'NHDWaterbody')
   
- wbd <- wbd %>% 
-  filter(
-    # filter the waterbodies for ftypes of interest. 390 = lake/pond; 436 = res;
-    # 361 = playa
-    ftype %in% c(390, 436, 361),
-    # ...and for area > 1 hectare (0.01 km^2)
-    areasqkm >= 0.01) 
+  wbd <- wbd %>% 
+    filter(
+      # filter the waterbodies for ftypes of interest. 390 = lake/pond; 436 = res;
+      # 361 = playa
+      ftype %in% c(390, 436, 361),
+      # ...and for area > 1 hectare (0.01 km^2)
+      areasqkm >= 0.01) 
+  # subset smaller lakes/ponds that are characterized as intermittent
+  intermittent <- wbd %>% 
+    filter(
+      areasqkm < 0.04,
+      fcode %in %c(39001, 39005, 39006)
+    )
+  
+  # remove intermittent from wbd
+  wbd <- anti_join(wbd, intermittent)
   
   # check for valid geometry and drop z coords (if they exist)
   wbd <- wbd %>% 
@@ -47,7 +56,7 @@ calculate_AK_poi <- function() {
     # add a rowid for future steps
     rowid_to_column()
   
-
+  
   # for each polygon, calculate a center. Because sf doesn't map easily, using a 
   # loop. Each loop adds a row the the poi_df dataframe.
   poi_df <- tibble(
@@ -70,13 +79,13 @@ calculate_AK_poi <- function() {
     # calculate the UTM zone using the mean value of Longitude for the polygon
     utm_suffix <- as.character(ceiling((mean_x + 180) / 6))
     utm_code <- if_else(mean_y >= 0,
-                       # EPSG prefix for N hemisphere
-                       paste0('EPSG:326', utm_suffix),
-                       # for S hemisphere
-                       paste0('EPSG:327', utm_suffix))
+                        # EPSG prefix for N hemisphere
+                        paste0('EPSG:326', utm_suffix),
+                        # for S hemisphere
+                        paste0('EPSG:327', utm_suffix))
     # transform wbd to UTM
     one_wbd_utm <- st_transform(one_wbd, 
-                               crs = utm_code)
+                                crs = utm_code)
     # get UTM coordinates
     coord <- one_wbd_utm %>% st_coordinates()
     x <- coord[,1]
@@ -89,15 +98,15 @@ calculate_AK_poi <- function() {
     poi_df$poi_dist_m[i] = poly_poi$dist
     # make a point feature and re-calculate decimal degrees in WGS84
     point <- st_point(x = c(as.numeric(poly_poi$x),
-                           as.numeric(poly_poi$y)))
+                            as.numeric(poly_poi$y)))
     point <- st_sfc(point, crs = utm_code)
     point <- st_transform(st_sfc(point), crs = 'EPSG:4326')
     
     new_coords <- point %>% st_coordinates()
     poi_df$poi_Longitude[i] = new_coords[,1]
     poi_df$poi_Latitude[i] = new_coords[,2]
-    }
-    
+  }
+  
   # sometimes there is more than one geometry per PermId. Let's limit this to the 
   # one that is the furthest distance from a shoreline (poi_dist)
   poi_df <- poi_df %>% 
@@ -113,7 +122,7 @@ calculate_AK_poi <- function() {
     summarise(AreaSqKM = sum(areasqkm, na.rm = TRUE),
               n_feat = n(),
               across(all_of(c("gnis_id", "gnis_name", "reachcode",
-                     "ftype", "fcode")),
+                              "ftype", "fcode")),
                      ~ toString(unique(.)))) %>% 
     rename(Permanent_Identifier = permanent_identifier)
   
@@ -140,8 +149,8 @@ calculate_AK_poi <- function() {
     st_drop_geometry()
   
   write_feather(poi_geo, file.path("a_Calculate_Centers/out/",
-                               paste0("AK_NHD_BestRes_POI_center_locs.feather")))
-    
+                                   paste0("AK_NHD_BestRes_POI_center_locs.feather")))
+  
   # clean up workspace for quicker processing
   # remove the fp and all contents completely before next HUC4
   unlink("a_Calculate_Centers/nhd/NHD_H_Alaska_State_GPKG.gpkg")
@@ -150,5 +159,5 @@ calculate_AK_poi <- function() {
   
   # and clear unused mem
   rm(wbd, poi_geo, poi_df)
-
+  
 }
