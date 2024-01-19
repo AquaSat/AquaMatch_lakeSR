@@ -118,6 +118,36 @@ b_pull_Landsat_SRST_poi_list <- list(
     packages = "reticulate"
   ),
   
+  # run the Landsat pull as function per tile
+  tar_target(
+    name = eeRun_poi,
+    command = {
+      poi_locs_WRS_latlon
+      csv_to_eeFeat
+      apply_scale_factors
+      dp_buff
+      DSWE
+      Mbsrv
+      Ndvi
+      Mbsrn
+      Mndwi
+      Awesh
+      add_rad_mask
+      sr_cloud_mask
+      sr_aerosol
+      cf_mask
+      calc_hill_shadows
+      calc_hill_shades
+      remove_geo
+      maximum_no_of_tasks
+      ref_pull_457_DSWE1_altered
+      ref_pull_457_DSWE3_altered
+      run_GEE_per_tile_altered(WRS_tiles_poi)
+    },
+    pattern = map(WRS_tiles_poi),
+    packages = "reticulate"
+  ),
+  
   # check to see that all tasks are complete! This target will run until all
   # cued GEE tasks from the previous target are complete.
   tar_target(

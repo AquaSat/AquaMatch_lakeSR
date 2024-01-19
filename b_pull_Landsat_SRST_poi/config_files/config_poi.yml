@@ -14,7 +14,7 @@ google_settings:
 
 temporal_settings: 
 - start_date: "1983-01-01" # earliest data of satellite data to be acquired; earliest data available is 1983-01-01
-- end_date: "2023-07-01" # latest data of satellite data to be acquired; if 'today' is used, the date will be set to the current date
+- end_date: "2024-01-01" # latest data of satellite data to be acquired; if 'today' is used, the date will be set to the current date
 
 spatial_settings: 
 - extent: "site" # options: "site", "polygon", "polycenter", "site+poly", "site+polygon+polycenter", "polygon+polycenter" - at this time lake and lake center can only be calculated for lakes in the US
