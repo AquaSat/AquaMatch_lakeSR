@@ -67,15 +67,3 @@ tar_make()
 tar_visnetwork()
 ```
 
-```{r write_mermaid}
-# save the mmd file
-writeLines(tar_mermaid(), sep = "\n", "mermaid/mermaid.mmd")
-```
-
-```{zsh create_mermaid_png}
-mmdc -i mermaid/mermaid.mmd -o mermaid/mermaid.png -t dark -w 4000 -H 1000
-```
-
-![](mermaid/mermaid.png)
-
-In order to view [legible] text, right click the image and open in a new window.
