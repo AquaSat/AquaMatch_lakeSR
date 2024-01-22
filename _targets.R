@@ -32,5 +32,11 @@ tar_source(files = c(
 # Collate targets groups: ---------------------------------------
 list(
   a_Calculate_Centers_list,
-  b_pull_Landsat_SRST_poi_list
+  b_pull_Landsat_SRST_poi_list,
+  tar_target(name = render_bookdown,
+             command = {
+               poi_tasks_complete #this should always be the last target!
+               render_book(input = "bookdown/")
+               },
+             packages = "bookdown")
 )

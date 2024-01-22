@@ -120,7 +120,7 @@ b_pull_Landsat_SRST_poi_list <- list(
   
   # run the Landsat pull as function per tile
   tar_target(
-    name = eeRun_poi,
+    name = eeRun_poi_alt,
     command = {
       poi_locs_WRS_latlon
       csv_to_eeFeat
@@ -154,6 +154,7 @@ b_pull_Landsat_SRST_poi_list <- list(
     name = poi_tasks_complete,
     command = {
       eeRun_poi
+      eeRun_poi_alt
       source_python("b_pull_Landsat_SRST_poi/py/poi_wait_for_completion.py")
     },
     packages = "reticulate"
