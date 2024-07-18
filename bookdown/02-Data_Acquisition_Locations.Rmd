@@ -3,6 +3,9 @@ editor_options:
   markdown: 
     wrap: 80
 bibliography: references.bib
+params:
+  all_pts: NA
+  ak_pts: NA
 ---
 
 ```{r chunk-opts, echo=FALSE}
@@ -11,13 +14,7 @@ knitr::opts_chunk$set(echo = F, message = F, warning = F, error = FALSE)
 
 ```{r r-setup-data-acq}
 library(tidyverse)
-library(targets)
-library(withr)
 
-with_dir("..", {
-  tar_load(AK_poi_points)
-  tar_load(combined_poi_points)
-})
 ```
 
 # Locations of Data Acquisition {#locs-data-acq}
@@ -37,17 +34,37 @@ data over varying buffer distances to support this decision ([GitHub Issue
 #14](https://github.com/rossyndicate/lakeSR/issues/14)). At this time, the
 buffer used is a 120m radius of any given data acquisition location.
 
+## Changes from AquaSat v1
+
+Some changes in lake polygon and center point have been made in modernizing and
+scaling from the original AquaSat. The lake center aspect of AquaSat v1 was
+built upon HydroLakes ([@messager2016]), a global database of lakes greater than
+10 hectares accounting for 1.4 million waterbodies and a a total surface area of
+2.67 million km² worldwide. While this dataset of lakes represents \~55% of the
+worldwide surface area of lakes greater than 1 hecare, it is only a sliver of
+the estimated 27 million waterbodies in the world of that size
+([@verpoorter2014]). AquaSat v2 uses the [USGS's National Hydrography
+products](https://www.usgs.gov/national-hydrography) which map the surface
+waters of the United States.
+
+The USGS National Hydrography products contain smaller waterbodies and higher
+resolution polygons than the HydroLakes shapes, which makes it computationally
+impossible to use the Chebyshev Center ("deepest point") calculation used in
+AquaSat v1 due to the number of vertices in each polygon. To replace this
+important step in this update, we employ the concept of "pole of
+inaccessibility" (POI) [@stefansson1920], which handles complex polygons in the
+R environment with minimal computational investment.
+
 ## Pole of Inaccessibility
 
-The concept of "pole of inaccessibility" (POI) [@stefansson1920] is used to
-define the geographic center of a circle with the largest circumference within
-any complex polygon. The foundational principle is used widely to describe the
-arctic pole of inaccessiblity, that is the point in the northern arctic circle
-that is the furthest from land, but has also been used to describe the
-geographic center of landmasses [@garcia-castellanos2007]. For **lakeSR**, we
-use POI to determine the point in a lake that is furthest from the shoreline
-using the `polylabelr::poi()` function [@larsson2020], which calculates a point
-in space and the radius of the circle used to define the POI.
+The concept of POI is used to define the geographic center of a circle with the
+largest circumference within any complex polygon. The foundational principle is
+used widely to describe the arctic pole of inaccessiblity, that is the point in
+the northern arctic circle that is the furthest from land, but has also been
+used to describe the geographic center of landmasses [@garcia-castellanos2007].
+For **lakeSR**, we use POI to determine the point in a lake that is furthest
+from the shoreline using the `polylabelr::poi()` function [@larsson2020], which
+calculates a point in space and the radius of the circle used to define the POI.
 
 ## Lakes included in lakeSR
 
@@ -71,9 +88,10 @@ Best Resolution dataset, all waterbodies are limited to those with
 belonging to the following groups: 390 (lake/pond), 436 (reservoir), and 361
 (playa) and are at least 0.01 km^2^ (1 hectare) in area according to the area
 value provided in the NHD file. This filtering resulted in
-`r format(nrow(combined_poi_points), big.mark = ",")` waterbodies included in
-our dataset, including `r format(nrow(AK_poi_points), big.mark = ",")` from
-Alaska.
+`r format(nrow(params$all_pts), big.mark = ",")` waterbodies included in our
+dataset, including `r format(nrow(params$ak_pts), big.mark = ",")` from Alaska.
+This is a `r round((nrow(params$all_pts)-56792)*100/56792, 0)` percent increase over the 56,792 
+lakes included in the original AquaSat product.
 
 For each waterbody, the POI and distance-to-shore radius was calculated using
 the `polylabelr::poi()` function. In order to accurately calculate
@@ -84,11 +102,10 @@ point-local UTM projection, we decrease distortion expected from any single CRS
 used to represent all of the locations from which we have lakes. The latitude
 and longitude values of the POI were transformed to decimal degrees in World
 Geodetic System 1984 (WGS84) (EPSG:4326) from UTM easting and northing
-coordinates for use later in the workflow. It is
-important to note that the `poi()` function does not perform particularly well
-on larger polygons, however the points calculated should be an acceptable proxy
-for pelagic lake conditions. [[Will add additional detail from analysis of
-buffer sizes.]]
+coordinates for use later in the workflow. It is important to note that the
+`poi()` function does not perform particularly well on larger polygons, however
+the points calculated should be an acceptable proxy for pelagic lake conditions.
+[[Will add additional detail from analysis of buffer sizes.]]
 
 ## Implementation
 

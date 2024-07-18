@@ -9,13 +9,13 @@ bibliography: references.bib
 
 This bookdown document [@xie2016] explains the methodology we use in the
 acquisition and compilation of satellite surface reflectance and surface
-temperature data for all lakes in the United States and US Territories. This
-product, "**lakeSR**", is a component of the **AquaSat** (v2) suite, an effort
-to create a database of lake and river water quality observations alongside
-remote sensing data.
+temperature data for all lakes greater than 1 hectacre in the United States and
+US Territories. This product, "**lakeSR**", is a component of the **AquaSat**
+(v2) suite, an effort to create a database of lake and river water quality
+observations alongside remote sensing data.
 
 Currently, **lakeSR** is comprised of the historical Landsat record from 1984
-until mid-2023, comprised of data from the following missions:
+until mid-2024, comprised of data from the following missions:
 
 -   Landsat 4 Thematic Mapper (TM)
 -   Landsat 5 TM
@@ -78,9 +78,5 @@ methodology.
 
 If you have followed all of the set up instructions, including those outlined in
 Section \@ref(software-settings), the code within this repository can be
-triggered by running the `run_targets.Rmd` file with the rProj file `lakeSR`
-open in your RStudio console. If you do not wish to re-run the entirety of the
-{targets} workflow, we encourage you to download the `lakeSR_targets.zip` file
-**[[NOTE: will need to zip this later and/or add to the data release]]**, rename
-it \_targets and copy it into the root directory of this repository, overwriting
-the existing `_targets` folder and contents.
+triggered by running the `run_targets.Rmd` file with the R Project file
+`lakeSR.rproj` open in your RStudio console.
