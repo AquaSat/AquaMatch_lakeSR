@@ -17,7 +17,7 @@ get_WRS_tiles_poi <- function(formatted_locations, yaml) {
   # and the poi locations
   locs <- st_as_sf(formatted_locations, 
                    coords = c("Longitude", "Latitude"), 
-                   crs = yaml$location_crs[1])
+                   crs = yaml$location_crs)
   # get the list of WRS tiles that intersect
   if (st_crs(locs) == st_crs(WRS)) {
     WRS_subset <- WRS[locs, ]

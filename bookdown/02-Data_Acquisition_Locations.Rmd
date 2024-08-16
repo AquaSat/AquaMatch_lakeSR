@@ -90,8 +90,8 @@ belonging to the following groups: 390 (lake/pond), 436 (reservoir), and 361
 value provided in the NHD file. This filtering resulted in
 `r format(nrow(params$all_pts), big.mark = ",")` waterbodies included in our
 dataset, including `r format(nrow(params$ak_pts), big.mark = ",")` from Alaska.
-This is a `r round((nrow(params$all_pts)-56792)*100/56792, 0)` percent increase over the 56,792 
-lakes included in the original AquaSat product.
+This is a `r round((nrow(params$all_pts)-56792)*100/56792, 0)` percent increase
+over the 56,792 lakes included in the original AquaSat product.
 
 For each waterbody, the POI and distance-to-shore radius was calculated using
 the `polylabelr::poi()` function. In order to accurately calculate
@@ -166,3 +166,13 @@ The resulting file (tracked as *AK_poi_points*), is combined with the
 target *combined_poi_file* (see
 [collate_NHDHR_AK.R](https://github.com/aquasat/lakeSR/blob/main/a_Calculate_Centers/src/collate_NHDHR_AK.R),
 the output file is tracked as *combined_poi_points*).
+
+## Comparison of POI and DP calculations
+
+Show MN/AK as examplesc
+
+Grab DP from LimnoSat
+
+Calc POI
+
+Calc differences in distance

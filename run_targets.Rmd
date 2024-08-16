@@ -39,6 +39,7 @@ packages <- c("tidyverse",
               "tarchetypes",
               "nhdplusTools",
               "polylabelr",
+              "rmapshaper",
               "sf",
               "tigris",
               "reticulate")
