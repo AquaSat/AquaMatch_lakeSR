@@ -18,7 +18,7 @@
 #' location in space can fall into multiple pathrows.
 #' 
 #' 
-check_if_fully_within_pr <- function(WRS_pathrows, locations, yaml) {
+check_if_fully_within_pr <- function(WRS_pathrow, locations, yaml) {
   # get the WRS2 shapefile
   WRS <- read_sf("b_pull_Landsat_SRST_poi/in/WRS2_descending.shp")
   # make locations into a {sf} object
@@ -29,11 +29,11 @@ check_if_fully_within_pr <- function(WRS_pathrows, locations, yaml) {
   # a larger number of rows than the upstream file, because sites can be in more
   # than one pathrow. 
   # filter for one path-row
-  one_PR <- WRS %>% filter(PR == WRS_pathrows) 
+  one_PR <- WRS %>% filter(PR == WRS_pathrow) 
   # get the locs within the path-row
   x <- locs[one_PR, ]
   x <- x %>% 
-    mutate(WRS2_PR = WRS_pathrows) 
+    mutate(WRS2_PR = WRS_pathrow) 
   
   # in order to apply a buffer in sf, we need to convert to UTM, otherwise 
   # it's assumed to be decimal degrees
@@ -69,5 +69,6 @@ check_if_fully_within_pr <- function(WRS_pathrows, locations, yaml) {
     st_drop_geometry() %>% 
     # only select the points completely contained by the WRS
     filter(is_contained_by_WRS == TRUE) %>% 
-    select(-is_contained_by_WRS)
+    select(-is_contained_by_WRS) %>% 
+    left_join(., locations)
 }
