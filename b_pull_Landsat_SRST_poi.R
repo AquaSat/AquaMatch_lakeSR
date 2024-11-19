@@ -53,8 +53,7 @@ b_pull_Landsat_SRST_poi_list <- list(
   # get WRS tiles/indication of whether buffered points are contained by them
   tar_target(
     name = WRS_tiles_poi,
-    command = get_WRS_tiles_poi(ref_locations_poi, yml_poi),
-    packages = c("readr", "sf")
+    command = get_WRS_tiles_poi(ref_locations_poi, yml_poi)
   ),
   
   # check to see if geometry is completely contained in pathrow

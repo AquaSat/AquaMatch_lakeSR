@@ -34,16 +34,20 @@ package_installer <- function(x) {
 List packages that need to be checked for install, and walk the function along them all.
 
 ```{r walk_package_installer}
-packages <- c("tidyverse",
-              "targets",
-              "tarchetypes",
+packages <- c("bookdown",
               "nhdplusTools",
               "polylabelr",
+              "reticulate",
               "rmapshaper",
               "sf",
+              "tarchetypes",
+              "targets",
+              "tidyverse",
               "tigris",
-              "reticulate")
+              "yaml")
 lapply(packages, package_installer)
+# this workflow requires the most up-to-date version of {nhdplusTools}
+update.packages("nhdplusTools")
 ```
 
 ## Authenticate Earth Engine
