@@ -19,8 +19,8 @@ temporal_settings:
 - end_date: "today" # latest data of satellite data to be acquired; if 'today' is used, the date will be set to the current date
 
 spatial_settings: 
-- extent: "site" # options: "site", "polygon", "polycenter", "site+poly", "site+polygon+polycenter", "polygon+polycenter" - at this time lake and lake center can only be calculated for lakes in the US
-- site_buffer: 120 # buffer distance in meters around the site or poly center
+- extent: "site"
+- site_buffer: 120 # buffer distance in meters around the site 
 
 gee_settings:
 - cloud_filter: "True" # True or False - if True, scenes will be filtered by scene-level cloudy value provided in the metadata
