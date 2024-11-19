@@ -11,7 +11,7 @@ google_settings:
 - google_email: "therossyndicate@gmail.com" # enter your google email address associated with the Earth Engine
 - proj: "LSC2_poi" # this is a short name for file naming conventions. All output files will include this prefix.
 - proj_folder: "ls_c2_srst_poi" # this is the folder name where the GEE data will be save to Google Drive. If it doesn't exist, it will be created.
-- ee_proj: "ee-ls-c2-srst" # this is the ee project name you are running your pulls from
+- ee_proj: "ee-aquamatch" # this is the ee project name you are running your pulls from
 - run_date: "2024-08-16" # date of run for versioning, must be in YYYY-MM-DD foramt
 
 temporal_settings: 

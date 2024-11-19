@@ -5,12 +5,10 @@
 # indicated. All inputs are case-sensitive.
 
 local_settings:
-- data_dir: "" # point to the *full* directory path where your location information is stored - this path must end with a '/'
-- location_file: "" # name of the *.csv* file that contains the location information
-- unique_id: "" # this is the column that stores the unique identifier for each site, should not contain any special characters
-- latitude: "" # this is the column that stores the latitude of the site, must be in decimal degrees
-- longitude: "" # this is the column that stores the longitude of the site, must be in decimal degrees
-- location_crs: "" # this is the coordinate reference system of the location data, must be in EPSG format (e.g. EPSG:4326)
+- unique_id: "r_id" # this is the column that stores the unique identifier for each site, should not contain any special characters
+- latitude: "poi_Latitude" # this is the column that stores the latitude of the site, must be in decimal degrees
+- longitude: "poi_Longitude" # this is the column that stores the longitude of the site, must be in decimal degrees
+- location_crs: "EPSG:4326" # this is the coordinate reference system of the location data, must be in EPSG format (e.g. EPSG:4326)
 
 google_settings:
 - google_email: "" # enter your google email address associated with the Earth Engine

@@ -6,7 +6,7 @@ library(reticulate)
 
 # activate conda env or create conda env and modules for the venv
 tryCatch({
-  use_condaenv(file.path(getwd(), "env"))
+  use_condaenv(file.path(getwd(), "env/"))
   print("conda environment activated")
 },
 warning = function(w){
@@ -18,9 +18,9 @@ error = function(e) {
   # install miniconda if necessary
   try(install_miniconda())
   #create a conda environment named "mod_env" with the packages you need
-  conda_create(envname = file.path(getwd(), "env"))
+  conda_create(envname = file.path(getwd(), "env/"))
   conda_install(envname = file.path(getwd(), "env/"),
-                packages = c("earthengine-api", "pandas", "pyreadr"))
+                packages = c("earthengine-api", "pandas", "pyreadr", "pyyaml"))
   # set the new python environment
   use_condaenv(file.path(getwd(), "env/"))
   print("conda environment created and activated")
