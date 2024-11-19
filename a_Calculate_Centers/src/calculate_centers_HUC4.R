@@ -51,7 +51,7 @@ calculate_centers_HUC4 <- function(HUC4) {
     # rmapshaper::ms_simplify())
     if (nrow(invalid) > 0) {
       sf_use_s2(TRUE) # make sure that we're using spherical geometry here
-      wbd_less <- wbd_filter[!wbd_filter$comid %in% invalid$comid,]
+      wbd_less <- wbd_filter[!wbd_filter$comid %in% invalid$comid, ]
       fixed <- invalid %>% 
         ms_simplify(keep = 0.75)
       wbd_filter <- bind_rows(wbd_less, fixed)

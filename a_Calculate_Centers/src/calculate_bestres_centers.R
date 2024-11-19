@@ -38,14 +38,14 @@ calculate_bestres_centers <- function(HUC4) {
       ftype %in% c(390, 436),
       # ...and for area > 1 hectare (0.01 km^2)
       areasqkm >= 0.01) 
+  
   # subset smaller (<4ha) lakes/ponds that are characterized as intermittent
   intermittent <- wbd %>% 
     filter(
       areasqkm < 0.04,
       fcode %in% c(39001, 39005)
     )
-  
-  # remove intermittent from wbd
+  # remove intermittent from wbd for processing ease
   wbd_filter <- wbd %>% filter(!permanent_identifier %in% intermittent$permanent_identifier)
   
   # check for valid polygons
@@ -58,7 +58,7 @@ calculate_bestres_centers <- function(HUC4) {
   # rmapshaper::ms_simplify())
   if (nrow(invalid) > 0) {
     sf_use_s2(TRUE) # make sure that we're using spherical geometry here
-    wbd_less <- wbd_filter[!wbd_filter$comid %in% invalid$comid,]
+    wbd_less <- wbd_filter[!wbd_filter$comid %in% invalid$comid, ]
     fixed <- invalid %>% 
       ms_simplify(keep = 0.75)
     wbd_filter <- bind_rows(wbd_less, fixed)
