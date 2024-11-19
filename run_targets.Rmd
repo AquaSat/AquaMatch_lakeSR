@@ -10,7 +10,10 @@ output:
 # Purpose
 
 This script loads all necessary packages to run the {targets} pipeline for 
-lakeSR then runs it! 
+AquaMatch_lakeSR then runs it! lakeSR extracts summaries of the Landsat Collection
+2 Surface Reflectance Product for the furthest point from shore (polygon edge) for
+all lakes/reservoirs/ponds/impoundments in the United States and Territories greater
+than 1ha and all waterbodies deemed "intermittent" by the NHD greater than 4ha. 
 
 Important note: before rendering this document or running this workflow, you 
 will need to authenticate your Earth Engine credentials in the *zsh* terminal. 
