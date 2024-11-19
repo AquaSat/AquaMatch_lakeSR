@@ -15,9 +15,7 @@
 calculate_centers_HUC4 <- function(HUC4) {
   
   message(paste0("Beginning center calculation for HUC 4 ", HUC4))
-  #set timeout for longer per issue #341: https://github.com/DOI-USGS/nhdplusTools/issues
-  options(timeout = 60000)
-  
+
   # grab the huc {sf} object
   huc <- get_huc(id = HUC4, type = "huc04") %>% 
     st_make_valid()
@@ -36,14 +34,14 @@ calculate_centers_HUC4 <- function(HUC4) {
         # ...and for area > 1 hectare (0.01 km^2)
         areasqkm >= 0.01) 
     
-    # subset smaller lakes/ponds that are characterized as intermittent
+    # grab smaller (<4ha) lakes/ponds that are characterized as intermittent by NHD
     intermittent <- wbd_filter %>% 
       filter(areasqkm < 0.04,
              fcode %in% c(39001, 39005))
-    # remove from dataset
+    # and remove from dataset for processing time
     wbd_filter <- wbd_filter %>% filter(!comid %in% intermittent$comid)
     
-    # check for valid polygons
+    # try to make valid polygons 
     wbd_filter <- wbd_filter %>% 
       st_make_valid()
     
@@ -52,15 +50,14 @@ calculate_centers_HUC4 <- function(HUC4) {
     # if there are any, simplify (st_simplify usually fails here, so using 
     # rmapshaper::ms_simplify())
     if (nrow(invalid) > 0) {
-      sf_use_s2(TRUE) # use more conservative setting to avoid errors
+      sf_use_s2(TRUE) # make sure that we're using spherical geometry here
       wbd_less <- wbd_filter[!wbd_filter$comid %in% invalid$comid,]
       fixed <- invalid %>% 
         ms_simplify(keep = 0.75)
       wbd_filter <- bind_rows(wbd_less, fixed)
-      sf_use_s2(FALSE) # but turn it back off
     }
   
-    # check for valid geometry and drop z coords (if they exist)
+    # check (again) for valid geometry and drop z coords (if they exist)
     wbd_valid <- wbd_filter %>% 
       rowwise() %>% 
       # drop z coordinate for processing ease
@@ -86,7 +83,7 @@ calculate_centers_HUC4 <- function(HUC4) {
       )
       for (i in 1:length(wbd_valid[[1]])) {
         poi_df  <- poi_df %>% add_row()
-        one_wbd <- wbd_valid[i,]
+        one_wbd <- wbd_valid[i, ]
         # transform crs, NHD is already in EPSG:4326, but just in case there is an outlier
         one_wbd <- st_transform(one_wbd, crs = "EPSG:4326")
         # get coordinates to calculate UTM zone. This is an adaptation of code from
@@ -94,8 +91,8 @@ calculate_centers_HUC4 <- function(HUC4) {
         # for any given polygon using Google Earth Engine JavaScript API 
         # (Version v 1). Zenodo. https://doi.org/10.5281/zenodo.4136755
         coord_for_UTM <- one_wbd %>% st_coordinates()
-        mean_x <- mean(coord_for_UTM[,1])
-        mean_y <- mean(coord_for_UTM[,2])
+        mean_x <- mean(coord_for_UTM[, 1])
+        mean_y <- mean(coord_for_UTM[, 2])
         # calculate the UTM zone using the mean value of Longitude for the polygon
         utm_suffix <- as.character(ceiling((mean_x + 180) / 6))
         utm_code <- if_else(mean_y >= 0,
@@ -108,13 +105,13 @@ calculate_centers_HUC4 <- function(HUC4) {
                                     crs = utm_code)
         # get UTM coordinates
         coord <- one_wbd_utm %>% st_coordinates()
-        x <- coord[,1]
-        y <- coord[,2]
+        x <- coord[, 1]
+        y <- coord[, 2]
         # using coordinates, get the poi distance
         poly_poi <- poi(x,y, precision = 0.01)
         # add info to poi_df
-        poi_df$r_id[i] = wbd_valid[i,]$r_id
-        poi_df$comid[i] = wbd_valid[i,]$comid
+        poi_df$r_id[i] = wbd_valid[i, ]$r_id
+        poi_df$comid[i] = wbd_valid[i, ]$comid
         poi_df$poi_dist_m[i] = poly_poi$dist
         # make a point feature and re-calculate decimal degrees in WGS84
         point <- st_point(x = c(as.numeric(poly_poi$x),
@@ -123,8 +120,8 @@ calculate_centers_HUC4 <- function(HUC4) {
         point <- st_transform(point, crs = 'EPSG:4326')
         
         new_coords <- point %>% st_coordinates()
-        poi_df$poi_Longitude[i] = new_coords[,1]
-        poi_df$poi_Latitude[i] = new_coords[,2]
+        poi_df$poi_Longitude[i] = new_coords[, 1]
+        poi_df$poi_Latitude[i] = new_coords[, 2]
       }
       
       # drop geometry of waterbodies

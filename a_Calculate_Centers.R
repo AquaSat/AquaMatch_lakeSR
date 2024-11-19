@@ -7,7 +7,12 @@ tar_source("a_Calculate_Centers/src/")
 # This {targets} list calculates "Point of Inaccessibility", also known as Cheybyshev 
 # Center for all lakes/reservoirs/impoundments greater than 1ha in surface area 
 # using the NHDPlus polygons using the {nhdplusTools} package and the `poi()` 
-# function in the {polylabelr} package. 
+# function in the {polylabelr} package. At some point, this workflow will need
+# to be updated to the new USGS 3DHP data, but that isn't complete right now. 
+# Additionally, we are intentionally using NHDPlusV2 instead of NHDPlusHR because
+# of computational time within the scope of this workflow. For HUC4s that are not
+# included in the NHDPlusV2, we access the NHD Best Resolution product directly
+# from the NHD from the National Map url.
 
 # create list of targets to perform this task
 a_Calculate_Centers_list <- list(
@@ -18,18 +23,16 @@ a_Calculate_Centers_list <- list(
       directories = c("a_Calculate_Centers/mid/",
                       "a_Calculate_Centers/nhd/",
                       "a_Calculate_Centers/out/")
-      
       walk(directories, function(dir) {
         if(!dir.exists(dir)){
           dir.create(dir)
         }
       })
     },
-    cue = tar_cue("always"),
-    priority = 1
-  ),
+    cue = tar_cue("always")
+    ),
   
-  # get {sf}s for all US states and territories from {tigris}
+  # get {sf}s for all US states and territories from {tigris} to grab all the HUC4s
   tar_target(
     name = US_states_territories,
     command = states() %>% st_make_valid(),
@@ -48,7 +51,7 @@ a_Calculate_Centers_list <- list(
     pattern = map(US_states_territories)
   ),
   
-  # get distinct HUC4s as a list
+  # get distinct HUC4s as a list from the previous target
   tar_target(
     name = HUC4_list,
     command = HUC4_dataframe %>% 
@@ -62,7 +65,12 @@ a_Calculate_Centers_list <- list(
   # run time for this target is ~ 45 min
   tar_target(
     name = NHD_poi_points,
-    command = calculate_centers_HUC4(HUC4_list),
+    command = {
+      # need to make sure that the directory structure has been created prior
+      # to running this target
+      a_check_dir_structure
+      calculate_centers_HUC4(HUC4_list)
+      },
     packages = c("nhdplusTools", "sf", "tidyverse", "polylabelr", "rmapshaper"),
     pattern = map(HUC4_list)
   ),
@@ -89,7 +97,8 @@ a_Calculate_Centers_list <- list(
     packages = c("tidyverse", "sf", "polylabelr")
   ), 
   
-  # and now we'll join together the two POI files
+  # and now we'll join together the two POI files, retaining source information
+  # and the unique identifier from NHD
   tar_target(
     name = combined_poi,
     command = {
