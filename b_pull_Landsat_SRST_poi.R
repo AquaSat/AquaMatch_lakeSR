@@ -4,7 +4,7 @@ tar_source("b_pull_Landsat_SRST_poi/src/")
 # Initiate pull of Landsat C2 SRST -------------
 
 # This {targets} list initiates the pull of Landsat SRST for all POI calculated
-# in the {targets} group 'a_Calculate_Centers'.
+# in the {targets} group "a_Calculate_Centers".
 
 # create list of targets to perform this task
 b_pull_Landsat_SRST_poi_list <- list(
@@ -20,8 +20,7 @@ b_pull_Landsat_SRST_poi_list <- list(
         }
       })
     },
-    cue = tar_cue("always"),
-    priority = 1
+    cue = tar_cue("always")
   ),
   
   # read and track the config file
@@ -29,13 +28,18 @@ b_pull_Landsat_SRST_poi_list <- list(
     name = config_file_poi,
     command = poi_config,
     read = read_yaml(!!.x),
-    packages = 'yaml'
+    packages = "yaml"
   ),
 
   # load, format, save yml as a csv
   tar_target(
     name = yml_poi,
-    command = format_yaml(config_file_poi),
+    command = {
+      # need to make sure that the directory structure has been created prior
+      # to running this target
+      b_check_dir_structure
+      format_yaml(config_file_poi)
+      },
     packages = c("yaml", "tidyverse")
   ),
 
