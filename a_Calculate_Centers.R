@@ -96,7 +96,12 @@ a_Calculate_Centers_list <- list(
   # run time for this target is > 1h
   tar_target(
     name = nonCONUS_poi,
-    command = calculate_bestres_centers(nonCONUS_HUC4),
+    command = {
+      # need to make sure that the directory structure has been created prior
+      # to running this target
+      a_check_dir_structure
+      calculate_bestres_centers(nonCONUS_HUC4)
+      },
     packages = c("tidyverse", "sf", "polylabelr"),
     pattern = map(nonCONUS_HUC4)
   ), 
