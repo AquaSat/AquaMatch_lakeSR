@@ -3,7 +3,6 @@ library(targets)
 library(tarchetypes)
 library(reticulate)
 library(crew)
-library(crew.cluster)
 
 # Set up python virtual environment ---------------------------------------
 
