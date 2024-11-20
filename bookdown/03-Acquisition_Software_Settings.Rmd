@@ -96,4 +96,5 @@ right.](images/Screenshot%202023-10-25%20at%2011.34.08%20AM.png)](https://code.e
 
 Alternatively, you can create an GEE project for this task in the dropdown menu
 accessed by clicking on the icon to the right of the highlighted box in the
-figure above.
+figure above. This workflow will not run without specifying an Earth Engine Project
+that is managed by the Google Account you authenticate this run with.

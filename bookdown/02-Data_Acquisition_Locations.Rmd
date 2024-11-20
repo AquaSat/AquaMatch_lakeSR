@@ -67,6 +67,8 @@ from the shoreline using the `polylabelr::poi()` function [@larsson2020], which
 calculates a point in space and the radius of the circle used to define the POI.
 
 ## Lakes included in lakeSR
+HUC4s figure
+https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/thumbnails/image/WBD_SubRegions_24x18.png
 
 For **lakeSR**, we use the [NHDPlusHR
 dataset](https://www.usgs.gov/national-hydrography/nhdplus-high-resolution) for
@@ -169,10 +171,10 @@ the output file is tracked as *combined_poi_points*).
 
 ## Comparison of POI and DP calculations
 
-Show MN/AK as examplesc
+This is a different center computation from AquaSatv1 - original was based on HydroLakes, 
+which only encompassed xxx lakes, whereas lakeSR and the NHD integration touches yyy lakes.
+Because the geometries of these lakes are significantly more complex, the DP calculation
+done in ASv1 can not be made on NHD polygons unless they are simplified, losing the
+benefit of the NHD resolution encompassing 1ha lakes. 
 
-Grab DP from LimnoSat
-
-Calc POI
-
-Calc differences in distance
+Show a few examples of DP from LimnoSat with hydrolake boundary, nhd boundary, POI calculations.

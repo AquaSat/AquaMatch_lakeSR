@@ -2,15 +2,26 @@
 library(targets)
 library(tarchetypes)
 library(reticulate)
+library(crew)
+library(crew.cluster)
 
 # Set up python virtual environment ---------------------------------------
 
 tar_source("python/pySetup.R")
 
+# Set up crew controller for multicore processing ------------------------
+controller_cores <- crew_controller_local(
+  workers = parallel::detectCores()-1,
+  seconds_idle = 12
+)
+
 # Set target options: ---------------------------------------
 
 tar_option_set(
-  packages = c("tidyverse", "sf") # packages that your targets need to run
+  # packages that {targets} need to run for this workflow
+  packages = c("tidyverse", "sf"),
+  # set up crew controller
+  controller = controller_cores
 )
 
 # Point to config files: ---------------------------------------

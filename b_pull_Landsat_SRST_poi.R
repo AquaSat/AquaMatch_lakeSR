@@ -20,7 +20,8 @@ b_pull_Landsat_SRST_poi_list <- list(
         }
       })
     },
-    cue = tar_cue("always")
+    cue = tar_cue("always"),
+    deployment = "main"
   ),
   
   # read and track the config file
@@ -28,7 +29,8 @@ b_pull_Landsat_SRST_poi_list <- list(
     name = config_file_poi,
     command = poi_config,
     read = read_yaml(!!.x),
-    packages = "yaml"
+    packages = "yaml",
+    deployment = "main"
   ),
 
   # load, format, save yml as a csv
@@ -40,31 +42,36 @@ b_pull_Landsat_SRST_poi_list <- list(
       b_check_dir_structure
       format_yaml(config_file_poi)
       },
-    packages = c("yaml", "tidyverse")
+    packages = c("yaml", "tidyverse"),
+    deployment = "main"
   ),
 
   # reformat location file for run_GEE_per_tile using the combined_poi_points
   # from the a_Calculate_Centers group
   tar_target(
     name = ref_locations_poi,
-    command = reformat_locations(yml_poi, combined_poi)
+    command = reformat_locations(yml_poi, combined_poi),
+    deployment = "main"
   ),
   
   # get WRS tiles/indication of whether buffered points are contained by them
   tar_target(
     name = WRS_tiles_poi,
-    command = get_WRS_tiles_poi(ref_locations_poi, yml_poi)
+    command = get_WRS_tiles_poi(ref_locations_poi, yml_poi),
+    deployment = "main"
   ),
   
   # check to see if geometry is completely contained in pathrow
   tar_target(
     name = poi_locs_filtered,
     command = check_if_fully_within_pr(WRS_tiles_poi, ref_locations_poi, yml_poi),
-    pattern = WRS_tiles_poi,
+    pattern = map(WRS_tiles_poi),
     packages = c("tidyverse", "sf", "feather")
   ),
   
-  # run the Landsat pull as function per tile
+  # run the Landsat pull as function per tile - this is the longest step and can
+  # not be run by multiple crew workers because the bottleneck is on the end of
+  # GEE, not local compute.
   tar_target(
     name = eeRun_poi,
     command = {
@@ -72,7 +79,8 @@ b_pull_Landsat_SRST_poi_list <- list(
       run_GEE_per_tile(WRS_tiles_poi)
       },
     pattern = map(WRS_tiles_poi),
-    packages = "reticulate"
+    packages = "reticulate",
+    deployment = "main"
   ),
   
   # check to see that all tasks are complete! This target will run until all

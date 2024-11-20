@@ -52,9 +52,15 @@ calculate_centers_HUC4 <- function(HUC4) {
     if (nrow(invalid) > 0) {
       sf_use_s2(TRUE) # make sure that we're using spherical geometry here
       wbd_less <- wbd_filter[!wbd_filter$comid %in% invalid$comid, ]
-      fixed <- invalid %>% 
-        ms_simplify(keep = 0.75)
-      wbd_filter <- bind_rows(wbd_less, fixed)
+      # for the rare cases that this doesn't work, we include a little error
+      # handling here
+      try(fixed <- invalid %>% 
+            ms_simplify(keep = 0.75))
+      if ("fixed" %in% ls()) {
+        wbd_filter <- bind_rows(wbd_less, fixed)
+      } else {
+        wbd_filter <- wbd_less
+      }
     }
   
     # check (again) for valid geometry and drop z coords (if they exist)

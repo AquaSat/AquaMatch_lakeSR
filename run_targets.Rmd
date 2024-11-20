@@ -17,9 +17,46 @@ the {targest} workflow is available in the README file.
 
 ## Prerequsites
 
-In order to use this workflow, you must have a [Google Earth Engine account](https://earthengine.google.com/signup/) 
-and have configured a [Google Cloud Project](https://developers.google.com/earth-engine/cloud/projects) 
-and you will need to[download, install, and initialize gcloud](https://cloud.google.com/sdk/docs/install). 
+There are a number of packages required for this workflow. first, we install 
+the necessary packages using a `package_installer()` custom function.
+
+Define package installer function
+
+```{r package_installer}
+package_installer <- function(x) {
+  if (x %in% installed.packages()) {
+    print(paste0("{", x ,"} package is already installed."))
+    } else {
+      install.packages(x)
+      print(paste0("{", x ,"} package has been installed."))
+    }
+  }
+```
+
+List packages that need to be checked for install which are used in this workflow, 
+and walk the function along them all.
+
+```{r walk_package_installer}
+packages <- c("bookdown",
+              "crew",
+              "nhdplusTools",
+              "parallel",
+              "polylabelr",
+              "reticulate",
+              "rmapshaper",
+              "sf",
+              "tarchetypes",
+              "targets",
+              "tidyverse",
+              "tigris",
+              "yaml")
+# note we use base-r lapply and not map since tidy is not loaded (and possibly
+# not installed) yet
+lapply(packages, package_installer)
+
+# this workflow requires the most up-to-date version of {nhdplusTools}
+update.packages("nhdplusTools")
+```
 
 
 ## Completing the config.yml file
@@ -39,9 +76,14 @@ the section `google_settings`.
 
 ## Confirm GEE access via API
 
-First, create a virtual environment for this use of Python. In order for this
-chunk of code to run properly, you will need to make sure that you are in a fresh
-R session.  
+In order to use this workflow, you must have a [Google Earth Engine account](https://earthengine.google.com/signup/) 
+and have configured a [Google Cloud Project](https://developers.google.com/earth-engine/cloud/projects) 
+and you will need to[download, install, and initialize gcloud](https://cloud.google.com/sdk/docs/install). 
+
+After the above steps have been taken, create a virtual environment for this use 
+of Python. In order for this chunk of code to run properly, you will need to 
+make sure that you are in a fresh R session, otherwise your settings may override
+activating a new environment.
 
 ```{r}
 source("python/pySetup.R")
@@ -75,56 +117,33 @@ ee.Initialize(project=ee_proj)
 
 ```
 
-Executing ee.Initialize() should result in no error or warning messagaes.
+Executing ee.Initialize() should result in no error or warning messagaes, but may
+pass messages from EE. As long as they do not begin with WARNING or ERROR, all is
+well.
 
-
-## Install necessary packages
-
-Define package installer function
-
-```{r package_installer}
-package_installer <- function(x) {
-  if (x %in% installed.packages()) {
-    print(paste0("{", x ,"} package is already installed."))
-    } else {
-      install.packages(x)
-      print(paste0("{", x ,"} package has been installed."))
-    }
-  }
-```
-
-List packages that need to be checked for install which are used in this workflow, 
-and walk the function along them all.
-
-```{r walk_package_installer}
-packages <- c("bookdown",
-              "nhdplusTools",
-              "polylabelr",
-              "reticulate",
-              "rmapshaper",
-              "sf",
-              "tarchetypes",
-              "targets",
-              "tidyverse",
-              "tigris",
-              "yaml")
-lapply(packages, package_installer)
-# this workflow requires the most up-to-date version of {nhdplusTools}
-update.packages("nhdplusTools")
-```
-
-You are now ready to run the pipeline!
 
 ## Run the targets pipeline and output a network graph.
 
+Just as a heads up, running this workflow will take multiple hours, mostly because
+of the bottleneck at GEE - only 10 tasks are cued at any given time, and GEE determines
+how many tasks are running at any given time. We use multiple
+cores for processing using {crew} workers integration with {targets} wherever 
+possible to increase efficiency of this process. Without multicores, -a- group
+takes about 2 hours and decrease in process time is directly correlated to the 
+number of CPU cores on your computer, the more cores, the more time savings. 
+This workflow currently uses n-1 cores as detected by the {parallel} package.
 
-Just as a heads up, running this workflow will take multiple hours.
+```{r}
+parallel::detectCores()
+```
+
+Now that you know this will take a while, go ahead and run the pipeline!
 
 ```{r run_targets}
 library(targets)
 
 # run the pipeline
-tar_make()
+tar_make(combined_poi)
 ```
 
 

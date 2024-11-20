@@ -29,7 +29,8 @@ a_Calculate_Centers_list <- list(
         }
       })
     },
-    cue = tar_cue("always")
+    cue = tar_cue("always"),
+    deployment = "main"
     ),
   
   # get {sf}s for all US states and territories from {tigris} to grab all the HUC4s
@@ -57,44 +58,47 @@ a_Calculate_Centers_list <- list(
     command = HUC4_dataframe %>% 
       distinct() %>% 
       pull("huc4"),
-    packages = "tidyverse"
+    packages = "tidyverse",
+    deployment = "main"
+  ),
+  
+  # now filter out for HUC4s that are in CONUS (and have NHDPlusV2 waterbodies)
+  tar_target(
+    name = CONUS_HUC4,
+    command = HUC4_list[as.numeric(HUC4_list) < 1900],
+    deployment = "main"
   ),
   
   # for each HUC4, grab the NHDPlus waterbodies, subset to lakes/res/
   # impoundments, subset to >= 1ha, and calculate POI for each polygon
-  # run time for this target is ~ 45 min
+  # run time for this target is ~ 45 min - 1 hour
   tar_target(
-    name = NHD_poi_points,
+    name = CONUS_poi,
     command = {
       # need to make sure that the directory structure has been created prior
       # to running this target
       a_check_dir_structure
-      calculate_centers_HUC4(HUC4_list)
+      calculate_centers_HUC4(CONUS_HUC4)
       },
     packages = c("nhdplusTools", "sf", "tidyverse", "polylabelr", "rmapshaper"),
-    pattern = map(HUC4_list)
+    pattern = map(CONUS_HUC4)
   ),
   
-  # Using the HUC list where there were no waterbodies (HI, Guam, AK, etc),
-  # get a list of states to download the NHD Best Resolution from the National
-  # Map using a url.
+  # and then grab the non-CONUS HUC4s
   tar_target(
-    name = need_wbd_HUC4,
-    command = {
-      NHD_poi_points
-      read_lines("a_Calculate_Centers/mid/no_wbd_huc4.txt")
-    },
-    packages = c("tidyverse", "sf")
+    name = nonCONUS_HUC4,
+    command = HUC4_list[as.numeric(HUC4_list) >= 1900],
+    deployment = "main"
   ),
   
   # now download the NHD Best Resolution file from the National Map, filter
   # waterbodies, and calculate POIs
   # run time for this target is > 1h
   tar_target(
-    name = NHD_bestres_poi,
-    command = calculate_bestres_centers(need_wbd_HUC4),
-    pattern = need_wbd_HUC4,
-    packages = c("tidyverse", "sf", "polylabelr")
+    name = nonCONUS_poi,
+    command = calculate_bestres_centers(nonCONUS_HUC4),
+    packages = c("tidyverse", "sf", "polylabelr"),
+    pattern = map(nonCONUS_HUC4)
   ), 
   
   # and now we'll join together the two POI files, retaining source information
@@ -102,14 +106,15 @@ a_Calculate_Centers_list <- list(
   tar_target(
     name = combined_poi,
     command = {
-      NHDv2 <- NHD_poi_points %>% 
+      CONUS <- CONUS_poi %>% 
         mutate(nhd_source = "NHDPlusv2")
-      NHDbestres <- NHD_bestres_poi %>% 
+      nonCONUS <- nonCONUS_poi %>% 
         mutate(nhd_source = "NHDBestRes")
-      full_join(NHDv2, NHDbestres) %>% 
+      full_join(CONUS, nonCONUS) %>% 
         mutate(nhd_id = if_else(!is.na(comid), comid, permanent_identifier)) %>% 
         select(-c(comid, permanent_identifier))
     },
-    packages = c("tidyverse", "feather")
+    packages = c("tidyverse", "feather"),
+    deployment = "main"
   )
 )
