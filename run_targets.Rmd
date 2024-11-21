@@ -27,7 +27,7 @@ package_installer <- function(x) {
   if (x %in% installed.packages()) {
     print(paste0("{", x ,"} package is already installed."))
     } else {
-      install.packages(x)
+      install.packages(x, repos = "http://cran.us.r-project.org")
       print(paste0("{", x ,"} package has been installed."))
     }
   }
@@ -55,7 +55,7 @@ packages <- c("bookdown",
 lapply(packages, package_installer)
 
 # this workflow requires the most up-to-date version of {nhdplusTools}
-update.packages("nhdplusTools")
+update.packages("nhdplusTools", repos = "http://cran.us.r-project.org")
 ```
 
 
