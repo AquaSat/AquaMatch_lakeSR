@@ -46,7 +46,7 @@ calculate_centers_HUC4 <- function(HUC4) {
       st_make_valid()
     
     # pull out geometries that are still invalid, if any
-    invalid <- wbd_filter[!st_is_valid(wbd_filter),]
+    invalid <- wbd_filter[!st_is_valid(wbd_filter), ]
     # if there are any, simplify (st_simplify usually fails here, so using 
     # rmapshaper::ms_simplify())
     if (nrow(invalid) > 0) {
