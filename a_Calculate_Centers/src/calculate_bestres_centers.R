@@ -139,9 +139,8 @@ calculate_bestres_centers <- function(HUC4) {
     # filter for containment
     contained_poi <- poi_sf_trans[wbd_valid, ]
     
-    # join the poi with all the info from the wbd file
-    poi <- wbd_df %>%
-      right_join(., contained_poi) %>% 
+    # and now grab the poi lat/lon from the poi_df and drop geometry
+    poi <- contained_poi %>%
       left_join(., poi_df) %>% 
       st_drop_geometry()
     
