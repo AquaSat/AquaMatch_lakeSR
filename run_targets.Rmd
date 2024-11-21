@@ -12,7 +12,7 @@ than 1ha and all waterbodies deemed "intermittent" by the NHD greater than 4ha.
 
 This R Markdown document is not meant to be "knit", rather to walk the user through
 the process of setting up and running this workflow. Additional overview about
-the {targest} workflow is available in the README file.
+the {targets} workflow is available in the README file.
 
 
 ## Prerequsites
