@@ -7,7 +7,7 @@ from pandas import read_csv, read_feather
 import math
 
 # LOAD ALL THE CUSTOM FUNCTIONS -----------------------------------------------
-# pull code begins on line 1222
+# pull code begins on line 1185
 
 def csv_to_eeFeat(df, proj):
   """Function to create an eeFeature from the location info
