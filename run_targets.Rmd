@@ -17,7 +17,7 @@ the {targest} workflow is available in the README file.
 
 ## Prerequsites
 
-There are a number of packages required for this workflow. first, we install 
+There are a number of packages required for this workflow. First, we install 
 the necessary packages using a `package_installer()` custom function.
 
 Define package installer function
