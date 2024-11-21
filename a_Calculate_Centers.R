@@ -56,8 +56,8 @@ a_Calculate_Centers_list <- list(
   tar_target(
     name = HUC4_list,
     command = HUC4_dataframe %>% 
-      distinct() %>% 
-      pull("huc4"),
+      pull("huc4") %>% 
+      unique(),
     packages = "tidyverse",
     deployment = "main"
   ),
