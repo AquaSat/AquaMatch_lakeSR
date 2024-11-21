@@ -112,7 +112,7 @@ calculate_bestres_centers <- function(HUC4) {
       x <- coord[, 1]
       y <- coord[, 2]
       # using coordinates, get the poi distance
-      poly_poi <- poi(x,y, precision = 0.01)
+      poly_poi <- poi(x, y, precision = 0.01)
       # add info to poi_df
       poi_df$r_id[i] = wbd_valid[i, ]$r_id
       poi_df$permanent_identifier[i] = as.character(wbd_valid[i, ]$permanent_identifier)
