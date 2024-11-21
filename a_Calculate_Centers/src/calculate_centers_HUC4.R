@@ -75,7 +75,7 @@ calculate_centers_HUC4 <- function(HUC4) {
       ungroup()
     
     # some HUC4s have very few waterbodies that meet the above filtering. If we try 
-    # to do this next step and there are now rows in the wbd dataframe, the pipeline
+    # to do this next step and there are no rows in the wbd dataframe, the pipeline
     # will error out
     if (nrow(wbd_valid) > 0) {
       # for each polygon, calculate a center. Because sf doesn't map easily, using a 
