@@ -1,22 +1,24 @@
 ---
-title: "Run Targets - lakeSR pipeline"
-author: "ROSSyndicate"
-date: "`r Sys.Date()`"
-output:
-  html_document: default
-  pdf_document: default
+title: "Run Targets - AquaMatch_lakeSR pipeline"
 ---
 
 # Purpose
 
 This script loads all necessary packages to run the {targets} pipeline for 
-lakeSR then runs it! 
+AquaMatch_lakeSR then runs it! lakeSR extracts summaries of the Landsat Collection
+2 Surface Reflectance Product for the furthest point from shore (polygon edge) for
+all lakes/reservoirs/ponds/impoundments in the United States and Territories greater
+than 1ha and all waterbodies deemed "intermittent" by the NHD greater than 4ha. 
 
-Important note: before rendering this document or running this workflow, you 
-will need to authenticate your Earth Engine credentials in the *zsh* terminal. 
-See the README in this repository for details on this action.
+This R Markdown document is not meant to be "knit", rather to walk the user through
+the process of setting up and running this workflow. Additional overview about
+the {targets} workflow is available in the README file.
 
-## Install necessary packages
+
+## Prerequsites
+
+There are a number of packages required for this workflow. First, we install 
+the necessary packages using a `package_installer()` custom function.
 
 Define package installer function
 
@@ -25,41 +27,125 @@ package_installer <- function(x) {
   if (x %in% installed.packages()) {
     print(paste0("{", x ,"} package is already installed."))
     } else {
-      install.packages(x)
+      install.packages(x, repos = "http://cran.us.r-project.org")
       print(paste0("{", x ,"} package has been installed."))
     }
   }
 ```
 
-List packages that need to be checked for install, and walk the function along them all.
+List packages that need to be checked for install which are used in this workflow, 
+and walk the function along them all.
 
 ```{r walk_package_installer}
-packages <- c("tidyverse",
-              "targets",
-              "tarchetypes",
+packages <- c("bookdown",
+              "crew",
               "nhdplusTools",
+              "parallel",
               "polylabelr",
+              "reticulate",
+              "rmapshaper",
               "sf",
+              "tarchetypes",
+              "targets",
+              "tidyverse",
               "tigris",
-              "reticulate")
+              "yaml")
+# note we use base-r lapply and not map since tidy is not loaded (and possibly
+# not installed) yet
 lapply(packages, package_installer)
+
+# this workflow requires the most up-to-date version of {nhdplusTools}
+update.packages("nhdplusTools", repos = "http://cran.us.r-project.org")
 ```
 
-## Authenticate Earth Engine
 
-This workflow requires authentication of your earth engine account. There are 
-additional dependencies listed in the README file as well as links for 
-troubleshooting. 
+## Completing the config.yml file
+
+Configuration of the config.yml file is necessary for this workflow to function.
+You will need to modify the yaml file in order for this workflow to work if you
+are running this and do not have access to the ROSSyndicate Google Account. 
+See the comments within the config.yml file for guidance on parameter definitions 
+and how to format each parameter. The workflow is set up to use the config file
+in the folder path `b_pull_Landsat_SRST_poi/config_files/config_poi.yml`, but we
+also provide a blank config file with default settings at the path 
+`b_pull_Landsat_SRST_poi/config_files/config.yml` - in order for {targets} to use
+an updated config file, you will need to change the file path on line 18 of the 
+`_targets.R` script. The only parameters that need to be filled in are those in 
+the section `google_settings`.
+
+
+## Confirm GEE access via API
+
+In order to use this workflow, you must have a [Google Earth Engine account](https://earthengine.google.com/signup/) 
+and have configured a [Google Cloud Project](https://developers.google.com/earth-engine/cloud/projects) 
+and you will need to [download, install, and initialize gcloud](https://cloud.google.com/sdk/docs/install). 
+
+After the above steps have been taken, create a virtual environment for this use 
+of Python. In order for this chunk of code to run properly, you will need to 
+make sure that you are in a fresh R session, otherwise your settings may override
+activating a new environment.
+
+```{r}
+source("python/pySetup.R")
+```
+
+The final output of the previous cell will be "conda environment activated" in your
+console if the setup was successful. 
+
+Now, we'll make sure that the Earth Engine API is set up correctly. Running this
+code chunk will open a web browser. Make sure that the credentials you use are
+the same that appear in your config file. When your browser will indicate that you 
+have successfully authenticated, return here to finish this step.
+
+```{python}
+import ee
+import yaml
+
+# note, you will need to update this file path if you are using a different config
+# file
+with open("b_pull_Landsat_SRST_poi/config_files/config_poi.yml") as config:
+    try:
+        cfg = yaml.safe_load(config)
+    except yaml.YAMLError as exc:
+        print(exc)
+
+google = cfg["google_settings"]
+ee_proj = next(item['ee_proj'] for item in google if 'ee_proj' in item)
+
+ee.Authenticate(auth_mode="localhost")
+ee.Initialize(project=ee_proj)
+
+```
+
+Executing ee.Initialize() should result in no error or warning messagaes, but may
+pass messages from EE. As long as they do not begin with WARNING or ERROR, all is
+well.
+
 
 ## Run the targets pipeline and output a network graph.
+
+Just as a heads up, running this workflow will take multiple hours, mostly because
+of the bottleneck at GEE - only 10 tasks are cued at any given time, and GEE determines
+how many tasks are running at any given time. We use multiple
+cores for processing using {crew} workers integration with {targets} wherever 
+possible to increase efficiency of this process. Without multicores, -a- group
+takes about 2 hours and decrease in process time is directly correlated to the 
+number of CPU cores on your computer, the more cores, the more time savings. 
+This workflow currently uses n-1 cores as detected by the {parallel} package.
+
+```{r}
+parallel::detectCores()
+```
+
+Now that you know this will take a while, go ahead and run the pipeline!
 
 ```{r run_targets}
 library(targets)
 
 # run the pipeline
-tar_make()
-
+tar_make(a_combined_poi)
 ```
+
 
 ### Create a network diagram of the workflow.
 
@@ -67,15 +153,3 @@ tar_make()
 tar_visnetwork()
 ```
 
-```{r write_mermaid}
-# save the mmd file
-writeLines(tar_mermaid(), sep = "\n", "mermaid/mermaid.mmd")
-```
-
-```{zsh create_mermaid_png}
-mmdc -i mermaid/mermaid.mmd -o mermaid/mermaid.png -t dark -w 4000 -H 1000
-```
-
-![](mermaid/mermaid.png)
-
-In order to view [legible] text, right click the image and open in a new window.
