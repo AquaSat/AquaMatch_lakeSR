@@ -15,7 +15,7 @@
 calculate_centers_HUC4 <- function(HUC4) {
   
   message(paste0("Beginning center calculation for HUC 4 ", HUC4))
-
+  
   # grab the huc {sf} object
   huc <- get_huc(id = HUC4, type = "huc04") %>% 
     st_make_valid()
@@ -62,7 +62,7 @@ calculate_centers_HUC4 <- function(HUC4) {
         wbd_filter <- wbd_less
       }
     }
-  
+    
     # check (again) for valid geometry and drop z coords (if they exist)
     wbd_valid <- wbd_filter %>% 
       rowwise() %>% 
@@ -130,21 +130,29 @@ calculate_centers_HUC4 <- function(HUC4) {
         poi_df$poi_Latitude[i] = new_coords[, 2]
       }
       
-      # drop geometry of waterbodies
-      wbd_df <- wbd_valid %>% 
-        st_drop_geometry()
+      # we still need to dummy check to be sure that all of the poi centers are
+      # inside the original polygons... sometimes when things are simplified too much
+      # the point ends up being outside of the polygon area.
+      poi_sf <- st_as_sf(poi_df, 
+                         coords = c("poi_Longitude", "poi_Latitude"), 
+                         crs = "EPSG:4326")
+      # transform the points to the same crs as the waterbodies
+      poi_sf_trans <- st_transform(poi_sf, st_crs(wbd_valid))
+      # filter for containment
+      contained_poi <- poi_sf_trans[wbd_valid, ]
       
-      # join back in with all the info from the wbd_valid file
-      poi_df <- wbd_df %>%
-        right_join(., poi_df) %>% 
-        mutate(location_type = "poi_center") 
+      # join the poi with all the info from the wbd file
+      poi <- wbd_df %>%
+        right_join(., contained_poi) %>% 
+        left_join(., poi_df) %>% 
+        st_drop_geometry()
       
     }
     
     #return the dataframe with location info
-    return(poi_df %>% 
-      mutate(r_id = paste(HUC4, r_id, sep = '_')) %>% 
-      select(r_id, comid, poi_Latitude, poi_Longitude, poi_dist_m))
+    return(poi %>% 
+             mutate(r_id = paste(HUC4, r_id, sep = '_')) %>% 
+             select(r_id, comid, poi_Latitude, poi_Longitude, poi_dist_m))
     
   } else { # if the object is null note it in a text doc to come back to. 
     message(paste0("HUC4 ", HUC4, " contains no waterbodies, noting in 'a_Calculate_Centers/mid/no_wbd_huc4.txt'"))
