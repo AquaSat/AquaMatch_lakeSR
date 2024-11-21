@@ -15,7 +15,7 @@ calculate_bestres_centers <- function(HUC4) {
   
   # set timeout so that... this doesn't timeout
   options(timeout = 60000)
-
+  
   # url for the NHD Best Resolution for HUC4
   url = paste0("https://prd-tnm.s3.amazonaws.com/StagedProducts/Hydrography/NHD/HU4/GPKG/NHD_H_", HUC4, "_HU4_GPKG.zip")
   download.file(url, destfile = file.path("a_Calculate_Centers/nhd/", 
@@ -84,7 +84,7 @@ calculate_bestres_centers <- function(HUC4) {
     poi_Latitude = numeric(),
     poi_dist_m = numeric()
   )
-    if(nrow(wbd_valid) > 0) {
+  if(nrow(wbd_valid) > 0) {
     for (i in 1:length(wbd_valid[[1]])) {
       poi_df  <- poi_df %>% add_row()
       one_wbd <- wbd_valid[i, ]
@@ -112,7 +112,7 @@ calculate_bestres_centers <- function(HUC4) {
       x <- coord[, 1]
       y <- coord[, 2]
       # using coordinates, get the poi distance
-      poly_poi <- poi(x,y, precision = 0.01)
+      poly_poi <- poi(x, y, precision = 0.01)
       # add info to poi_df
       poi_df$r_id[i] = wbd_valid[i, ]$r_id
       poi_df$permanent_identifier[i] = as.character(wbd_valid[i, ]$permanent_identifier)
@@ -128,29 +128,34 @@ calculate_bestres_centers <- function(HUC4) {
       poi_df$poi_Latitude[i] = new_coords[, 2]
     }
     
-    # create a simplified df aggregated if there are multiple features for any 
-    # given PermID
-    wbd_df <- wbd %>% 
-      st_drop_geometry() 
+    # we still need to dummy check to be sure that all of the poi centers are
+    # inside the original polygons... sometimes when things are simplified too much
+    # the point ends up being outside of the polygon area.
+    poi_sf <- st_as_sf(poi_df, 
+                       coords = c("poi_Longitude", "poi_Latitude"), 
+                       crs = "EPSG:4326")
+    # transform the points to the same crs as the waterbodies
+    poi_sf_trans <- st_transform(poi_sf, st_crs(wbd_valid))
+    # filter for containment
+    contained_poi <- poi_sf_trans[wbd_valid, ]
     
-    # join back in with all the info from the wbd file
-    poi_df <- wbd_df %>%
-      right_join(., poi_df) %>% 
-      mutate(location_type = "poi_center",
-             data_source = "NHD Best Resolution") 
+    # and now grab the poi lat/lon from the poi_df and drop geometry
+    poi <- contained_poi %>%
+      left_join(., poi_df) %>% 
+      st_drop_geometry()
     
     # clean up workspace for quicker processing
     # remove the fp and all contents completely before next HUC4
     unlink(file.path("a_Calculate_Centers/nhd/", paste0("NHD_H_", HUC4, "_HU4_GPKG.gpkg")))
     unlink(file.path("a_Calculate_Centers/nhd/", paste0("NHD_H_", HUC4, "_HU4_GPKG.xml")))
     unlink(file.path("a_Calculate_Centers/nhd/", paste0("NHD_H_", HUC4, "_HU4_GPKG.jpg")))
-  
-    #return the dataframe with location info
-    return(poi_df %>% 
+    
+    # return the dataframe with location info
+    return(poi %>% 
              mutate(r_id = paste(HUC4, r_id, sep = "_")) %>% 
              select(r_id, permanent_identifier, poi_Latitude, poi_Longitude, poi_dist_m))
-    } else { # if there are no waterbodies that meet criteria, return null
-      NULL
-    }
-
+  } else { # if there are no waterbodies that meet criteria, return null
+    NULL
+  }
+  
 }

@@ -29,7 +29,7 @@ function in the {polylabelr} package. Alaska, HI, and some other HUC4 waterbodie
 are not included in the NHDPlusv2, so they are downloaded by url from The 
 National Map and are processed in a separate target. 
 
-**Note**: this group of targets will take up to 4h to complete.
+**Note**: this group of targets will take up to 2h to complete.
 
 
 **b_pull_Landsat_SRST_poi**:

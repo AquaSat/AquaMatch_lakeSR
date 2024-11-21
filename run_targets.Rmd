@@ -12,12 +12,20 @@ than 1ha and all waterbodies deemed "intermittent" by the NHD greater than 4ha.
 
 This R Markdown document is not meant to be "knit", rather to walk the user through
 the process of setting up and running this workflow. Additional overview about
+<<<<<<< HEAD
 the {targest} workflow is available in the README file.
+=======
+the {targets} workflow is available in the README file.
+>>>>>>> main
 
 
 ## Prerequsites
 
+<<<<<<< HEAD
 There are a number of packages required for this workflow. first, we install 
+=======
+There are a number of packages required for this workflow. First, we install 
+>>>>>>> main
 the necessary packages using a `package_installer()` custom function.
 
 Define package installer function
@@ -27,7 +35,7 @@ package_installer <- function(x) {
   if (x %in% installed.packages()) {
     print(paste0("{", x ,"} package is already installed."))
     } else {
-      install.packages(x)
+      install.packages(x, repos = "http://cran.us.r-project.org")
       print(paste0("{", x ,"} package has been installed."))
     }
   }
@@ -55,7 +63,11 @@ packages <- c("bookdown",
 lapply(packages, package_installer)
 
 # this workflow requires the most up-to-date version of {nhdplusTools}
+<<<<<<< HEAD
 update.packages("nhdplusTools")
+=======
+update.packages("nhdplusTools", repos = "http://cran.us.r-project.org")
+>>>>>>> main
 ```
 
 
@@ -78,7 +90,11 @@ the section `google_settings`.
 
 In order to use this workflow, you must have a [Google Earth Engine account](https://earthengine.google.com/signup/) 
 and have configured a [Google Cloud Project](https://developers.google.com/earth-engine/cloud/projects) 
+<<<<<<< HEAD
 and you will need to[download, install, and initialize gcloud](https://cloud.google.com/sdk/docs/install). 
+=======
+and you will need to [download, install, and initialize gcloud](https://cloud.google.com/sdk/docs/install). 
+>>>>>>> main
 
 After the above steps have been taken, create a virtual environment for this use 
 of Python. In order for this chunk of code to run properly, you will need to 
@@ -143,7 +159,11 @@ Now that you know this will take a while, go ahead and run the pipeline!
 library(targets)
 
 # run the pipeline
+<<<<<<< HEAD
 tar_make(combined_poi)
+=======
+tar_make(a_combined_poi)
+>>>>>>> main
 ```
 
 

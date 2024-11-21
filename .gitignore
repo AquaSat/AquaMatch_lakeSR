@@ -11,7 +11,6 @@ env/
 a_Calculate_Centers/mid/*
 a_Calculate_Centers/out/*
 a_Calculate_Centers/nhd/*
-a_Calculate_Centers/multisurface/*
 
 b_pull_Landsat_SRST_poi/mid/*
 b_pull_Landsat_SRST_poi/out/*
