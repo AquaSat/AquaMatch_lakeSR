@@ -115,7 +115,7 @@ a_Calculate_Centers_list <- list(
         mutate(nhd_source = "NHDPlusv2")
       nonCONUS <- a_nonCONUS_poi %>% 
         mutate(nhd_source = "NHDBestRes")
-      full_join(a_CONUS, a_nonCONUS) %>% 
+      full_join(CONUS, nonCONUS) %>% 
         mutate(nhd_id = if_else(!is.na(comid), comid, permanent_identifier)) %>% 
         select(-c(comid, permanent_identifier))
     },
