@@ -145,7 +145,7 @@ calculate_bestres_centers <- function(HUC4) {
     unlink(file.path("a_Calculate_Centers/nhd/", paste0("NHD_H_", HUC4, "_HU4_GPKG.xml")))
     unlink(file.path("a_Calculate_Centers/nhd/", paste0("NHD_H_", HUC4, "_HU4_GPKG.jpg")))
   
-    #return the dataframe with location info
+    # return the dataframe with location info
     return(poi_df %>% 
              mutate(r_id = paste(HUC4, r_id, sep = "_")) %>% 
              select(r_id, permanent_identifier, poi_Latitude, poi_Longitude, poi_dist_m))
