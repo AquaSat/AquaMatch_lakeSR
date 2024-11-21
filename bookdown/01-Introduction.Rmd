@@ -79,4 +79,4 @@ methodology.
 If you have followed all of the set up instructions, including those outlined in
 Section \@ref(software-settings), the code within this repository can be
 triggered by running the `run_targets.Rmd` file with the R Project file
-`lakeSR.rproj` open in your RStudio console.
+`AquaMatch_lakeSR.rproj` open in your RStudio console.
