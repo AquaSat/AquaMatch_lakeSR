@@ -140,7 +140,7 @@ calculate_centers_HUC4 <- function(HUC4) {
       poi_sf_trans <- st_transform(poi_sf, st_crs(wbd_valid))
       # filter for containment
       contained_poi <- poi_sf_trans[wbd_valid, ]
-
+      
       # and now grab the poi lat/lon from the poi_df and drop geometry
       poi <- contained_poi %>%
         left_join(., poi_df) %>% 
