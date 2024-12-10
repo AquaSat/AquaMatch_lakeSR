@@ -43,7 +43,7 @@ calculate_bestres_centers <- function(HUC4) {
   intermittent <- wbd %>% 
     filter(
       areasqkm < 0.04,
-      fcode %in% c(39001, 39005)
+      fcode %in% c(39001, 39005, 39006, 43614)
     )
   # remove intermittent from wbd for processing ease
   wbd_filter <- wbd %>% filter(!permanent_identifier %in% intermittent$permanent_identifier)

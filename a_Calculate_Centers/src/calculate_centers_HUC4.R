@@ -37,7 +37,7 @@ calculate_centers_HUC4 <- function(HUC4) {
     # grab smaller (<4ha) lakes/ponds that are characterized as intermittent by NHD
     intermittent <- wbd_filter %>% 
       filter(areasqkm < 0.04,
-             fcode %in% c(39001, 39005))
+             fcode %in% c(39001, 39005, 39006, 43614))
     # and remove from dataset for processing time
     wbd_filter <- wbd_filter %>% filter(!comid %in% intermittent$comid)
     

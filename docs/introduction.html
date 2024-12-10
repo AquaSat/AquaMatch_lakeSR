@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2024-11-20" />
+<meta name="date" content="2024-12-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -104,22 +104,10 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#changes-from-aquasat-v1"><i class="fa fa-check"></i><b>2.1</b> Changes from AquaSat v1</a></li>
 <li class="chapter" data-level="2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>2.2</b> Pole of Inaccessibility</a></li>
-<li class="chapter" data-level="2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#lakes-included-in-lakesr"><i class="fa fa-check"></i><b>2.3</b> Lakes included in lakeSR</a></li>
-<li class="chapter" data-level="2.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#implementation"><i class="fa fa-check"></i><b>2.4</b> Implementation</a></li>
-<li class="chapter" data-level="2.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#comparison-of-poi-and-dp-calculations"><i class="fa fa-check"></i><b>2.5</b> Comparison of POI and DP calculations</a></li>
+<li class="chapter" data-level="2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>2.3</b> Waterbodies in AquaMatch-lakeSR</a></li>
+<li class="chapter" data-level="2.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation"><i class="fa fa-check"></i><b>2.4</b> Technical Implementation</a></li>
+<li class="chapter" data-level="2.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>2.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>3</b> Satellite Data Acquisition Software and Settings</a>
-<ul>
-<li class="chapter" data-level="3.1" data-path="software-settings.html"><a href="software-settings.html#reticulate-conda-environment"><i class="fa fa-check"></i><b>3.1</b> {reticulate} Conda Environment</a></li>
-<li class="chapter" data-level="3.2" data-path="software-settings.html"><a href="software-settings.html#google-earth-engine-setup"><i class="fa fa-check"></i><b>3.2</b> Google Earth Engine Setup</a>
-<ul>
-<li class="chapter" data-level="3.2.1" data-path="software-settings.html"><a href="software-settings.html#create-a-gee-account"><i class="fa fa-check"></i><b>3.2.1</b> Create a GEE account</a></li>
-<li class="chapter" data-level="3.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud-cli"><i class="fa fa-check"></i><b>3.2.2</b> gcloud CLI</a></li>
-<li class="chapter" data-level="3.2.3" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>3.2.3</b> GEE Authentication</a></li>
-<li class="chapter" data-level="3.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-project-setting"><i class="fa fa-check"></i><b>3.2.4</b> GEE project setting</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="4" data-path="citations.html"><a href="citations.html"><i class="fa fa-check"></i><b>4</b> Citations</a></li>
 </ul>
 
       </nav>
@@ -140,18 +128,21 @@ div.csl-indent {
 <div id="header">
 <h1 class="title">lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</h1>
 <p class="author"><em>ROSSyndicate</em></p>
-<p class="date"><em>2024-11-20</em></p>
+<p class="date"><em>2024-12-10</em></p>
 </div>
 <div id="introduction" class="section level1 hasAnchor" number="1">
 <h1><span class="header-section-number">1</span> Introduction<a href="introduction.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>This bookdown document <span class="citation">(<a href="#ref-xie2016">Xie 2016</a>)</span> explains the methodology we use in the
 acquisition and compilation of satellite surface reflectance and surface
 temperature data for all lakes greater than 1 hectacre in the United States and
-US Territories. This product, “<strong>lakeSR</strong>”, is a component of the <strong>AquaSat</strong>
-(v2) suite, an effort to create a database of lake and river water quality
-observations alongside remote sensing data.</p>
+US Territories. This product, “<strong>lakeSR</strong>”, is a component of the <a href="https://github.com/aquasat"><strong>AquaSat</strong>
+suite</a>, an effort to create a database of lake and
+river water quality observations alongside remote sensing data. This is an
+update to the original <strong>AquaSat</strong> (<span class="citation">Ross et al. (<a href="#ref-ross2019">2019</a>)</span>), the foundational effort towards
+making satellite and <em>in situ</em> water quality data accessible for freshwater
+monitoring.</p>
 <p>Currently, <strong>lakeSR</strong> is comprised of the historical Landsat record from 1984
-until mid-2024, comprised of data from the following missions:</p>
+until late 2024, comprised of data from the following missions:</p>
 <ul>
 <li>Landsat 4 Thematic Mapper (TM)</li>
 <li>Landsat 5 TM</li>
@@ -164,9 +155,11 @@ until mid-2024, comprised of data from the following missions:</p>
 <strong>R</strong>eflectance and <strong>S</strong>urface <strong>T</strong>emperature). There will be additional
 satellite data incorporated into the <strong>lakeSR</strong> product in the future.</p>
 <p><strong>lakeSR</strong> acquires tabular data summaries of satellite-derived surface
-reflectance and surface temperature data at central locations within a lake and
-at locations identified with monitoring records from the Water Quality Portal
-from the <strong>AquaMatch</strong> component of <strong>AquaSat</strong>.</p>
+reflectance and surface temperature data at central locations within a lake. The
+sibling product to this is <strong>siteSR</strong>, which acquires the same data at locations
+identified with monitoring records from the Water Quality Portal from the
+<a href="https://aquasat.github.io/AquaMatch_harmonize_WQP/"><strong>AquaMatch</strong></a> component of
+<strong>AquaSat</strong>.</p>
 <div id="code-architecture" class="section level2 hasAnchor" number="1.1">
 <h2><span class="header-section-number">1.1</span> Code Architecture<a href="introduction.html#code-architecture" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><strong>lakeSR</strong> is built on the {targets} workflow management system for R
@@ -176,44 +169,59 @@ benefit of {targets} workflows is that code is only run if a target, a target’
 code, or a target’s dependencies have changed (or become “outdated” in {targets}
 speak).</p>
 <p><strong>lakeSR</strong> is broken down into functional groups of targets, listed below with a
-brief summary about what task(s) each group completes.</p>
+brief summary about what task(s) each group completes. This particular workflow
+incorporates both R and Python programming languages to complete these tasks.</p>
 <p><strong>a_Calculate_Centers</strong>:</p>
-<p>This {targets} list calculates “Pole of Inaccessibility” (POI) for all lakes,
-ponds, reservoirs, and playas greater than 1 hectare in surface area using the
-NHDPlusHR polygons using the {nhdplusTools} package and the <code>poi()</code> function in
-the {polylabelr} package. For all waterbodies in Alaska, POI were calculated
-based on the NHD Best Resolution file for the entire state because the NHDPlusHR
-is not complete for AK. <strong>Note</strong>: this group of targets will take up to 4h to
-complete.</p>
+<p>This {targets} list calculates “Pole of Inaccessibility” (POI,
+<span class="citation">Garcia-Castellanos and Lombardo (<a href="#ref-garcia-castellanos2007">2007</a>)</span>) for all non-intermittent lakes, ponds, and reservoirs
+greater than 1 hectare in surface area and intermittent lakes, ponds, and
+reservoirs greater than 4 hectares using the NHDPlusV2 polygons using the
+{nhdplusTools} package (<span class="citation">Blodgett and Johnson (<a href="#ref-blodgett2023">2023</a>)</span>) and the <code>poi()</code> function in the
+{polylabelr} package (<span class="citation">Larsson (<a href="#ref-larsson2020">2020</a>)</span>). For all waterbodies outside of CONUS, POI
+were calculated based on the NHD Best Resolution file for the entire state or
+territory.</p>
 <p>See Section <a href="locs-data-acq.html#locs-data-acq">2</a> for additional background and detailed
 methodology.</p>
 <p><strong>b_pull_Landsat_SRST_poi</strong>:</p>
-<p>This {targets} group uses the config file <code>config_files/config_poi.yml</code> and the
-“Pole of Inaccessibility” points created in the <code>a_Calculate_Centers</code> group to
-pull Landsat Collection 2 Surface Reflectance and Surface Temperature using the
-GEE API. In this group, we use the most strict LS4-7 pixel filters which include
-the <code>sr_cloud_mask</code> filter. This filter is a conservative filter, removing
-artefacts from upstream products that are used to create the SR product. This
-group of targets ends with a branched target that maps over each of the WRS2
-path rows that intersect with the points. <strong>Note</strong>: this group of targets takes
-a very, very long time, averaging about 1 hour per path-row branch. There are
-just under 800 path rows executed in this branch.</p>
+<p>This {targets} group uses the config file
+<code>b_pull_Landsat_SRST_poi/config_files/config_poi.yml</code> and the “Pole of
+Inaccessibility” points created in the <code>a_Calculate_Centers</code> group to pull
+Landsat Collection 2 Surface Reflectance and Surface Temperature using the GEE
+API. In this group, we use the most conservative LS4-7 pixel filters, as we are
+applying these settings across such a large continuum of time and space. This
+group ends with a branched target that sends tasks to Google Earth engine by
+mapping over WRS2 path rows that intersect with the points created in
+<code>a_Calculate_Centers</code>. <strong>Note</strong>: this group of targets takes a very, very long
+time, averaging about 1 hour per path-row branch. There are just under 800 path
+rows executed in this branch.</p>
 <p>See Section <a href="#LS-C2-SRST"><strong>??</strong></a> for additional background and detailed
 methodology.</p>
 </div>
 <div id="running-the-code-within-this-repository" class="section level2 hasAnchor" number="1.2">
 <h2><span class="header-section-number">1.2</span> Running the code within this repository<a href="introduction.html#running-the-code-within-this-repository" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>If you have followed all of the set up instructions, including those outlined in
-Section <a href="software-settings.html#software-settings">3</a>, the code within this repository can be
+Section <a href="#software-settings"><strong>??</strong></a>, the code within this repository can be
 triggered by running the <code>run_targets.Rmd</code> file with the R Project file
 <code>AquaMatch_lakeSR.rproj</code> open in your RStudio console.</p>
 
 </div>
 </div>
-<h3> Citations<a href="citations.html#citations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<h3>References</h3>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-blodgett2023" class="csl-entry">
+Blodgett, David, and Mike Johnson. 2023. <em>nhdplusTools: Tools for Accessing and Working with the NHDPlus</em>. Reston, VA: U.S. Geological Survey. <a href="https://doi.org/10.5066/P97AS8JD">https://doi.org/10.5066/P97AS8JD</a>.
+</div>
+<div id="ref-garcia-castellanos2007" class="csl-entry">
+Garcia-Castellanos, Daniel, and Umberto Lombardo. 2007. <span>“Poles of Inaccessibility: A Calculation Algorithm for the Remotest Places on Earth.”</span> <em>Scottish Geographical Journal</em> 123 (3): 227–33. <a href="https://doi.org/10.1080/14702540801897809">https://doi.org/10.1080/14702540801897809</a>.
+</div>
 <div id="ref-landau2021" class="csl-entry">
 Landau, William Michael. 2021. <span>“The Targets r Package: A Dynamic Make-Like Function-Oriented Pipeline Toolkit for Reproducibility and High-Performance Computing.”</span> <em>Journal of Open Source Software</em> 6 (57): 2959. <a href="https://doi.org/10.21105/joss.02959">https://doi.org/10.21105/joss.02959</a>.
+</div>
+<div id="ref-larsson2020" class="csl-entry">
+Larsson, Johan. 2020. <em>Polylabelr: Find the Pole of Inaccessibility (Visual Center) of a Polygon</em>. <a href="https://cran.r-project.org/package=polylabelr">https://cran.r-project.org/package=polylabelr</a>.
+</div>
+<div id="ref-ross2019" class="csl-entry">
+Ross, Matthew R. V., Simon N. Topp, Alison P. Appling, Xiao Yang, Catherine Kuhn, David Butman, Marc Simard, and Tamlin M. Pavelsky. 2019. <span>“AquaSat: A Data Set to Enable Remote Sensing of Water Quality for Inland Waters.”</span> <em>Water Resources Research</em> 55 (11): 10012–25. <a href="https://doi.org/10.1029/2019WR024883">https://doi.org/10.1029/2019WR024883</a>.
 </div>
 <div id="ref-xie2016" class="csl-entry">
 Xie, Yihui. 2016. <em>Bookdown: Authoring Books and Technical Documents with r Markdown</em>. Boca Raton, Florida: Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/bookdown">https://bookdown.org/yihui/bookdown</a>.

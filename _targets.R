@@ -30,11 +30,13 @@ poi_config <- "b_pull_Landsat_SRST_poi/config_files/config_poi.yml"
 # Source targets groups: ---------------------------------------
 # Run the R scripts with custom functions:
 tar_source(files = c(
-  "a_Calculate_Centers.R"
+  "a_Calculate_Centers.R",
+  "z_render_bookdown.R"
   )
 )
 
 # Collate targets groups: ---------------------------------------
 list(
-  a_Calculate_Centers_list
+  a_Calculate_Centers_list,
+  z_render_bookdown
 )

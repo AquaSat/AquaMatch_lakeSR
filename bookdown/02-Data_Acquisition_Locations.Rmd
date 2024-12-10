@@ -17,10 +17,13 @@ library(sf)
 library(tigris)
 library(tmap)
 library(nhdplusTools)
+library(targets)
 
 CONUS <- params$poi %>% 
   filter(nhd_source == "NHDBestRes")
 nonCONUS <- anti_join(params$poi, CONUS)
+
+ts <- tar_timestamp(a_combined_poi)
 ```
 
 # Locations of Data Acquisition {#locs-data-acq}
@@ -42,12 +45,12 @@ summarize the Landsat data within a 120m radius of any given location.
 
 Some changes in lake polygon and center point have been made in modernizing and
 scaling from the original AquaSat. The lake center aspect called "deepest point"
-of AquaSat v1 was built upon HydroLakes ([@messager2016]), a global database of
+of AquaSat v1 was built upon HydroLakes [@messager2016], a global database of
 lakes greater than 10 hectares accounting for 1.4 million waterbodies and a a
 total surface area of 2.67 million km² worldwide. While this dataset of lakes
 represents \~55% of the worldwide surface area of lakes greater than 1 hectare,
 it is only a sliver of the estimated 27 million waterbodies in the world
-([@verpoorter2014]). AquaSat v2 uses the [USGS's National Hydrography
+[@verpoorter2014]. AquaSat v2 uses the [USGS's National Hydrography
 products](https://www.usgs.gov/national-hydrography) which map the surface
 waters of the United States, and allows for reduction in minimum size of
 waterbody and an increase in coverage of freshwater systems across the United
@@ -72,103 +75,82 @@ For **lakeSR**, we use POI to determine the point in a lake that is furthest
 from the shoreline using the `polylabelr::poi()` function [@larsson2020], which
 calculates a point in space and the radius of the circle used to define the POI.
 
-## Lakes included in lakeSR
+## Waterbodies in AquaMatch-lakeSR {#waterbodies}
 
-HUC4s figure
-<https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/thumbnails/image/WBD_SubRegions_24x18.png>
+For **lakeSR**, we use the NHDPlusV2 dataset for lakes within the conterminous
+US and US Territories using the {nhdplusTools} R package [@blodgett2023]. All
+HUC4s were downloaded and processed on `r date(ymd_hms(ts))` using the most
+updated version available at the time of download. Because the NHDPlusV2 dataset
+is incomplete for Alaska (Figure \@ref(fig:NHDPlusV2-status)), we used the NHD
+Best Resolution File [@usgeologicalsurvey] for the state of AK and territories.
 
-For **lakeSR**, we use the [NHDPlusHR
-dataset](https://www.usgs.gov/national-hydrography/nhdplus-high-resolution) for
-lakes within the conterminous US and US Territories using the
-`nhdplusTools::download_nhdplushr()` function [@blodgett2023]. All HUC4s were
-downloaded and processed on
-`r date(ymd_hms(file.info("../a_Calculate_Centers/mid/poi_centers_huc4_0101.csv")$mtime))`
-using the most updated version available at the time of download. Because the
-NHDPlusHR dataset is incomplete for Alaska (Figure \@ref(fig:NHDPlusHR-status)),
-we used the NHD Best Resolution File for the state of AK [@usgeologicalsurvey].
-
-```{r NHDPlusHR-status, echo=F, fig.cap="NHDPlusHR dataset availability, courtesy of the USGS."}
-knitr::include_graphics("https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/images/NHDPlusHRStatus_Web_20220707_0.png")
+```{r NHDPlusV2-status, echo=F, fig.cap="NHD HUC4 map for the United States and Territories, courtesy of the USGS."}
+knitr::include_graphics("https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/thumbnails/image/WBD_SubRegions_24x18.png")
 ```
 
-For every HUC4 included in the NHDPlusV2 dataset and the state of Alaska NHD
-Best Resolution dataset, all waterbodies are limited to those with
-[FCodes](https://files.hawaii.gov/dbedt/op/gis/data/NHD%20Complete%20FCode%20Attribute%20Value%20List.pdf)
-belonging to the following groups: 390 (lake/pond), 436 (reservoir), and 361
-(playa) and are at least 0.01 km^2^ (1 hectare) in area according to the area
-value provided in the NHD file. This filtering resulted in
+For every HUC4 in the United States and Territories, all waterbodies are limited
+to those with
+[FCodes](https://www.usgs.gov/ngp-standards-and-specifications/national-hydrography-dataset-nhd-data-dictionary-feature-domains)
+belonging to the following groups: 390 (lake/pond) and 436 (reservoir) and are
+at least 0.01 km^2^ (1 hectare) in area according to the area value provided in
+the NHD file. If the FType of the waterbody belonged to an intermittent category
+(39001, 39005, 39006, 43614) the threshold for inclusion was reduced to 0.04
+km^2^ (4 hectares) to reduce processing time when extracting data from Google
+Earth Engine. This filtering resulted in
 `r format(nrow(params$poi), big.mark = ",")` waterbodies included in our
 dataset, including `r format(nrow(nonCONUS), big.mark = ",")` non-CONUS
-waterbodies. This is a `r round((nrow(params$poi)-56792)*100/56792, 0)` percent
+waterbodies. This is a
+`r format(round((nrow(params$poi)-56792)*100/56792, 0), big.mark = ",")` percent
 increase over the 56,792 lakes included in the original AquaSat product.
 
 For each waterbody, the POI and distance-to-shore radius was calculated using
-the `polylabelr::poi()` function. In order to accurately calculate
-distance-to-shore, each waterbody was converted to the proper Universal
-Transverse Mercator (UTM) projection calculated from the mean longitudinal value
-of the polygon vertices prior to applying the `poi()` function. By using the
-point-local UTM projection, we decrease distortion expected from any single CRS
-used to represent all of the locations from which we have lakes. The latitude
-and longitude values of the POI were transformed to decimal degrees in World
-Geodetic System 1984 (WGS84) (EPSG:4326) from UTM easting and northing
-coordinates for use later in the workflow. It is important to note that the
-`poi()` function does not perform particularly well on larger polygons, however
+the `polylabelr::poi()` function. It is important to note that the `poi()`
+function can sometimes attribute a POI to a location other than the point
+furthest away from a shoreline. This occurs with polygons with a very large
+number of indices (due to sheer area or geomorphological complexity); however
 the points calculated should be an acceptable proxy for pelagic lake conditions.
-[[Will add additional detail from analysis of buffer sizes.]]
 
-## Implementation
+## Technical Implementation
 
 The code for gathering NHD waterbodies and calculating their respective POIs is
 found in {targets} group *a_Calculate_Centers* which is located in the script
-[a_Calculate_Centers.R](https://github.com/aquasat/lakeSR/blob/main/a_Calculate_Centers.R).
-The network graph (Figure \@ref(fig:a-group-vis)) for this group depicts the
-dependencies between each of the *targets* in this group.
+[a_Calculate_Centers.R](https://github.com/aquasat/lakeSR/blob/main/a_Calculate_Centers.R)
+at the root directory of the repository.
 
-On a high level, the processing begins by acquiring the polygons of all US
-states and territories using the {tigris} package [@walker2023]
-(*US_state_territories*). These polygons are used to acquire a list HUC4s that
-intersect with each municipal boundary using the `nhdplusTools::get_huc()`
-function (*HUC4_dataframe*), which are then reduced to distinct HUC4's and
-transformed into a vector of HUC4s (*HUC4_list*). As an error-handling measure,
-*empty_hucs_file* is created (not pictured in Figure \@ref(fig:a-group-vis)) to
-collect a list of HUC4s that do not have high resolution files available for
-download (Figure \@ref(fig:NHDPlusHR-status)). The target *all_poi_points* is
-created by calculating POIs for all waterbodies \> 1 hectare and having an FCode
-of 390, 436, or 361 from each HUC4 in the *HUC4_list.* For this target, we use
-the dynamic branching feature to iterate over each item in the *HUC4_list*. See
-the script
-[calculate_centers_HUC4.R](https://github.com/aquasat/lakeSR/blob/main/a_Calculate_Centers/src/calculate_centers_HUC4.R)
-for details on the function applied in this target. The output of the
-*all_poi_points* target include multiple *.csv* files - these files are collated
-in the target *all_poi_points*, which outputs a *.feather* file (tracked as
-*NHDHR_poi_points*) containing all the POIs resulting from the NHDPlusHR polygon
-files.
+The processing begins by acquiring the polygons of all US states and territories
+using the {tigris} package [@walker2023]. These polygons are used to acquire a
+list HUC4s that intersect with each municipal boundary using the
+`nhdplusTools::get_huc()` function, which are then reduced to distinct HUC4's
+and transformed into a vector of HUC4s. HUC4s are then split into CONUS (HUC4 \<
+1900) and non-CONUS (HUC4 \>= 1900) groups. To efficiently calculate the POI
+across hundreds of HUC4s, we use the dynamic branching feature to iterate over
+each HUC4. For each HUC4, the NHDPlusV2 (CONUS) or NHD Best Resolution (non
+CONUS) waterbodies are acquired and filtered for lake/ponds and reservoirs of at
+least 1 hectare in area or 4 hectares for intermittent lake/ponds or reservoirs.
 
-## Comparison of POI and DP calculations
+In order to accurately calculate distance-to-shore when using the
+`polylabelr::poi()` function as described in \@ref(waterbodies), each waterbody
+was converted to the proper Universal Transverse Mercator (UTM) projection
+calculated from the mean longitudinal value of the polygon vertices prior to
+applying the poi() function. By using the point-local UTM projection, we
+decrease distortion expected from any single CRS used to represent all of the
+locations from which we have lakes. The latitude and longitude values of the POI
+were transformed to decimal degrees in World Geodetic System 1984 (WGS84,
+EPSG:4326) from UTM easting and northing coordinates for use later in the
+workflow.
 
-This is a different center computation from AquaSatv1 - original was based on
-HydroLakes, which only encompassed xxx lakes, whereas lakeSR and the NHD
-integration touches yyy lakes. Because the geometries of these lakes are
-significantly more complex, the DP calculation done in ASv1 can not be made on
-NHD polygons unless they are simplified, losing the benefit of the NHD
-resolution encompassing 1ha lakes.
+To increase computational efficiency, we allow for multicore processing and the
+use of `targets::crew_controller_local()` function within this workflow. This
+reduces processing time substantially. If you are running this workflow on your
+own computer, the length of time that it takes to calculate POIs will be
+dependent on the number of cores you allow for processing (we used
+`r parallel::detectCores()-1` cores during the development of this workflow).
 
-Show a few examples of DP from LimnoSat with hydrolake boundary, nhd boundary,
-POI calculations.
-
-Notes: Okay, it is REALLY messy to compare the original Hydrolakes DP
-calculations from ASv1 and the new POI calculations from the NHD....I probably
-just need a fresh brain, but instead of sinking more time into this, do you
-think a) we can just state we get X times more lakes because we use NHD and b)
-we can't use the same calculation method as v1 because the NHD waterbodies are
-too complex for that procedure and simplifying them defeats the purpose of using
-NHD? And then I can just show something like this (fig 1 is v2, fig 2 is v1)
-
-In the case of Wisconsin, ASv1 had 2694 lakes included, ASv2 includes 10516
+## Case Study: Wisconsin Waterbodies
 
 ```{r}
 # grab state of Wisconsin
-WI <- states() %>% filter(STUSPS == "WI") %>% st_transform("EPSG:4326")
+WI <- states(progress_bar = FALSE) %>% filter(STUSPS == "WI") %>% st_transform("EPSG:4326")
 
 # grab all the pois and create a sf out of them
 poi_sf <- st_as_sf(params$poi, 
@@ -176,89 +158,56 @@ poi_sf <- st_as_sf(params$poi,
                    crs = "EPSG:4326")
 # filter to WI
 WI_poi <- poi_sf[WI, ]
-#grab the lakes from NHD, filter like in workflow
+
+#grab the lakes from NHD
 HUC4s <- WI_poi %>% 
   mutate(HUC4 = str_sub(r_id, 1, 4)) %>% 
   pull(HUC4) %>% 
   unique(.)
+# get the waterbodies from the NHD and filter like in workflow
 WI_wbd <- get_waterbodies(AOI = WI) %>% 
   filter(areasqkm > 0.01, ftype %in% c("LakePond", "Reservoir"))
 intermittent_small <- WI_wbd %>% 
   filter(areasqkm < 0.04, fcode %in% c(39001, 39005))
+# join, and remove Great Lakes
 WI_wbd <- WI_wbd[!WI_wbd$comid %in% intermittent_small$comid, ]
 WI_wbd <- st_make_valid(WI_wbd) %>% 
   filter(areasqkm < 700)
 
 # load in Wisconsin lakes in hydrolakes
-WI_HL <- read_sf("bookdown/data/WI_hydrolakes.gpkg") %>% 
+WI_HL <- read_sf("../bookdown/data/WI_hydrolakes.gpkg") %>% 
   filter(Lake_area < 700)
 # and the DP form AquaSat1
-HL_DP <- read_sf("bookdown/data/HydroLakes_DP.shp") %>% 
+HL_DP <- read_sf("../bookdown/data/HydroLakes_DP.shp") %>% 
   # only grab deepest point
   filter(type == "dp") 
 WI_HL_DP <- HL_DP[WI, ]
 
-# tm_shape(WI) +
-#   tm_fill() +
-#   tm_borders() +
+```
+
+The state of Wisconsin contains more than 15,000 freshwater lakes. AquaSat v1
+contained just `r format(nrow(WI_HL_DP), big.mark = ",")` waterbodies within
+Wisconsin (\@ref(fig:v1-WI-lakes)), whereas the our update includes
+`r format(nrow(WI_poi), big.mark = ",")` (\@ref(fig:v2-WI-lakes)) - accounting
+for a majority of the state's freshwater water bodies.
+
+```{r v1-WI-lakes, echo=F, fig.cap="Wisconsin lakes included in AquaSat v1, defined by the Hydrolakes data product."}
+tm_shape(WI) +
+  tm_borders() +
   tm_shape(WI_HL) +
   tm_fill("lightblue") +
   tm_borders() +
   tm_shape(WI_HL_DP) +
   tm_dots("black")
 
-# tm_shape(WI) +
-#   tm_fill() +
-#   tm_borders() +
+```
+
+```{r v2-WI-lakes, fig.cap="Wisconsin lakes included in AquaSat v2, defined by the NHDPlusV2 and NHD Best Resolution data products."}
+tm_shape(WI) +
+  tm_borders() +
   tm_shape(WI_wbd) +
   tm_fill("lightblue") +
   tm_borders() +
   tm_shape(WI_poi) +
   tm_dots("black")
-```
-
-Now grab the poi that are in the hydrolakes lakes, and calculate distance
-
-```{r}
-# grab the poi that overlap with hydrolakes lakes
-poi_in_hl <- WI_poi[WI_HL, ]
-poi_in_hl <- st_join(poi_in_hl, WI_wbd)
-
-# grab the waterbodies that overlap with hydrolakes lakes
-hl_nhd_overlap <- WI_wbd[WI_HL, ]
-
-# let's join the hydrolakes centers with the nhd wbd associated with them
-WI_HL_DP <- st_join(WI_HL_DP, WI_wbd)
-wbd_overlap <- WI_HL_DP %>% 
-  filter(comid %in% unique(poi_in_hl$comid))
-
-poi_in_overlap <- poi_in_hl %>% 
-  filter(comid %in% unique(wbd_overlap$comid))
-
-nearest <- st_nearest_feature(poi_in_overlap, wbd_overlap)
-distance <- st_distance(poi_in_overlap, wbd_overlap[nearest, ], by_element = TRUE)
-
-poi_in_overlap$distance_from_HL <- as.numeric(distance)
-poi_in_overlap$HL_id <- WI_HL_DP$Hylak_id[nearest]
-
-# reduce these to the unique hylake ids
-poi_in_hl_unique <- poi_in_overlap %>% 
-  arrange(-distance_from_HL) %>% 
-  slice(1, .by = HL_id) 
-
-gt100 <- poi_in_hl_unique %>% 
-  filter(distance_from_HL > 250)
-
-hydrolakes_matches <- WI_HL_DP %>% 
-  filter(comid %in% gt100$comid)
-
-ggplot(poi_in_hl_unique, aes(x = distance_from_HL)) +
-  geom_histogram()
-
-tm_shape(gt100) +
-  tm_dots(fill = "distance_from_HL", size = 0.5) +
-  tm_shape(hydrolakes_matches) +
-  tm_dots("black")
-
-# these are all separate waterbodies.
 ```
