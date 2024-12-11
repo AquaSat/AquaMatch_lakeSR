@@ -1,12 +1,12 @@
-fig:NHDPlusV2-status
+fig:NHDPlusV2-HUC4
 fig:v1-WI-lakes
-fig:unnamed-chunk-2
+fig:v2-WI-lakes
 introduction
 code-architecture
-running-the-code-within-this-repository
 locs-data-acq
 changes-from-aquasat-v1
 pole-of-inaccessibility
 waterbodies
 technical-implementation
 case-study-wisconsin-waterbodies
+references

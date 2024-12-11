@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</title>
+  <title>3 References | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</title>
   <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  <meta property="og:title" content="3 References | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  <meta name="twitter:title" content="3 References | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
   
   <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
+<link rel="prev" href="locs-data-acq.html"/>
 
-<link rel="next" href="locs-data-acq.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -125,104 +125,46 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</h1>
-<p class="author"><em>ROSSyndicate</em></p>
-<p class="date"><em>2024-12-11</em></p>
-</div>
-<div id="introduction" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">1</span> Introduction<a href="introduction.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>This bookdown document <span class="citation">(<a href="#ref-xie2016">Xie 2016</a>)</span> explains the methodology we use in the
-acquisition and compilation of satellite surface reflectance and surface
-temperature data for all lakes greater than 1 hectacre in the United States and
-US Territories. This product, “<strong>lakeSR</strong>”, is a component of the <a href="https://github.com/aquasat"><strong>AquaSat</strong>
-suite</a>, an effort to create a database of lake and
-river water quality observations alongside remote sensing data. This is an
-update to the original <strong>AquaSat</strong> (<span class="citation">Ross et al. (<a href="#ref-ross2019">2019</a>)</span>), the foundational effort towards
-making satellite and <em>in situ</em> water quality data accessible for freshwater
-monitoring.</p>
-<p>Currently, <strong>lakeSR</strong> is comprised of the historical Landsat record from 1984
-until late 2024, comprised of data from the following missions:</p>
-<ul>
-<li>Landsat 4 Thematic Mapper (TM)</li>
-<li>Landsat 5 TM</li>
-<li>Landsat 7 Enhanced Thematic Mapper Plus (ETM+)</li>
-<li>Landsat 8 Operational Land Imager/Thermal Infrared Sensor (OLI/TIRS)</li>
-<li>Landsat 9 OLI/TIRS</li>
-</ul>
-<p>Together the Landsat archive of <strong>lakeSR</strong> is referred to as
-“<em>lakeSR-LS_C2_SRST</em>” (<strong>L</strong>and<strong>s</strong>at <strong>C</strong>ollection <strong>2</strong> <strong>S</strong>urface
-<strong>R</strong>eflectance and <strong>S</strong>urface <strong>T</strong>emperature). There will be additional
-satellite data incorporated into the <strong>lakeSR</strong> product in the future.</p>
-<p><strong>lakeSR</strong> acquires tabular data summaries of satellite-derived surface
-reflectance and surface temperature data at central locations within a lake. The
-sibling product to this is <strong>siteSR</strong>, which acquires the same data at locations
-identified with monitoring records from the Water Quality Portal from the
-<a href="https://aquasat.github.io/AquaMatch_harmonize_WQP/"><strong>AquaMatch</strong></a> component of
-<strong>AquaSat</strong>.</p>
-<div id="code-architecture" class="section level2 hasAnchor" number="1.1">
-<h2><span class="header-section-number">1.1</span> Code Architecture<a href="introduction.html#code-architecture" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><strong>lakeSR</strong> is built on the {targets} workflow management system for R
-<span class="citation">(<a href="#ref-landau2021">Landau 2021</a>)</span>. The {targets} architecture is based on lists of functions
-performed in a specific order, each function called a <em>target</em>. The primary
-benefit of {targets} workflows is that code is only run if a target, a target’s
-code, or a target’s dependencies have changed (or become “outdated” in {targets}
-speak).</p>
-<p><strong>lakeSR</strong> is broken down into functional groups of targets, listed below with a
-brief summary about what task(s) each group completes. This particular workflow
-incorporates both R and Python programming languages to complete these tasks.</p>
-<p><strong>a_Calculate_Centers</strong>:</p>
-<p>This {targets} list calculates “Pole of Inaccessibility” (POI,
-<span class="citation">Garcia-Castellanos and Lombardo (<a href="#ref-garcia-castellanos2007">2007</a>)</span>) for all non-intermittent lakes, ponds, and reservoirs
-greater than 1 hectare in surface area and intermittent lakes, ponds, and
-reservoirs greater than 4 hectares using the NHDPlusV2 polygons using the
-{nhdplusTools} package (<span class="citation">Blodgett and Johnson (<a href="#ref-blodgett2023">2023</a>)</span>) and the <code>poi()</code> function in the
-{polylabelr} package (<span class="citation">Larsson (<a href="#ref-larsson2020">2020</a>)</span>). For all waterbodies outside of CONUS, POI
-were calculated based on the NHD Best Resolution file for the entire state or
-territory.</p>
-<p>See Section <a href="locs-data-acq.html#locs-data-acq">2</a> for additional background and detailed
-methodology.</p>
-<p><strong>b_pull_Landsat_SRST_poi</strong>:</p>
-<p>This {targets} group uses the config file
-<code>b_pull_Landsat_SRST_poi/config_files/config_poi.yml</code> and the “Pole of
-Inaccessibility” points created in the <code>a_Calculate_Centers</code> group to pull
-Landsat Collection 2 Surface Reflectance and Surface Temperature using the GEE
-API. In this group, we use the most conservative LS4-7 pixel filters, as we are
-applying these settings across such a large continuum of time and space. This
-group ends with a branched target that sends tasks to Google Earth engine by
-mapping over WRS2 path rows that intersect with the points created in
-<code>a_Calculate_Centers</code>. <strong>Note</strong>: this group of targets takes a very, very long
-time, averaging about 1 hour per path-row branch. There are just under 800 path
-rows executed in this branch.</p>
-<!-- See Section \@ref(LS-C2-SRST) for additional background and detailed -->
-<!-- methodology. -->
-<!-- ## Running the code within this repository -->
-<!-- If you have followed all of the set up instructions, including those outlined in -->
-<!-- Section \@ref(software-settings), the code within this repository can be -->
-<!-- triggered by running the `run_targets.Rmd` file with the R Project file -->
-<!-- `AquaMatch_lakeSR.rproj` open in your RStudio console. -->
+<div id="references" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 
-</div>
-</div>
-<h3> References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
-<div id="ref-blodgett2023" class="csl-entry">
+<div class="csl-entry">
 Blodgett, David, and Mike Johnson. 2023. <em>nhdplusTools: Tools for Accessing and Working with the NHDPlus</em>. Reston, VA: U.S. Geological Survey. <a href="https://doi.org/10.5066/P97AS8JD">https://doi.org/10.5066/P97AS8JD</a>.
 </div>
-<div id="ref-garcia-castellanos2007" class="csl-entry">
+<div class="csl-entry">
 Garcia-Castellanos, Daniel, and Umberto Lombardo. 2007. <span>“Poles of Inaccessibility: A Calculation Algorithm for the Remotest Places on Earth.”</span> <em>Scottish Geographical Journal</em> 123 (3): 227–33. <a href="https://doi.org/10.1080/14702540801897809">https://doi.org/10.1080/14702540801897809</a>.
 </div>
-<div id="ref-landau2021" class="csl-entry">
+<div class="csl-entry">
 Landau, William Michael. 2021. <span>“The Targets r Package: A Dynamic Make-Like Function-Oriented Pipeline Toolkit for Reproducibility and High-Performance Computing.”</span> <em>Journal of Open Source Software</em> 6 (57): 2959. <a href="https://doi.org/10.21105/joss.02959">https://doi.org/10.21105/joss.02959</a>.
 </div>
-<div id="ref-larsson2020" class="csl-entry">
+<div class="csl-entry">
 Larsson, Johan. 2020. <em>Polylabelr: Find the Pole of Inaccessibility (Visual Center) of a Polygon</em>. <a href="https://cran.r-project.org/package=polylabelr">https://cran.r-project.org/package=polylabelr</a>.
 </div>
-<div id="ref-ross2019" class="csl-entry">
+<div class="csl-entry">
+Messager, Mathis Loïc, Bernhard Lehner, Günther Grill, Irena Nedeva, and Oliver Schmitt. 2016. <span>“Estimating the Volume and Age of Water Stored in Global Lakes Using a Geo-Statistical Approach.”</span> <em>Nature Communications</em> 7 (1): 13603. <a href="https://doi.org/10.1038/ncomms13603">https://doi.org/10.1038/ncomms13603</a>.
+</div>
+<div class="csl-entry">
 Ross, Matthew R. V., Simon N. Topp, Alison P. Appling, Xiao Yang, Catherine Kuhn, David Butman, Marc Simard, and Tamlin M. Pavelsky. 2019. <span>“AquaSat: A Data Set to Enable Remote Sensing of Water Quality for Inland Waters.”</span> <em>Water Resources Research</em> 55 (11): 10012–25. <a href="https://doi.org/10.1029/2019WR024883">https://doi.org/10.1029/2019WR024883</a>.
 </div>
-<div id="ref-xie2016" class="csl-entry">
+<div class="csl-entry">
+Stefansson, Vilhjalmur. 1920. <span>“The Region of Maximum Inaccessibility in the Arctic.”</span> <em>Geographical Review</em> 10 (3): 167–72. <a href="https://doi.org/10.2307/207749">https://doi.org/10.2307/207749</a>.
+</div>
+<div class="csl-entry">
+US Geological Survey. n.d. <span>“USGS National Hydrography Dataset Best Resolution (NHD) - Alaska (Published 20230506) GeoPackage.”</span>
+</div>
+<div class="csl-entry">
+Verpoorter, Charles, Tiit Kutser, David A. Seekell, and Lars J. Tranvik. 2014. <span>“A Global Inventory of Lakes Based on High-Resolution Satellite Imagery.”</span> <em>Geophysical Research Letters</em> 41 (18): 6396–6402. <a href="https://doi.org/10.1002/2014GL060641">https://doi.org/10.1002/2014GL060641</a>.
+</div>
+<div class="csl-entry">
+Walker, Kyle. 2023. <em>Tigris: Load Census TIGER/Line Shapefiles</em>. <a href="https://CRAN.R-project.org/package=tigris">https://CRAN.R-project.org/package=tigris</a>.
+</div>
+<div class="csl-entry">
 Xie, Yihui. 2016. <em>Bookdown: Authoring Books and Technical Documents with r Markdown</em>. Boca Raton, Florida: Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/bookdown">https://bookdown.org/yihui/bookdown</a>.
+</div>
+<div class="csl-entry">
+Yang, Xiao. 2020. <em>Deepest Point Calculation for Any Given Polygon Using Google Earth Engine JavaScript API</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.6341960">https://doi.org/10.5281/zenodo.6341960</a>.
+</div>
 </div>
 </div>
             </section>
@@ -230,8 +172,8 @@ Xie, Yihui. 2016. <em>Bookdown: Authoring Books and Technical Documents with r M
           </div>
         </div>
       </div>
+<a href="locs-data-acq.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
-<a href="locs-data-acq.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

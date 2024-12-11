@@ -79,12 +79,12 @@ mapping over WRS2 path rows that intersect with the points created in
 time, averaging about 1 hour per path-row branch. There are just under 800 path
 rows executed in this branch.
 
-See Section \@ref(LS-C2-SRST) for additional background and detailed
-methodology.
+<!-- See Section \@ref(LS-C2-SRST) for additional background and detailed -->
+<!-- methodology. -->
 
-## Running the code within this repository
+<!-- ## Running the code within this repository -->
 
-If you have followed all of the set up instructions, including those outlined in
-Section \@ref(software-settings), the code within this repository can be
-triggered by running the `run_targets.Rmd` file with the R Project file
-`AquaMatch_lakeSR.rproj` open in your RStudio console.
+<!-- If you have followed all of the set up instructions, including those outlined in -->
+<!-- Section \@ref(software-settings), the code within this repository can be -->
+<!-- triggered by running the `run_targets.Rmd` file with the R Project file -->
+<!-- `AquaMatch_lakeSR.rproj` open in your RStudio console. -->

@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2024-12-10" />
+<meta name="date" content="2024-12-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="introduction.html"/>
-
+<link rel="next" href="references.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -98,7 +98,6 @@ div.csl-indent {
 <li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
 <ul>
 <li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#code-architecture"><i class="fa fa-check"></i><b>1.1</b> Code Architecture</a></li>
-<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#running-the-code-within-this-repository"><i class="fa fa-check"></i><b>1.2</b> Running the code within this repository</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>2</b> Locations of Data Acquisition</a>
 <ul>
@@ -108,6 +107,7 @@ div.csl-indent {
 <li class="chapter" data-level="2.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation"><i class="fa fa-check"></i><b>2.4</b> Technical Implementation</a></li>
 <li class="chapter" data-level="2.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>2.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
+<li class="chapter" data-level="3" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>3</b> References</a></li>
 </ul>
 
       </nav>
@@ -132,13 +132,13 @@ div.csl-indent {
 specific, centrally-located points within waterbodies (typically in pelagic
 locations of lakes, <strong>lakeSR</strong>) and at locations where there are <em>in situ</em> data
 (<strong>siteSR</strong>). The data acquired at locations where there are <em>in situ</em> data are
-acquired to create location-specific algorithms using the <strong>AquaMatch</strong>
-database, which can then be applied to the data collected over the
-centrally-located point across all waterbodies in the <strong>lakeSR</strong> database.
-<strong>lakeSR</strong> does not acquire nor summarize data over the entire waterbody’s
-surface, as it is computationally impractical for most large lakes that cross
-multiple satellite path-rows or tiles. For both <strong>lakeSR</strong> and <strong>siteSR</strong>, we
-summarize the Landsat data within a 120m radius of any given location.</p>
+meant to create location-specific algorithms using the <strong>AquaMatch</strong> database,
+which can then be applied to the data collected over the centrally-located point
+across all waterbodies in the <strong>lakeSR</strong> database. <strong>lakeSR</strong> does not acquire
+nor summarize data over the entire waterbody’s surface, as it is computationally
+impractical for most large lakes, especially those that cross multiple satellite
+path-rows or tiles. For both <strong>lakeSR</strong> and <strong>siteSR</strong>, we summarize the Landsat
+data within a 120m radius of a defined location.</p>
 <div id="changes-from-aquasat-v1" class="section level2 hasAnchor" number="2.1">
 <h2><span class="header-section-number">2.1</span> Changes from AquaSat v1<a href="locs-data-acq.html#changes-from-aquasat-v1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Some changes in lake polygon and center point have been made in modernizing and
@@ -152,7 +152,7 @@ it is only a sliver of the estimated 27 million waterbodies in the world
 products</a> which map the surface
 waters of the United States, and allows for reduction in minimum size of
 waterbody and an increase in coverage of freshwater systems across the United
-States and territories.</p>
+States and permanently inhabited territories.</p>
 </div>
 <div id="pole-of-inaccessibility" class="section level2 hasAnchor" number="2.2">
 <h2><span class="header-section-number">2.2</span> Pole of Inaccessibility<a href="locs-data-acq.html#pole-of-inaccessibility" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -160,52 +160,54 @@ States and territories.</p>
 resolution polygons than the HydroLakes shapes, which makes it computationally
 impossible to use the Chebyshev Center (“deepest point”, <span class="citation">Yang (<a href="#ref-yang2020">2020</a>)</span>) calculation
 used in AquaSat v1 due to the number of vertices in each polygon. To replace
-this important step in this update, we employ the concept of “pole of
-inaccessibility” (POI) <span class="citation">(<a href="#ref-stefansson1920">Stefansson 1920</a>)</span>, which handles complex polygons in the
-R environment with minimal computational investment.</p>
+this important step in the update, we employ the concept of “pole of
+inaccessibility” (POI) <span class="citation">(<a href="#ref-stefansson1920">Stefansson 1920</a>)</span>, which can handle complex polygons in
+the R environment with minimal computational investment.</p>
 <p>The concept of POI is used to define the geographic center of a circle with the
 largest circumference within any complex polygon. The foundational principle is
 used widely to describe the arctic pole of inaccessiblity, that is the point in
 the northern arctic circle that is the furthest from land, but has also been
 used to describe the geographic center of landmasses <span class="citation">(<a href="#ref-garcia-castellanos2007">Garcia-Castellanos and Lombardo 2007</a>)</span>.
-For <strong>lakeSR</strong>, we use POI to determine the point in a lake that is furthest
-from the shoreline using the <code>polylabelr::poi()</code> function <span class="citation">(<a href="#ref-larsson2020">Larsson 2020</a>)</span>, which
-calculates a point in space and the radius of the circle used to define the POI.</p>
+For <strong>lakeSR</strong>, we use POI to determine the point in a waterbody that is
+furthest from the shoreline using the <code>polylabelr::poi()</code> function
+<span class="citation">(<a href="#ref-larsson2020">Larsson 2020</a>)</span>, which calculates a point in space and the radius of the circle
+used to define the POI.</p>
 </div>
 <div id="waterbodies" class="section level2 hasAnchor" number="2.3">
 <h2><span class="header-section-number">2.3</span> Waterbodies in AquaMatch-lakeSR<a href="locs-data-acq.html#waterbodies" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>For <strong>lakeSR</strong>, we use the NHDPlusV2 dataset for lakes within the conterminous
-US and US Territories using the {nhdplusTools} R package <span class="citation">(<a href="#ref-blodgett2023">Blodgett and Johnson 2023</a>)</span>. All
-HUC4s were downloaded and processed on 1969-12-31 using the most
-updated version available at the time of download. Because the NHDPlusV2 dataset
-is incomplete for Alaska (Figure <a href="locs-data-acq.html#fig:NHDPlusV2-status">2.1</a>), we used the NHD
-Best Resolution File <span class="citation">(<a href="#ref-usgeologicalsurvey">US Geological Survey, n.d.</a>)</span> for the state of AK and territories.</p>
-<div class="figure"><span style="display:block;" id="fig:NHDPlusV2-status"></span>
+US and US Territories using the {nhdplusTools} R package <span class="citation">(<a href="#ref-blodgett2023">Blodgett and Johnson 2023</a>)</span> and the
+NHD Best Resolution <span class="citation">(<a href="#ref-usgeologicalsurvey">US Geological Survey, n.d.</a>)</span> data through The National Map. All
+HUC4s were downloaded and processed in November 2024 using the most
+updated version available at the time of download.</p>
+<div class="figure"><span style="display:block;" id="fig:NHDPlusV2-HUC4"></span>
 <img src="https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/thumbnails/image/WBD_SubRegions_24x18.png" alt="NHD HUC4 map for the United States and Territories, courtesy of the USGS."  />
 <p class="caption">
 Figure 2.1: NHD HUC4 map for the United States and Territories, courtesy of the USGS.
 </p>
 </div>
-<p>For every HUC4 in the United States and Territories, all waterbodies are limited
-to those with
-<a href="https://files.hawaii.gov/dbedt/op/gis/data/NHD%20Complete%20FCode%20Attribute%20Value%20List.pdf">FCodes</a>
+<p>For every HUC4 in the United States and Territories (Figure
+<a href="locs-data-acq.html#fig:NHDPlusV2-HUC4">2.1</a>), all waterbodies are limited to those with <a href="https://www.usgs.gov/ngp-standards-and-specifications/national-hydrography-dataset-nhd-data-dictionary-feature-classes">NHD
+Waterbody
+Subtypes</a>
 belonging to the following groups: 390 (lake/pond) and 436 (reservoir) and are
 at least 0.01 km<sup>2</sup> (1 hectare) in area according to the area value provided in
-the NHD file. If the FType of the waterbody belonged to an intermittent category
-(39001, 39005, 39006, 43614) the threshold for inclusion was reduced to 0.04
-km<sup>2</sup> (4 hectares) to reduce processing time when extracting data from Google
-Earth Engine. This filtering resulted in
-729,943 waterbodies included in our
-dataset, including 313,249 non-CONUS
-waterbodies. This is a
+the NHD file. If the <a href="https://www.usgs.gov/ngp-standards-and-specifications/national-hydrography-dataset-nhd-data-dictionary-feature-domains">feature type
+(FType)</a>
+of the waterbody belonged to an intermittent category (39001, 39005, 39006,
+43614) the threshold for inclusion was increased to 0.04 km<sup>2</sup> (4 hectares) to
+reduce processing time when extracting data from Google Earth Engine. This
+filtering resulted in 729,941 waterbodies
+included in our dataset, including 313,248
+non-CONUS waterbodies. This is a
 1,185 percent
 increase over the 56,792 lakes included in the original AquaSat product.</p>
 <p>For each waterbody, the POI and distance-to-shore radius was calculated using
 the <code>polylabelr::poi()</code> function. It is important to note that the <code>poi()</code>
 function can sometimes attribute a POI to a location other than the point
-furthest away from a shoreline. This occurs with polygons with a very large
-number of indices (due to sheer area or geomorphological complexity); however
-the points calculated should be an acceptable proxy for pelagic lake conditions.</p>
+furthest away from a shoreline. This occurs in polygons with a very large number
+of indices (due to sheer area or geomorphological complexity); however the
+points calculated should be an acceptable proxy for pelagic lake conditions.</p>
 </div>
 <div id="technical-implementation" class="section level2 hasAnchor" number="2.4">
 <h2><span class="header-section-number">2.4</span> Technical Implementation<a href="locs-data-acq.html#technical-implementation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -218,89 +220,53 @@ using the {tigris} package <span class="citation">(<a href="#ref-walker2023">Wal
 list HUC4s that intersect with each municipal boundary using the
 <code>nhdplusTools::get_huc()</code> function, which are then reduced to distinct HUC4’s
 and transformed into a vector of HUC4s. HUC4s are then split into CONUS (HUC4 &lt;
-1900) and non-CONUS (HUC4 &gt;= 1900) groups. To efficiently calculate the POI
+1900) and non-CONUS (HUC4 ≥ 1900) groups. To efficiently calculate the POI
 across hundreds of HUC4s, we use the dynamic branching feature to iterate over
 each HUC4. For each HUC4, the NHDPlusV2 (CONUS) or NHD Best Resolution (non
 CONUS) waterbodies are acquired and filtered for lake/ponds and reservoirs of at
 least 1 hectare in area or 4 hectares for intermittent lake/ponds or reservoirs.</p>
 <p>In order to accurately calculate distance-to-shore when using the
-<code>polylabelr::poi()</code> function as described in <a href="locs-data-acq.html#waterbodies">2.3</a>, each waterbody
-was converted to the proper Universal Transverse Mercator (UTM) projection
-calculated from the mean longitudinal value of the polygon vertices prior to
-applying the poi() function. By using the point-local UTM projection, we
-decrease distortion expected from any single CRS used to represent all of the
+<code>polylabelr::poi()</code> function as described in Section <a href="locs-data-acq.html#waterbodies">2.3</a>, each
+waterbody was converted to the proper Universal Transverse Mercator (UTM)
+projection calculated from the mean longitudinal value of the polygon vertices
+prior to applying the poi() function. By using the point-local UTM projection,
+we decrease distortion expected from any single CRS used to represent all of the
 locations from which we have lakes. The latitude and longitude values of the POI
 were transformed to decimal degrees in World Geodetic System 1984 (WGS84,
 EPSG:4326) from UTM easting and northing coordinates for use later in the
 workflow.</p>
 <p>To increase computational efficiency, we allow for multicore processing and the
 use of <code>targets::crew_controller_local()</code> function within this workflow. This
-reduces processing time substantially. If you are running this workflow on your
-own computer, the length of time that it takes to calculate POIs will be
-dependent on the number of cores you allow for processing (we used
-11 cores during the development of this workflow).</p>
+reduces processing time substantially as processing thousands of polygons is
+quite time consuming. If you are running this workflow on your own computer, the
+length of time that it takes to calculate POIs will be dependent on the number
+of cores you allow for processing (we used 11 cores
+during the development of this workflow and it takes on the order of tens of
+minutes).</p>
 </div>
 <div id="case-study-wisconsin-waterbodies" class="section level2 hasAnchor" number="2.5">
 <h2><span class="header-section-number">2.5</span> Case Study: Wisconsin Waterbodies<a href="locs-data-acq.html#case-study-wisconsin-waterbodies" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The state of Wisconsin contains more than 15,000 freshwater lakes. AquaSat v1
 contained just 2,694 waterbodies within
-Wisconsin (<a href="locs-data-acq.html#fig:v1-WI-lakes">2.2</a>), whereas the our update includes
-10,574 (<a href="#fig:v2-WI-lakes"><strong>??</strong></a>) - accounting
-for a majority of the state’s freshwater water bodies.</p>
+Wisconsin (Figure <a href="locs-data-acq.html#fig:v1-WI-lakes">2.2</a>), whereas the our update includes
+10,574 (Figure <a href="locs-data-acq.html#fig:v2-WI-lakes">2.3</a>) -
+accounting for a majority of the state’s freshwater water bodies.</p>
 <div class="figure"><span style="display:block;" id="fig:v1-WI-lakes"></span>
 <img src="AquaMatch_lakeSR_files/figure-html/v1-WI-lakes-1.png" alt="Wisconsin lakes included in AquaSat v1, defined by the Hydrolakes data product." width="672" />
 <p class="caption">
 Figure 2.2: Wisconsin lakes included in AquaSat v1, defined by the Hydrolakes data product.
 </p>
 </div>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-2"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/unnamed-chunk-2-1.png" alt="Wisconsin lakes included in AquaSat v2, defined by the NHDPlusV2 and NHD Best Resolution data products." width="672" />
+<div class="figure"><span style="display:block;" id="fig:v2-WI-lakes"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/v2-WI-lakes-1.png" alt="Wisconsin lakes included in AquaSat v2, defined by the NHDPlusV2 data product." width="672" />
 <p class="caption">
-Figure 2.3: Wisconsin lakes included in AquaSat v2, defined by the NHDPlusV2 and NHD Best Resolution data products.
+Figure 2.3: Wisconsin lakes included in AquaSat v2, defined by the NHDPlusV2 data product.
 </p>
 </div>
 
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
-<div class="csl-entry">
-Blodgett, David, and Mike Johnson. 2023. <em>nhdplusTools: Tools for Accessing and Working with the NHDPlus</em>. Reston, VA: U.S. Geological Survey. <a href="https://doi.org/10.5066/P97AS8JD">https://doi.org/10.5066/P97AS8JD</a>.
-</div>
-<div class="csl-entry">
-Garcia-Castellanos, Daniel, and Umberto Lombardo. 2007. <span>“Poles of Inaccessibility: A Calculation Algorithm for the Remotest Places on Earth.”</span> <em>Scottish Geographical Journal</em> 123 (3): 227–33. <a href="https://doi.org/10.1080/14702540801897809">https://doi.org/10.1080/14702540801897809</a>.
-</div>
-<div class="csl-entry">
-Landau, William Michael. 2021. <span>“The Targets r Package: A Dynamic Make-Like Function-Oriented Pipeline Toolkit for Reproducibility and High-Performance Computing.”</span> <em>Journal of Open Source Software</em> 6 (57): 2959. <a href="https://doi.org/10.21105/joss.02959">https://doi.org/10.21105/joss.02959</a>.
-</div>
-<div class="csl-entry">
-Larsson, Johan. 2020. <em>Polylabelr: Find the Pole of Inaccessibility (Visual Center) of a Polygon</em>. <a href="https://cran.r-project.org/package=polylabelr">https://cran.r-project.org/package=polylabelr</a>.
-</div>
-<div class="csl-entry">
-Messager, Mathis Loïc, Bernhard Lehner, Günther Grill, Irena Nedeva, and Oliver Schmitt. 2016. <span>“Estimating the Volume and Age of Water Stored in Global Lakes Using a Geo-Statistical Approach.”</span> <em>Nature Communications</em> 7 (1): 13603. <a href="https://doi.org/10.1038/ncomms13603">https://doi.org/10.1038/ncomms13603</a>.
-</div>
-<div class="csl-entry">
-Ross, Matthew R. V., Simon N. Topp, Alison P. Appling, Xiao Yang, Catherine Kuhn, David Butman, Marc Simard, and Tamlin M. Pavelsky. 2019. <span>“AquaSat: A Data Set to Enable Remote Sensing of Water Quality for Inland Waters.”</span> <em>Water Resources Research</em> 55 (11): 10012–25. <a href="https://doi.org/10.1029/2019WR024883">https://doi.org/10.1029/2019WR024883</a>.
-</div>
-<div class="csl-entry">
-Stefansson, Vilhjalmur. 1920. <span>“The Region of Maximum Inaccessibility in the Arctic.”</span> <em>Geographical Review</em> 10 (3): 167–72. <a href="https://doi.org/10.2307/207749">https://doi.org/10.2307/207749</a>.
-</div>
-<div class="csl-entry">
-US Geological Survey. n.d. <span>“USGS National Hydrography Dataset Best Resolution (NHD) - Alaska (Published 20230506) GeoPackage.”</span>
-</div>
-<div class="csl-entry">
-Verpoorter, Charles, Tiit Kutser, David A. Seekell, and Lars J. Tranvik. 2014. <span>“A Global Inventory of Lakes Based on High-Resolution Satellite Imagery.”</span> <em>Geophysical Research Letters</em> 41 (18): 6396–6402. <a href="https://doi.org/10.1002/2014GL060641">https://doi.org/10.1002/2014GL060641</a>.
-</div>
-<div class="csl-entry">
-Walker, Kyle. 2023. <em>Tigris: Load Census TIGER/Line Shapefiles</em>. <a href="https://CRAN.R-project.org/package=tigris">https://CRAN.R-project.org/package=tigris</a>.
-</div>
-<div class="csl-entry">
-Xie, Yihui. 2016. <em>Bookdown: Authoring Books and Technical Documents with r Markdown</em>. Boca Raton, Florida: Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/bookdown">https://bookdown.org/yihui/bookdown</a>.
-</div>
-<div class="csl-entry">
-Yang, Xiao. 2020. <em>Deepest Point Calculation for Any Given Polygon Using Google Earth Engine JavaScript API</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.6341960">https://doi.org/10.5281/zenodo.6341960</a>.
 </div>
 </div>
-</div>
-</div>
-<h3>References</h3>
+<h3> References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-blodgett2023" class="csl-entry">
 Blodgett, David, and Mike Johnson. 2023. <em>nhdplusTools: Tools for Accessing and Working with the NHDPlus</em>. Reston, VA: U.S. Geological Survey. <a href="https://doi.org/10.5066/P97AS8JD">https://doi.org/10.5066/P97AS8JD</a>.
@@ -335,8 +301,8 @@ Yang, Xiao. 2020. <em>Deepest Point Calculation for Any Given Polygon Using Goog
           </div>
         </div>
       </div>
-<a href="introduction.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="introduction.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
