@@ -103,9 +103,9 @@ this process for Landsat 7 (lines 61-66). Note that `cloud_thresh`, `yml_start`,
 #| echo: true
 l7 = (ee.ImageCollection("LANDSAT/LE07/C02/T1_L2")
     .filter(ee.Filter.lt("CLOUD_COVER", ee.Number.parse(str(cloud_thresh))))
+    .filterDate(yml_start, yml_end)
     .filter(ee.Filter.eq("WRS_PATH", w_p))
     .filter(ee.Filter.eq("WRS_ROW", w_r))
-    .filterDate(yml_start, yml_end)
     .map(apply_scale_factors))
 ```
 
@@ -141,8 +141,7 @@ completed separately.
 
 ### Payload handling
 
-Because GEE is a free service to those at academic or governmental institutions, 
-there are limits to the total size of a task sent
+Because GEE is a free service, there are limits to the total size of a task sent
 to GEE for completion. For this reason, tasks are sent to GEE in 10k location
 increments per tile (for-loop encompassing lines 132-321). This is an additional
 step that is taken in addition to processing per tile to avoid failed tasks.
