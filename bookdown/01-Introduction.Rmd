@@ -9,13 +9,16 @@ bibliography: references.bib
 
 This bookdown document [@xie2016] explains the methodology we use in the
 acquisition and compilation of satellite surface reflectance and surface
-temperature data for all lakes in the United States and US Territories. This
-product, "**lakeSR**", is a component of the **AquaSat** (v2) suite, an effort
-to create a database of lake and river water quality observations alongside
-remote sensing data.
+temperature data for all lakes greater than 1 hectacre in the United States and
+US Territories. This product, "**lakeSR**", is a component of the [**AquaSat**
+suite](https://github.com/aquasat), an effort to create a database of lake and
+river water quality observations alongside remote sensing data. This is an
+update to the original **AquaSat** (@ross2019), the foundational effort towards
+making satellite and *in situ* water quality data accessible for freshwater
+monitoring.
 
 Currently, **lakeSR** is comprised of the historical Landsat record from 1984
-until mid-2023, comprised of data from the following missions:
+until late 2024, comprised of data from the following missions:
 
 -   Landsat 4 Thematic Mapper (TM)
 -   Landsat 5 TM
@@ -29,9 +32,11 @@ Together the Landsat archive of **lakeSR** is referred to as
 satellite data incorporated into the **lakeSR** product in the future.
 
 **lakeSR** acquires tabular data summaries of satellite-derived surface
-reflectance and surface temperature data at central locations within a lake and
-at locations identified with monitoring records from the Water Quality Portal
-from the **AquaMatch** component of **AquaSat**.
+reflectance and surface temperature data at central locations within a lake. The
+sibling product to this is **siteSR**, which acquires the same data at locations
+identified with monitoring records from the Water Quality Portal from the
+[**AquaMatch**](https://aquasat.github.io/AquaMatch_harmonize_WQP/) component of
+**AquaSat**.
 
 ## Code Architecture
 
@@ -43,44 +48,43 @@ code, or a target's dependencies have changed (or become "outdated" in {targets}
 speak).
 
 **lakeSR** is broken down into functional groups of targets, listed below with a
-brief summary about what task(s) each group completes.
+brief summary about what task(s) each group completes. This particular workflow
+incorporates both R and Python programming languages to complete these tasks.
 
 **a_Calculate_Centers**:
 
-This {targets} list calculates "Pole of Inaccessibility" (POI) for all lakes,
-ponds, reservoirs, and playas greater than 1 hectare in surface area using the
-NHDPlusHR polygons using the {nhdplusTools} package and the `poi()` function in
-the {polylabelr} package. For all waterbodies in Alaska, POI were calculated
-based on the NHD Best Resolution file for the entire state because the NHDPlusHR
-is not complete for AK. **Note**: this group of targets will take up to 4h to
-complete.
+This {targets} list calculates "Pole of Inaccessibility" (POI,
+@garcia-castellanos2007) for all non-intermittent lakes, ponds, and reservoirs
+greater than 1 hectare in surface area and intermittent lakes, ponds, and
+reservoirs greater than 4 hectares using the NHDPlusV2 polygons using the
+{nhdplusTools} package (@blodgett2023) and the `poi()` function in the
+{polylabelr} package (@larsson2020). For all waterbodies outside of CONUS, POI
+were calculated based on the NHD Best Resolution file for the entire state or
+territory.
 
 See Section \@ref(locs-data-acq) for additional background and detailed
 methodology.
 
 **b_pull_Landsat_SRST_poi**:
 
-This {targets} group uses the config file `config_files/config_poi.yml` and the
-"Pole of Inaccessibility" points created in the `a_Calculate_Centers` group to
-pull Landsat Collection 2 Surface Reflectance and Surface Temperature using the
-GEE API. In this group, we use the most strict LS4-7 pixel filters which include
-the `sr_cloud_mask` filter. This filter is a conservative filter, removing
-artefacts from upstream products that are used to create the SR product. This
-group of targets ends with a branched target that maps over each of the WRS2
-path rows that intersect with the points. **Note**: this group of targets takes
-a very, very long time, averaging about 1 hour per path-row branch. There are
-just under 800 path rows executed in this branch.
+This {targets} group uses the config file
+`b_pull_Landsat_SRST_poi/config_files/config_poi.yml` and the "Pole of
+Inaccessibility" points created in the `a_Calculate_Centers` group to pull
+Landsat Collection 2 Surface Reflectance and Surface Temperature using the GEE
+API. In this group, we use the most conservative LS4-7 pixel filters, as we are
+applying these settings across such a large continuum of time and space. This
+group ends with a branched target that sends tasks to Google Earth engine by
+mapping over WRS2 path rows that intersect with the points created in
+`a_Calculate_Centers`. **Note**: this group of targets takes a very, very long
+time, averaging about 1 hour per path-row branch. There are just under 800 path
+rows executed in this branch.
 
-See Section \@ref(LS-C2-SRST) for additional background and detailed
-methodology.
+<!-- See Section \@ref(LS-C2-SRST) for additional background and detailed -->
+<!-- methodology. -->
 
-## Running the code within this repository
+<!-- ## Running the code within this repository -->
 
-If you have followed all of the set up instructions, including those outlined in
-Section \@ref(software-settings), the code within this repository can be
-triggered by running the `run_targets.Rmd` file with the rProj file `lakeSR`
-open in your RStudio console. If you do not wish to re-run the entirety of the
-{targets} workflow, we encourage you to download the `lakeSR_targets.zip` file
-**[[NOTE: will need to zip this later and/or add to the data release]]**, rename
-it \_targets and copy it into the root directory of this repository, overwriting
-the existing `_targets` folder and contents.
+<!-- If you have followed all of the set up instructions, including those outlined in -->
+<!-- Section \@ref(software-settings), the code within this repository can be -->
+<!-- triggered by running the `run_targets.Rmd` file with the R Project file -->
+<!-- `AquaMatch_lakeSR.rproj` open in your RStudio console. -->

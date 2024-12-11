@@ -24,7 +24,7 @@ run (lines 8-12 of the
 be sure that our Python code runs consistently.
 
 | Software/Py Module | version | citation                                                     |
-|---------------------|:-----------:|--------------------------------------------|
+|--------------------|:-------:|--------------------------------------------------------------|
 | Python             | 3.8.18  | Python Software Foundation, [www.python.org](www.python.org) |
 | earthengine-api    | 0.1.374 | [@gorelick2023]                                              |
 | pandas             |  2.0.3  | [@thepandasdevelopmentteam2023]                              |
@@ -32,7 +32,27 @@ be sure that our Python code runs consistently.
 | pyreadr            |  0.5.0  | [@fajardo2023]                                               |
 | pyarrow            | 13.0.0  | [@apachearrowdevelopers2023]                                 |
 
-: Python and python modules and versions used in \*\*lakeSR\*\*.
+: Python and python modules and versions used in \*\*lakeSR\*\*. Note, later
+versions of earthengine-api will require the use of 'ee.Authenticate()' in
+python instead of 'earthengine authenticate' at the command line. The following
+two chunks of code should work, as long as the environment is set up using the
+pySetup.R file:
+
+```{r eval = F}
+library(reticulate)
+
+if (!dir.exists("env")) {
+  source("python/pySetup.R")
+} else {
+  use_condaenv(file.path(getwd(), "env"))
+}
+```
+
+```{python eval = F}
+import ee
+
+ee.Authenticate()
+```
 
 ## Google Earth Engine Setup
 
@@ -44,7 +64,7 @@ an account:
 
 [![Header of earthengine.google.com with link to create a GEE account
 highlighted in the red box to the
-right.](images/Screenshot 2023-10-25 at 11.56.29 AM.png)](https://earthengine.google.com)
+right.](images/Screenshot%202023-10-25%20at%2011.56.29%20AM.png)](https://earthengine.google.com)
 
 ### gcloud CLI
 
@@ -72,8 +92,9 @@ and enter the project name listed in the top right hand corner of your screen:
 
 [![Header of code.earthengine.google.com with current Earth Engine project
 highlighted in the red box to the
-right.](images/Screenshot 2023-10-25 at 11.34.08 AM.png)](https://code.earthengine.com)
+right.](images/Screenshot%202023-10-25%20at%2011.34.08%20AM.png)](https://code.earthengine.com)
 
 Alternatively, you can create an GEE project for this task in the dropdown menu
 accessed by clicking on the icon to the right of the highlighted box in the
-figure above.
+figure above. This workflow will not run without specifying an Earth Engine Project
+that is managed by the Google Account you authenticate this run with.
