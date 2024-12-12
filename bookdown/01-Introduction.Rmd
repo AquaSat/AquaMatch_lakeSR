@@ -58,7 +58,7 @@ This {targets} list calculates "Pole of Inaccessibility" (POI,
 greater than 1 hectare in surface area and intermittent lakes, ponds, and
 reservoirs greater than 4 hectares using the NHDPlusV2 polygons using the
 {nhdplusTools} package [@blodgett2023] and the `poi()` function in the
-{polylabelr} package (@larsson2020). For all waterbodies outside of CONUS, POI
+{polylabelr} package [@larsson2020]. For all waterbodies outside of CONUS, POI
 were calculated based on the NHD Best Resolution file for the entire state or
 territory.
 
