@@ -67,7 +67,7 @@ methodology.
 
 **b_pull_Landsat_SRST_poi**:
 
-This {targets} group uses the config file
+This {targets} group uses the configuration file
 `b_pull_Landsat_SRST_poi/config_files/config_poi.yml` and the "Pole of
 Inaccessibility" points created in the `a_Calculate_Centers` group to pull
 Landsat Collection 2 Surface Reflectance and Surface Temperature using the GEE
