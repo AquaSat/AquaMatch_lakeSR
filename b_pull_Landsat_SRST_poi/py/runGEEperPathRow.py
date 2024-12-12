@@ -1230,11 +1230,14 @@ with open("b_pull_Landsat_SRST_poi/out/current_pathrow.txt", "r") as file:
 locs_fn = os.path.join("b_pull_Landsat_SRST_poi/out/locations/", ("locations_" + pr + ".csv"))
 
 # read in locations file
-locations_subset = read_feather("b_pull_Landsat_SRST_poi/out/locations_with_WRS2_pathrows_latlon.feather")
+locations_subset = read_csv(locs_fn)
 
 ##############################################
 ##---- CREATING EE FEATURECOLLECTIONS   ----##
 ##############################################
+
+wrs = (ee.FeatureCollection('projects/ee-ls-c2-srst/assets/WRS2_descending')
+  .filterMetadata('PR', 'equals', pr))
 
 # store path and row for subsetting the stacks so there is not overlap between PR pulls
 w_p = int(str(pr)[0:3])

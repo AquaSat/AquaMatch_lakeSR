@@ -79,7 +79,7 @@ b_pull_Landsat_SRST_poi_list <- list(
   tar_target(
     name = b_eeRun_poi,
     command = {
-      run_GEE_per_tile(b_WRS_tiles_poi)
+      run_GEE_per_pathrow(WRS_pathrow = b_WRS_tiles_poi)
       },
     pattern = map(b_WRS_tiles_poi),
     packages = "reticulate",
@@ -101,11 +101,13 @@ b_pull_Landsat_SRST_poi_list <- list(
     packages = "reticulate"
   ),
   
+  # since we can't easily track if tasks have failed, and we send a lot of tasks
+  # in this process, let's check for any failed tasks and add them to 
+  # b_pull_Landsat_SRST_poi/out/GEE_failed_tasks.txt
   tar_target(
     name = b_check_for_failed_tasks,
     command = {
       b_poi_tasks_complete
-      
       source_python("b_pull_Landsat_SRST_poi/py/check_for_failed_tasks.py")
     },
     packages = "reticulate"
