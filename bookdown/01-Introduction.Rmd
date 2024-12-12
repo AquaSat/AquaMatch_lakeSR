@@ -13,7 +13,7 @@ temperature data for all lakes greater than 1 hectacre in the United States and
 US Territories. This product, "**lakeSR**", is a component of the [**AquaSat**
 suite](https://github.com/aquasat), an effort to create a database of lake and
 river water quality observations alongside remote sensing data. This is an
-update to the original **AquaSat** (@ross2019), the foundational effort towards
+update to the original **AquaSat** [@ross2019], the foundational effort towards
 making satellite and *in situ* water quality data accessible for freshwater
 monitoring.
 
