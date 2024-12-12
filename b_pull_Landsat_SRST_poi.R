@@ -103,7 +103,7 @@ b_pull_Landsat_SRST_poi_list <- list(
   
   # since we can't easily track if tasks have failed, and we send a lot of tasks
   # in this process, let's check for any failed tasks and add them to 
-  # b_pull_Landsat_SRST_poi/out/GEE_failed_tasks.txt
+  # b_pull_Landsat_SRST_poi/out/GEE_failed_tasks_vRUN_DATE.txt
   tar_target(
     name = b_check_for_failed_tasks,
     command = {

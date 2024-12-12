@@ -202,7 +202,7 @@ Wisconsin (Figure \@ref(fig:v1-WI-lakes)), whereas the our update includes
 `r format(nrow(WI_poi), big.mark = ",")` (Figure \@ref(fig:v2-WI-lakes)) -
 accounting for a majority of the state's freshwater water bodies.
 
-```{r v1-WI-lakes, echo=F, fig.cap="Wisconsin lakes included in AquaSat v1, defined by the Hydrolakes data product."}
+```{r v1-WI-lakes, echo=F, fig.cap="Deepest point of Wisconsin lakes included in AquaSat v1, defined by the Hydrolakes data product. Deepest point for each lake is indicated with a black dot."}
 tm_shape(WI_for_viz) +
   tm_borders() +
   tm_shape(WI_HL) +
@@ -213,7 +213,7 @@ tm_shape(WI_for_viz) +
 
 ```
 
-```{r v2-WI-lakes, fig.cap="Wisconsin lakes included in AquaSat v2, defined by the NHDPlusV2 data product."}
+```{r v2-WI-lakes, fig.cap="Point of inaccessibility for Wisconsin lakes included in AquaSat v2, defined by the NHDPlusV2 data product. Point of inaccessibility for each lake is indicated with a black dot."}
 tm_shape(WI_for_viz) +
   tm_borders() +
   tm_shape(WI_wbd_poi) +
