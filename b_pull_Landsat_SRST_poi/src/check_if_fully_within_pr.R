@@ -1,12 +1,12 @@
 #' @title Check to see if point is completely contained within path-row
 #' 
 #' @description
-#' Using the output of the previous target `b_WRS_tiles_poi`, and the output of 
+#' Using the output of the previous target `b_WRS_pathrow_poi`, and the output of 
 #' the target `b_ref_locations_poi`, add WRS pathrow information to the locations 
 #' file, remove buffered points that are not completely within the 
 #' path row geometry.
 #' 
-#' @param WRS_pathrows list of pathrows to iterate over, output of target `b_WRS_tiles_poi`
+#' @param WRS_pathrows list of pathrows to iterate over, output of target `b_WRS_pathrow_poi`
 #' @param locations dataframe of locations, output of target `b_ref_locations_poi`
 #' @param yml contents of the reformatted yaml .csv file, output of target `b_yml_poi`
 #' 
