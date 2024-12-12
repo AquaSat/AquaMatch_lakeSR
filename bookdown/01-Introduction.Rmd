@@ -68,7 +68,7 @@ methodology.
 This {targets} group uses the configuration file
 `b_pull_Landsat_SRST_poi/config_files/config_poi.yml` and the "Pole of
 Inaccessibility" points created in the `a_Calculate_Centers` group to pull
-Landsat Collection 2 Surface Reflectance and Surface Temperature using the GEE
+Landsat Collection 2 Surface Reflectance and Surface Temperature using the Google Earth Engine (GEE)
 API. In this group, we use the most conservative LS4-7 pixel filters, as we are
 applying these settings across such a large continuum of time and space. This
 group ends with a branched target that sends tasks to Google Earth engine by
