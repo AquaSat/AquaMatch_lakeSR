@@ -57,7 +57,7 @@ b_pull_Landsat_SRST_poi_list <- list(
   
   # get WRS tiles/indication of whether buffered points are contained by them
   tar_target(
-    name = b_WRS_pathrwo_poi,
+    name = b_WRS_pathrow_poi,
     command = get_WRS_pathrow_poi(locations = b_ref_locations_poi, 
                                   yml = b_yml_poi),
     deployment = "main"

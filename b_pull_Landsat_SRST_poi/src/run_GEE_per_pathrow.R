@@ -13,5 +13,5 @@ run_GEE_per_pathrow <- function(WRS_pathrow) {
   # document WRS tile for python script
   write_lines(WRS_pathrow, "b_pull_Landsat_SRST_poi/out/current_pathrow.txt", sep = "")
   # run the python script
-  source_python("b_pull_Landsat_SRST_poi/py/runGEEperPathRow.py")
+  source_python("b_pull_Landsat_SRST_poi/py/run_GEE_per_pathrow.py")
 }
