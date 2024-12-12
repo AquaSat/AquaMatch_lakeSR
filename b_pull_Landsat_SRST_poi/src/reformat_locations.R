@@ -10,11 +10,11 @@
 #' @returns reformatted dataframe with generalized names for earth engine run
 #' 
 #' 
-reformat_locations <- function(yaml, locations) {
+reformat_locations <- function(yml, locations) {
   # store yaml info as objects
-  lat <- yaml$latitude
-  lon <- yaml$longitude
-  id <- yaml$unique_id
+  lat <- yml$latitude
+  lon <- yml$longitude
+  id <- yml$unique_id
   # apply objects to tibble and return
   locations %>% 
     rename_with(~c("Latitude", "Longitude", "id"), 

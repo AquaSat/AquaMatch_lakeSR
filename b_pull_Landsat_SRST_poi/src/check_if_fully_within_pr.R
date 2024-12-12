@@ -1,30 +1,38 @@
 #' @title Check to see if point is completely contained within path-row
 #' 
 #' @description
-#' Using the output of the previous target `WRS_tiles_poi`, and the output of 
-#' the target `ref_locations_poi`, add WRS pathrow information to the locations 
+#' Using the output of the previous target `b_WRS_tiles_poi`, and the output of 
+#' the target `b_ref_locations_poi`, add WRS pathrow information to the locations 
 #' file, remove buffered points that are not completely within the 
 #' path row geometry.
 #' 
-#' @param WRS_pathrows list of pathrows to iterate over, output of target `WRS_tiles_poi`
-#' @param locations dataframe of locations, output of target `ref_locations_poi`
-#' @param yaml contents of the yaml .csv file
+#' @param WRS_pathrows list of pathrows to iterate over, output of target `b_WRS_tiles_poi`
+#' @param locations dataframe of locations, output of target `b_ref_locations_poi`
+#' @param yml contents of the reformatted yaml .csv file, output of target `b_yml_poi`
 #' 
-#' @returns silently saves a .feather file containing the location information 
-#' with the WRS2 pathrow and returns the filepath of resulting .feather file
+#' @returns tibble of locations that includes WRS2 pathrow if, when buffered, they 
+#' are fully contained by the WRS2 pathrow extent
 #' 
 #' @note
 #' This step will result in more rows than the locations file, because a single 
 #' location in space can fall into multiple pathrows.
 #' 
 #' 
-check_if_fully_within_pr <- function(WRS_pathrow, locations, yaml) {
+check_if_fully_within_pr <- function(WRS_pathrow, locations, yml) {
+  # make a directory of locations for use in python workflow
+  if (!dir.exists("b_pull_Landsat_SRST_poi/out/locations/")) {
+    dir.create("b_pull_Landsat_SRST_poi/out/locations/")
+  }
   # get the WRS2 shapefile
   WRS <- read_sf("b_pull_Landsat_SRST_poi/in/WRS2_descending.shp")
   # make locations into a {sf} object
   locs <- st_as_sf(locations, 
                    coords = c("Longitude", "Latitude"), 
-                   crs = yaml$location_crs)
+                   crs = yml$location_crs)
+  # make sure that the locs are in WGS84 if they aren't already
+  if (yml$location_crs != "EPSG:4326") {
+    locs <- st_transform(locs, "EPSG:4326")
+  }
   # map over each path-row, adding the pathrow to the site. Note, this will create
   # a larger number of rows than the upstream file, because sites can be in more
   # than one pathrow. 
@@ -57,18 +65,23 @@ check_if_fully_within_pr <- function(WRS_pathrow, locations, yaml) {
     st_make_valid()
   x_trans <- st_transform(x, 
                           crs = utm_code) 
-  x_buffd <- st_buffer(x_trans, dist = as.numeric(yaml$site_buffer)) %>% 
+  x_buffd <- st_buffer(x_trans, dist = as.numeric(yml$site_buffer)) %>% 
     st_make_valid()
   # see if the buffered points are completely contained  
-  is_contained_by_WRS = as_tibble(st_within(x_buffd,
-                                            wrs,
-                                            sparse = FALSE)) %>% 
-    rename(is_contained_by_WRS = V1)
+  is_contained_by_WRS = tibble(st_within(x_buffd,
+                                         wrs,
+                                         sparse = FALSE))   
+  names(is_contained_by_WRS) = "is_contained_by_WRS"
   # and bind cols
-  bind_cols(x, is_contained_by_WRS) %>% 
+  filtered <- bind_cols(x, is_contained_by_WRS) %>% 
     st_drop_geometry() %>% 
     # only select the points completely contained by the WRS
     filter(is_contained_by_WRS == TRUE) %>% 
     select(-is_contained_by_WRS) %>% 
     left_join(., locations)
+  write_csv(filtered, 
+            paste0("b_pull_Landsat_SRST_poi/out/locations/locations_", 
+                   WRS_pathrow, 
+                   ".csv"))
+  filtered
 }

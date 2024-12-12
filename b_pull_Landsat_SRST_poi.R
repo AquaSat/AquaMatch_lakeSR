@@ -26,7 +26,7 @@ b_pull_Landsat_SRST_poi_list <- list(
   
   # read and track the config file
   tar_file_read(
-    name = config_file_poi,
+    name = b_config_file_poi,
     command = poi_config,
     read = read_yaml(!!.x),
     packages = "yaml",
@@ -35,12 +35,12 @@ b_pull_Landsat_SRST_poi_list <- list(
 
   # load, format, save yml as a csv
   tar_target(
-    name = yml_poi,
+    name = b_yml_poi,
     command = {
       # need to make sure that the directory structure has been created prior
       # to running this target
       b_check_dir_structure
-      format_yaml(config_file_poi)
+      format_yaml(yml = b_config_file_poi)
       },
     packages = c("yaml", "tidyverse"),
     deployment = "main"
@@ -49,23 +49,27 @@ b_pull_Landsat_SRST_poi_list <- list(
   # reformat location file for run_GEE_per_tile using the combined_poi_points
   # from the a_Calculate_Centers group
   tar_target(
-    name = ref_locations_poi,
-    command = reformat_locations(yml_poi, combined_poi),
+    name = b_ref_locations_poi,
+    command = reformat_locations(yml = b_yml_poi, 
+                                 locations = a_combined_poi),
     deployment = "main"
   ),
   
   # get WRS tiles/indication of whether buffered points are contained by them
   tar_target(
-    name = WRS_tiles_poi,
-    command = get_WRS_tiles_poi(ref_locations_poi, yml_poi),
+    name = b_WRS_tiles_poi,
+    command = get_WRS_tiles_poi(locations = b_ref_locations_poi, 
+                                yml = b_yml_poi),
     deployment = "main"
   ),
   
   # check to see if geometry is completely contained in pathrow
   tar_target(
-    name = poi_locs_filtered,
-    command = check_if_fully_within_pr(WRS_tiles_poi, ref_locations_poi, yml_poi),
-    pattern = map(WRS_tiles_poi),
+    name = b_poi_locs_filtered,
+    command = check_if_fully_within_pr(WRS_pathrow = b_WRS_tiles_poi, 
+                                       locations = b_ref_locations_poi, 
+                                       yml = b_yml_poi),
+    pattern = map(b_WRS_tiles_poi),
     packages = c("tidyverse", "sf", "feather")
   ),
   
@@ -73,23 +77,36 @@ b_pull_Landsat_SRST_poi_list <- list(
   # not be run by multiple crew workers because the bottleneck is on the end of
   # GEE, not local compute.
   tar_target(
-    name = eeRun_poi,
+    name = b_eeRun_poi,
     command = {
-      poi_locs_filtered
-      run_GEE_per_tile(WRS_tiles_poi)
+      run_GEE_per_tile(b_WRS_tiles_poi)
       },
-    pattern = map(WRS_tiles_poi),
+    pattern = map(b_WRS_tiles_poi),
     packages = "reticulate",
+    # note, this can not/should not be used in mulitcore processing mode - the
+    # bottleneck here is at GEE, not local processing, and the way the {targets}
+    # and python workflow work together requires only a single `run_GEE_per_tile`
+    # at a time.
     deployment = "main"
   ),
   
   # check to see that all tasks are complete! This target will run until all
   # cued GEE tasks from the previous target are complete.
   tar_target(
-    name = poi_tasks_complete,
+    name = b_poi_tasks_complete,
     command = {
-      eeRun_poi
+      b_eeRun_poi
       source_python("b_pull_Landsat_SRST_poi/py/poi_wait_for_completion.py")
+    },
+    packages = "reticulate"
+  ),
+  
+  tar_target(
+    name = b_check_for_failed_tasks,
+    command = {
+      b_poi_tasks_complete
+      
+      source_python("b_pull_Landsat_SRST_poi/py/check_for_failed_tasks.py")
     },
     packages = "reticulate"
   )

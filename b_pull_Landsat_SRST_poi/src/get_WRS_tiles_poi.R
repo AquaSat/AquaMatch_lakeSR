@@ -5,19 +5,20 @@
 #' iterate over and add pathrow to location file in order to subset and speed up
 #' the python workflow in `run_GEE_per_tile`
 #' 
-#' @param formatted_locations the POI locations for lakeSR acquisition
-#' @param yaml contents of the yaml .csv file
-#' @returns list of WRS2 tiles, silently outputs a .feather file with an added
-#' column containing the pathrow for subsetting in the python workflow
+#' @param locations the POI locations for lakeSR acquisition
+#' @param yml contents of the yml .csv file
+#' 
+#' @returns list of WRS2 tiles, silently outputs a csv file with the subset of WRS
+#' tiles
 #' 
 #' 
-get_WRS_tiles_poi <- function(formatted_locations, yaml) {
+get_WRS_tiles_poi <- function(locations, yml) {
   # get the WRS2 shapefile
   WRS <- read_sf("b_pull_Landsat_SRST_poi/in/WRS2_descending.shp")
   # and the poi locations
-  locs <- st_as_sf(formatted_locations, 
+  locs <- st_as_sf(locations, 
                    coords = c("Longitude", "Latitude"), 
-                   crs = yaml$location_crs)
+                   crs = yml$location_crs)
   # get the list of WRS tiles that intersect
   if (st_crs(locs) == st_crs(WRS)) {
     WRS_subset <- WRS[locs, ]
