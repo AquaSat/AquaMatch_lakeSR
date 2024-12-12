@@ -1,4 +1,4 @@
-#' @title Make list of WRS tiles to map over
+#' @title Make list of WRS pathrow to map over
 #' 
 #' @description
 #' Using the reformatted locations for the POI data, get the list of pathrows to 
@@ -12,7 +12,7 @@
 #' tiles
 #' 
 #' 
-get_WRS_tiles_poi <- function(locations, yml) {
+get_WRS_pathrow_poi <- function(locations, yml) {
   # get the WRS2 shapefile
   WRS <- read_sf("b_pull_Landsat_SRST_poi/in/WRS2_descending.shp")
   # and the poi locations

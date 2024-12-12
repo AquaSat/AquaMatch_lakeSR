@@ -32,7 +32,7 @@ b_pull_Landsat_SRST_poi_list <- list(
     packages = "yaml",
     deployment = "main"
   ),
-
+  
   # load, format, save yml as a csv
   tar_target(
     name = b_yml_poi,
@@ -41,11 +41,11 @@ b_pull_Landsat_SRST_poi_list <- list(
       # to running this target
       b_check_dir_structure
       format_yaml(yml = b_config_file_poi)
-      },
+    },
     packages = c("yaml", "tidyverse"),
     deployment = "main"
   ),
-
+  
   # reformat location file for run_GEE_per_tile using the combined_poi_points
   # from the a_Calculate_Centers group
   tar_target(
@@ -57,16 +57,16 @@ b_pull_Landsat_SRST_poi_list <- list(
   
   # get WRS tiles/indication of whether buffered points are contained by them
   tar_target(
-    name = b_WRS_tiles_poi,
-    command = get_WRS_tiles_poi(locations = b_ref_locations_poi, 
-                                yml = b_yml_poi),
+    name = b_WRS_pathrwo_poi,
+    command = get_WRS_pathrow_poi(locations = b_ref_locations_poi, 
+                                  yml = b_yml_poi),
     deployment = "main"
   ),
   
   # check to see if geometry is completely contained in pathrow
   tar_target(
     name = b_poi_locs_filtered,
-    command = check_if_fully_within_pr(WRS_pathrow = b_WRS_tiles_poi, 
+    command = check_if_fully_within_pr(WRS_pathrow = b_WRS_pathrow_poi, 
                                        locations = b_ref_locations_poi, 
                                        yml = b_yml_poi),
     pattern = map(b_WRS_tiles_poi),
@@ -79,9 +79,9 @@ b_pull_Landsat_SRST_poi_list <- list(
   tar_target(
     name = b_eeRun_poi,
     command = {
-      run_GEE_per_pathrow(WRS_pathrow = b_WRS_tiles_poi)
-      },
-    pattern = map(b_WRS_tiles_poi),
+      run_GEE_per_pathrow(WRS_pathrow = b_WRS_pathrow_poi)
+    },
+    pattern = map(b_WRS_pathrow_poi),
     packages = "reticulate",
     # note, this can not/should not be used in mulitcore processing mode - the
     # bottleneck here is at GEE, not local processing, and the way the {targets}
