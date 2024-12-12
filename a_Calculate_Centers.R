@@ -31,14 +31,14 @@ a_Calculate_Centers_list <- list(
     },
     cue = tar_cue("always"),
     deployment = "main"
-    ),
+  ),
   
   # get {sf}s for all US states and territories from {tigris} to grab all the HUC4s
   tar_target(
     name = a_US_states_territories,
     command = states() %>% st_make_valid(),
     packages = c("tigris", "sf", "tidyverse")
-    ),
+  ),
   
   # for each state/territory, get a list of HUC4s
   # while this is not the most efficient (HUC4s cross state boundaries),
@@ -79,7 +79,7 @@ a_Calculate_Centers_list <- list(
       # to running this target
       a_check_dir_structure
       calculate_centers_HUC4(a_CONUS_HUC4)
-      },
+    },
     packages = c("nhdplusTools", "sf", "tidyverse", "polylabelr", "rmapshaper"),
     pattern = map(a_CONUS_HUC4)
   ),
@@ -101,7 +101,7 @@ a_Calculate_Centers_list <- list(
       # to running this target
       a_check_dir_structure
       calculate_bestres_centers(a_nonCONUS_HUC4)
-      },
+    },
     packages = c("tidyverse", "sf", "polylabelr"),
     pattern = map(a_nonCONUS_HUC4)
   ), 
