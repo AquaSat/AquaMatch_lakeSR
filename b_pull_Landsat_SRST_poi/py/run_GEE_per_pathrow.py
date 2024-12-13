@@ -484,12 +484,13 @@ def apply_high_aero_mask(image):
 
 
 ## Set up the reflectance pull
-def ref_pull_457_DSWE1(image):
+def ref_pull_457_DSWE1(image, feat):
   """ This function applies all functions to the Landsat 4-7 ee.ImageCollection, extracting
   summary statistics for each geometry area where the DSWE value is 1 (high confidence water)
 
   Args:
       image: ee.Image of an ee.ImageCollection
+      feat: ee.FeatureGeometry of the buffered locations
 
   Returns:
       summaries for band data within any given geometry area where the DSWE value is 1
@@ -557,10 +558,9 @@ def ref_pull_457_DSWE1(image):
                                   ['mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 
                                   'mean_Swir1', 'mean_Swir2', 
                                   'mean_SurfaceTemp']))
-            .updateMask(d.eq(1)) # only high confidence water
-            .updateMask(hs.eq(1)) # only illuminated pixels
-            .updateMask(f.eq(0))
-            .updateMask(r.eq(1))
+            # mask the image
+            .updateMask(dswe1.eq(1)) # high confidence water mask
+            # add bands back in for QA (prior to masking of dswe/hs/f/r)
             .addBands(gt0) 
             .addBands(dswe1)
             .addBands(dswe3)
@@ -593,13 +593,14 @@ def ref_pull_457_DSWE1(image):
   return out
 
 ## Set up the reflectance pull
-def ref_pull_457_DSWE1a(image):
+def ref_pull_457_DSWE1a(image, feat):
   """ This function applies all functions to the Landsat 4-7 ee.ImageCollection, extracting
   summary statistics for each geometry area where the DSWE value is 1 (high confidence water)
   or where the algal mask threshold is met
 
   Args:
       image: ee.Image of an ee.ImageCollection
+      feat: ee.FeatureGeometry of the buffered locations
 
   Returns:
       summaries for band data within any given geometry area where the DSWE value is 1 or where
@@ -668,10 +669,9 @@ def ref_pull_457_DSWE1a(image):
                                   ['mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 
                                   'mean_Swir1', 'mean_Swir2', 
                                   'mean_SurfaceTemp']))
-            .updateMask(dswe1a.eq(1)) # mask for dswe1a
-            .updateMask(hs.eq(1)) # only illuminated pixels
-            .updateMask(f.eq(0))
-            .updateMask(r.eq(1))
+            # mask the image
+            .updateMask(dswe1a.eq(1)) # dswe1 with algal mask
+            # add bands back in for QA (prior to masking of dswe/hs/f/r)
             .addBands(gt0) 
             .addBands(dswe1)
             .addBands(dswe3)
@@ -703,13 +703,14 @@ def ref_pull_457_DSWE1a(image):
   out = lsout.map(remove_geo)
   return out
 
-def ref_pull_457_DSWE3(image):
+def ref_pull_457_DSWE3(image, feat):
   """ This function applies all functions to the Landsat 4-7 ee.ImageCollection, extracting
   summary statistics for each geometry area where the DSWE value is 3 (high confidence
   vegetated pixel)
 
   Args:
       image: ee.Image of an ee.ImageCollection
+      feat: ee.FeatureGeometry of the buffered locations
 
   Returns:
       summaries for band data within any given geometry area where the DSWE value is 3
@@ -771,16 +772,15 @@ def ref_pull_457_DSWE3(image):
                                   'Nir', 'Swir1', 'Swir2', 'SurfaceTemp'],
                                 ['sd_Blue', 'sd_Green', 'sd_Red', 
                                 'sd_Nir', 'sd_Swir1', 'sd_Swir2', 'sd_SurfaceTemp']))
-            .addBands(image.select(['Blue', 'Green', 'Red', 'Nir', 
-                                    'Swir1', 'Swir2', 
-                                    'SurfaceTemp'],
-                                  ['mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 
-                                  'mean_Swir1', 'mean_Swir2', 
-                                  'mean_SurfaceTemp']))
-          .updateMask(d.eq(3)) # only vegetated water
-          .updateMask(hs.eq(1)) # only illuminated pixels
-          .updateMask(f.eq(0))
-          .updateMask(r.eq(1))
+          .addBands(image.select(['Blue', 'Green', 'Red', 'Nir', 
+                                  'Swir1', 'Swir2', 
+                                  'SurfaceTemp'],
+                                ['mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 
+                                'mean_Swir1', 'mean_Swir2', 
+                                'mean_SurfaceTemp']))
+          # mask the image
+          .updateMask(dswe3.eq(1)) # vegetated water mask
+          # add bands back in for QA (prior to masking of dswe/hs/f/r)
           .addBands(gt0) 
           .addBands(dswe1)
           .addBands(dswe3)
@@ -813,12 +813,13 @@ def ref_pull_457_DSWE3(image):
   return out
 
 
-def ref_pull_89_DSWE1(image):
+def ref_pull_89_DSWE1(image, feat):
   """ This function applies all functions to the Landsat 8 and 9 ee.ImageCollection, extracting
   summary statistics for each geometry area where the DSWE value is 1 (high confidence water)
 
   Args:
       image: ee.Image of an ee.ImageCollection
+      feat: ee.FeatureGeometry of the buffered locations
 
   Returns:
       summaries for band data within any given geometry area where the DSWE value is 1
@@ -869,7 +870,7 @@ def ref_pull_89_DSWE1(image):
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
-    .selfMask()
+.selfMask()
     )
   pixOut = (image.select(['Aerosol', 'Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2', 
                       'SurfaceTemp'],
@@ -887,10 +888,9 @@ def ref_pull_89_DSWE1(image):
                                 ['mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 
                                 'mean_Swir1', 'mean_Swir2', 
                                 'mean_SurfaceTemp']))
-          .updateMask(d.eq(1)) # only high confidence water
-          .updateMask(hs.eq(1)) # only illuminated pixels
-          .updateMask(f.eq(0))
-          .updateMask(r.eq(1))
+          # mask the image
+          .updateMask(dswe1.eq(1)) # high confidence water mask
+          # add bands back in for QA (prior to masking of dswe/hs/f/r)
           .addBands(gt0) 
           .addBands(dswe1)
           .addBands(dswe3)
@@ -923,13 +923,14 @@ def ref_pull_89_DSWE1(image):
   return out
 
 
-def ref_pull_89_DSWE1a(image):
+def ref_pull_89_DSWE1a(image, feat):
   """ This function applies all functions to the Landsat 8 and 9 ee.ImageCollection, extracting
   summary statistics for each geometry area where the DSWE value is 1 (high confidence water)
   or the algal threshold has been met
 
   Args:
       image: ee.Image of an ee.ImageCollection
+      feat: ee.FeatureGeometry of the buffered locations
 
   Returns:
       summaries for band data within any given geometry area where the DSWE value is 1 or the algal 
@@ -1000,10 +1001,9 @@ def ref_pull_89_DSWE1a(image):
                                 ['mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 
                                 'mean_Swir1', 'mean_Swir2', 
                                 'mean_SurfaceTemp']))
-          .updateMask(dswe1a.eq(1)) # only algal mask
-          .updateMask(hs.eq(1)) # only illuminated pixels
-          .updateMask(f.eq(0))
-          .updateMask(r.eq(1))
+          # mask the image
+          .updateMask(dswe1a.eq(1)) # high confidence water + algal mask 
+          # add bands back in for QA (prior to masking of dswe/hs/f/r)
           .addBands(gt0) 
           .addBands(dswe1)
           .addBands(dswe3)
@@ -1036,13 +1036,14 @@ def ref_pull_89_DSWE1a(image):
   return out
 
 
-def ref_pull_89_DSWE3(image):
+def ref_pull_89_DSWE3(image, feat):
   """ This function applies all functions to the Landsat 8 and 9 ee.ImageCollection, extracting
   summary statistics for each geometry area where the DSWE value is 3 (high confidence vegetated
   pixels)
 
   Args:
       image: ee.Image of an ee.ImageCollection
+      feat: ee.FeatureGeometry of the buffered locations
 
   Returns:
       summaries for band data within any given geometry area where the DSWE value is 3
@@ -1116,10 +1117,9 @@ def ref_pull_89_DSWE3(image):
                                 ['mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 
                                 'mean_Swir1', 'mean_Swir2', 
                                 'mean_SurfaceTemp']))
-          .updateMask(d.eq(3)) # only vegetated water
-          .updateMask(hs.eq(1)) # only illuminated pixels
-          .updateMask(f.eq(0))
-          .updateMask(r.eq(1))
+          # mask image
+          .updateMask(dswe3.eq(1)) # dswe3 mask
+          # add bands back in for QA (prior to masking of dswe/hs/f/r)
           .addBands(gt0) 
           .addBands(dswe1)
           .addBands(dswe3)
@@ -1196,8 +1196,6 @@ ee.Initialize(project = eeproj)
 # get EE/Google settings from yml file
 proj = yml["proj"][0]
 proj_folder = yml["proj_folder"][0]
-# create folder with version number
-folder_version = proj_folder + "_v" + run_date
 
 # get/save start date
 yml_start = yml["start_date"][0]
@@ -1214,6 +1212,9 @@ run_date = yml["run_date"][0]
 buffer = yml["site_buffer"][0]
 cloud_filt = yml["cloud_filter"][0]
 cloud_thresh = yml["cloud_thresh"][0]
+
+# create folder with version number
+folder_version = proj_folder + "_v" + run_date
 
 # get and format dswe value
 try: 
@@ -1356,7 +1357,7 @@ def process_subset(df_subset, chunk):
     if '1a' in dswe:
       locs_out_457_D1 = locs_stack_ls457.map(lambda image: ref_pull_457_DSWE1(image, feat)).flatten()
       locs_out_457_D1 = locs_out_457_D1.filter(ee.Filter.notNull(['med_Blue']))
-      locs_srname_457_D1 = proj+'_site_LS457_C2_SRST_DSWE1_'+str(tiles)+'_'+str(chunk)+'_v'+run_date
+      locs_srname_457_D1 = proj+'_site_LS457_C2_SRST_DSWE1_'+str(pr)+'_'+str(chunk)+'_v'+run_date
       locs_dataOut_457_D1 = (ee.batch.Export.table.toDrive(collection = locs_out_457_D1,
                                               description = locs_srname_457_D1,
                                               folder = folder_version,
@@ -1371,10 +1372,10 @@ def process_subset(df_subset, chunk):
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_457_D1.start()
-      print('Completed Landsat 4, 5, 7 DSWE 1 stack acquisitions for site configuration at tile ' + str(tiles) + ' chunk ' + str(chunk + 1))
+      print('Completed Landsat 4, 5, 7 DSWE 1 stack acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
       locs_out_457_D1a = locs_stack_ls457.map(lambda image: ref_pull_457_DSWE1a(image, feat)).flatten()
       locs_out_457_D1a = locs_out_457_D1a.filter(ee.Filter.notNull(['med_Blue']))
-      locs_srname_457_D1a = proj+'_site_LS457_C2_SRST_DSWE1a_'+str(tiles)+'_'+str(chunk)+'_v'+run_date
+      locs_srname_457_D1a = proj+'_site_LS457_C2_SRST_DSWE1a_'+str(pr)+'_'+str(chunk)+'_v'+run_date
       locs_dataOut_457_D1a = (ee.batch.Export.table.toDrive(collection = locs_out_457_D1a,
                                               description = locs_srname_457_D1a,
                                               folder = folder_version,
@@ -1389,13 +1390,13 @@ def process_subset(df_subset, chunk):
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_457_D1a.start()
-      print('Completed Landsat 4, 5, 7 DSWE 1a stack acquisitions for site configuration at tile ' + str(tiles) + ' chunk ' + str(chunk + 1))
+      print('Completed Landsat 4, 5, 7 DSWE 1a stack acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
     
     else: 
       # only pull DSWE1
       locs_out_457_D1 = locs_stack_ls457.map(lambda image: ref_pull_457_DSWE1(image, feat)).flatten()
       locs_out_457_D1 = locs_out_457_D1.filter(ee.Filter.notNull(['med_Blue']))
-      locs_srname_457_D1 = proj+'_site_LS457_C2_SRST_DSWE1_'+str(tiles)+'_'+str(chunk)+'_v'+run_date
+      locs_srname_457_D1 = proj+'_site_LS457_C2_SRST_DSWE1_'+str(pr)+'_'+str(chunk)+'_v'+run_date
       locs_dataOut_457_D1 = (ee.batch.Export.table.toDrive(collection = locs_out_457_D1,
                                               description = locs_srname_457_D1,
                                               folder = folder_version,
@@ -1410,7 +1411,7 @@ def process_subset(df_subset, chunk):
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_457_D1.start()
-      print('Completed Landsat 4, 5, 7 DSWE 1 stack acquisitions for site configuration at tile ' + str(tiles) + ' chunk ' + str(chunk + 1))
+      print('Completed Landsat 4, 5, 7 DSWE 1 stack acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
     
   else: print('Not configured to acquire DSWE 1 or DSWE 1a stack for Landsat 4, 5, 7 for site configuration')
   
@@ -1419,7 +1420,7 @@ def process_subset(df_subset, chunk):
     # pull DSWE3
     locs_out_457_D3 = locs_stack_ls457.map(lambda image: ref_pull_457_DSWE3(image, feat)).flatten()
     locs_out_457_D3 = locs_out_457_D3.filter(ee.Filter.notNull(['med_Blue']))
-    locs_srname_457_D3 = proj+'_site_LS457_C2_SRST_DSWE3_'+str(tiles)+'_'+str(chunk)+'_v'+run_date
+    locs_srname_457_D3 = proj+'_site_LS457_C2_SRST_DSWE3_'+str(pr)+'_'+str(chunk)+'_v'+run_date
     locs_dataOut_457_D3 = (ee.batch.Export.table.toDrive(collection = locs_out_457_D3,
                                             description = locs_srname_457_D3,
                                             folder = folder_version,
@@ -1434,7 +1435,7 @@ def process_subset(df_subset, chunk):
                                             'prop_clouds','prop_hillShadow','mean_hillShade']))
     #Send next task.                                        
     locs_dataOut_457_D3.start()
-    print('Completed Landsat 4, 5, 7 DSWE 3 stack acquisitions for site configuration at tile ' + str(tiles) + ' chunk ' + str(chunk + 1))
+    print('Completed Landsat 4, 5, 7 DSWE 3 stack acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
     
   else: print('Not configured to acquire DSWE 3 stack for Landsat 4, 5, 7 for site configuration')
   
@@ -1458,7 +1459,7 @@ def process_subset(df_subset, chunk):
     if '1a' in dswe:
       locs_out_89_D1 = locs_stack_ls89.map(lambda image: ref_pull_89_DSWE1(image, feat)).flatten()
       locs_out_89_D1 = locs_out_89_D1.filter(ee.Filter.notNull(['med_Blue']))
-      locs_srname_89_D1 = proj+'_site_LS89_C2_SRST_DSWE1_'+str(tiles)+'_'+str(chunk)+'_v'+run_date
+      locs_srname_89_D1 = proj+'_site_LS89_C2_SRST_DSWE1_'+str(pr)+'_'+str(chunk)+'_v'+run_date
       locs_dataOut_89_D1 = (ee.batch.Export.table.toDrive(collection = locs_out_89_D1,
                                               description = locs_srname_89_D1,
                                               folder = folder_version,
@@ -1473,10 +1474,10 @@ def process_subset(df_subset, chunk):
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_89_D1.start()
-      print('Completed Landsat 8, 9 DSWE 1 stack acquisitions for site configuration at tile ' + str(tiles) + ' chunk ' + str(chunk + 1))
+      print('Completed Landsat 8, 9 DSWE 1 stack acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
       locs_out_89_D1a = locs_stack_ls89.map(lambda image: ref_pull_89_DSWE1a(image, feat)).flatten()
       locs_out_89_D1a = locs_out_89_D1a.filter(ee.Filter.notNull(['med_Blue']))
-      locs_srname_89_D1a = proj+'_site_LS89_C2_SRST_DSWE1a_'+str(tiles)+'_'+str(chunk)+'_v'+run_date
+      locs_srname_89_D1a = proj+'_site_LS89_C2_SRST_DSWE1a_'+str(pr)+'_'+str(chunk)+'_v'+run_date
       locs_dataOut_89_D1a = (ee.batch.Export.table.toDrive(collection = locs_out_89_D1a,
                                               description = locs_srname_89_D1a,
                                               folder = folder_version,
@@ -1491,11 +1492,11 @@ def process_subset(df_subset, chunk):
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_89_D1a.start()
-      print('Completed Landsat 8, 9 DSWE 1a stack acquisitions for site configuration at tile ' + str(tiles) + ' chunk ' + str(chunk + 1))
+      print('Completed Landsat 8, 9 DSWE 1a stack acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
     else:
       locs_out_89_D1 = locs_stack_ls89.map(lambda image: ref_pull_89_DSWE1(image, feat)).flatten()
       locs_out_89_D1 = locs_out_89_D1.filter(ee.Filter.notNull(['med_Blue']))
-      locs_srname_89_D1 = proj+'_site_LS89_C2_SRST_DSWE1_'+str(tiles)+'_'+str(chunk)+'_v'+run_date
+      locs_srname_89_D1 = proj+'_site_LS89_C2_SRST_DSWE1_'+str(pr)+'_'+str(chunk)+'_v'+run_date
       locs_dataOut_89_D1 = (ee.batch.Export.table.toDrive(collection = locs_out_89_D1,
                                               description = locs_srname_89_D1,
                                               folder = folder_version,
@@ -1510,14 +1511,14 @@ def process_subset(df_subset, chunk):
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_89_D1.start()
-      print('Completed Landsat 8, 9 DSWE 1 stack acquisitions for site configuration at tile ' + str(tiles) + ' chunk ' + str(chunk + 1))
+      print('Completed Landsat 8, 9 DSWE 1 stack acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
   
   else: print('Not configured to acquire DSWE 1 stack for Landsat 8, 9 for site configuration')
   
   if '3' in dswe:
     locs_out_89_D3 = locs_stack_ls89.map(lambda image: ref_pull_89_DSWE3(image, feat)).flatten()
     locs_out_89_D3 = locs_out_89_D3.filter(ee.Filter.notNull(['med_Blue']))
-    locs_srname_89_D3 = proj+'_site_LS89_C2_SRST_DSWE3_'+str(tiles)+'_'+str(chunk)+'_v'+run_date
+    locs_srname_89_D3 = proj+'_site_LS89_C2_SRST_DSWE3_'+str(pr)+'_'+str(chunk)+'_v'+run_date
     locs_dataOut_89_D3 = (ee.batch.Export.table.toDrive(collection = locs_out_89_D3,
                                             description = locs_srname_89_D3,
                                             folder = folder_version,
@@ -1532,7 +1533,7 @@ def process_subset(df_subset, chunk):
                                             'prop_clouds','prop_hillShadow','mean_hillShade']))
     #Send next task.                                        
     locs_dataOut_89_D3.start()
-    print('Completed Landsat 8, 9 DSWE 3 stack acquisitions for site configuration at tile ' + str(tiles) + ' chunk ' + str(chunk + 1))
+    print('Completed Landsat 8, 9 DSWE 3 stack acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
   
   else: print('Not configured to acquire DSWE 3 stack for Landsat 8,9 for sites')
 
