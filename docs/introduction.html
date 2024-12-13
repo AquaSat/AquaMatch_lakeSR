@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2024-12-12" />
+<meta name="date" content="2024-12-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -107,7 +107,18 @@ div.csl-indent {
 <li class="chapter" data-level="2.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation"><i class="fa fa-check"></i><b>2.4</b> Technical Implementation</a></li>
 <li class="chapter" data-level="2.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>2.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>3</b> References</a></li>
+<li class="chapter" data-level="3" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>3</b> Satellite Data Acquisition Software and Settings</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="software-settings.html"><a href="software-settings.html#reticulate-conda-environment"><i class="fa fa-check"></i><b>3.1</b> {reticulate} Conda Environment</a></li>
+<li class="chapter" data-level="3.2" data-path="software-settings.html"><a href="software-settings.html#google-earth-engine-setup"><i class="fa fa-check"></i><b>3.2</b> Google Earth Engine Setup</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="software-settings.html"><a href="software-settings.html#create-a-gee-account"><i class="fa fa-check"></i><b>3.2.1</b> Create a GEE account</a></li>
+<li class="chapter" data-level="3.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud-cli"><i class="fa fa-check"></i><b>3.2.2</b> gcloud CLI</a></li>
+<li class="chapter" data-level="3.2.3" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>3.2.3</b> GEE Authentication</a></li>
+<li class="chapter" data-level="3.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-project-setting"><i class="fa fa-check"></i><b>3.2.4</b> GEE project setting</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>4</b> References</a></li>
 </ul>
 
       </nav>
@@ -128,7 +139,7 @@ div.csl-indent {
 <div id="header">
 <h1 class="title">lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</h1>
 <p class="author"><em>ROSSyndicate</em></p>
-<p class="date"><em>2024-12-12</em></p>
+<p class="date"><em>2024-12-13</em></p>
 </div>
 <div id="introduction" class="section level1 hasAnchor" number="1">
 <h1><span class="header-section-number">1</span> Introduction<a href="introduction.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
@@ -184,19 +195,19 @@ methodology.</p>
 <p>This {targets} group uses the configuration file
 <code>b_pull_Landsat_SRST_poi/config_files/config_poi.yml</code> and the “Pole of
 Inaccessibility” points created in the <code>a_Calculate_Centers</code> group to pull
-Landsat Collection 2 Surface Reflectance and Surface Temperature using the GEE
-API. In this group, we use the most conservative LS4-7 pixel filters, as we are
-applying these settings across such a large continuum of time and space. This
-group ends with a branched target that sends tasks to Google Earth engine by
-mapping over WRS2 path rows that intersect with the points created in
-<code>a_Calculate_Centers</code>. <strong>Note</strong>: this group of targets takes a very, very long
-time, averaging about 1 hour per path-row branch. There are just under 800 path
-rows executed in this branch.</p>
+Landsat Collection 2 Surface Reflectance and Surface Temperature using the
+Google Earth Engine (GEE) API. In this group, we use the most conservative LS4-7
+pixel filters, as we are applying these settings across such a large continuum
+of time and space. This group ends with a branched target that sends tasks to
+Google Earth engine by mapping over WRS2 path rows that intersect with the
+points created in <code>a_Calculate_Centers</code>. <strong>Note</strong>: this group of targets takes a
+very, very long time, averaging about 1 hour per path-row branch. There are just
+under 800 path rows executed in this branch.</p>
 <!-- See Section <a href="#LS-C2-SRST"><strong>??</strong></a> for additional background and detailed -->
 <!-- methodology. -->
 <!-- ## Running the code within this repository -->
 <!-- If you have followed all of the set up instructions, including those outlined in -->
-<!-- Section <a href="#software-settings"><strong>??</strong></a>, the code within this repository can be -->
+<!-- Section <a href="software-settings.html#software-settings">3</a>, the code within this repository can be -->
 <!-- triggered by running the `run_targets.Rmd` file with the R Project file -->
 <!-- `AquaMatch_lakeSR.rproj` open in your RStudio console. -->
 

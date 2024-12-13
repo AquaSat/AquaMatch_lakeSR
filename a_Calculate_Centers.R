@@ -37,7 +37,8 @@ a_Calculate_Centers_list <- list(
   tar_target(
     name = a_US_states_territories,
     command = states() %>% st_make_valid(),
-    packages = c("tigris", "sf", "tidyverse")
+    packages = c("tigris", "sf", "tidyverse"),
+    deployment = "main"
   ),
   
   # for each state/territory, get a list of HUC4s

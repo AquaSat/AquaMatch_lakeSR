@@ -9,4 +9,11 @@ pole-of-inaccessibility
 waterbodies
 technical-implementation
 case-study-wisconsin-waterbodies
+software-settings
+reticulate-conda-environment
+google-earth-engine-setup
+create-a-gee-account
+gcloud-cli
+gee-authentication
+gee-project-setting
 references
