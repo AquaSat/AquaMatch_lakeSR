@@ -12,7 +12,7 @@ google_settings:
 - proj: "LSC2_poi" # this is a short name for file naming conventions. All output files will include this prefix.
 - proj_folder: "ls_c2_srst_poi" # this is the folder name where the GEE data will be save to Google Drive. If it doesn't exist, it will be created.
 - ee_proj: "ee-aquamatch" # this is the ee project name you are running your pulls from
-- run_date: "2024-12-12" # date of run for versioning, must be in YYYY-MM-DD foramt
+- run_date: "2024-12-13" # date of run for versioning, must be in YYYY-MM-DD foramt
 
 temporal_settings: 
 - start_date: "1983-01-01" # earliest data of satellite data to be acquired; earliest data available is 1983-01-01
