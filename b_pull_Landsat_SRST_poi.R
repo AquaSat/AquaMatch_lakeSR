@@ -73,12 +73,29 @@ b_pull_Landsat_SRST_poi_list <- list(
     packages = c("tidyverse", "sf", "feather")
   ),
   
+  # track python files for changes
+  tar_file(
+    name = b_eeRun_script,
+    command = "b_pull_Landsat_SRST_poi/py/run_GEE_per_pathrow.py"
+  ),
+  
+  tar_file(
+    name = b_ee_complete_script,
+    command = "b_pull_Landsat_SRST_poi/py/poi_wait_for_completion.py"
+  ),
+  
+  tar_file(
+    name = b_ee_fail_script,
+    command = "b_pull_Landsat_SRST_poi/py/check_for_failed_tasks.py"
+  ),
+  
   # run the Landsat pull as function per tile - this is the longest step and can
   # not be run by multiple crew workers because the bottleneck is on the end of
   # GEE, not local compute.
   tar_target(
     name = b_eeRun_poi,
     command = {
+      b_eeRun_script
       run_GEE_per_pathrow(WRS_pathrow = b_WRS_pathrow_poi)
     },
     pattern = map(b_WRS_pathrow_poi),
@@ -95,6 +112,7 @@ b_pull_Landsat_SRST_poi_list <- list(
   tar_target(
     name = b_poi_tasks_complete,
     command = {
+      b_ee_complete_script
       b_eeRun_poi
       source_python("b_pull_Landsat_SRST_poi/py/poi_wait_for_completion.py")
     },
@@ -107,6 +125,7 @@ b_pull_Landsat_SRST_poi_list <- list(
   tar_target(
     name = b_check_for_failed_tasks,
     command = {
+      b_ee_fail_script
       b_poi_tasks_complete
       source_python("b_pull_Landsat_SRST_poi/py/check_for_failed_tasks.py")
     },
