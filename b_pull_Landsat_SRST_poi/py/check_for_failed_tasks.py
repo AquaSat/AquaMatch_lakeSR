@@ -19,7 +19,7 @@ ts = list(ee.batch.Task.list())
 
 # for each of the tasks, see if any failed, if so, add a line to a csv file with the task id
 for task in ts:
-   if ("FAIL" in task.status()['state']):
+   if ("FAIL" in task.status()['state'] and run_date in task.status()['description']):
        # add the task description to a file called 'GEE_task_errors.csv'
        with open(os.path.join('b_pull_Landsat_SRST_poi/out/', fn), 'a') as f:
           f.write(task.status()['description'] + '\n')
