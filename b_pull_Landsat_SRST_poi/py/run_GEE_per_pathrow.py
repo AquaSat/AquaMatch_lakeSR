@@ -1587,8 +1587,6 @@ meta_dataOut_457 = (ee.batch.Export.table.toDrive(collection = ls457,
                                         folder = folder_version,
                                         fileFormat = "csv"))
 
-#Check how many existing tasks are running and take a break of 120 secs if it's >10 
-maximum_no_of_tasks(10, 120)
 #Send next task.                                        
 meta_dataOut_457.start()
 
@@ -1605,8 +1603,6 @@ meta_dataOut_89 = (ee.batch.Export.table.toDrive(collection = ls89,
                                         folder = folder_version,
                                         fileFormat = "csv"))
 
-#Check how many existing tasks are running and take a break of 120 secs if it's >10 
-maximum_no_of_tasks(10, 120)
 #Send next task.                                        
 meta_dataOut_89.start()
 
