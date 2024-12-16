@@ -1253,17 +1253,17 @@ l7 = (ee.ImageCollection("LANDSAT/LE07/C02/T1_L2")
     .filter(ee.Filter.eq("WRS_ROW", w_r))
     .filter(ee.Filter.lt("CLOUD_COVER", ee.Number.parse(str(cloud_thresh))))
     .filterDate(yml_start, yml_end)
-    .filterDate('1999-05-28', '2019-12-31')) # for valid dates
+    .filterDate('1999-05-28', '2019-12-31')) # truncated to reflect drift issues
 l5 = (ee.ImageCollection("LANDSAT/LT05/C02/T1_L2")
     .filter(ee.Filter.eq("WRS_PATH", w_p))
     .filter(ee.Filter.eq("WRS_ROW", w_r))
     .filter(ee.Filter.lt("CLOUD_COVER", ee.Number.parse(str(cloud_thresh))))
-    .filterDate(yml_start, yml_end))
+    .filterDate(yml_start, "2011-11-18")) # end of science mission
 l4 = (ee.ImageCollection("LANDSAT/LT04/C02/T1_L2")
     .filter(ee.Filter.eq("WRS_PATH", w_p))
     .filter(ee.Filter.eq("WRS_ROW", w_r))
     .filter(ee.Filter.lt("CLOUD_COVER", ee.Number.parse(str(cloud_thresh))))
-    .filterDate(yml_start, yml_end))
+    .filterDate(yml_start, "1993-12-14")) # end of science mission
     
 # merge collections by image processing groups
 ls457 = ee.ImageCollection(l4.merge(l5).merge(l7))
