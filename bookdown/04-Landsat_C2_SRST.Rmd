@@ -1,6 +1,6 @@
 ---
-editor_options: 
-  markdown: 
+editor_options:
+  markdown:
     wrap: 80
 bibliography: references.bib
 ---
@@ -17,34 +17,17 @@ relevant to the creation and use of lakeSR.*
 The Landsat archive of multispectral and thermal data in lakeSR is composed of
 Landsat missions 4 through 9 and spans more than 40 years.
 
-+----------------------------------------+-----------+-----------+-----------+
-| Mission                                | Launch    | End of    | Dec       |
-|                                        | Date      | Science   | ommission |
-|                                        |           | Mission   | Date      |
-+========================================+:=========:+:=========:+:=========:+
-| [Landsat 4                             | 1         | 1         | 2         |
-| TM](https://landsa%20t.g               | 982-07-16 | 993-12-14 | 001-06-15 |
-| sfc.nasa.gov/sat%20ellites/landsat-4/) |           |           |           |
-+----------------------------------------+-----------+-----------+-----------+
-| [Landsat 5                             | 1         | 2         | 2         |
-| TM](https://landsa%20t.g               | 984-03-01 | 011-11-18 | 013-06-05 |
-| sfc.nasa.gov/sat%20ellites/landsat-5/) |           |           |           |
-+----------------------------------------+-----------+-----------+-----------+
-| [Landsat 7 E                           | 1         | 2         | N/A       |
-| TM+](https://landsa%20t.g              | 999-04-15 | 022-04-06 |           |
-| sfc.nasa.gov/sat%20ellites/landsat-7/) |           |           |           |
-+----------------------------------------+-----------+-----------+-----------+
-| [Landsat 8 OLI/T                       | 2         | N/A       | N/A       |
-| IRS](https://landsa%20t.g              | 013-02-11 |           |           |
-| sfc.nasa.gov/sat%20ellites/landsat-8/) |           |           |           |
-+----------------------------------------+-----------+-----------+-----------+
-| [Landsat 9 OLI-2/TIR                   | 2         | N/A       | N/A       |
-| S-2](https://landsa%20t.g              | 021-09-27 |           |           |
-| sfc.nasa.gov/sat%20ellites/landsat-9/) |           |           |           |
-+----------------------------------------+-----------+-----------+-----------+
+| Mission | Launch Date | End of Science Mission | Dec ommission Date |
+|----|:--:|:--:|:--:|
+| [Landsat 4 TM](https://landsa%20t.g%20%20sfc.nasa.gov/sat%20ellites/landsat-4/) [@eros-45] | 1 982-07-16 | 1 993-12-14 | 2 001-06-15 |
+| [Landsat 5 TM](https://landsa%20t.g%20%20sfc.nasa.gov/sat%20ellites/landsat-5/) [@eros-45] | 1 984-03-01 | 2 011-11-18 | 2 013-06-05 |
+| [Landsat 7 ETM+](https://landsa%20t.g%20%20sfc.nasa.gov/sat%20ellites/landsat-7/) [@eros-7] | 1 999-04-15 | 2 022-04-06 | N/A |
+| [Landsat 8 OLI/TIRS](https://landsa%20t.g%20%20sfc.nasa.gov/sat%20ellites/landsat-8/) [@eros-89] | 2 013-02-11 | N/A | N/A |
+| [Landsat 9 OLI-2/TIRS-2](https://landsa%20t.g%20%20sfc.nasa.gov/sat%20ellites/landsat-9/) [@eros-89] | 2 021-09-27 | N/A | N/A |
 
 The image record for Landsat 4 is not consistent nor robust due to a data
-transmitter failure early in service. Landsat 6 did not achieve orbit.
+transmitter failure early in service, however our pipeline acquires data as
+available. Landsat 6 did not achieve orbit.
 
 For the purposes of lakeSR, we truncate the data record for Landsat 4 and 5 at
 the end of the Science Mission of the satellite. Landsat 7 began to experience
@@ -63,7 +46,7 @@ relatively consistent (with the addition of an Aerosol band beginning Landsat
 Landsat 8 OLI/TIRS:
 
 +-------+-------+-------+-------+-------+-------+-------+-------+-------+
-| S e   | Ae    | Blue  | Green | Red   | Near  | Short | Short | Th    |
+| Se    | Ae    | Blue  | Green | Red   | Near  | Short | Short | Th    |
 | nsors | rosol |       |       |       | Inf   | Wave  | Wave  | ermal |
 |       |       |       |       |       | rared | Inf   | Inf   |       |
 |       |       |       |       |       | (NIR) | rared | rared |       |
@@ -90,17 +73,17 @@ Landsat 8 OLI/TIRS:
 The spatial resolution of the Level 1 data has not changed for optical bands
 (Aerosol, RGB, NIR, SWIR) but has varied over the history for thermal data:
 
-+----------------+----------------+----------------+
-| Sensors        | Optical Bands  | Thermal Bands  |
-+================+================+================+
-| TM             | 30             | 120            |
-+----------------+----------------+----------------+
-| ETM+           | 30             | 60             |
-+----------------+----------------+----------------+
-| OLI/TIRS       | 30             | 100            |
-|                |                |                |
-| OLI-2/TIRS-2   |                |                |
-+----------------+----------------+----------------+
++--------------+---------------+---------------+
+| Sensors      | Optical Bands | Thermal Bands |
++==============+===============+===============+
+| TM           | 30            | 120           |
++--------------+---------------+---------------+
+| ETM+         | 30            | 60            |
++--------------+---------------+---------------+
+| OLI/TIRS     | 30            | 100           |
+|              |               |               |
+| OLI-2/TIRS-2 |               |               |
++--------------+---------------+---------------+
 
 All Collection 2 Level 2 Surface Reflectance and Surface Temperature data have
 been resampled to 30m in the USGS SRST product.
@@ -120,7 +103,7 @@ Collection 2 Surface
 Reflectance](https://www.usgs.gov/landsat-missions/landsat-surface-reflectance)
 product page and has been summarized here for the purpose of providing
 background information about the Landsat archive relevant to the creation and
-use of lakeSR*.
+use of lakeSR.*
 
 The Landsat Collection 2 Surface Reflectance (SR) product is a Level 2 data
 product that has been atmospherically corrected from the Level 1 Top of
@@ -154,11 +137,11 @@ Collection 2 Surface
 Temperature](https://www.usgs.gov/landsat-missions/landsat-collection-2-surface-temperature)
 product page and has been summarized here for the purpose of providing
 background information about the Landsat archive relevant to the creation and
-use of lakeSR*.
+use of lakeSR.*
 
 The Landsat Collection 2 Surface Temperature (ST) product is calculated using a
 single-channel algorithm [@cook2014a; @cook2014b] to convert the thermal band
 data to temperature estimates in degrees Kelvin. These data are considered
 interoperable over space and time with few differences in the ST algorithm
-product within Collection 2, with the acknowledgement of the
-previously-documented spectral and radiometric resolution differences.
+product within Collection 2, with the acknowledgement of the previously-
+documented spectral and radiometric resolution differences.
