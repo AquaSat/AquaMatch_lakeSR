@@ -12,9 +12,9 @@ bibliography: references.bib
 *The information presented in this section originates from the [NASA Landsat
 Science website](https://landsat.gsfc.nasa.gov/) and has been summarized here
 for the purpose of providing background information about the Landsat archive
-relevant to the creation and use of **lakeSR***.
+relevant to the creation and use of lakeSR.*
 
-The Landsat archive of multispectral and thermal data in **lakeSR** is composed
+The Landsat archive of multispectral and thermal data in lakeSR is composed
 of Landsat missions 4 through 9 and spans more than 40 years.
 
 | Mission                                                                              | Launch Date | End of Science Mission | Decommission Date |
@@ -94,7 +94,7 @@ Collection 2 Surface
 Reflectance](https://www.usgs.gov/landsat-missions/landsat-surface-reflectance)
 product page and has been summarized here for the purpose of providing
 background information about the Landsat archive relevant to the creation and
-use of **lakeSR***.
+use of lakeSR*.
 
 The Landsat Collection 2 Surface Reflectance (SR) product is a Level 2 data
 product that has been atmospherically corrected from the Level 1 Top of
@@ -102,10 +102,10 @@ Atmosphere product using a myriad of inputs to create a reasonably consistent
 data product across space and time. The USGS EROS describes the SR product as
 follows:
 
-> *Surface reflectance improves comparison between multiple images over the same
+> *Surface reflectance improves comparison between multiple images over the same
 > region by accounting for atmospheric effects such as aerosol scattering and
 > thin clouds, which can help in the detection and characterization of Earth
-> surface change. Surface reflectance is generated from Level-1 inputs that meet
+> surface change. Surface reflectance is generated from Level-1 inputs that meet
 > the \<76 degrees Solar Zenith Angle constraint and include the required
 > auxiliary data inputs to generate a scientifically viable product.*
 
@@ -128,7 +128,7 @@ Collection 2 Surface
 Temperature](https://www.usgs.gov/landsat-missions/landsat-collection-2-surface-temperature)
 product page and has been summarized here for the purpose of providing
 background information about the Landsat archive relevant to the creation and
-use of **lakeSR***.
+use of lakeSR*.
 
 The Landsat Collection 2 Surface Temperature (ST) product is calculated using a
 single-channel algorithm [@cook2014a; @cook2014b] to convert the thermal band

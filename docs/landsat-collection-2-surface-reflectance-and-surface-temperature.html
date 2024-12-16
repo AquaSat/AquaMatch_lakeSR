@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4 Landsat Collection 2 Surface Reflectance and Surface Temperature | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</title>
+  <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4 Landsat Collection 2 Surface Reflectance and Surface Temperature | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Landsat Collection 2 Surface Reflectance and Surface Temperature | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  
+  <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  
+
+<meta name="author" content="ROSSyndicate" />
+
+
+<meta name="date" content="2024-12-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="software-settings.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#code-architecture"><i class="fa fa-check"></i><b>1.1</b> Code Architecture</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>2</b> Locations of Data Acquisition</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#changes-from-aquasat-v1"><i class="fa fa-check"></i><b>2.1</b> Changes from AquaSat v1</a></li>
+<li class="chapter" data-level="2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>2.2</b> Pole of Inaccessibility</a></li>
+<li class="chapter" data-level="2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>2.3</b> Waterbodies in AquaMatch-lakeSR</a></li>
+<li class="chapter" data-level="2.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation"><i class="fa fa-check"></i><b>2.4</b> Technical Implementation</a></li>
+<li class="chapter" data-level="2.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>2.5</b> Case Study: Wisconsin Waterbodies</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>3</b> Satellite Data Acquisition Software and Settings</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="software-settings.html"><a href="software-settings.html#reticulate-conda-environment"><i class="fa fa-check"></i><b>3.1</b> {reticulate} Conda Environment</a></li>
+<li class="chapter" data-level="3.2" data-path="software-settings.html"><a href="software-settings.html#google-earth-engine-setup"><i class="fa fa-check"></i><b>3.2</b> Google Earth Engine Setup</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="software-settings.html"><a href="software-settings.html#create-a-gee-account"><i class="fa fa-check"></i><b>3.2.1</b> Create a GEE account</a></li>
+<li class="chapter" data-level="3.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud-cli"><i class="fa fa-check"></i><b>3.2.2</b> gcloud CLI</a></li>
+<li class="chapter" data-level="3.2.3" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>3.2.3</b> GEE Authentication</a></li>
+<li class="chapter" data-level="3.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-project-setting"><i class="fa fa-check"></i><b>3.2.4</b> GEE project setting</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><i class="fa fa-check"></i><b>4</b> Landsat Collection 2 Surface Reflectance and Surface Temperature</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#background-information"><i class="fa fa-check"></i><b>4.1</b> Background Information</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#spectral-response"><i class="fa fa-check"></i><b>4.1.1</b> Spectral Response</a></li>
+<li class="chapter" data-level="4.1.2" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#sensor-resolution"><i class="fa fa-check"></i><b>4.1.2</b> Sensor Resolution</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#surface-reflectance-product"><i class="fa fa-check"></i><b>4.2</b> Surface Reflectance Product</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#sr-atmospheric-processing"><i class="fa fa-check"></i><b>4.2.1</b> SR Atmospheric Processing</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="landsat-collection-2-surface-reflectance-and-surface-temperature.html"><a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#surface-temperature"><i class="fa fa-check"></i><b>4.3</b> Surface Temperature</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>5</b> References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="landsat-collection-2-surface-reflectance-and-surface-temperature" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">4</span> Landsat Collection 2 Surface Reflectance and Surface Temperature<a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#landsat-collection-2-surface-reflectance-and-surface-temperature" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="background-information" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Background Information<a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#background-information" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>The information presented in this section originates from the <a href="https://landsat.gsfc.nasa.gov/">NASA Landsat
+Science website</a> and has been summarized here
+for the purpose of providing background information about the Landsat archive
+relevant to the creation and use of lakeSR.</em></p>
+<p>The Landsat archive of multispectral and thermal data in lakeSR is composed
+of Landsat missions 4 through 9 and spans more than 40 years.</p>
+<table>
+<colgroup>
+<col width="60%" />
+<col width="9%" />
+<col width="16%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Mission</th>
+<th align="center">Launch Date</th>
+<th align="center">End of Science Mission</th>
+<th align="center">Decommission Date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://landsa%20t.gsfc.nasa.gov/sat%20ellites/landsat-4/">Landsat 4 TM</a></td>
+<td align="center">1982-07-16</td>
+<td align="center">1993-12-14</td>
+<td align="center">2001-06-15</td>
+</tr>
+<tr class="even">
+<td><a href="https://landsa%20t.gsfc.nasa.gov/sat%20ellites/landsat-5/">Landsat 5 TM</a></td>
+<td align="center">1984-03-01</td>
+<td align="center">2011-11-18</td>
+<td align="center">2013-06-05</td>
+</tr>
+<tr class="odd">
+<td><a href="https://landsa%20t.gsfc.nasa.gov/sat%20ellites/landsat-7/">Landsat 7 E TM+</a></td>
+<td align="center">1999-04-15</td>
+<td align="center">2022-04-06</td>
+<td align="center">N/A</td>
+</tr>
+<tr class="even">
+<td><a href="https://landsa%20t.gsfc.nasa.gov/sat%20ellites/landsat-8/">Landsat 8 OLI/T IRS</a></td>
+<td align="center">2013-02-11</td>
+<td align="center">N/A</td>
+<td align="center">N/A</td>
+</tr>
+<tr class="odd">
+<td><a href="https://landsa%20t.gsfc.nasa.gov/sat%20ellites/landsat-9/">Landsat 9 OLI-2/TIR S-2</a></td>
+<td align="center">2021-09-27</td>
+<td align="center">N/A</td>
+<td align="center">N/A</td>
+</tr>
+</tbody>
+</table>
+<p>The image record for Landsat 4 is not consistent nor robust due to a data
+transmitter failure early in service. Landsat 6 did not achieve orbit.</p>
+<div id="spectral-response" class="section level3 hasAnchor" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> Spectral Response<a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#spectral-response" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>While the nominal bands for each of the missions within the archive is
+relatively consistent (with the addition of an Aerosol band beginning Landsat
+8), the precise spectral response for each nominal band shifted beginning with
+Landsat 8 OLI/TIRS:</p>
+<table style="width:91%;">
+<colgroup>
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>S
+e
+nsors</th>
+<th>Ae
+rosol</th>
+<th>Blue</th>
+<th>Green</th>
+<th>Red</th>
+<th>Near
+Inf
+rared
+(NIR)</th>
+<th>Short
+Wave
+Inf
+rared
+1
+(SWIR
+1)</th>
+<th>Short
+Wave
+Inf
+rared
+2
+(SWIR
+2)</th>
+<th>Th
+ermal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>TM</p>
+<p>ETM+</p></td>
+<td>N/A</td>
+<td>0.45
+-0.52
+μm</td>
+<td>0.52
+-0.60
+μm</td>
+<td>0.63
+-0.69
+μm</td>
+<td>0.77
+-0.90
+μm</td>
+<td>1.55
+-1.75
+μm</td>
+<td>2.08
+-2.35
+μm</td>
+<td>1
+0.40-
+12.50
+μm</td>
+</tr>
+<tr class="even">
+<td><p>OL
+I
+/TIRS</p>
+<p>O
+LI-2/
+T
+IRS-2</p></td>
+<td>0
+.435-
+0.451
+μm</td>
+<td>0
+.452-
+0.512
+μm</td>
+<td>0
+.533-
+0.590
+μm</td>
+<td>0
+.636-
+0.673
+μm</td>
+<td>0
+.851-
+0.879
+μm</td>
+<td>1
+.566-
+1.651
+μm</td>
+<td>2
+.107-
+2.294
+μm</td>
+<td>10
+.60-1
+1.19,
+1
+1.50-
+12.51
+μm</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="sensor-resolution" class="section level3 hasAnchor" number="4.1.2">
+<h3><span class="header-section-number">4.1.2</span> Sensor Resolution<a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#sensor-resolution" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The spatial resolution of the Level 1 data has not changed for optical bands
+(Aerosol, RGB, NIR, SWIR) but has varied over the history for thermal data:</p>
+<table style="width:65%;">
+<colgroup>
+<col width="20%" />
+<col width="22%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Sensors</th>
+<th>Optical Bands</th>
+<th>Thermal Bands</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>TM</td>
+<td>30</td>
+<td>120</td>
+</tr>
+<tr class="even">
+<td>ETM+</td>
+<td>30</td>
+<td>60</td>
+</tr>
+<tr class="odd">
+<td><p>OLI/TIRS</p>
+<p>OLI-2/TIRS-2</p></td>
+<td>30</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+<p>All Collection 2 Level 2 Surface Reflectance and Surface Temperature data have
+been resampled to 30m.</p>
+<p>Alongside the pixel resolution of the sensors is the radiometric resolution at
+which the data are stored. TM and ETM+ data are stored as 8-bit data products,
+OLI data are quantitized to 12 bits and Landsat 9 to 14 bits. This equates to
+256 shades per band for Landsat 4-7, 4,096 shades for Landsat 8 and 16,384
+shades for Landsat 9, where higher numbers allow for greater precision of
+measurement in a given band. All Collection 2 Level 2 Surface Reflectance and
+Surface Temperature data have been rescaled to 16 bits.</p>
+</div>
+</div>
+<div id="surface-reflectance-product" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Surface Reflectance Product<a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#surface-reflectance-product" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>The information presented in this section originates from the <a href="https://www.usgs.gov/landsat-missions/landsat-surface-reflectance">USGS Landsat
+Collection 2 Surface
+Reflectance</a>
+product page and has been summarized here for the purpose of providing
+background information about the Landsat archive relevant to the creation and
+use of lakeSR</em>.</p>
+<p>The Landsat Collection 2 Surface Reflectance (SR) product is a Level 2 data
+product that has been atmospherically corrected from the Level 1 Top of
+Atmosphere product using a myriad of inputs to create a reasonably consistent
+data product across space and time. The USGS EROS describes the SR product as
+follows:</p>
+<blockquote>
+<p><em>Surface reflectance improves comparison between multiple images over the same
+region by accounting for atmospheric effects such as aerosol scattering and
+thin clouds, which can help in the detection and characterization of Earth
+surface change. Surface reflectance is generated from Level-1 inputs that meet
+the &lt;76 degrees Solar Zenith Angle constraint and include the required
+auxiliary data inputs to generate a scientifically viable product.</em></p>
+</blockquote>
+<div id="sr-atmospheric-processing" class="section level3 hasAnchor" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> SR Atmospheric Processing<a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#sr-atmospheric-processing" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The SR product for Landsat 4-7 is calculated using the Land Ecosystem
+Distrubance Adaptive Procesing System (LEDAPS) <span class="citation">(<a href="#ref-schmidt2013">Schmidt et al. 2013</a>)</span> and Landsat 8 and
+9 SR data are calculated using the Land Surface Reflectance Code (LaSRC)
+algorithm <span class="citation">(<a href="#ref-vermote2018">Vermote et al. 2018</a>)</span>. The two algorithms are functionally different, but the
+outcome is the same: a consistently-processed surface reflectance product that
+is available worldwide. See the table under section heading <a href="https://www.usgs.gov/landsat-missions/landsat-collection-2-surface-reflectance">‘Differences in
+Surface Reflectance Processing Algorithms’ on the USGS Landsat C2
+website</a>
+for details.</p>
+</div>
+</div>
+<div id="surface-temperature" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> Surface Temperature<a href="landsat-collection-2-surface-reflectance-and-surface-temperature.html#surface-temperature" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>The information presented in this section originates from the <a href="https://www.usgs.gov/landsat-missions/landsat-collection-2-surface-temperature">USGS Landsat
+Collection 2 Surface
+Temperature</a>
+product page and has been summarized here for the purpose of providing
+background information about the Landsat archive relevant to the creation and
+use of lakeSR</em>.</p>
+<p>The Landsat Collection 2 Surface Temperature (ST) product is calculated using a
+single-channel algorithm <span class="citation">(<a href="#ref-cook2014a">M. J. Cook 2014</a>; <a href="#ref-cook2014b">M. Cook et al. 2014</a>)</span> to convert the thermal band
+data to temperature estimates in degrees Kelvin. These data are considered
+interoperable over space and time with few differences in the ST algorithm
+product within Collection 2, with the acknowledgement of the
+previously-documented spectral and radiometric resolution differences.</p>
+
+</div>
+</div>
+<h3> References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-cook2014a" class="csl-entry">
+Cook, M J. 2014. <span>“Atmospheric Compensation for a Landsat Land Surface Temperature Product.”</span> PhD thesis, Rochester, NY. <a href="https://scholarworks.rit.edu/theses/8513">https://scholarworks.rit.edu/theses/8513</a>.
+</div>
+<div id="ref-cook2014b" class="csl-entry">
+Cook, Monica, John R. Schott, John Mandel, and Nina Raqueno. 2014. <span>“Development of an Operational Calibration Methodology for the Landsat Thermal Data Archive and Initial Testing of the Atmospheric Compensation Component of a Land Surface Temperature (LST) Product from the Archive.”</span> <em>Remote Sensing</em> 6 (11): 1124411266. <a href="https://doi.org/10.3390/rs61111244">https://doi.org/10.3390/rs61111244</a>.
+</div>
+<div id="ref-schmidt2013" class="csl-entry">
+Schmidt, Gail, Calli B. Jenkerson, Jeffrey Masek, Eric Vermote, and Feng Gao. 2013. <span>“Landsat Ecosystem Disturbance Adaptive Processing System (LEDAPS) Algorithm Description.”</span> Reston, VA. <a href="https://doi.org/10.3133/ofr20131057">https://doi.org/10.3133/ofr20131057</a>.
+</div>
+<div id="ref-vermote2018" class="csl-entry">
+Vermote, E., J. C. Roger, B. Franch, and Sergii Skakun. 2018. <span>“LaSRC (Land Surface Reflectance Code): Overview, Application and Validation Using MODIS, VIIRS, LANDSAT and Sentinel 2 Data’s.”</span> In, 8173–76. <a href="https://doi.org/10.1109/IGARSS.2018.8517622">https://doi.org/10.1109/IGARSS.2018.8517622</a>.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="software-settings.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
