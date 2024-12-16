@@ -10,7 +10,7 @@ import math
 # pull code begins on line 1185
 
 def csv_to_eeFeat(df, proj, chunk):
-  """Function to create an eeFeature from the location info
+  """Function to create an eeFeature from the location data
 
   Args:
       df: point locations .csv file with Latitude and Longitude
@@ -78,7 +78,7 @@ def add_rad_mask(image):
 
 
 def cf_mask(image):
-  """Masks any pixels obstructed by clouds and snow/ice
+  """Creates a multi-value mask for any pixels obstructed by clouds and snow/ice
 
   Args:
       image: ee.Image of an ee.ImageCollection
@@ -99,8 +99,8 @@ def cf_mask(image):
 
 
 def sr_aerosol(image):
-  """Flags any pixels in Landsat 8 and 9 that have 'medium' or 'high' aerosol QA flags from the
-  SR_QA_AEROSOL band.
+  """Creates a binary maks for any pixels in Landsat 8 and 9 that have 'medium' 
+  or 'high' aerosol QA flags from the SR_QA_AEROSOL band
 
   Args:
       image: ee.Image of an ee.ImageCollection
@@ -112,6 +112,160 @@ def sr_aerosol(image):
   aerosolQA = image.select('aerosol_qa')
   medHighAero = aerosolQA.bitwiseAnd(1 << 7).rename('medHighAero')# pull out mask out where aeorosol is med and high
   return image.addBands(medHighAero)
+
+
+def apply_fill_mask_457(image):
+  """ mask any fill values (0) in scaled raster for Landsat 4, 5, 7
+  
+  Args:
+      image: ee.Image of an ee.ImageCollection
+
+  Returns:
+      an ee.Image where any values previously 0 are masked
+  """
+  b1_mask = image.select('SR_B1').gt(0)
+  b2_mask = image.select('SR_B2').gt(0)
+  b3_mask = image.select('SR_B3').gt(0)
+  b4_mask = image.select('SR_B4').gt(0)
+  b5_mask = image.select('SR_B5').gt(0)
+  b7_mask = image.select('SR_B7').gt(0)
+  fill_mask = (b1_mask.eq(1)
+    .And(b2_mask.eq(1))
+    .And(b3_mask.eq(1))
+    .And(b4_mask.eq(1))
+    .And(b5_mask.eq(1))
+    .And(b7_mask.eq(1))
+    .selfMask()
+    )
+  return image.updateMask(fill_mask.eq(1))
+
+
+def apply_fill_mask_89(image):
+  """ mask any fill values (0) in scaled raster for Landsat 8,9
+  
+  Args:
+      image: ee.Image of an ee.ImageCollection
+
+  Returns:
+      an ee.Image where any values previously 0 are masked
+  """
+  b1_mask = image.select('SR_B1').gt(0)
+  b2_mask = image.select('SR_B2').gt(0)
+  b3_mask = image.select('SR_B3').gt(0)
+  b4_mask = image.select('SR_B4').gt(0)
+  b5_mask = image.select('SR_B5').gt(0)
+  b6_mask = image.select('SR_B6').gt(0)
+  b7_mask = image.select('SR_B7').gt(0)
+  fill_mask = (b1_mask.eq(1)
+    .And(b2_mask.eq(1))
+    .And(b3_mask.eq(1))
+    .And(b4_mask.eq(1))
+    .And(b5_mask.eq(1))
+    .And(b6_mask.eq(1))
+    .And(b7_mask.eq(1))
+    .selfMask()
+    )
+  return image.updateMask(fill_mask.eq(1))
+
+
+# This should be applied AFTER scaling factors
+# Mask values less than -0.01
+def apply_realistic_mask_457(image):
+  """ mask out unrealistic SR values (those less than -0.01) in Landsat 4, 5, 7
+  
+  Args:
+      image: ee.Image of an ee.ImageCollection
+
+  Returns:
+      an ee.Image where any re-scaled values <-0.01 are masked
+  """
+  b1_mask = image.select('SR_B1').gt(-0.01)
+  b2_mask = image.select('SR_B2').gt(-0.01)
+  b3_mask = image.select('SR_B3').gt(-0.01)
+  b4_mask = image.select('SR_B4').gt(-0.01)
+  b5_mask = image.select('SR_B5').gt(-0.01)
+  b7_mask = image.select('SR_B7').gt(-0.01)
+  realistic = (b1_mask.eq(1)
+    .And(b2_mask.eq(1))
+    .And(b3_mask.eq(1))
+    .And(b4_mask.eq(1))
+    .And(b5_mask.eq(1))
+    .And(b7_mask.eq(1))
+    .selfMask())
+  return image.updateMask(realistic.eq(1))
+
+def apply_realistic_mask_89(image):
+  """ mask out unrealistic SR values (those less than -0.01) in Landsat 8, 9
+  
+  Args:
+      image: ee.Image of an ee.ImageCollection
+
+  Returns:
+      an ee.Image where any re-scaled values <-0.01 are masked
+  """
+  b1_mask = image.select('SR_B1').gt(-0.01)
+  b2_mask = image.select('SR_B2').gt(-0.01)
+  b3_mask = image.select('SR_B3').gt(-0.01)
+  b4_mask = image.select('SR_B4').gt(-0.01)
+  b5_mask = image.select('SR_B5').gt(-0.01)
+  b6_mask = image.select('SR_B6').gt(-0.01)
+  b7_mask = image.select('SR_B7').gt(-0.01)
+  realistic = (b1_mask.eq(1)
+    .And(b2_mask.eq(1))
+    .And(b3_mask.eq(1))
+    .And(b4_mask.eq(1))
+    .And(b5_mask.eq(1))
+    .And(b6_mask.eq(1))
+    .And(b7_mask.eq(1))
+    .selfMask())
+  return image.updateMask(realistic.eq(1))
+
+# mask high opacity (>0.3 after scaling) pixels
+def apply_opac_mask(image):
+  """ mask out instances where atmospheric opacity is greater than 0.3 in Landsat 
+      5&7
+  
+  Args:
+      image: ee.Image of an ee.ImageCollection
+
+  Returns:
+      an ee.Image where any pixels with SR_ATMOS_OPACITY greater than 0.3 are
+      masked
+  """
+  opac = image.select("SR_ATMOS_OPACITY").multiply(0.001).lt(0.3)
+  return image.updateMask(opac)
+
+
+# function to split QA bits
+def extract_qa_bits(qa_band, start_bit, end_bit, band_name):
+  """
+  Extracts specified quality assurance (QA) bits from a QA band. This function originated
+  from https://calekochenour.github.io/remote-sensing-textbook/03-beginner/chapter13-data-quality-bitmasks.html
+
+  Args:
+      qa_band (ee.Image): The earth engine image QA band to extract the bits from.
+      start_bit (int): The start bit of the QA bits to extract.
+      end_bit (int): The end bit of the QA bits to extract (not inclusive)
+      band_name (str): The name to give to the output band.
+
+  Returns:
+      ee.Image: A single band image of the extracted QA bit values.
+  """
+  # Initialize QA bit string/pattern to check QA band against
+  qa_bits = 0
+  # Add each specified QA bit flag value/string/pattern to the QA bits to check/extract
+  for bit in range(end_bit):
+    qa_bits += (1 << bit)
+  # Return a single band image of the extracted QA bit values
+  return (qa_band
+    # Rename output band to specified name
+    .select([0], [band_name])
+    # Check QA band against specified QA bits to see what QA flag values are set
+    .bitwiseAnd(qa_bits)
+    # Get value that matches bitmask documentation
+    # (0 or 1 for single bit,  0-3 or 0-N for multiple bits)
+    .rightShift(start_bit))
+
 
 
 def Mndwi(image):
@@ -314,176 +468,6 @@ def remove_geo(image):
   return image.setGeometry(None)
 
 
-def apply_fill_mask_457(image):
-  """ mask any fill values (0) in scaled raster for Landsat 4, 5, 7
-  
-  Args:
-      image: ee.Image of an ee.ImageCollection
-
-  Returns:
-      an ee.Image where any values previously 0 are masked
-  """
-  b1_mask = image.select('SR_B1').gt(0)
-  b2_mask = image.select('SR_B2').gt(0)
-  b3_mask = image.select('SR_B3').gt(0)
-  b4_mask = image.select('SR_B4').gt(0)
-  b5_mask = image.select('SR_B5').gt(0)
-  b7_mask = image.select('SR_B7').gt(0)
-  fill_mask = (b1_mask.eq(1)
-    .And(b2_mask.eq(1))
-    .And(b3_mask.eq(1))
-    .And(b4_mask.eq(1))
-    .And(b5_mask.eq(1))
-    .And(b7_mask.eq(1))
-    .selfMask()
-    )
-  return image.updateMask(fill_mask.eq(1))
-
-
-def apply_fill_mask_89(image):
-  """ mask any fill values (0) in scaled raster for Landsat 8,9
-  
-  Args:
-      image: ee.Image of an ee.ImageCollection
-
-  Returns:
-      an ee.Image where any values previously 0 are masked
-  """
-  b1_mask = image.select('SR_B1').gt(0)
-  b2_mask = image.select('SR_B2').gt(0)
-  b3_mask = image.select('SR_B3').gt(0)
-  b4_mask = image.select('SR_B4').gt(0)
-  b5_mask = image.select('SR_B5').gt(0)
-  b6_mask = image.select('SR_B6').gt(0)
-  b7_mask = image.select('SR_B7').gt(0)
-  fill_mask = (b1_mask.eq(1)
-    .And(b2_mask.eq(1))
-    .And(b3_mask.eq(1))
-    .And(b4_mask.eq(1))
-    .And(b5_mask.eq(1))
-    .And(b6_mask.eq(1))
-    .And(b7_mask.eq(1))
-    .selfMask()
-    )
-  return image.updateMask(fill_mask.eq(1))
-
-
-# This should be applied AFTER scaling factors
-# Mask values less than -0.01
-def apply_realistic_mask_457(image):
-  """ mask out unrealistic SR values (those less than -0.01) in Landsat 4, 5, 7
-  
-  Args:
-      image: ee.Image of an ee.ImageCollection
-
-  Returns:
-      an ee.Image where any re-scaled values <-0.01 are masked
-  """
-  b1_mask = image.select('SR_B1').gt(-0.01)
-  b2_mask = image.select('SR_B2').gt(-0.01)
-  b3_mask = image.select('SR_B3').gt(-0.01)
-  b4_mask = image.select('SR_B4').gt(-0.01)
-  b5_mask = image.select('SR_B5').gt(-0.01)
-  b7_mask = image.select('SR_B7').gt(-0.01)
-  realistic = (b1_mask.eq(1)
-    .And(b2_mask.eq(1))
-    .And(b3_mask.eq(1))
-    .And(b4_mask.eq(1))
-    .And(b5_mask.eq(1))
-    .And(b7_mask.eq(1))
-    .selfMask())
-  return image.updateMask(realistic.eq(1))
-
-def apply_realistic_mask_89(image):
-  """ mask out unrealistic SR values (those less than -0.01) in Landsat 8, 9
-  
-  Args:
-      image: ee.Image of an ee.ImageCollection
-
-  Returns:
-      an ee.Image where any re-scaled values <-0.01 are masked
-  """
-  b1_mask = image.select('SR_B1').gt(-0.01)
-  b2_mask = image.select('SR_B2').gt(-0.01)
-  b3_mask = image.select('SR_B3').gt(-0.01)
-  b4_mask = image.select('SR_B4').gt(-0.01)
-  b5_mask = image.select('SR_B5').gt(-0.01)
-  b6_mask = image.select('SR_B6').gt(-0.01)
-  b7_mask = image.select('SR_B7').gt(-0.01)
-  realistic = (b1_mask.eq(1)
-    .And(b2_mask.eq(1))
-    .And(b3_mask.eq(1))
-    .And(b4_mask.eq(1))
-    .And(b5_mask.eq(1))
-    .And(b6_mask.eq(1))
-    .And(b7_mask.eq(1))
-    .selfMask())
-  return image.updateMask(realistic.eq(1))
-
-# mask high opacity (>0.3 after scaling) pixels
-def apply_opac_mask(image):
-  """ mask out instances where atmospheric opacity is greater than 0.3 in Landsat 
-      5&7
-  
-  Args:
-      image: ee.Image of an ee.ImageCollection
-
-  Returns:
-      an ee.Image where any pixels with SR_ATMOS_OPACITY greater than 0.3 are
-      masked
-  """
-  opac = image.select("SR_ATMOS_OPACITY").multiply(0.001).lt(0.3)
-  return image.updateMask(opac)
-
-
-# function to split QA bits
-def extract_qa_bits(qa_band, start_bit, end_bit, band_name):
-  """
-  Extracts specified quality assurance (QA) bits from a QA band. This function originated
-  from https://calekochenour.github.io/remote-sensing-textbook/03-beginner/chapter13-data-quality-bitmasks.html
-
-  Args:
-      qa_band (ee.Image): The earth engine image QA band to extract the bits from.
-      start_bit (int): The start bit of the QA bits to extract.
-      end_bit (int): The end bit of the QA bits to extract (not inclusive)
-      band_name (str): The name to give to the output band.
-
-  Returns:
-      ee.Image: A single band image of the extracted QA bit values.
-  """
-  # Initialize QA bit string/pattern to check QA band against
-  qa_bits = 0
-  # Add each specified QA bit flag value/string/pattern to the QA bits to check/extract
-  for bit in range(end_bit):
-    qa_bits += (1 << bit)
-  # Return a single band image of the extracted QA bit values
-  return (qa_band
-    # Rename output band to specified name
-    .select([0], [band_name])
-    # Check QA band against specified QA bits to see what QA flag values are set
-    .bitwiseAnd(qa_bits)
-    # Get value that matches bitmask documentation
-    # (0 or 1 for single bit,  0-3 or 0-N for multiple bits)
-    .rightShift(start_bit))
-
-
-# mask for high aerosol
-def apply_high_aero_mask(image):
-  """ mask out high aerosol pixels in Landsat 8/9 images
-  
-  Args:
-      image: ee.Image of an ee.ImageCollection
-
-  Returns:
-      an ee.Image where any pixels with SR_QA_AEROSOL greater than or equal to 
-      3 are masked
-  """
-  qa_aero = image.select('SR_QA_AEROSOL')
-  aero = extract_qa_bits(qa_aero, 6, 8, 'aero_level')
-  aero_mask = aero.lt(3)
-  return image.updateMask(aero_mask)
-
-
 ## Set up the reflectance pull
 def ref_pull_457_DSWE1(image, feat):
   """ This function applies all functions to the Landsat 4-7 ee.ImageCollection, extracting
@@ -502,25 +486,36 @@ def ref_pull_457_DSWE1(image, feat):
   f = cf_mask(image).select('cfmask')
   # where the f mask is > 1, call that 1 (otherwise 0) and rename as clouds.
   clouds = f.gte(1).rename('clouds')
-  #calculate hillshade
+  # calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
-  #calculate hillshadow
+  # calculate hillshadow
   hs = calc_hill_shadows(image, wrs.geometry()).select('hillShadow')
-  #apply dswe function
+  # apply dswe function
   d = DSWE(image).select('dswe')
+  # create additive masks for dswe>0 (water of any type)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
   gt0 = (d.gt(0).rename('dswe_gt0')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
     .selfMask()
     )
+  # create additive masks for dswe==1 (confident open water)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
   dswe1 = (d.eq(1).rename('dswe1')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
     .selfMask()
     )
-  # band where dswe is 3 and apply all masks
+  # create additive masks for dswe==3 (confident vegetated water)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
   dswe3 = (d.eq(3).rename('dswe3')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
@@ -534,6 +529,10 @@ def ref_pull_457_DSWE1(image, feat):
     .And(grn_alg_thrsh.eq(1))
     .And(red_alg_thrsh.eq(1))
     )
+  # create additive mask for dswe1a: dswe = 1 or algal threshold met
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
   dswe1a = (d.eq(1)
     .Or(alg.eq(1))
     .rename('dswe1a')
@@ -619,19 +618,30 @@ def ref_pull_457_DSWE1a(image, feat):
   hs = calc_hill_shadows(image, wrs.geometry()).select('hillShadow')
   #apply dswe function
   d = DSWE(image).select('dswe')
+  # create additive masks for dswe>0 (water of any type)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
   gt0 = (d.gt(0).rename('dswe_gt0')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
     .selfMask()
     )
+  # create additive masks for dswe==1 (confident open water)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
   dswe1 = (d.eq(1).rename('dswe1')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
     .selfMask()
     )
-  # band where dswe is 3 and apply all masks
+  # create additive masks for dswe==3 (confident vegetated water)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
   dswe3 = (d.eq(3).rename('dswe3')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
@@ -645,6 +655,10 @@ def ref_pull_457_DSWE1a(image, feat):
     .And(grn_alg_thrsh.eq(1))
     .And(red_alg_thrsh.eq(1))
     )
+  # create additive mask for dswe1a: dswe = 1 or algal threshold met
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
   dswe1a = (d.eq(1)
     .Or(alg.eq(1))
     .rename('dswe1a')
@@ -728,19 +742,30 @@ def ref_pull_457_DSWE3(image, feat):
   hs = calc_hill_shadows(image, wrs.geometry()).select('hillShadow')
   #apply dswe function
   d = DSWE(image).select('dswe')
+  # create additive masks for dswe>0 (water of any type)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
   gt0 = (d.gt(0).rename('dswe_gt0')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
     .selfMask()
     )
+  # create additive masks for dswe==1 (confident open water)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
   dswe1 = (d.eq(1).rename('dswe1')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
     .selfMask()
     )
-  # band where dswe is 3 and apply all masks
+  # create additive masks for dswe==3 (confident vegetated water)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
   dswe3 = (d.eq(3).rename('dswe3')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
@@ -754,6 +779,10 @@ def ref_pull_457_DSWE3(image, feat):
     .And(grn_alg_thrsh.eq(1))
     .And(red_alg_thrsh.eq(1))
     )
+  # create additive mask for dswe1a: dswe = 1 or algal threshold met
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
   dswe1a = (d.eq(1)
     .Or(alg.eq(1))
     .rename('dswe1a')
@@ -839,23 +868,40 @@ def ref_pull_89_DSWE1(image, feat):
   hs = calc_hill_shadows(image, wrs.geometry()).select('hillShadow')
   #apply dswe function
   d = DSWE(image).select('dswe')
+  # create additive masks for dswe>0 (water of any type)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
+  # a = 0, pixel does not have med/high aerosol
   gt0 = (d.gt(0).rename('dswe_gt0')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
+    .updateMask(a.eq(0))
     .selfMask()
     )
+  # create additive masks for dswe==1 (confident open water)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
+  # a = 0, pixel does not have med/high aerosol
   dswe1 = (d.eq(1).rename('dswe1')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
+    .updateMask(a.eq(0))
     .selfMask()
     )
-  # band where dswe is 3 and apply all masks
+  # create additive masks for dswe==3 (confident vegetated water)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
+  # a = 0, pixel does not have med/high aerosol
   dswe3 = (d.eq(3).rename('dswe3')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
+    .updateMask(a.eq(0))
     .selfMask()
     )
   # define dswe 1a where d is not 0 and red/green threshold met
@@ -865,13 +911,19 @@ def ref_pull_89_DSWE1(image, feat):
     .And(grn_alg_thrsh.eq(1))
     .And(red_alg_thrsh.eq(1))
     )
+  # create additive mask for dswe1a: dswe = 1 or algal threshold met
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
+  # a = 0, pixel does not have med/high aerosol
   dswe1a = (d.eq(1)
     .Or(alg.eq(1))
     .rename('dswe1a')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
-.selfMask()
+    .updateMask(a.eq(0))
+    .selfMask()
     )
   pixOut = (image.select(['Aerosol', 'Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2', 
                       'SurfaceTemp'],
@@ -952,23 +1004,40 @@ def ref_pull_89_DSWE1a(image, feat):
 
   #apply dswe function
   d = DSWE(image).select('dswe')
+  # create additive masks for dswe>0 (water of any type)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
+  # a = 0, pixel does not have med/high aerosol
   gt0 = (d.gt(0).rename('dswe_gt0')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
+    .updateMask(a.eq(0))
     .selfMask()
     )
+  # create additive masks for dswe==1 (confident open water)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
+  # a = 0, pixel does not have med/high aerosol
   dswe1 = (d.eq(1).rename('dswe1')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
+    .updateMask(a.eq(0))
     .selfMask()
     )
-  # band where dswe is 3 and apply all masks
+  # create additive masks for dswe==3 (confident vegetated water)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
+  # a = 0, pixel does not have med/high aerosol
   dswe3 = (d.eq(3).rename('dswe3')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
+    .updateMask(a.eq(0))
     .selfMask()
     )
   # define dswe 1a where d is not 0 and red/green threshold met
@@ -978,12 +1047,18 @@ def ref_pull_89_DSWE1a(image, feat):
     .And(grn_alg_thrsh.eq(1))
     .And(red_alg_thrsh.eq(1))
     )
+  # create additive mask for dswe1a: dswe = 1 or algal threshold met
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
+  # a = 0, pixel does not have med/high aerosol
   dswe1a = (d.eq(1)
     .Or(alg.eq(1))
     .rename('dswe1a')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
+    .updateMask(a.eq(0))
     .selfMask()
     )
   pixOut = (image.select(['Aerosol', 'Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2', 
@@ -1064,23 +1139,40 @@ def ref_pull_89_DSWE3(image, feat):
   
   #apply dswe function
   d = DSWE(image).select('dswe')
+  # create additive masks for dswe>0 (water of any type)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
+  # a = 0, pixel does not have med/high aerosol
   gt0 = (d.gt(0).rename('dswe_gt0')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
+    .updateMask(a.eq(0))
     .selfMask()
     )
+  # create additive masks for dswe==1 (confident open water)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
+  # a = 0, pixel does not have med/high aerosol
   dswe1 = (d.eq(1).rename('dswe1')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
+    .updateMask(a.eq(0))
     .selfMask()
     )
-  # band where dswe is 3 and apply all masks
+  # create additive masks for dswe==3 (confident vegetated water)
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
+  # a = 0, pixel does not have med/high aerosol
   dswe3 = (d.eq(3).rename('dswe3')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
+    .updateMask(a.eq(0))
     .selfMask()
     )
   # define dswe 1a where d is not 0 and red/green threshold met
@@ -1090,12 +1182,18 @@ def ref_pull_89_DSWE3(image, feat):
     .And(grn_alg_thrsh.eq(1))
     .And(red_alg_thrsh.eq(1))
     )
+  # create additive mask for dswe1a: dswe = 1 or algal threshold met
+  # hs = 1, fully illuminated pixels
+  # f = 0, no contaminated pixels
+  # r = 1, pixel is not saturated
+  # a = 0, pixel does not have med/high aerosol
   dswe1a = (d.eq(1)
     .Or(alg.eq(1))
     .rename('dswe1a')
     .updateMask(hs.eq(1))
     .updateMask(f.eq(0))
     .updateMask(r.eq(1))
+    .updateMask(a.eq(0))
     .selfMask()
     )
   #calculate hillshade
@@ -1443,8 +1541,7 @@ def process_subset(df_subset, chunk):
     # apply fill mask and scaling factors
     .map(apply_fill_mask_89)
     .map(apply_scale_factors)
-    .map(apply_realistic_mask_89)
-    .map(apply_high_aero_mask))
+    .map(apply_realistic_mask_89))
   
   # rename bands for ease
   locs_stack_ls89 = locs_stack_ls89.select(bn89, bns89)
