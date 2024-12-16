@@ -126,12 +126,15 @@ well.
 
 Just as a heads up, running this workflow will take multiple hours, mostly because
 of the bottleneck at GEE - only 10 tasks are cued at any given time, and GEE determines
-how many tasks are running at any given time. We use multiple
-cores for processing using {crew} workers integration with {targets} wherever 
+how many tasks are running at any given time (usually just 1-3 at any given time). 
+
+We use multiple cores for processing using {crew} workers integration with {targets} wherever 
 possible to increase efficiency of this process. Without multicores, -a- group
 takes about 2 hours and decrease in process time is directly correlated to the 
 number of CPU cores on your computer, the more cores, the more time savings. 
-This workflow currently uses n-1 cores as detected by the {parallel} package.
+This workflow currently uses n-1 cores as detected by the {parallel} package. The
+GEE steps can not be run using multi-core processes since the processing bottleneck
+is not local. 
 
 ```{r}
 parallel::detectCores()
@@ -143,7 +146,7 @@ Now that you know this will take a while, go ahead and run the pipeline!
 library(targets)
 
 # run the pipeline
-tar_make(a_combined_poi)
+tar_make(b_check_for_failed_tasks)
 ```
 
 
