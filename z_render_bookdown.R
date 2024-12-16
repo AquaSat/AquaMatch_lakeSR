@@ -10,6 +10,8 @@ z_render_bookdown <- list(
            command = "bookdown/03-Acquisition_Software_Settings.Rmd"), 
   tar_file(name = landsat_background,
            command = "bookdown/04-Landsat_C2_SRST.Rmd"),
+  tar_file(name = srst_pull,
+           command = "bookdown/05-lakeSR_LS_C2_SRST.Rmd"),
   tar_file(name = refs,
            command = "bookdown/z-Refs.Rmd"),
   # render bookdown, add req's of the above files in command prompt 
@@ -20,6 +22,7 @@ z_render_bookdown <- list(
                locations
                settings
                landsat_background
+               srst_pull
                refs
                render_book(input = "bookdown/",
                            params = list(

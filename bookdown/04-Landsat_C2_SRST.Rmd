@@ -14,19 +14,46 @@ Science website](https://landsat.gsfc.nasa.gov/) and has been summarized here
 for the purpose of providing background information about the Landsat archive
 relevant to the creation and use of lakeSR.*
 
-The Landsat archive of multispectral and thermal data in lakeSR is composed
-of Landsat missions 4 through 9 and spans more than 40 years.
+The Landsat archive of multispectral and thermal data in lakeSR is composed of
+Landsat missions 4 through 9 and spans more than 40 years.
 
-| Mission                                                                              | Launch Date | End of Science Mission | Decommission Date |
-|--------------------------------------------------------------------------------------|:-----------:|:----------------------:|:-----------------:|
-| [Landsat 4 TM](https://landsa%20t.gsfc.nasa.gov/sat%20ellites/landsat-4/)            | 1982-07-16  |       1993-12-14       |    2001-06-15     |
-| [Landsat 5 TM](https://landsa%20t.gsfc.nasa.gov/sat%20ellites/landsat-5/)            | 1984-03-01  |       2011-11-18       |    2013-06-05     |
-| [Landsat 7 E TM+](https://landsa%20t.gsfc.nasa.gov/sat%20ellites/landsat-7/)         | 1999-04-15  |       2022-04-06       |        N/A        |
-| [Landsat 8 OLI/T IRS](https://landsa%20t.gsfc.nasa.gov/sat%20ellites/landsat-8/)     | 2013-02-11  |          N/A           |        N/A        |
-| [Landsat 9 OLI-2/TIR S-2](https://landsa%20t.gsfc.nasa.gov/sat%20ellites/landsat-9/) | 2021-09-27  |          N/A           |        N/A        |
++----------------------------------------+-----------+-----------+-----------+
+| Mission                                | Launch    | End of    | Dec       |
+|                                        | Date      | Science   | ommission |
+|                                        |           | Mission   | Date      |
++========================================+:=========:+:=========:+:=========:+
+| [Landsat 4                             | 1         | 1         | 2         |
+| TM](https://landsa%20t.g               | 982-07-16 | 993-12-14 | 001-06-15 |
+| sfc.nasa.gov/sat%20ellites/landsat-4/) |           |           |           |
++----------------------------------------+-----------+-----------+-----------+
+| [Landsat 5                             | 1         | 2         | 2         |
+| TM](https://landsa%20t.g               | 984-03-01 | 011-11-18 | 013-06-05 |
+| sfc.nasa.gov/sat%20ellites/landsat-5/) |           |           |           |
++----------------------------------------+-----------+-----------+-----------+
+| [Landsat 7 E                           | 1         | 2         | N/A       |
+| TM+](https://landsa%20t.g              | 999-04-15 | 022-04-06 |           |
+| sfc.nasa.gov/sat%20ellites/landsat-7/) |           |           |           |
++----------------------------------------+-----------+-----------+-----------+
+| [Landsat 8 OLI/T                       | 2         | N/A       | N/A       |
+| IRS](https://landsa%20t.g              | 013-02-11 |           |           |
+| sfc.nasa.gov/sat%20ellites/landsat-8/) |           |           |           |
++----------------------------------------+-----------+-----------+-----------+
+| [Landsat 9 OLI-2/TIR                   | 2         | N/A       | N/A       |
+| S-2](https://landsa%20t.g              | 021-09-27 |           |           |
+| sfc.nasa.gov/sat%20ellites/landsat-9/) |           |           |           |
++----------------------------------------+-----------+-----------+-----------+
 
 The image record for Landsat 4 is not consistent nor robust due to a data
 transmitter failure early in service. Landsat 6 did not achieve orbit.
+
+For the purposes of lakeSR, we truncate the data record for Landsat 4 and 5 at
+the end of the Science Mission of the satellite. Landsat 7 began to experience
+orbital drift beginning in 2017, resulting in top-of-atmosphere (and therefore
+also surface reflectance data) that had growing uncertainties over time as the
+drift increased [@qiu2021]. Qui [-@qiu2021] suggests that data are not robust
+enough for trend analysis after the start of the growing season in 2020, but
+because their analysis was of NDVI, we conservatively truncated the data at the
+end of 2019.
 
 ### Spectral Response
 
@@ -36,9 +63,9 @@ relatively consistent (with the addition of an Aerosol band beginning Landsat
 Landsat 8 OLI/TIRS:
 
 +-------+-------+-------+-------+-------+-------+-------+-------+-------+
-| S     | Ae    | Blue  | Green | Red   | Near  | Short | Short | Th    |
-| e     | rosol |       |       |       | Inf   | Wave  | Wave  | ermal |
-| nsors |       |       |       |       | rared | Inf   | Inf   |       |
+| S e   | Ae    | Blue  | Green | Red   | Near  | Short | Short | Th    |
+| nsors | rosol |       |       |       | Inf   | Wave  | Wave  | ermal |
+|       |       |       |       |       | rared | Inf   | Inf   |       |
 |       |       |       |       |       | (NIR) | rared | rared |       |
 |       |       |       |       |       |       | 1     | 2     |       |
 |       |       |       |       |       |       | (SWIR | (SWIR |       |
@@ -49,14 +76,13 @@ Landsat 8 OLI/TIRS:
 | ETM+  |       | μm    | μm    | μm    | μm    | μm    | μm    | 12.50 |
 |       |       |       |       |       |       |       |       | μm    |
 +-------+-------+-------+-------+-------+-------+-------+-------+-------+
-| OL    | 0     | 0     | 0     | 0     | 0     | 1     | 2     | 10    |
-| I     | .435- | .452- | .533- | .636- | .851- | .566- | .107- | .60-1 |
-| /TIRS | 0.451 | 0.512 | 0.590 | 0.673 | 0.879 | 1.651 | 2.294 | 1.19, |
-|       | μm    | μm    | μm    | μm    | μm    | μm    | μm    | 1     |
-| O     |       |       |       |       |       |       |       | 1.50- |
-| LI-2/ |       |       |       |       |       |       |       | 12.51 |
-| T     |       |       |       |       |       |       |       | μm    |
-| IRS-2 |       |       |       |       |       |       |       |       |
+| OL I  | 0     | 0     | 0     | 0     | 0     | 1     | 2     | 10    |
+| /TIRS | .435- | .452- | .533- | .636- | .851- | .566- | .107- | .60-1 |
+|       | 0.451 | 0.512 | 0.590 | 0.673 | 0.879 | 1.651 | 2.294 | 1.19, |
+| O     | μm    | μm    | μm    | μm    | μm    | μm    | μm    | 1     |
+| LI-2/ |       |       |       |       |       |       |       | 1.50- |
+| T     |       |       |       |       |       |       |       | 12.51 |
+| IRS-2 |       |       |       |       |       |       |       | μm    |
 +-------+-------+-------+-------+-------+-------+-------+-------+-------+
 
 ### Sensor Resolution
@@ -64,20 +90,20 @@ Landsat 8 OLI/TIRS:
 The spatial resolution of the Level 1 data has not changed for optical bands
 (Aerosol, RGB, NIR, SWIR) but has varied over the history for thermal data:
 
-+--------------+---------------+---------------+
-| Sensors      | Optical Bands | Thermal Bands |
-+==============+===============+===============+
-| TM           | 30            | 120           |
-+--------------+---------------+---------------+
-| ETM+         | 30            | 60            |
-+--------------+---------------+---------------+
-| OLI/TIRS     | 30            | 100           |
-|              |               |               |
-| OLI-2/TIRS-2 |               |               |
-+--------------+---------------+---------------+
++----------------+----------------+----------------+
+| Sensors        | Optical Bands  | Thermal Bands  |
++================+================+================+
+| TM             | 30             | 120            |
++----------------+----------------+----------------+
+| ETM+           | 30             | 60             |
++----------------+----------------+----------------+
+| OLI/TIRS       | 30             | 100            |
+|                |                |                |
+| OLI-2/TIRS-2   |                |                |
++----------------+----------------+----------------+
 
 All Collection 2 Level 2 Surface Reflectance and Surface Temperature data have
-been resampled to 30m.
+been resampled to 30m in the USGS SRST product.
 
 Alongside the pixel resolution of the sensors is the radiometric resolution at
 which the data are stored. TM and ETM+ data are stored as 8-bit data products,

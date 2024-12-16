@@ -59,7 +59,7 @@ def dp_buff(image):
   return image.buffer(ee.Number.parse(str(buffer)))
 
 
-def add_rad_mask(image):
+def apply_rad_mask(image):
   """Mask out all pixels that are radiometrically saturated using the QA_RADSAT
   QA band.
 
@@ -73,20 +73,17 @@ def add_rad_mask(image):
   #grab the radsat band
   satQA = image.select('radsat_qa')
   # all must be non-saturated per pixel
-  satMask = satQA.eq(0).rename('radsat')
-  return image.addBands(satMask).updateMask(satMask)
-
+  satMask = satQA.eq(0)
+  return image.updateMask(satMask)
 
 def cf_mask(image):
-  """Creates a multi-value mask for any pixels obstructed by clouds and snow/ice
-
+  """Creates a binary band for contaminated or clear pixels
+  
   Args:
       image: ee.Image of an ee.ImageCollection
 
   Returns:
-      ee.Image with additional band called 'cfmask', where pixels are given values
-      based on the QA_PIXEL band informaiton. Generally speaking, 0 is clear, values 
-      greater than 0 are obstructed by clouds and/or snow/ice
+      ee.Image with additional band called 'cfmask'
   """
   #grab just the pixel_qa info
   qa = image.select('pixel_qa')
@@ -98,7 +95,27 @@ def cf_mask(image):
   return image.addBands(cloudqa)
 
 
-def sr_aerosol(image):
+def apply_cf_mask(image):
+  """Applies masks for any pixels obstructed by clouds and snow/ice
+
+  Args:
+      image: ee.Image of an ee.ImageCollection
+
+  Returns:
+      ee.Image with maksed to remove contaminated pixels
+  """
+  #grab just the pixel_qa info
+  qa = image.select('pixel_qa')
+  cloudqa = (qa.bitwiseAnd(1 << 1) #dialated clouds value 1
+    # high aerosol for LS8/9 is taken care of in sr_aerosol function
+    .where(qa.bitwiseAnd(1 << 3), ee.Image(2)) # clouds value 2
+    .where(qa.bitwiseAnd(1 << 4), ee.Image(3)) # cloud shadows value 3
+    .where(qa.bitwiseAnd(1 << 5), ee.Image(4))) # snow value 4
+  cloud_mask = cloudqa.eq(0)
+  return image.updateMask(cloud_mask)
+
+
+def apply_sr_aero_mask(image):
   """Creates a binary maks for any pixels in Landsat 8 and 9 that have 'medium' 
   or 'high' aerosol QA flags from the SR_QA_AEROSOL band
 
@@ -110,8 +127,10 @@ def sr_aerosol(image):
       if the aerosol QA flag is medium or high and 0 otherwise
   """
   aerosolQA = image.select('aerosol_qa')
-  medHighAero = aerosolQA.bitwiseAnd(1 << 7).rename('medHighAero')# pull out mask out where aeorosol is med and high
-  return image.addBands(medHighAero)
+  # pull out mask out where aeorosol is med and high
+  medHighAero = aerosolQA.bitwiseAnd(1 << 7).rename('medHighAero')
+  sr_aero_mask = medHighAero.eq(0)
+  return image.updateMask(sr_aero_mask)
 
 
 def apply_fill_mask_457(image):
@@ -471,21 +490,20 @@ def remove_geo(image):
 ## Set up the reflectance pull
 def ref_pull_457_DSWE1(image, feat):
   """ This function applies all functions to the Landsat 4-7 ee.ImageCollection, extracting
-  summary statistics for each geometry area where the DSWE value is 1 (high confidence water)
+  summary statistics for each geometry area where the DSWE value is 1, high confidence
+  water
 
   Args:
       image: ee.Image of an ee.ImageCollection
       feat: ee.FeatureGeometry of the buffered locations
 
   Returns:
-      summaries for band data within any given geometry area where the DSWE value is 1
+      summaries for band data within any given geometry area where the DSWE is 1
   """
-  # process image with the radsat mask
-  r = add_rad_mask(image).select('radsat')
   # process image with cfmask
-  f = cf_mask(image).select('cfmask')
-  # where the f mask is > 1, call that 1 (otherwise 0) and rename as clouds.
-  clouds = f.gte(1).rename('clouds')
+  # where the mask is > 1 (clouds and cloud shadow)
+  # call that 1 (otherwise 0) and rename as clouds.
+  clouds = cf_mask(image).select('cfmask').gte(1).rename('clouds')
   # calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
   # calculate hillshadow
@@ -494,32 +512,20 @@ def ref_pull_457_DSWE1(image, feat):
   d = DSWE(image).select('dswe')
   # create additive masks for dswe>0 (water of any type)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
   gt0 = (d.gt(0).rename('dswe_gt0')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
     .selfMask()
     )
   # create additive masks for dswe==1 (confident open water)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
   dswe1 = (d.eq(1).rename('dswe1')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
     .selfMask()
     )
   # create additive masks for dswe==3 (confident vegetated water)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
   dswe3 = (d.eq(3).rename('dswe3')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
     .selfMask()
     )
   # define dswe 1a where d is not 0 and red/green threshold met
@@ -531,14 +537,10 @@ def ref_pull_457_DSWE1(image, feat):
     )
   # create additive mask for dswe1a: dswe = 1 or algal threshold met
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
   dswe1a = (d.eq(1)
     .Or(alg.eq(1))
     .rename('dswe1a')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
     .selfMask()
     )
   
@@ -559,7 +561,7 @@ def ref_pull_457_DSWE1(image, feat):
                                   'mean_Swir1', 'mean_Swir2', 
                                   'mean_SurfaceTemp']))
             # mask the image
-            .updateMask(dswe1.eq(1)) # high confidence water mask
+            .updateMask(dswe1) # high confidence water mask
             # add bands back in for QA (prior to masking of dswe/hs/f/r)
             .addBands(gt0) 
             .addBands(dswe1)
@@ -606,46 +608,33 @@ def ref_pull_457_DSWE1a(image, feat):
       summaries for band data within any given geometry area where the DSWE value is 1 or where
       the algal mask threshold is met
   """
-  # process image with the radsat mask
-  r = add_rad_mask(image).select('radsat')
   # process image with cfmask
-  f = cf_mask(image).select('cfmask')
-  # where the f mask is > 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
-  clouds = f.gte(1).rename('clouds')
-  #calculate hillshade
+  # where the mask is > 1 (clouds and cloud shadow)
+  # call that 1 (otherwise 0) and rename as clouds.
+  clouds = cf_mask(image).select('cfmask').gte(1).rename('clouds')
+  # calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
-  #calculate hillshadow
+  # calculate hillshadow
   hs = calc_hill_shadows(image, wrs.geometry()).select('hillShadow')
-  #apply dswe function
+  
+  # apply dswe function
   d = DSWE(image).select('dswe')
   # create additive masks for dswe>0 (water of any type)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
   gt0 = (d.gt(0).rename('dswe_gt0')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
     .selfMask()
     )
   # create additive masks for dswe==1 (confident open water)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
   dswe1 = (d.eq(1).rename('dswe1')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
     .selfMask()
     )
   # create additive masks for dswe==3 (confident vegetated water)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
   dswe3 = (d.eq(3).rename('dswe3')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
     .selfMask()
     )
   # define dswe 1a where d is not 0 and red/green threshold met
@@ -657,53 +646,49 @@ def ref_pull_457_DSWE1a(image, feat):
     )
   # create additive mask for dswe1a: dswe = 1 or algal threshold met
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
   dswe1a = (d.eq(1)
     .Or(alg.eq(1))
     .rename('dswe1a')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
     .selfMask()
     )
   
-  pixOut = (image.select(['Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2', 
+  pixOut = (image.select(['Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2',
                         'SurfaceTemp'],
-                        ['med_Blue', 'med_Green', 'med_Red', 'med_Nir', 'med_Swir1', 'med_Swir2', 
+                        ['med_Blue', 'med_Green', 'med_Red', 'med_Nir', 'med_Swir1', 'med_Swir2',
                         'med_SurfaceTemp'])
             .addBands(image.select(['SurfaceTemp'],
                                     ['min_SurfaceTemp']))
-            .addBands(image.select(['Blue', 'Green', 'Red', 
+            .addBands(image.select(['Blue', 'Green', 'Red',
                                     'Nir', 'Swir1', 'Swir2', 'SurfaceTemp'],
-                                  ['sd_Blue', 'sd_Green', 'sd_Red', 
+                                  ['sd_Blue', 'sd_Green', 'sd_Red',
                                   'sd_Nir', 'sd_Swir1', 'sd_Swir2', 'sd_SurfaceTemp']))
-            .addBands(image.select(['Blue', 'Green', 'Red', 'Nir', 
-                                    'Swir1', 'Swir2', 
+            .addBands(image.select(['Blue', 'Green', 'Red', 'Nir',
+                                    'Swir1', 'Swir2',
                                     'SurfaceTemp'],
-                                  ['mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 
-                                  'mean_Swir1', 'mean_Swir2', 
+                                  ['mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir',
+                                  'mean_Swir1', 'mean_Swir2',
                                   'mean_SurfaceTemp']))
             # mask the image
-            .updateMask(dswe1a.eq(1)) # dswe1 with algal mask
+            .updateMask(dswe1a) # dswe1 with algal mask
             # add bands back in for QA (prior to masking of dswe/hs/f/r)
-            .addBands(gt0) 
+            .addBands(gt0)
             .addBands(dswe1)
             .addBands(dswe3)
             .addBands(dswe1a)
-            .addBands(clouds) 
+            .addBands(clouds)
             .addBands(hs)
             .addBands(h)
-            ) 
+            )
   combinedReducer = (ee.Reducer.median().unweighted()
-      .forEachBand(pixOut.select(['med_Blue', 'med_Green', 'med_Red', 
+      .forEachBand(pixOut.select(['med_Blue', 'med_Green', 'med_Red',
             'med_Nir', 'med_Swir1', 'med_Swir2', 'med_SurfaceTemp']))
     .combine(ee.Reducer.min().unweighted()
       .forEachBand(pixOut.select(['min_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.stdDev().unweighted()
       .forEachBand(pixOut.select(['sd_Blue', 'sd_Green', 'sd_Red', 'sd_Nir', 'sd_Swir1', 'sd_Swir2', 'sd_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted()
-      .forEachBand(pixOut.select(['mean_Blue', 'mean_Green', 'mean_Red', 
+      .forEachBand(pixOut.select(['mean_Blue', 'mean_Green', 'mean_Red',
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
       .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a'])), outputPrefix = 'pCount_', sharedInputs = False)
@@ -730,12 +715,10 @@ def ref_pull_457_DSWE3(image, feat):
   Returns:
       summaries for band data within any given geometry area where the DSWE value is 3
   """
-  # process image with the radsat mask
-  r = add_rad_mask(image).select('radsat')
   # process image with cfmask
-  f = cf_mask(image).select('cfmask')
-  # where the f mask is > 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
-  clouds = f.gte(1).rename('clouds')
+  # where the mask is > 1 (clouds and cloud shadow)
+  # call that 1 (otherwise 0) and rename as clouds.
+  clouds = cf_mask(image).select('cfmask').gte(1).rename('clouds')
   #calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
   #calculate hillshadow
@@ -744,32 +727,20 @@ def ref_pull_457_DSWE3(image, feat):
   d = DSWE(image).select('dswe')
   # create additive masks for dswe>0 (water of any type)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
   gt0 = (d.gt(0).rename('dswe_gt0')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
     .selfMask()
     )
   # create additive masks for dswe==1 (confident open water)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
   dswe1 = (d.eq(1).rename('dswe1')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
     .selfMask()
     )
   # create additive masks for dswe==3 (confident vegetated water)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
   dswe3 = (d.eq(3).rename('dswe3')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
     .selfMask()
     )
   # define dswe 1a where d is not 0 and red/green threshold met
@@ -781,53 +752,49 @@ def ref_pull_457_DSWE3(image, feat):
     )
   # create additive mask for dswe1a: dswe = 1 or algal threshold met
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
   dswe1a = (d.eq(1)
     .Or(alg.eq(1))
     .rename('dswe1a')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
     .selfMask()
     )
-  
-  pixOut = (image.select(['Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2', 
+
+  pixOut = (image.select(['Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2',
                       'SurfaceTemp'],
-                      ['med_Blue', 'med_Green', 'med_Red', 'med_Nir', 'med_Swir1', 'med_Swir2', 
+                      ['med_Blue', 'med_Green', 'med_Red', 'med_Nir', 'med_Swir1', 'med_Swir2',
                       'med_SurfaceTemp'])
           .addBands(image.select(['SurfaceTemp'],
                                   ['min_SurfaceTemp']))
-          .addBands(image.select(['Blue', 'Green', 'Red', 
+          .addBands(image.select(['Blue', 'Green', 'Red',
                                   'Nir', 'Swir1', 'Swir2', 'SurfaceTemp'],
-                                ['sd_Blue', 'sd_Green', 'sd_Red', 
+                                ['sd_Blue', 'sd_Green', 'sd_Red',
                                 'sd_Nir', 'sd_Swir1', 'sd_Swir2', 'sd_SurfaceTemp']))
-          .addBands(image.select(['Blue', 'Green', 'Red', 'Nir', 
-                                  'Swir1', 'Swir2', 
+          .addBands(image.select(['Blue', 'Green', 'Red', 'Nir',
+                                  'Swir1', 'Swir2',
                                   'SurfaceTemp'],
-                                ['mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 
-                                'mean_Swir1', 'mean_Swir2', 
+                                ['mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir',
+                                'mean_Swir1', 'mean_Swir2',
                                 'mean_SurfaceTemp']))
           # mask the image
-          .updateMask(dswe3.eq(1)) # vegetated water mask
+          .updateMask(dswe3) # vegetated water mask
           # add bands back in for QA (prior to masking of dswe/hs/f/r)
-          .addBands(gt0) 
+          .addBands(gt0)
           .addBands(dswe1)
           .addBands(dswe3)
           .addBands(dswe1a)
-          .addBands(clouds) 
+          .addBands(clouds)
           .addBands(hs)
           .addBands(h)
-          ) 
+          )
   combinedReducer = (ee.Reducer.median().unweighted()
-      .forEachBand(pixOut.select(['med_Blue', 'med_Green', 'med_Red', 
+      .forEachBand(pixOut.select(['med_Blue', 'med_Green', 'med_Red',
             'med_Nir', 'med_Swir1', 'med_Swir2', 'med_SurfaceTemp']))
     .combine(ee.Reducer.min().unweighted()
       .forEachBand(pixOut.select(['min_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.stdDev().unweighted()
       .forEachBand(pixOut.select(['sd_Blue', 'sd_Green', 'sd_Red', 'sd_Nir', 'sd_Swir1', 'sd_Swir2', 'sd_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted()
-      .forEachBand(pixOut.select(['mean_Blue', 'mean_Green', 'mean_Red', 
+      .forEachBand(pixOut.select(['mean_Blue', 'mean_Green', 'mean_Red',
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
       .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a'])), outputPrefix = 'pCount_', sharedInputs = False)
@@ -845,23 +812,17 @@ def ref_pull_457_DSWE3(image, feat):
 
 def ref_pull_89_DSWE1(image, feat):
   """ This function applies all functions to the Landsat 8 and 9 ee.ImageCollection, extracting
-  summary statistics for each geometry area where the DSWE value is 1 (high confidence water)
+  summary statistics for each geometry area where DSWE is 1, high confidence water
 
   Args:
       image: ee.Image of an ee.ImageCollection
       feat: ee.FeatureGeometry of the buffered locations
 
   Returns:
-      summaries for band data within any given geometry area where the DSWE value is 1
+      summaries for band data within any given geometry area where the DSWE is 1
   """
-  # process image with the radsat mask
-  r = add_rad_mask(image).select('radsat')
-  # process image with cfmask
-  f = cf_mask(image).select('cfmask')
-  # process image with st SR cloud mask
-  a = sr_aerosol(image).select('medHighAero')
   # where the f mask is > 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
-  clouds = f.gte(1).rename('clouds')
+  clouds = cf_mask(image).select('cfmask').gte(1).rename('clouds')
   #calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
   #calculate hillshadow
@@ -870,38 +831,20 @@ def ref_pull_89_DSWE1(image, feat):
   d = DSWE(image).select('dswe')
   # create additive masks for dswe>0 (water of any type)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
-  # a = 0, pixel does not have med/high aerosol
   gt0 = (d.gt(0).rename('dswe_gt0')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
-    .updateMask(a.eq(0))
     .selfMask()
     )
   # create additive masks for dswe==1 (confident open water)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
-  # a = 0, pixel does not have med/high aerosol
   dswe1 = (d.eq(1).rename('dswe1')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
-    .updateMask(a.eq(0))
     .selfMask()
     )
   # create additive masks for dswe==3 (confident vegetated water)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
-  # a = 0, pixel does not have med/high aerosol
   dswe3 = (d.eq(3).rename('dswe3')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
-    .updateMask(a.eq(0))
     .selfMask()
     )
   # define dswe 1a where d is not 0 and red/green threshold met
@@ -913,16 +856,10 @@ def ref_pull_89_DSWE1(image, feat):
     )
   # create additive mask for dswe1a: dswe = 1 or algal threshold met
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
-  # a = 0, pixel does not have med/high aerosol
   dswe1a = (d.eq(1)
     .Or(alg.eq(1))
     .rename('dswe1a')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
-    .updateMask(a.eq(0))
     .selfMask()
     )
   pixOut = (image.select(['Aerosol', 'Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2', 
@@ -942,7 +879,7 @@ def ref_pull_89_DSWE1(image, feat):
                                 'mean_Swir1', 'mean_Swir2', 
                                 'mean_SurfaceTemp']))
           # mask the image
-          .updateMask(dswe1.eq(1)) # high confidence water mask
+          .updateMask(dswe1) # high confidence water mask
           # add bands back in for QA (prior to masking of dswe/hs/f/r)
           .addBands(gt0) 
           .addBands(dswe1)
@@ -986,17 +923,11 @@ def ref_pull_89_DSWE1a(image, feat):
       feat: ee.FeatureGeometry of the buffered locations
 
   Returns:
-      summaries for band data within any given geometry area where the DSWE value is 1 or the algal 
+      summaries for band data within any given geometry area where the DSWE value is 1 or the algal
       threshold has been met
   """
-  # process image with the radsat mask
-  r = add_rad_mask(image).select('radsat')
-  # process image with cfmask
-  f = cf_mask(image).select('cfmask')
-  # process image with st SR cloud mask
-  a = sr_aerosol(image).select('medHighAero')
   # where the f mask is > 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
-  clouds = f.gte(1).rename('clouds')
+  clouds = cf_mask(image).select('cfmask').gte(1).rename('clouds')
   #calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
   #calculate hillshadow
@@ -1006,38 +937,20 @@ def ref_pull_89_DSWE1a(image, feat):
   d = DSWE(image).select('dswe')
   # create additive masks for dswe>0 (water of any type)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
-  # a = 0, pixel does not have med/high aerosol
   gt0 = (d.gt(0).rename('dswe_gt0')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
-    .updateMask(a.eq(0))
     .selfMask()
     )
   # create additive masks for dswe==1 (confident open water)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
-  # a = 0, pixel does not have med/high aerosol
   dswe1 = (d.eq(1).rename('dswe1')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
-    .updateMask(a.eq(0))
     .selfMask()
     )
   # create additive masks for dswe==3 (confident vegetated water)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
-  # a = 0, pixel does not have med/high aerosol
   dswe3 = (d.eq(3).rename('dswe3')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
-    .updateMask(a.eq(0))
     .selfMask()
     )
   # define dswe 1a where d is not 0 and red/green threshold met
@@ -1056,47 +969,44 @@ def ref_pull_89_DSWE1a(image, feat):
     .Or(alg.eq(1))
     .rename('dswe1a')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
-    .updateMask(a.eq(0))
     .selfMask()
     )
-  pixOut = (image.select(['Aerosol', 'Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2', 
+  pixOut = (image.select(['Aerosol', 'Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2',
                       'SurfaceTemp'],
-                      ['med_Aerosol', 'med_Blue', 'med_Green', 'med_Red', 'med_Nir', 'med_Swir1', 'med_Swir2', 
+                      ['med_Aerosol', 'med_Blue', 'med_Green', 'med_Red', 'med_Nir', 'med_Swir1', 'med_Swir2',
                       'med_SurfaceTemp'])
           .addBands(image.select(['SurfaceTemp'],
                                   ['min_SurfaceTemp']))
-          .addBands(image.select(['Aerosol', 'Blue', 'Green', 'Red', 
+          .addBands(image.select(['Aerosol', 'Blue', 'Green', 'Red',
                                   'Nir', 'Swir1', 'Swir2', 'SurfaceTemp'],
-                                ['sd_Aerosol', 'sd_Blue', 'sd_Green', 'sd_Red', 
+                                ['sd_Aerosol', 'sd_Blue', 'sd_Green', 'sd_Red',
                                 'sd_Nir', 'sd_Swir1', 'sd_Swir2', 'sd_SurfaceTemp']))
-          .addBands(image.select(['Aerosol', 'Blue', 'Green', 'Red', 'Nir', 
-                                  'Swir1', 'Swir2', 
+          .addBands(image.select(['Aerosol', 'Blue', 'Green', 'Red', 'Nir',
+                                  'Swir1', 'Swir2',
                                   'SurfaceTemp'],
-                                ['mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 
-                                'mean_Swir1', 'mean_Swir2', 
+                                ['mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir',
+                                'mean_Swir1', 'mean_Swir2',
                                 'mean_SurfaceTemp']))
           # mask the image
-          .updateMask(dswe1a.eq(1)) # high confidence water + algal mask 
+          .updateMask(dswe1a) # high confidence water + algal mask
           # add bands back in for QA (prior to masking of dswe/hs/f/r)
-          .addBands(gt0) 
+          .addBands(gt0)
           .addBands(dswe1)
           .addBands(dswe3)
           .addBands(dswe1a)
-          .addBands(clouds) 
+          .addBands(clouds)
           .addBands(hs)
           .addBands(h)
-          ) 
+          )
   combinedReducer = (ee.Reducer.median().unweighted()
-      .forEachBand(pixOut.select(['med_Aerosol', 'med_Blue', 'med_Green', 'med_Red', 
+      .forEachBand(pixOut.select(['med_Aerosol', 'med_Blue', 'med_Green', 'med_Red',
             'med_Nir', 'med_Swir1', 'med_Swir2', 'med_SurfaceTemp']))
     .combine(ee.Reducer.min().unweighted()
       .forEachBand(pixOut.select(['min_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.stdDev().unweighted()
       .forEachBand(pixOut.select(['sd_Aerosol', 'sd_Blue', 'sd_Green', 'sd_Red', 'sd_Nir', 'sd_Swir1', 'sd_Swir2', 'sd_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted()
-      .forEachBand(pixOut.select(['mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 
+      .forEachBand(pixOut.select(['mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red',
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
       .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a'])), outputPrefix = 'pCount_', sharedInputs = False)
@@ -1124,55 +1034,31 @@ def ref_pull_89_DSWE3(image, feat):
   Returns:
       summaries for band data within any given geometry area where the DSWE value is 3
   """
-  # process image with the radsat mask
-  r = add_rad_mask(image).select('radsat')
-  # process image with cfmask
-  f = cf_mask(image).select('cfmask')
-  # process image with st SR cloud mask
-  a = sr_aerosol(image).select('medHighAero')
   # where the f mask is > 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
-  clouds = f.gte(1).rename('clouds')
+  clouds = cf_mask(image).select('cfmask').gte(1).rename('clouds')
   #calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
   #calculate hillshadow
   hs = calc_hill_shadows(image, wrs.geometry()).select('hillShadow')
-  
+
   #apply dswe function
   d = DSWE(image).select('dswe')
   # create additive masks for dswe>0 (water of any type)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
-  # a = 0, pixel does not have med/high aerosol
   gt0 = (d.gt(0).rename('dswe_gt0')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
-    .updateMask(a.eq(0))
     .selfMask()
     )
   # create additive masks for dswe==1 (confident open water)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
-  # a = 0, pixel does not have med/high aerosol
   dswe1 = (d.eq(1).rename('dswe1')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
-    .updateMask(a.eq(0))
     .selfMask()
     )
   # create additive masks for dswe==3 (confident vegetated water)
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
-  # a = 0, pixel does not have med/high aerosol
   dswe3 = (d.eq(3).rename('dswe3')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
-    .updateMask(a.eq(0))
     .selfMask()
     )
   # define dswe 1a where d is not 0 and red/green threshold met
@@ -1184,58 +1070,51 @@ def ref_pull_89_DSWE3(image, feat):
     )
   # create additive mask for dswe1a: dswe = 1 or algal threshold met
   # hs = 1, fully illuminated pixels
-  # f = 0, no contaminated pixels
-  # r = 1, pixel is not saturated
-  # a = 0, pixel does not have med/high aerosol
   dswe1a = (d.eq(1)
     .Or(alg.eq(1))
     .rename('dswe1a')
     .updateMask(hs.eq(1))
-    .updateMask(f.eq(0))
-    .updateMask(r.eq(1))
-    .updateMask(a.eq(0))
     .selfMask()
     )
   #calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
   #calculate hillshadow
   hs = calc_hill_shadows(image, wrs.geometry()).select('hillShadow')
-  pixOut = (image.select(['Aerosol', 'Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2', 
+  pixOut = (image.select(['Aerosol', 'Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2',
                       'SurfaceTemp'],
-                      ['med_Aerosol', 'med_Blue', 'med_Green', 'med_Red', 'med_Nir', 'med_Swir1', 'med_Swir2', 
+                      ['med_Aerosol', 'med_Blue', 'med_Green', 'med_Red', 'med_Nir', 'med_Swir1', 'med_Swir2',
                       'med_SurfaceTemp'])
           .addBands(image.select(['SurfaceTemp'],
                                   ['min_SurfaceTemp']))
-          .addBands(image.select(['Aerosol', 'Blue', 'Green', 'Red', 
+          .addBands(image.select(['Aerosol', 'Blue', 'Green', 'Red',
                                   'Nir', 'Swir1', 'Swir2', 'SurfaceTemp'],
-                                ['sd_Aerosol', 'sd_Blue', 'sd_Green', 'sd_Red', 
+                                ['sd_Aerosol', 'sd_Blue', 'sd_Green', 'sd_Red',
                                 'sd_Nir', 'sd_Swir1', 'sd_Swir2', 'sd_SurfaceTemp']))
-          .addBands(image.select(['Aerosol', 'Blue', 'Green', 'Red', 'Nir', 
-                                  'Swir1', 'Swir2', 
+          .addBands(image.select(['Aerosol', 'Blue', 'Green', 'Red', 'Nir',
+                                  'Swir1', 'Swir2',
                                   'SurfaceTemp'],
-                                ['mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 
-                                'mean_Swir1', 'mean_Swir2', 
+                                ['mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir',
+                                'mean_Swir1', 'mean_Swir2',
                                 'mean_SurfaceTemp']))
           # mask image
-          .updateMask(dswe3.eq(1)) # dswe3 mask
+          .updateMask(dswe3) # dswe3 mask
           # add bands back in for QA (prior to masking of dswe/hs/f/r)
-          .addBands(gt0) 
+          .addBands(gt0)
           .addBands(dswe1)
           .addBands(dswe3)
-          .addBands(dswe1a)
-          .addBands(clouds) 
+          .addBands(clouds)
           .addBands(hs)
           .addBands(h)
-          ) 
+          )
   combinedReducer = (ee.Reducer.median().unweighted()
-      .forEachBand(pixOut.select(['med_Aerosol', 'med_Blue', 'med_Green', 'med_Red', 
+      .forEachBand(pixOut.select(['med_Aerosol', 'med_Blue', 'med_Green', 'med_Red',
             'med_Nir', 'med_Swir1', 'med_Swir2', 'med_SurfaceTemp']))
     .combine(ee.Reducer.min().unweighted()
       .forEachBand(pixOut.select(['min_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.stdDev().unweighted()
       .forEachBand(pixOut.select(['sd_Aerosol', 'sd_Blue', 'sd_Green', 'sd_Red', 'sd_Nir', 'sd_Swir1', 'sd_Swir2', 'sd_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted()
-      .forEachBand(pixOut.select(['mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 
+      .forEachBand(pixOut.select(['mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red',
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
       .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a'])), outputPrefix = 'pCount_', sharedInputs = False)
@@ -1437,10 +1316,16 @@ def process_subset(df_subset, chunk):
     .map(apply_fill_mask_457)
     .map(apply_scale_factors)
     .map(apply_realistic_mask_457)
+    # apply opacity mask
     .map(apply_opac_mask))
   
   # rename bands for ease
   locs_stack_ls457 = locs_stack_ls457.select(bn457, bns457)
+  
+  # apply masks that require above rename
+  locs_stack_ls457 = (locs_stack_ls457
+    .map(apply_rad_mask)
+    .map(apply_cf_mask))
   
   # pull DSWE1 variations as configured
   if '1' in dswe:
@@ -1542,10 +1427,16 @@ def process_subset(df_subset, chunk):
     .map(apply_fill_mask_89)
     .map(apply_scale_factors)
     .map(apply_realistic_mask_89))
-  
+    
   # rename bands for ease
   locs_stack_ls89 = locs_stack_ls89.select(bn89, bns89)
   
+  # apply masks that require above rename
+  locs_stack_ls89 = (locs_stack_ls89
+    .map(apply_rad_mask)
+    .map(apply_cf_mask)
+    .map(apply_sr_aero_mask))
+    
   if '1' in dswe:
     if '1a' in dswe:
       locs_out_89_D1 = locs_stack_ls89.map(lambda image: ref_pull_89_DSWE1(image, feat)).flatten()

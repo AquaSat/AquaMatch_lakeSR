@@ -7,82 +7,104 @@ bibliography: references.bib
 
 # lakeSR-LS_C2_SRST Data Product {#LS-C2-SRST}
 
-The **lakeSR-LS_C2_SRST** data product is a set of tabular datasets,
-representing either the SR and ST data summarized for the POI location which is
-meant to represent pelagic conditions at a given waterbody (identified by its
-NHD Permanent Identifier, see Section \@ref(locs-data-acq)) or representing the
-SR and ST data summarized for any sampling location(s) within a waterbody
-detected in the WQP in the early stages of **AquaMatch**. Both types of data
-contain "full stacks" of the Landsat Collection 2 record - that is, all
-summarized Landsat data available from all Landsat missions.
+The lakeSR data product is a set of tabular datasets, representing the surface
+reflectance (SR) and surface tempearture (ST) data summarized for the point of
+inaccessibility (POI) location which is meant to represent pelagic conditions at
+a given waterbody (identified by its NHD unique identifier, see Section
+\@ref(locs-data-acq)). This data product contains "full stacks" of the Landsat
+Collection 2 record - that is, all summarized Landsat data available from all
+Landsat missions that met our QA criteria.
 
 ## Overview
 
-At a high level, the workflow for data acquisition is as follows:
+The workflow for data acquisition is as follows:
 
 1.  read in and format the yaml configuration file for the GEE run
-
-    -   for POI: completed in `config_file_poi`, `yml_file_poi`, `yml_poi`
+    (`b_config_file_poi`, `b_yml_poi`)
 
 2.  reformat the locations file for the GEE run using the configuration file
+    (`b_ref_locations_poi`)
 
-    -   for POI: completed in `ref_locs_poi_file`, `ref_locations_poi`
+3.  determine the WRS-2 path-rows that intersect with the locations file
+    (`b_WRS_pathrow_poi`)
 
-3.  determine the WRS-2 path rows (or 'tiles') that intersect with the locations
-    file
+4.  filter the locations for those that are completely contained by the WRS-2
+    path-row when the automated buffer is added, add the WRS-2 path-rows to the
+    reformatted locations, and save distinct location files by path-row for
+    easier processing in Python (`b_poi_locs_filtered`)
 
-    -   for POI: completed in `WRS_tiles_poi`
-
-4.  add the WRS-2 path rows to the reformatted locations file for quicker
-    processing
-
-    -   for POI: completed in `poi_locs_WRS_file`, `poi_locs_WRS`,
-        `poi_locs_WRS_latlon`
-
-5.  iteratively run the GEE script per WRS-2 tile
-
-    -   for POI: completed in `eeRun_poi`
+5.  iteratively run the GEE script per WRS-2 path-row (`b_eeRun_poi`)
 
 6.  check to see that all tasks are complete in GEE before moving to next step
+    (`b_poi_tasks_complete`)
 
-    -   for POI: completed in `poi_tasks_complete`
+7.  check to see if any tasks failed in GEE extraction which is not visible from
+    the RStudio IDE (`b_check_for_failed_tasks`)
 
-```{r b-group-vis, fig.cap= "Network graph of the *targets* in the b_pull_Landsat_SRST_poi {targets} group."}
- with_dir("..", {
-    tar_visnetwork(targets_only = T, 
-                   shortcut = T,
-                   label = "branches",
-                   names = c("yml_file_poi",
-                             "yml_poi_file",
-                             "yml_poi",
-                             "yml_poi", 
-                             "ref_locs_poi_file",
-                             "ref_locations_poi",
-                             "WRS_tiles_poi",
-                             "poi_locs_WRS_file",
-                             "poi_locs_with_WRS",
-                             "poi_locs_WRS_latlon",
-                             "eeRun_poi",
-                             "poi_tasks_complete"))
-    })
-```
+## Technical Implementation of Acquisition Script
 
-## Data Acquisition Script
+In order to cue Python scripts and map along WRS-2 path-rows within the
+{targets} architecture, we use a function (`run_GEE_per_pathrow()`) which writes
+the current WRS-2 path-row to a text file, then sources a python script that
+uses that text file to run the acquisition for the path-row. Additional details
+are provided below to describe the steps in the python script
+(`run_GEE_per_pathrow.py`).
 
-The data acquisition pipeline for POIs and sampling locations for the
-**lakeSR-LS_C2_SRST** data product is the same, but the pipeline is initialized
-with two different yaml configuration files. This section will walk through the
-code in `b_pull_Landsat_SRST_poi/py/runGEEperTile.py`.
+### Custom Functions
+
+The first section of `run_GEE_per_pathrow.py` saves custom functions used in the
+Landsat stack acquisition. These include data manipulation to create Earth
+Engine (EE) objects, custom QA masks, DSWE algorithm, and the functions that
+perform the masking and extraction of data from the Landsat image. Below is an
+overview of some of the custom masking procedures.
+
+-   `apply_rad_mask`: Masks out all pixels that are radiometrically saturated
+    using the QA_RADSAT QA band
+
+    -   0: pixel is radiometrically saturated in any optical band
+
+    -   1: pixel is NOT radiometrically saturated in any optical band
+
+-   `apply_cf_mask`: Applies mask for any pixels obstructed by clouds and
+    snow/ice
+
+-   `apply_sr_aero_mask`: Applies mask for any pixels in Landsat 8 and 9 that
+    have 'medium' or 'high' aerosol QA flags from the SR_QA_AEROSOL band
+
+-   `apply_opac_mask`: Applies mask to remove pixels where atmospheric opacity
+    is greater than 0.3 in Landsat 4, 5, and 7.
+
+-   `apply_fill_mask_457` and `apply_fill_mask_89`:
+
+-   `apply_realistic_mask_457` and `apply_realistic_mask_89`:
+
+### Defining water area
+
+`DSWE`: Calculates the dynamic surface water extent per pixel, as defined by
+@jones2019 and @usgeologicalsurveya, within the scope of lakeSR we extract DSWE
+1 and what we refer to as `DSWE1a`, described later.
+
+-   a value of 0 indicates no water/fill
+
+-   1 is confident water
+
+-   2 is low confidence water
+
+-   3 is high confidence partial water (or vegetated water)
+
+-   4 is low confidence partial water
+
+These functions are
 
 ### Setup
 
-The first 50 lines of the `runGEEperTile.py` file import Python modules (lines
-2-8), read in the formatted configuration file (line 11) and assign environment
-variables (lines 13-41), read in the text file that stores the current tile
-(lines 43-45) created by the `run_GEE_per_tile()` function called in the
-`eeRun_poi` target), and read in the locations file created in the target
-`poi_locs_WRS_latlon` then subset it for locations that are within the current
-tile (lines 47-50).
+The first 50 lines of the ``` run_GEE_per_pathrow``py ``` file import Python
+modules (lines 2-8), read in the formatted configuration file (line 11) and
+assign environment variables (lines 13-41), read in the text file that stores
+the current tile (lines 43-45) created by the `run_GEE_per_tile()` function
+called in the `eeRun_poi` target), and read in the locations file created in the
+target `poi_locs_WRS_latlon` then subset it for locations that are within the
+current tile (lines 47-50).
 
 ### Collating Earth Engine objects for extraction
 
@@ -141,10 +163,10 @@ completed separately.
 
 ### Payload handling
 
-Because GEE is a free service to those at academic or governmental institutions, 
-there are limits to the total size of a task sent
-to GEE for completion. For this reason, tasks are sent to GEE in 10k location
-increments per tile (for-loop encompassing lines 132-321). This is an additional
-step that is taken in addition to processing per tile to avoid failed tasks.
+Because GEE is a free service to those at academic or governmental institutions,
+there are limits to the total size of a task sent to GEE for completion. For
+this reason, tasks are sent to GEE in 10k location increments per tile (for-loop
+encompassing lines 132-321). This is an additional step that is taken in
+addition to processing per tile to avoid failed tasks.
 
-### Creating an ee.FeatureCollection from a dataframe
+## Changes from AquaSat v1
