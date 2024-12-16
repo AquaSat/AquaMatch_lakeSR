@@ -9,7 +9,7 @@ import math
 # LOAD ALL THE CUSTOM FUNCTIONS -----------------------------------------------
 # pull code begins on line 1185
 
-def csv_to_eeFeat(df, proj):
+def csv_to_eeFeat(df, proj, chunk):
   """Function to create an eeFeature from the location info
 
   Args:
@@ -20,15 +20,16 @@ def csv_to_eeFeat(df, proj):
       ee.FeatureCollection of the points 
   """
   features=[]
-  for i in range(df.shape[0]):
+  range_min = df.shape[0] * chunk
+  range_max = df.shape[0] * (chunk + 1) 
+  for i in range(range_min, range_max):
     x,y = df.Longitude[i],df.Latitude[i]
     latlong =[x,y]
     loc_properties = {'system:index':str(df.id[i]), 'id':str(df.id[i])}
     g=ee.Geometry.Point(latlong, proj) 
     feature = ee.Feature(g, loc_properties)
     features.append(feature)
-  ee_object = ee.FeatureCollection(features)
-  return ee_object
+  return ee.FeatureCollection(features)
 
 
 def apply_scale_factors(image):
@@ -1317,7 +1318,7 @@ def process_subset(df_subset, chunk):
   # it's more than 10, and keep checking to not overload the GEE server
   maximum_no_of_tasks(10, 120)
 
-  locs_feature = csv_to_eeFeat(df_subset, yml['location_crs'][0])
+  locs_feature = csv_to_eeFeat(df_subset, yml['location_crs'][0], chunk)
   
   geo = wrs.geometry()
   
@@ -1542,8 +1543,7 @@ def process_dataframe_in_chunks(df, chunk_size=5000):
     Returns:
     list: A list of results from processing each chunk
     """
-    results = []
-    
+
     # Calculate the number of chunks
     num_chunks = len(df) // chunk_size + (1 if len(df) % chunk_size != 0 else 0)
     
@@ -1557,8 +1557,7 @@ def process_dataframe_in_chunks(df, chunk_size=5000):
         
         # Process the subset and store the result
         result = process_subset(df_subset, i)
-        results.append(result)
-        
+
         print(f"Processed chunk {i+1}/{num_chunks}")
     
     return ()
