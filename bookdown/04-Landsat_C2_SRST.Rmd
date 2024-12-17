@@ -5,9 +5,36 @@ editor_options:
 bibliography: references.bib
 ---
 
-# Landsat Collection 2 Surface Reflectance and Surface Temperature
+# Landsat Collection 2 SRST {#LS-C2-SRST}
 
-## Background Information
+## Acronyms and Landsat Jargon
+
+*SR*: surface reflectance
+
+*ST*: surface temperature
+
+*Collection 2 (C2)*: The second version of the Landsat record - the transition
+to C2 began in 2020. There were extensive changes to the data storage and
+metadata when moving from Collection 1 to C2. An overview of the differences is
+available as a PDF download
+[here](https://www.usgs.gov/media/files/landsat-collection-1-vs-collection-2-summary)
+from the USGS.
+
+*Data Tier*: a data tier for Landsat refers to data quality and processing.
+lakeSR uses Tier 1 data exclusively which conform to the highest level of data
+quality. To learn more about Landsat tiers, see [this video from the
+USGS](https://www.usgs.gov/media/videos/landsat-collections-what-are-tiers).
+
+*Data Processing Level*: a data processing level for Landsat refers to how much
+the data have been processed. Level 1 (top of atmosphere) is less processed than
+Level 2 (surface reflectance). lakeSR uses Level 2 data exclusively, as it has
+gone through a standard atmospheric correction process that attempts to
+standardize data handling through out the Landsat record - it is *derived* from
+Level 1 data. NASA has compiled [a list of general data processing levels and
+descriptions
+here](https://www.earthdata.nasa.gov/learn/earth-observation-data-basics/data-processing-levels).
+
+## Background Information {#valid-dates}
 
 *The information presented in this section originates from the [NASA Landsat
 Science website](https://landsat.gsfc.nasa.gov/) and has been summarized here
@@ -17,59 +44,63 @@ relevant to the creation and use of lakeSR.*
 The Landsat archive of multispectral and thermal data in lakeSR is composed of
 Landsat missions 4 through 9 and spans more than 40 years.
 
-+--------------------------+---------------+---------------+---------------+
-| Mission                  | Launch Date   | End of        | Dec ommission |
-|                          |               | Science       | Date          |
-|                          |               | Mission       |               |
-+==========================+:=============:+:=============:+:=============:+
-| [Landsat 4               | 1 982-07-16   | 1 993-12-14   | 2 001-06-15   |
-| TM](h                    |               |               |               |
-| ttps://lands%20a%20t.g%2 |               |               |               |
-| 0%20sfc.na%20sa.go%20v/s |               |               |               |
-| at%20ellites/landsat-4/) |               |               |               |
-| [@eros-45]               |               |               |               |
-+--------------------------+---------------+---------------+---------------+
-| [Landsat 5               | 1 984-03-01   | 2 011-11-18   | 2 013-06-05   |
-| TM](h                    |               |               |               |
-| ttps://lands%20a%20t.g%2 |               |               |               |
-| 0%20sfc.na%20sa.go%20v/s |               |               |               |
-| at%20ellites/landsat-5/) |               |               |               |
-| [@eros-45]               |               |               |               |
-+--------------------------+---------------+---------------+---------------+
-| [Landsat 7               | 1 999-04-15   | 2 022-04-06   | N/A           |
-| ETM+](h                  |               |               |               |
-| ttps://lands%20a%20t.g%2 |               |               |               |
-| 0%20sfc.na%20sa.go%20v/s |               |               |               |
-| at%20ellites/landsat-7/) |               |               |               |
-| [@eros-7]                |               |               |               |
-+--------------------------+---------------+---------------+---------------+
-| [Landsat 8               | 2 013-02-11   | N/A           | N/A           |
-| OLI/TIRS](h              |               |               |               |
-| ttps://lands%20a%20t.g%2 |               |               |               |
-| 0%20sfc.na%20sa.go%20v/s |               |               |               |
-| at%20ellites/landsat-8/) |               |               |               |
-| [@eros-89]               |               |               |               |
-+--------------------------+---------------+---------------+---------------+
-| [Landsat 9               | 2 021-09-27   | N/A           | N/A           |
-| OLI-2/TIRS-2](h          |               |               |               |
-| ttps://lands%20a%20t.g%2 |               |               |               |
-| 0%20sfc.na%20sa.go%20v/s |               |               |               |
-| at%20ellites/landsat-9/) |               |               |               |
-| [@eros-89]               |               |               |               |
-+--------------------------+---------------+---------------+---------------+
++------------------------+----------------+----------------+----------------+
+| Mission                | Launch Date    | End of Science | Decommission   |
+|                        |                | Mission        | Date           |
++========================+:==============:+:==============:+:==============:+
+| [Landsat 4             | 1982-07-16     | 1993-12-14     | 2001-06-15     |
+| TM](h%20ttps://lands   |                |                |                |
+| %20a%20t.g%2%200%20sfc |                |                |                |
+| .na%20sa.go%20v/s%20at |                |                |                |
+| %20ellites/landsat-4/) |                |                |                |
+| [@eros-45]             |                |                |                |
++------------------------+----------------+----------------+----------------+
+| [Landsat 5             | 1984-03-01     | 2011-11-18     | 2013-06-05     |
+| TM](h%20ttps://lands   |                |                |                |
+| %20a%20t.g%2%200%20sfc |                |                |                |
+| .na%20sa.go%20v/s%20at |                |                |                |
+| %20ellites/landsat-5/) |                |                |                |
+| [@eros-45]             |                |                |                |
++------------------------+----------------+----------------+----------------+
+| [Landsat 7             | 1999-04-15     | 2022-04-06     | N/A            |
+| ETM+](h%20ttps://lands |                |                |                |
+| %20a%20t.g%2%200%20sfc |                |                |                |
+| .na%20sa.go%20v/s%20at |                |                |                |
+| %20ellites/landsat-7/) |                |                |                |
+| [@eros-7]              |                |                |                |
++------------------------+----------------+----------------+----------------+
+| [Landsat 8             | 2013-02-11     | N/A            | N/A            |
+| OLI/                   |                |                |                |
+| TIRS](h%20ttps://lands |                |                |                |
+| %20a%20t.g%2%200%20sfc |                |                |                |
+| .na%20sa.go%20v/s%20at |                |                |                |
+| %20ellites/landsat-8/) |                |                |                |
+| [@eros-89]             |                |                |                |
++------------------------+----------------+----------------+----------------+
+| [Landsat 9             | 2021-09-27     | N/A            | N/A            |
+| OLI-2/TI               |                |                |                |
+| RS-2](h%20ttps://lands |                |                |                |
+| %20a%20t.g%2%200%20sfc |                |                |                |
+| .na%20sa.go%20v/s%20at |                |                |                |
+| %20ellites/landsat-9/) |                |                |                |
+| [@eros-89]             |                |                |                |
++------------------------+----------------+----------------+----------------+
 
 The image record for Landsat 4 is not consistent nor robust due to a data
 transmitter failure early in service, however our pipeline acquires data as
 available. Landsat 6 did not achieve orbit.
 
 For the purposes of lakeSR, we truncate the data record for Landsat 4 and 5 at
-the end of the Science Mission of the satellite. Landsat 7 began to experience
-orbital drift beginning in 2017, resulting in top-of-atmosphere (and therefore
-also surface reflectance data) that had growing uncertainties over time as the
-drift increased [@qiu2021]. Qui [-@qiu2021] suggests that data are not robust
-enough for trend analysis after the start of the growing season in 2020, but
-because their analysis was of NDVI, we conservatively truncated the data at the
-end of 2019.
+the end of the Science Mission of the satellite. No corrections were made for
+the Landsat 7 scanline error that began on May 31, 2003, data were collected as
+available despite the scanline error since the data are still of acceptable
+quality [per the USGS](https://www.usgs.gov/faqs/what-landsat-7-etm-slc-data).
+Additionally, Landsat 7 began to experience orbital drift beginning in 2017,
+resulting in top-of-atmosphere (and therefore also surface reflectance) that had
+growing uncertainties over time as the drift increased [@qiu2021]. Qui
+[-@qiu2021] suggests that data are not robust enough for trend analysis after
+the start of the growing season in 2020, but because their analysis was of NDVI,
+we conservatively truncate the data at the end of 2019.
 
 ### Spectral Response
 
@@ -92,12 +123,12 @@ Landsat 8 OLI/TIRS:
 |       |       | 0.52  | 0.60  | 0.69  | 0.90  | 1.75  | 2.35  | 12.50 |
 |       |       | μm    | μm    | μm    | μm    | μm    | μm    | μm    |
 +-------+-------+-------+-------+-------+-------+-------+-------+-------+
-| OLI   | 0.    | 0.    | 0.    | 0.    | 0.    | 1.    | 2.    | 10    |
-| /TIRS | 435 - | 452 - | 533 - | 636 - | 851 - | 566 - | 107 - | .60 - |
-|       |       |       |       |       |       |       |       | 1     |
-| OL    | 0.451 | 0.512 | 0.590 | 0.673 | 0.879 | 1.651 | 2.294 | 1.19, |
-| I-2/T |       |       |       |       |       |       |       | 11    |
-| IRS-2 |    μm |    μm |    μm |    μm |    μm |    μm |    μm | .50 - |
+| OLI   | 435 - | 0.452 | 0.533 | 0.636 | 0.851 | 1.566 | 2.107 | 10    |
+| /TIRS |       | -     | -     | -     | -     | -     | -     | .60 - |
+|       | 0.451 |       |       |       |       |       |       | 1     |
+| OL    |       | 0.512 | 0.590 | 0.673 | 0.879 | 1.651 | 2.294 | 1.19, |
+| I-2/T | μm    |       |       |       |       |       |       | 11    |
+| IRS-2 |       | μm    | μm    | μm    | μm    | μm    | μm    | .50 - |
 |       |       |       |       |       |       |       |       | 12.51 |
 |       |       |       |       |       |       |       |       | μm    |
 +-------+-------+-------+-------+-------+-------+-------+-------+-------+
@@ -105,22 +136,23 @@ Landsat 8 OLI/TIRS:
 ### Sensor Resolution
 
 The spatial resolution of the Level 1 data has not changed for optical bands
-(Aerosol, RGB, NIR, SWIR) but has varied over the history for thermal data:
+over time (Aerosol, RGB, NIR, SWIR) but has varied over the historic record for
+thermal data:
 
-+---------------------+---------------------+---------------------+
-| Sensors             | Optical Bands       | Thermal Bands       |
-+=====================+=====================+=====================+
-| TM                  | 30                  | 120                 |
-+---------------------+---------------------+---------------------+
-| ETM+                | 30                  | 60                  |
-+---------------------+---------------------+---------------------+
-| OLI/TIRS            | 30                  | 100                 |
-|                     |                     |                     |
-| OLI-2/TIRS-2        |                     |                     |
-+---------------------+---------------------+---------------------+
++-----------------------+-----------------------+-----------------------+
+| Sensors               | Optical Bands         | Thermal Bands         |
++=======================+=======================+=======================+
+| TM                    | 30                    | 120                   |
++-----------------------+-----------------------+-----------------------+
+| ETM+                  | 30                    | 60                    |
++-----------------------+-----------------------+-----------------------+
+| OLI/TIRS              | 30                    | 100                   |
+|                       |                       |                       |
+| OLI-2/TIRS-2          |                       |                       |
++-----------------------+-----------------------+-----------------------+
 
 All Collection 2 Level 2 Surface Reflectance and Surface Temperature data have
-been resampled to 30m in the USGS SRST product.
+been resampled to 30m.
 
 Alongside the pixel resolution of the sensors is the radiometric resolution at
 which the data are stored. TM and ETM+ data are stored as 8-bit data products,
@@ -139,11 +171,10 @@ product page and has been summarized here for the purpose of providing
 background information about the Landsat archive relevant to the creation and
 use of lakeSR.*
 
-The Landsat Collection 2 Surface Reflectance (SR) product is a Level 2 data
-product that has been atmospherically corrected from the Level 1 Top of
-Atmosphere product using a myriad of inputs to create a reasonably consistent
-data product across space and time. The USGS EROS describes the SR product as
-follows:
+The Landsat C2 SR product is a Level 2 data product that has been
+atmospherically corrected from the Level 1 Top of Atmosphere product using a
+myriad of inputs to create a reasonably consistent data product across space and
+time. The USGS EROS describes the SR product as follows:
 
 > *Surface reflectance improves comparison between multiple images over the same
 > region by accounting for atmospheric effects such as aerosol scattering and
@@ -177,5 +208,5 @@ The Landsat Collection 2 Surface Temperature (ST) product is calculated using a
 single-channel algorithm [@cook2014a; @cook2014b] to convert the thermal band
 data to temperature estimates in degrees Kelvin. These data are considered
 interoperable over space and time with few differences in the ST algorithm
-product within Collection 2, with the acknowledgement of the previously-
-documented spectral and radiometric resolution differences.
+product within Collection 2, with the acknowledgement of the
+previously-documented spectral and radiometric resolution differences.

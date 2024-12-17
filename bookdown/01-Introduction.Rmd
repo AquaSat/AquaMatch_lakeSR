@@ -10,7 +10,7 @@ bibliography: references.bib
 This bookdown document [@xie2016] explains the methodology we use in the
 acquisition and compilation of satellite surface reflectance and surface
 temperature data for all lakes greater than 1 hectacre in the United States and
-US Territories. This product, lakeSR, is a component of the [**AquaSat**
+US Territories. This product, lakeSR, is a component of the [AquaSat
 suite](https://github.com/aquasat), an effort to create a database of lake and
 river water quality observations alongside remote sensing data. This is an
 update to the original AquaSat [@ross2019], the foundational effort towards
@@ -26,13 +26,14 @@ late 2024, comprised of data from the following missions:
 -   Landsat 8 Operational Land Imager/Thermal Infrared Sensor (OLI/TIRS)
 -   Landsat 9 OLI/TIRS
 
-There will be additional satellite data incorporated into the **lakeSR** product
-in the future.
+There will be additional satellite data incorporated into the lakeSR data
+product in the future.
 
 lakeSR acquires tabular data summaries of satellite-derived surface reflectance
 and surface temperature data at central locations within a lake. The sibling
-product to this is siteSR, which acquires the same data at locations identified
-with monitoring records from the Water Quality Portal from the
+product to this is [siteSR](https://github.com/AquaSat/AquaMatch_siteSR_WQP),
+which acquires the same data at locations identified with monitoring records
+from the Water Quality Portal from the
 [AquaMatch](https://aquasat.github.io/AquaMatch_harmonize_WQP/) component of
 AquaSat.
 
@@ -77,16 +78,6 @@ points created in `a_Calculate_Centers`. **Note**: this group of targets takes a
 very, very long time, averaging about 1 hour per path-row branch. There are just
 under 800 path rows executed in this branch.
 
-<!-- See Section @ref(LS-C2-SRST) for additional background and detailed -->
-
-<!-- methodology. -->
-
-<!-- ## Running the code within this repository -->
-
-<!-- If you have followed all of the set up instructions, including those outlined in -->
-
-<!-- Section @ref(software-settings), the code within this repository can be -->
-
-<!-- triggered by running the `run_targets.Rmd` file with the R Project file -->
-
-<!-- `AquaMatch_lakeSR.rproj` open in your RStudio console. -->
+See Section \@ref(software-settings) for details on software used in this
+workflow, Section \@ref(LS-C2-SRST) for additional background on Landsat data,
+and Section \@ref(LS-SRST-pull) and detailed methodology.
