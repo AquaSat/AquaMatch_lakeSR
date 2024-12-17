@@ -21,3 +21,7 @@ b_pull_Landsat_SRST_poi/out/*
 # _targets directory
 _targets/
 
+# bookdown images (these are duplicated in docs)
+bookdown/images/*
+bookdown/figure-html/*
+
