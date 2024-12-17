@@ -44,47 +44,59 @@ relevant to the creation and use of lakeSR.*
 The Landsat archive of multispectral and thermal data in lakeSR is composed of
 Landsat missions 4 through 9 and spans more than 40 years.
 
-+------------------------+----------------+----------------+----------------+
-| Mission                | Launch Date    | End of Science | Decommission   |
-|                        |                | Mission        | Date           |
-+========================+:==============:+:==============:+:==============:+
-| [Landsat 4             | 1982-07-16     | 1993-12-14     | 2001-06-15     |
-| TM](h%20ttps://lands   |                |                |                |
-| %20a%20t.g%2%200%20sfc |                |                |                |
-| .na%20sa.go%20v/s%20at |                |                |                |
-| %20ellites/landsat-4/) |                |                |                |
-| [@eros-45]             |                |                |                |
-+------------------------+----------------+----------------+----------------+
-| [Landsat 5             | 1984-03-01     | 2011-11-18     | 2013-06-05     |
-| TM](h%20ttps://lands   |                |                |                |
-| %20a%20t.g%2%200%20sfc |                |                |                |
-| .na%20sa.go%20v/s%20at |                |                |                |
-| %20ellites/landsat-5/) |                |                |                |
-| [@eros-45]             |                |                |                |
-+------------------------+----------------+----------------+----------------+
-| [Landsat 7             | 1999-04-15     | 2022-04-06     | N/A            |
-| ETM+](h%20ttps://lands |                |                |                |
-| %20a%20t.g%2%200%20sfc |                |                |                |
-| .na%20sa.go%20v/s%20at |                |                |                |
-| %20ellites/landsat-7/) |                |                |                |
-| [@eros-7]              |                |                |                |
-+------------------------+----------------+----------------+----------------+
-| [Landsat 8             | 2013-02-11     | N/A            | N/A            |
-| OLI/                   |                |                |                |
-| TIRS](h%20ttps://lands |                |                |                |
-| %20a%20t.g%2%200%20sfc |                |                |                |
-| .na%20sa.go%20v/s%20at |                |                |                |
-| %20ellites/landsat-8/) |                |                |                |
-| [@eros-89]             |                |                |                |
-+------------------------+----------------+----------------+----------------+
-| [Landsat 9             | 2021-09-27     | N/A            | N/A            |
-| OLI-2/TI               |                |                |                |
-| RS-2](h%20ttps://lands |                |                |                |
-| %20a%20t.g%2%200%20sfc |                |                |                |
-| .na%20sa.go%20v/s%20at |                |                |                |
-| %20ellites/landsat-9/) |                |                |                |
-| [@eros-89]             |                |                |                |
-+------------------------+----------------+----------------+----------------+
++--------------------+-----------------+-----------------+-----------------+
+| Mission            | Launch Date     | End of Science  | Decommission    |
+|                    |                 | Mission         | Date            |
++====================+:===============:+:===============:+:===============:+
+| [Landsat 4         | 1982-07-16      | 1993-12-14      | 2001-06-15      |
+| TM](h%20ttps://%2  |                 |                 |                 |
+| 0lands%20%20a%20t. |                 |                 |                 |
+| g%2%20%200%20sfc%2 |                 |                 |                 |
+| 0.na%20s%20a.go%20 |                 |                 |                 |
+| v/s%20at%20%2%200e |                 |                 |                 |
+| llites/landsat-4/) |                 |                 |                 |
+| [@eros-45]         |                 |                 |                 |
++--------------------+-----------------+-----------------+-----------------+
+| [Landsat 5         | 1984-03-01      | 2011-11-18      | 2013-06-05      |
+| TM](h%20ttps://%2  |                 |                 |                 |
+| 0lands%20%20a%20t. |                 |                 |                 |
+| g%2%20%200%20sfc%2 |                 |                 |                 |
+| 0.na%20s%20a.go%20 |                 |                 |                 |
+| v/s%20at%20%2%200e |                 |                 |                 |
+| llites/landsat-5/) |                 |                 |                 |
+| [@eros-45]         |                 |                 |                 |
++--------------------+-----------------+-----------------+-----------------+
+| [Landsat 7         | 1999-04-15      | 2022-04-06      | N/A             |
+| E                  |                 |                 |                 |
+| TM+](h%20ttps://%2 |                 |                 |                 |
+| 0lands%20%20a%20t. |                 |                 |                 |
+| g%2%20%200%20sfc%2 |                 |                 |                 |
+| 0.na%20s%20a.go%20 |                 |                 |                 |
+| v/s%20at%20%2%200e |                 |                 |                 |
+| llites/landsat-7/) |                 |                 |                 |
+| [@eros-7]          |                 |                 |                 |
++--------------------+-----------------+-----------------+-----------------+
+| [Landsat 8 OLI/    | 2013-02-11      | N/A             | N/A             |
+| T                  |                 |                 |                 |
+| IRS](h%20ttps://%2 |                 |                 |                 |
+| 0lands%20%20a%20t. |                 |                 |                 |
+| g%2%20%200%20sfc%2 |                 |                 |                 |
+| 0.na%20s%20a.go%20 |                 |                 |                 |
+| v/s%20at%20%2%200e |                 |                 |                 |
+| llites/landsat-8/) |                 |                 |                 |
+| [@eros-89]         |                 |                 |                 |
++--------------------+-----------------+-----------------+-----------------+
+| [Landsat 9         | 2021-09-27      | N/A             | N/A             |
+| OLI-2/TI           |                 |                 |                 |
+| R                  |                 |                 |                 |
+| S-2](h%20ttps://%2 |                 |                 |                 |
+| 0lands%20%20a%20t. |                 |                 |                 |
+| g%2%20%200%20sfc%2 |                 |                 |                 |
+| 0.na%20s%20a.go%20 |                 |                 |                 |
+| v/s%20at%20%2%200e |                 |                 |                 |
+| llites/landsat-9/) |                 |                 |                 |
+| [@eros-89]         |                 |                 |                 |
++--------------------+-----------------+-----------------+-----------------+
 
 The image record for Landsat 4 is not consistent nor robust due to a data
 transmitter failure early in service, however our pipeline acquires data as
@@ -104,34 +116,14 @@ we conservatively truncate the data at the end of 2019.
 
 ### Spectral Response
 
-While the nominal bands for each of the missions within the archive is
+While the nominal bands for each of the missions within the archive are
 relatively consistent (with the addition of an Aerosol band beginning Landsat
 8), the precise spectral response for each nominal band shifted beginning with
-Landsat 8 OLI/TIRS:
+Landsat 8 OLI/TIRS. The image below visualizes the spectral response throughout
+the Landsat archive.
 
-+-------+-------+-------+-------+-------+-------+-------+-------+-------+
-| Se    | Ae    | Blue  | Green | Red   | Near  | Short | Short | Th    |
-| nsors | rosol |       |       |       | Inf   | Wave  | Wave  | ermal |
-|       |       |       |       |       | rared | Inf   | Inf   |       |
-|       |       |       |       |       | (NIR) | rared | rared |       |
-|       |       |       |       |       |       | 1     | 2     |       |
-|       |       |       |       |       |       | (SWIR | (SWIR |       |
-|       |       |       |       |       |       | 1)    | 2)    |       |
-+:=====:+:=====:+:=====:+:=====:+:=====:+:=====:+:=====:+:=====:+:=====:+
-| TM    | N/A   | 0     | 0     | 0     | 0     | 1     | 2     | 10    |
-| ETM+  |       | .45 - | .52 - | .63 - | .77 - | .55 - | .08 - | .40 - |
-|       |       | 0.52  | 0.60  | 0.69  | 0.90  | 1.75  | 2.35  | 12.50 |
-|       |       | μm    | μm    | μm    | μm    | μm    | μm    | μm    |
-+-------+-------+-------+-------+-------+-------+-------+-------+-------+
-| OLI   | 435 - | 0.452 | 0.533 | 0.636 | 0.851 | 1.566 | 2.107 | 10    |
-| /TIRS |       | -     | -     | -     | -     | -     | -     | .60 - |
-|       | 0.451 |       |       |       |       |       |       | 1     |
-| OL    |       | 0.512 | 0.590 | 0.673 | 0.879 | 1.651 | 2.294 | 1.19, |
-| I-2/T | μm    |       |       |       |       |       |       | 11    |
-| IRS-2 |       | μm    | μm    | μm    | μm    | μm    | μm    | .50 - |
-|       |       |       |       |       |       |       |       | 12.51 |
-|       |       |       |       |       |       |       |       | μm    |
-+-------+-------+-------+-------+-------+-------+-------+-------+-------+
+[![Image credit: L. Rocchio and J. Barsi;
+NASA](images/Landsat-SpectralBands.png)](https://landsat.gsfc.nasa.gov/article/the-intervening-atmosphere-tracing-the-provenance-of-a-favorite-landsat-infographic/)
 
 ### Sensor Resolution
 
@@ -139,17 +131,17 @@ The spatial resolution of the Level 1 data has not changed for optical bands
 over time (Aerosol, RGB, NIR, SWIR) but has varied over the historic record for
 thermal data:
 
-+-----------------------+-----------------------+-----------------------+
-| Sensors               | Optical Bands         | Thermal Bands         |
-+=======================+=======================+=======================+
-| TM                    | 30                    | 120                   |
-+-----------------------+-----------------------+-----------------------+
-| ETM+                  | 30                    | 60                    |
-+-----------------------+-----------------------+-----------------------+
-| OLI/TIRS              | 30                    | 100                   |
-|                       |                       |                       |
-| OLI-2/TIRS-2          |                       |                       |
-+-----------------------+-----------------------+-----------------------+
++-------------------------+-------------------------+-------------------------+
+| Sensors                 | Optical Bands           | Thermal Bands           |
++:=======================:+:=======================:+:=======================:+
+| TM                      | 30                      | 120                     |
++-------------------------+-------------------------+-------------------------+
+| ETM+                    | 30                      | 60                      |
++-------------------------+-------------------------+-------------------------+
+| OLI/TIRS                | 30                      | 100                     |
+|                         |                         |                         |
+| OLI-2/TIRS-2            |                         |                         |
++-------------------------+-------------------------+-------------------------+
 
 All Collection 2 Level 2 Surface Reflectance and Surface Temperature data have
 been resampled to 30m.

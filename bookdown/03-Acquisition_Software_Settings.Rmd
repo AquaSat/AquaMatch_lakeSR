@@ -9,8 +9,8 @@ bibliography: references.bib
 
 Currently, all satellite data in AquaSat are obtained using the Python API for
 Google Earth Engine (GEE) [@gorelick2017]. While the orchestration of data
-acquisition is performed by {targets}, a workflow management program for R, all
-code directly related to GEE data acquisition is written in Python.
+acquisition is performed by the {targets} workflow, all code directly related to
+GEE data acquisition is written in Python.
 
 ## {reticulate} Conda Environment
 
@@ -24,7 +24,7 @@ run (lines 8-12 of the
 be sure that our Python code runs consistently.
 
 | Software/Py Module | version | citation |
-|----|:--:|----|
+|---------------------------|:-------------------------:|---------------------------|
 | Python | 3.10.13 | Python Software Foundation, [www.python.org](www.python.org) |
 | earthengine-api | 1.4.0 | @gorelick2023 |
 | pandas | 2.0.3 | @thepandasdevelopmentteam2023 |

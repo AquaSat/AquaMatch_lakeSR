@@ -16,7 +16,7 @@ create-a-gee-account
 gcloud-cli
 gee-authentication
 gee-project-setting
-landsat-collection-2-srst
+LS-C2-SRST
 acronyms-and-landsat-jargon
 valid-dates
 spectral-response
@@ -24,7 +24,7 @@ sensor-resolution
 surface-reflectance-product
 sr-atmospheric-processing
 surface-temperature
-LS-C2-SRST
+LS-SRST-pull
 changes-from-aquasat-v1-1
 overview-of-aqcuisition-steps
 creating-a-custom-configuration-file

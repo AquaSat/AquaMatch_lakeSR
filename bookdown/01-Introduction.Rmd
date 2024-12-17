@@ -7,7 +7,7 @@ bibliography: references.bib
 
 # Introduction
 
-This bookdown document [@xie2016] explains the methodology we use in the
+This {bookdown} [@xie2016] document explains the methodology we use in the
 acquisition and compilation of satellite surface reflectance and surface
 temperature data for all lakes greater than 1 hectacre in the United States and
 US Territories. This product, lakeSR, is a component of the [AquaSat
@@ -74,10 +74,13 @@ Google Earth Engine (GEE) API. In this group, we use the most conservative LS4-7
 pixel filters, as we are applying these settings across such a large continuum
 of time and space. This group ends with a branched target that sends tasks to
 Google Earth engine by mapping over WRS2 path rows that intersect with the
-points created in `a_Calculate_Centers`. **Note**: this group of targets takes a
-very, very long time, averaging about 1 hour per path-row branch. There are just
-under 800 path rows executed in this branch.
+points created in the `a_Calculate_Centers` group. **Note**: this group of
+targets takes a very, very long time, running 2 minutes - 1 hour per path-row
+branch in `b_eeRun_poi`. There are just under 800 path rows executed in this
+target. Anecdotally speaking, processing time is often defined by the number of
+queued tasks globally, so weekends and nights are often periods of quicker
+processing than weekday during business hours.
 
 See Section \@ref(software-settings) for details on software used in this
 workflow, Section \@ref(LS-C2-SRST) for additional background on Landsat data,
-and Section \@ref(LS-SRST-pull) and detailed methodology.
+and Section \@ref(LS-SRST-pull) for detailed methodology of the Landsat pull.
