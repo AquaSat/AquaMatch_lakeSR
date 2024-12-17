@@ -17,13 +17,46 @@ relevant to the creation and use of lakeSR.*
 The Landsat archive of multispectral and thermal data in lakeSR is composed of
 Landsat missions 4 through 9 and spans more than 40 years.
 
-| Mission | Launch Date | End of Science Mission | Dec ommission Date |
-|----|:--:|:--:|:--:|
-| [Landsat 4 TM](https://landsa%20t.g%20%20sfc.nasa.gov/sat%20ellites/landsat-4/) [@eros-45] | 1 982-07-16 | 1 993-12-14 | 2 001-06-15 |
-| [Landsat 5 TM](https://landsa%20t.g%20%20sfc.nasa.gov/sat%20ellites/landsat-5/) [@eros-45] | 1 984-03-01 | 2 011-11-18 | 2 013-06-05 |
-| [Landsat 7 ETM+](https://landsa%20t.g%20%20sfc.nasa.gov/sat%20ellites/landsat-7/) [@eros-7] | 1 999-04-15 | 2 022-04-06 | N/A |
-| [Landsat 8 OLI/TIRS](https://landsa%20t.g%20%20sfc.nasa.gov/sat%20ellites/landsat-8/) [@eros-89] | 2 013-02-11 | N/A | N/A |
-| [Landsat 9 OLI-2/TIRS-2](https://landsa%20t.g%20%20sfc.nasa.gov/sat%20ellites/landsat-9/) [@eros-89] | 2 021-09-27 | N/A | N/A |
++--------------------------+---------------+---------------+---------------+
+| Mission                  | Launch Date   | End of        | Dec ommission |
+|                          |               | Science       | Date          |
+|                          |               | Mission       |               |
++==========================+:=============:+:=============:+:=============:+
+| [Landsat 4               | 1 982-07-16   | 1 993-12-14   | 2 001-06-15   |
+| TM](h                    |               |               |               |
+| ttps://lands%20a%20t.g%2 |               |               |               |
+| 0%20sfc.na%20sa.go%20v/s |               |               |               |
+| at%20ellites/landsat-4/) |               |               |               |
+| [@eros-45]               |               |               |               |
++--------------------------+---------------+---------------+---------------+
+| [Landsat 5               | 1 984-03-01   | 2 011-11-18   | 2 013-06-05   |
+| TM](h                    |               |               |               |
+| ttps://lands%20a%20t.g%2 |               |               |               |
+| 0%20sfc.na%20sa.go%20v/s |               |               |               |
+| at%20ellites/landsat-5/) |               |               |               |
+| [@eros-45]               |               |               |               |
++--------------------------+---------------+---------------+---------------+
+| [Landsat 7               | 1 999-04-15   | 2 022-04-06   | N/A           |
+| ETM+](h                  |               |               |               |
+| ttps://lands%20a%20t.g%2 |               |               |               |
+| 0%20sfc.na%20sa.go%20v/s |               |               |               |
+| at%20ellites/landsat-7/) |               |               |               |
+| [@eros-7]                |               |               |               |
++--------------------------+---------------+---------------+---------------+
+| [Landsat 8               | 2 013-02-11   | N/A           | N/A           |
+| OLI/TIRS](h              |               |               |               |
+| ttps://lands%20a%20t.g%2 |               |               |               |
+| 0%20sfc.na%20sa.go%20v/s |               |               |               |
+| at%20ellites/landsat-8/) |               |               |               |
+| [@eros-89]               |               |               |               |
++--------------------------+---------------+---------------+---------------+
+| [Landsat 9               | 2 021-09-27   | N/A           | N/A           |
+| OLI-2/TIRS-2](h          |               |               |               |
+| ttps://lands%20a%20t.g%2 |               |               |               |
+| 0%20sfc.na%20sa.go%20v/s |               |               |               |
+| at%20ellites/landsat-9/) |               |               |               |
+| [@eros-89]               |               |               |               |
++--------------------------+---------------+---------------+---------------+
 
 The image record for Landsat 4 is not consistent nor robust due to a data
 transmitter failure early in service, however our pipeline acquires data as
@@ -53,19 +86,20 @@ Landsat 8 OLI/TIRS:
 |       |       |       |       |       |       | 1     | 2     |       |
 |       |       |       |       |       |       | (SWIR | (SWIR |       |
 |       |       |       |       |       |       | 1)    | 2)    |       |
-+=======+=======+=======+=======+=======+=======+=======+=======+=======+
-| TM    | N/A   | 0.45  | 0.52  | 0.63  | 0.77  | 1.55  | 2.08  | 1     |
-|       |       | -0.52 | -0.60 | -0.69 | -0.90 | -1.75 | -2.35 | 0.40- |
-| ETM+  |       | μm    | μm    | μm    | μm    | μm    | μm    | 12.50 |
-|       |       |       |       |       |       |       |       | μm    |
++:=====:+:=====:+:=====:+:=====:+:=====:+:=====:+:=====:+:=====:+:=====:+
+| TM    | N/A   | 0     | 0     | 0     | 0     | 1     | 2     | 10    |
+| ETM+  |       | .45 - | .52 - | .63 - | .77 - | .55 - | .08 - | .40 - |
+|       |       | 0.52  | 0.60  | 0.69  | 0.90  | 1.75  | 2.35  | 12.50 |
+|       |       | μm    | μm    | μm    | μm    | μm    | μm    | μm    |
 +-------+-------+-------+-------+-------+-------+-------+-------+-------+
-| OL I  | 0     | 0     | 0     | 0     | 0     | 1     | 2     | 10    |
-| /TIRS | .435- | .452- | .533- | .636- | .851- | .566- | .107- | .60-1 |
-|       | 0.451 | 0.512 | 0.590 | 0.673 | 0.879 | 1.651 | 2.294 | 1.19, |
-| O     | μm    | μm    | μm    | μm    | μm    | μm    | μm    | 1     |
-| LI-2/ |       |       |       |       |       |       |       | 1.50- |
-| T     |       |       |       |       |       |       |       | 12.51 |
-| IRS-2 |       |       |       |       |       |       |       | μm    |
+| OLI   | 0.    | 0.    | 0.    | 0.    | 0.    | 1.    | 2.    | 10    |
+| /TIRS | 435 - | 452 - | 533 - | 636 - | 851 - | 566 - | 107 - | .60 - |
+|       |       |       |       |       |       |       |       | 1     |
+| OL    | 0.451 | 0.512 | 0.590 | 0.673 | 0.879 | 1.651 | 2.294 | 1.19, |
+| I-2/T |       |       |       |       |       |       |       | 11    |
+| IRS-2 |    μm |    μm |    μm |    μm |    μm |    μm |    μm | .50 - |
+|       |       |       |       |       |       |       |       | 12.51 |
+|       |       |       |       |       |       |       |       | μm    |
 +-------+-------+-------+-------+-------+-------+-------+-------+-------+
 
 ### Sensor Resolution
@@ -73,17 +107,17 @@ Landsat 8 OLI/TIRS:
 The spatial resolution of the Level 1 data has not changed for optical bands
 (Aerosol, RGB, NIR, SWIR) but has varied over the history for thermal data:
 
-+--------------+---------------+---------------+
-| Sensors      | Optical Bands | Thermal Bands |
-+==============+===============+===============+
-| TM           | 30            | 120           |
-+--------------+---------------+---------------+
-| ETM+         | 30            | 60            |
-+--------------+---------------+---------------+
-| OLI/TIRS     | 30            | 100           |
-|              |               |               |
-| OLI-2/TIRS-2 |               |               |
-+--------------+---------------+---------------+
++---------------------+---------------------+---------------------+
+| Sensors             | Optical Bands       | Thermal Bands       |
++=====================+=====================+=====================+
+| TM                  | 30                  | 120                 |
++---------------------+---------------------+---------------------+
+| ETM+                | 30                  | 60                  |
++---------------------+---------------------+---------------------+
+| OLI/TIRS            | 30                  | 100                 |
+|                     |                     |                     |
+| OLI-2/TIRS-2        |                     |                     |
++---------------------+---------------------+---------------------+
 
 All Collection 2 Level 2 Surface Reflectance and Surface Temperature data have
 been resampled to 30m in the USGS SRST product.

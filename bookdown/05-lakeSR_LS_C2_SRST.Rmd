@@ -75,9 +75,8 @@ of data acquisition.
     band. In particular, we follow the suggestions in the product User Guide
     [@usgs-ls47user; @usgs-ls89user]
 
-    > Users are advised to engage the QA “Dilated Cloud” (bit 1) AND
-    > “Cloud” (bit 3) OFF condition to correctly identify clear pixels over
-    > water.
+    > Users are advised to engage the QA “Dilated Cloud” (bit 1) AND “Cloud”
+    > (bit 3) OFF condition to correctly identify clear pixels over water.
 
 -   `apply_sr_aero_mask`: Applies mask for any pixels in Landsat 8 and 9 that
     have 'medium' or 'high' aerosol QA flags from the SR_QA_AEROSOL band.
@@ -93,12 +92,11 @@ of data acquisition.
     4-7 User Guide [@usgs-ls47user] states the following about the atmospheric
     opacity values:
 
-    > A general interpretation of atmospheric opacity is that values
-    > less than 0.1 are clear, 0.1-0.3 are average, and values greater than 0.3
-    > indicate haze
-    > or other cloud situations. SR values from pixels with high atmospheric
-    > opacity will be
-    > less reliable, especially under high solar zenith angle conditions.
+    > A general interpretation of atmospheric opacity is that values less than
+    > 0.1 are clear, 0.1-0.3 are average, and values greater than 0.3 indicate
+    > haze or other cloud situations. SR values from pixels with high
+    > atmospheric opacity will be less reliable, especially under high solar
+    > zenith angle conditions.
 
 -   `apply_fill_mask_457` and `apply_fill_mask_89`: Applies a mask where any
     band value is 0 before applying scaling factors to bands. Filled values are
@@ -133,18 +131,18 @@ in the following values per pixel:
 
 -   4 is low confidence partial water
 
-Within the scope of lakeSR, we tabulate pixels that are a DSWE value of 1 for
-high confidence open water, or what we call 1a - high confidence open water OR
-they meet a threshold that may indicate there is surface-level algae. The algae
-mask is defined as when a pixel has a DSWE value greater than 1 and the green
-band value is greater than 0.05 and the red band value is less than 0.04. This
-is an experimental mask, so we export both DSWE1 and DSWE1a summaries within
-lakeSR. We have found some omission error within DSWE1 for visible floating scum
-within river systems and this additional mask captures many of those pixels
-withofut adding unnecessary uncertainty. Downstream users can choose to use the
-DSWE1a product if it seems applicable to their research, however, this threshold
-was defined in the Illinois and Ohio Rivers and may not be applicable in all
-environments.
+Within the scope of lakeSR, we tabulate pixels that are a DSWE value of 1
+(DSWE1) for high confidence open water, or what we call DSWE1a - high confidence
+open water OR they meet a threshold that may indicate there is surface-level
+algae. The algae mask is defined as when a pixel has a DSWE value greater than 1
+and the green band value is greater than 0.05 and the red band value is less
+than 0.04. This is an experimental mask, so we export both DSWE1 and DSWE1a
+summaries within lakeSR. We have found some omission error within DSWE1 for
+visible floating scum within river systems and this additional mask captures
+many of those pixels without adding unnecessary uncertainty. Downstream users
+can choose to use the DSWE1a product if applicable to their research, however,
+this threshold was defined in the Illinois and Ohio Rivers and may not be
+applicable in all environments.
 
 ### Setup
 

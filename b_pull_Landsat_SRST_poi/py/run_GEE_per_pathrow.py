@@ -9,7 +9,7 @@ import math
 # LOAD ALL THE CUSTOM FUNCTIONS -----------------------------------------------
 # pull code begins on line 1185
 
-def csv_to_eeFeat(df, proj, chunk):
+def csv_to_eeFeat(df, proj, chunk, chunk_size):
   """Function to create an eeFeature from the location data
 
   Args:
@@ -20,8 +20,9 @@ def csv_to_eeFeat(df, proj, chunk):
       ee.FeatureCollection of the points 
   """
   features=[]
-  range_min = df.shape[0] * chunk
-  range_max = df.shape[0] * (chunk + 1) 
+  # Calculate start and end indices for the current chunk
+  range_min = chunk_size * chunk
+  range_max = min(chunk_size * (chunk + 1), len(df))
   for i in range(range_min, range_max):
     x,y = df.Longitude[i],df.Latitude[i]
     latlong =[x,y]
@@ -1285,7 +1286,7 @@ bns89 = (["Aerosol", "Blue", "Green", "Red", "Nir", "Swir1", "Swir2",
 ##########################################
 
 # Map the pull function over the 5000 or so created sites, as needed
-def process_subset(df_subset, chunk):
+def process_subset(df_subset, chunk, chunk_size):
   """
   This function processes a subset of the DataFrame.
   Replace this with your actual processing function.
@@ -1295,7 +1296,7 @@ def process_subset(df_subset, chunk):
   # it's more than 10, and keep checking to not overload the GEE server
   maximum_no_of_tasks(10, 120)
 
-  locs_feature = csv_to_eeFeat(df_subset, yml['location_crs'][0], chunk)
+  locs_feature = csv_to_eeFeat(df_subset, yml['location_crs'][0], chunk, chunk_size)
   
   geo = wrs.geometry()
   
@@ -1544,7 +1545,7 @@ def process_dataframe_in_chunks(df, chunk_size=5000):
         df_subset = df.iloc[start_idx:end_idx]
         
         # Process the subset and store the result
-        result = process_subset(df_subset, i)
+        result = process_subset(df_subset, i, chunk_size)
 
         print(f"Processed chunk {i+1}/{num_chunks}")
     
