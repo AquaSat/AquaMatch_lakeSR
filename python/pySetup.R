@@ -18,9 +18,15 @@ error = function(e) {
   # install miniconda if necessary
   try(install_miniconda())
   #create a conda environment named "mod_env" with the packages you need
-  conda_create(envname = file.path(getwd(), "env/"))
+  conda_create(envname = file.path(getwd(), "env/"), 
+               python_version = "3.10.13")
   conda_install(envname = file.path(getwd(), "env/"),
-                packages = c("earthengine-api", "pandas", "pyreadr", "pyyaml"))
+                python_version = "3.10.13",  
+                packages = c("earthengine-api==1.4.0", 
+                             "pandas==2.0.3", 
+                             "pyreadr==0.5.2", 
+                             "pyyaml==6.0.2",
+                             "numpy==1.24.4"))
   # set the new python environment
   use_condaenv(file.path(getwd(), "env/"))
   print("conda environment created and activated")
