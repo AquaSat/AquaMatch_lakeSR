@@ -23,5 +23,5 @@ _targets/
 
 # bookdown images (these are duplicated in docs)
 bookdown/images/*
-bookdown/figure-html/*
+bookdown/AquaMatch_lakeSR_files/*
 
