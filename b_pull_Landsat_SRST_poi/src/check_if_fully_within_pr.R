@@ -46,7 +46,13 @@ check_if_fully_within_pr <- function(WRS_pathrow, locations, yml) {
   # in order to apply a buffer in sf, we need to convert to UTM, otherwise 
   # it's assumed to be decimal degrees
   # we'll use the WRS to calculate the appropriate UTM to use here.
-  wrs <- st_transform(one_PR, crs = "EPSG:4326")
+  
+  # just for kicks, make sure that the PR file is in EPSG:4326. It should be, 
+  # but this is our sanity check!
+  if (st_crs(one_PR) != "EPSG:4326") {
+    wrs <- st_transform(one_PR, crs = "EPSG:4326")
+  }
+  
   # get coordinates to calculate UTM zone. This is an adaptation of code from
   # Xiao Yang's code in EE - Yang, Xiao. (2020).
   coord_for_UTM <- wrs %>% st_coordinates()
