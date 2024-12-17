@@ -31,7 +31,9 @@ format_yaml <-  function(yml) {
   unnested <- unnested %>% 
     select(desc, param) %>% 
     pivot_wider(names_from = desc, values_from = param)
+  # save the file for python workflow
   write_csv(unnested, "b_pull_Landsat_SRST_poi/mid/yml.csv")
-  "b_pull_Landsat_SRST_poi/mid/yml.csv"
+  # return the formatted yml
+  unnested
 }
 
