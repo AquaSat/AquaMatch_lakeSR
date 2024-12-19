@@ -2,9 +2,10 @@ fig:NHDPlusV2-HUC4
 fig:v1-WI-lakes
 fig:v2-WI-lakes
 introduction
+background
 code-architecture
 locs-data-acq
-changes-from-aquasat-v1
+updates-in-aquasat-v2
 pole-of-inaccessibility
 waterbodies
 technical-implementation
@@ -17,7 +18,7 @@ gcloud-cli
 gee-authentication
 gee-project-setting
 LS-C2-SRST
-acronyms-and-landsat-jargon
+initialisms-and-landsat-jargon
 valid-dates
 spectral-response
 sensor-resolution
@@ -25,8 +26,8 @@ surface-reflectance-product
 sr-atmospheric-processing
 surface-temperature
 LS-SRST-pull
-changes-from-aquasat-v1-1
-overview-of-aqcuisition-steps
+changes-from-aquasat-v1-and-limnosat-us
+overview-of-acquisition-steps
 creating-a-custom-configuration-file
 technical-implementation-of-acquisition-script
 masking-functions

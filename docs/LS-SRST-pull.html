@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>5 Landsat Collection 2 SRST Data Product | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</title>
+  <title>6 Landsat Collection 2 SRST Data Product | AquaSat v2: lakeSR and siteSR</title>
   <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="5 Landsat Collection 2 SRST Data Product | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  <meta property="og:title" content="6 Landsat Collection 2 SRST Data Product | AquaSat v2: lakeSR and siteSR" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="5 Landsat Collection 2 SRST Data Product | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  <meta name="twitter:title" content="6 Landsat Collection 2 SRST Data Product | AquaSat v2: lakeSR and siteSR" />
   
   <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2024-12-17" />
+<meta name="date" content="2024-12-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -159,58 +159,59 @@ div.csl-indent {
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>2</b> Background</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#code-architecture"><i class="fa fa-check"></i><b>1.1</b> Code Architecture</a></li>
+<li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#code-architecture"><i class="fa fa-check"></i><b>2.1</b> Code Architecture</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>2</b> Locations of Data Acquisition</a>
+<li class="chapter" data-level="3" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>3</b> Locations of Data Acquisition</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#changes-from-aquasat-v1"><i class="fa fa-check"></i><b>2.1</b> Changes from AquaSat v1</a></li>
-<li class="chapter" data-level="2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>2.2</b> Pole of Inaccessibility</a></li>
-<li class="chapter" data-level="2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>2.3</b> Waterbodies in AquaMatch-lakeSR</a></li>
-<li class="chapter" data-level="2.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation"><i class="fa fa-check"></i><b>2.4</b> Technical Implementation</a></li>
-<li class="chapter" data-level="2.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>2.5</b> Case Study: Wisconsin Waterbodies</a></li>
+<li class="chapter" data-level="3.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.1</b> Updates in AquaSat v2</a></li>
+<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>3.2</b> Pole of Inaccessibility</a></li>
+<li class="chapter" data-level="3.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>3.3</b> Waterbodies in AquaMatch-lakeSR</a></li>
+<li class="chapter" data-level="3.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation"><i class="fa fa-check"></i><b>3.4</b> Technical Implementation</a></li>
+<li class="chapter" data-level="3.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>3</b> Satellite Data Acquisition Software and Settings</a>
+<li class="chapter" data-level="4" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>4</b> Satellite Data Acquisition Software and Settings</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="software-settings.html"><a href="software-settings.html#reticulate-conda-environment"><i class="fa fa-check"></i><b>3.1</b> {reticulate} Conda Environment</a></li>
-<li class="chapter" data-level="3.2" data-path="software-settings.html"><a href="software-settings.html#google-earth-engine-setup"><i class="fa fa-check"></i><b>3.2</b> Google Earth Engine Setup</a>
+<li class="chapter" data-level="4.1" data-path="software-settings.html"><a href="software-settings.html#reticulate-conda-environment"><i class="fa fa-check"></i><b>4.1</b> {reticulate} Conda Environment</a></li>
+<li class="chapter" data-level="4.2" data-path="software-settings.html"><a href="software-settings.html#google-earth-engine-setup"><i class="fa fa-check"></i><b>4.2</b> Google Earth Engine Setup</a>
 <ul>
-<li class="chapter" data-level="3.2.1" data-path="software-settings.html"><a href="software-settings.html#create-a-gee-account"><i class="fa fa-check"></i><b>3.2.1</b> Create a GEE account</a></li>
-<li class="chapter" data-level="3.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud-cli"><i class="fa fa-check"></i><b>3.2.2</b> gcloud CLI</a></li>
-<li class="chapter" data-level="3.2.3" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>3.2.3</b> GEE Authentication</a></li>
-<li class="chapter" data-level="3.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-project-setting"><i class="fa fa-check"></i><b>3.2.4</b> GEE project setting</a></li>
+<li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-a-gee-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
+<li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud-cli"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
+<li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>4.2.3</b> GEE Authentication</a></li>
+<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-project-setting"><i class="fa fa-check"></i><b>4.2.4</b> GEE project setting</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>4</b> Landsat Collection 2 SRST</a>
+<li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#acronyms-and-landsat-jargon"><i class="fa fa-check"></i><b>4.1</b> Acronyms and Landsat Jargon</a></li>
-<li class="chapter" data-level="4.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#valid-dates"><i class="fa fa-check"></i><b>4.2</b> Background Information</a>
+<li class="chapter" data-level="5.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#initialisms-and-landsat-jargon"><i class="fa fa-check"></i><b>5.1</b> Initialisms and Landsat Jargon</a></li>
+<li class="chapter" data-level="5.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#valid-dates"><i class="fa fa-check"></i><b>5.2</b> Background Information</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#spectral-response"><i class="fa fa-check"></i><b>4.2.1</b> Spectral Response</a></li>
-<li class="chapter" data-level="4.2.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#sensor-resolution"><i class="fa fa-check"></i><b>4.2.2</b> Sensor Resolution</a></li>
+<li class="chapter" data-level="5.2.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#spectral-response"><i class="fa fa-check"></i><b>5.2.1</b> Spectral Response</a></li>
+<li class="chapter" data-level="5.2.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#sensor-resolution"><i class="fa fa-check"></i><b>5.2.2</b> Sensor Resolution</a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#surface-reflectance-product"><i class="fa fa-check"></i><b>4.3</b> Surface Reflectance Product</a>
+<li class="chapter" data-level="5.3" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#surface-reflectance-product"><i class="fa fa-check"></i><b>5.3</b> Surface Reflectance Product</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#sr-atmospheric-processing"><i class="fa fa-check"></i><b>4.3.1</b> SR Atmospheric Processing</a></li>
+<li class="chapter" data-level="5.3.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#sr-atmospheric-processing"><i class="fa fa-check"></i><b>5.3.1</b> SR Atmospheric Processing</a></li>
 </ul></li>
-<li class="chapter" data-level="4.4" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#surface-temperature"><i class="fa fa-check"></i><b>4.4</b> Surface Temperature</a></li>
+<li class="chapter" data-level="5.4" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#surface-temperature"><i class="fa fa-check"></i><b>5.4</b> Surface Temperature</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST Data Product</a>
+<li class="chapter" data-level="6" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html"><i class="fa fa-check"></i><b>6</b> Landsat Collection 2 SRST Data Product</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#changes-from-aquasat-v1-1"><i class="fa fa-check"></i><b>5.1</b> Changes from AquaSat v1</a></li>
-<li class="chapter" data-level="5.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#overview-of-aqcuisition-steps"><i class="fa fa-check"></i><b>5.2</b> Overview of Aqcuisition Steps</a>
+<li class="chapter" data-level="6.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#changes-from-aquasat-v1-and-limnosat-us"><i class="fa fa-check"></i><b>6.1</b> Changes from AquaSat v1 and LimnoSat-US</a></li>
+<li class="chapter" data-level="6.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#overview-of-acquisition-steps"><i class="fa fa-check"></i><b>6.2</b> Overview of Acquisition Steps</a>
 <ul>
-<li class="chapter" data-level="5.2.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#creating-a-custom-configuration-file"><i class="fa fa-check"></i><b>5.2.1</b> Creating a Custom Configuration File</a></li>
+<li class="chapter" data-level="6.2.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#creating-a-custom-configuration-file"><i class="fa fa-check"></i><b>6.2.1</b> Creating a Custom Configuration File</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#technical-implementation-of-acquisition-script"><i class="fa fa-check"></i><b>5.3</b> Technical Implementation of Acquisition Script</a>
+<li class="chapter" data-level="6.3" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#technical-implementation-of-acquisition-script"><i class="fa fa-check"></i><b>6.3</b> Technical Implementation of Acquisition Script</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#masking-functions"><i class="fa fa-check"></i><b>5.3.1</b> Custom Earth Engine Masking Functions</a></li>
-<li class="chapter" data-level="5.3.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#dswe-implementation"><i class="fa fa-check"></i><b>5.3.2</b> Defining water area</a></li>
+<li class="chapter" data-level="6.3.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#masking-functions"><i class="fa fa-check"></i><b>6.3.1</b> Custom Earth Engine Masking Functions</a></li>
+<li class="chapter" data-level="6.3.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#dswe-implementation"><i class="fa fa-check"></i><b>6.3.2</b> Defining water area</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>5.4</b> Payload handling</a></li>
+<li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.4</b> Payload handling</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>6</b> References</a></li>
+<li class="chapter" data-level="7" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>7</b> References</a></li>
 </ul>
 
       </nav>
@@ -220,7 +221,7 @@ div.csl-indent {
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AquaSat v2: lakeSR and siteSR</a>
           </h1>
         </div>
 
@@ -228,22 +229,25 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="LS-SRST-pull" class="section level1 hasAnchor" number="5">
-<h1><span class="header-section-number">5</span> Landsat Collection 2 SRST Data Product<a href="LS-SRST-pull.html#LS-SRST-pull" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>The lakeSR data product is a set of tabular datasets, representing the surface
-reflectance (SR) and surface tempearture (ST) data summarized for the point of
-inaccessibility (POI) location which is meant to represent pelagic conditions at
-a given waterbody (identified by its NHD unique identifier, see Section
-<a href="locs-data-acq.html#locs-data-acq">2</a>). This data product contains “full stacks” of the Landsat
-Collection 2 record - that is, all summarized Landsat data available from all
-Landsat missions that met our QA criteria.</p>
-<div id="changes-from-aquasat-v1-1" class="section level2 hasAnchor" number="5.1">
-<h2><span class="header-section-number">5.1</span> Changes from AquaSat v1<a href="LS-SRST-pull.html#changes-from-aquasat-v1-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>While much of the general architecture in AquaSat v1 has remained unchanged, we
-have added a number of features to the lakeSR acquisition, have increased
-efficiency of the data pull, and have made the aquired data more robust through
-additional masking. The bullets below summarize the changes implemented in this
-update.</p>
+<div id="LS-SRST-pull" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">6</span> Landsat Collection 2 SRST Data Product<a href="LS-SRST-pull.html#LS-SRST-pull" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The lakeSR-Landsat data product is a set of tabular datasets, representing the
+Landsat surface reflectance (SR) and surface tempearture (ST) data summarized
+for the point of inaccessibility (POI) location which is meant to represent
+pelagic conditions at a given waterbody (identified by its NHD unique
+identifier, see Section <a href="locs-data-acq.html#locs-data-acq">3</a>). This data product contains “full
+stacks” of the Landsat Collection 2 record - that is, all summarized Landsat
+data available from all Landsat missions that met our QA criteria.</p>
+<p>The siteSR-Landsat data product is similar, but is acquired at unique sampling
+locations identified in Section INSERT REFERENCE TO FUTURE SECTION ABOUT
+COLLATING SITESR LOCS.</p>
+<div id="changes-from-aquasat-v1-and-limnosat-us" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Changes from AquaSat v1 and LimnoSat-US<a href="LS-SRST-pull.html#changes-from-aquasat-v1-and-limnosat-us" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>While much of the general architecture from the precedent data products remained
+unchanged, in AquaSat v2 have added a number of features to the remote sensing
+acquisition workflow, have increased efficiency of the data pull, and have made
+the acquired data more robust through additional masking. The bullets below
+summarize the changes implemented in this update.</p>
 <ul>
 <li><p>using yaml file for configuration of the workflow. This allows for greater
 flexibility in data acquisition including the use of custom configurations
@@ -254,17 +258,17 @@ locations and buffers that are at the edge of a path-row, assuring that the
 buffer distance and included area is consistent per location if it is in the
 area of path-row overlap.</p>
 <p>[[insert drawing of this]]</p></li>
-<li><p>inclusion of Landsat 4 and Landsat 9. At the time of the initial AquaSat,
-Landsat 4 was not easily integrated with other Landsat missions due to data
-storage differences <span class="citation">(<a href="#ref-ross2019">Ross et al. 2019</a>)</span>. Collection 2 updates allowed for easier
+<li><p>inclusion of Landsat 4 and Landsat 9. At the time of AquaSat v1 and
+LimnoSat-US, Landsat 4 was not easily integrated with other Landsat missions
+due to data storage differences. Collection 2 updates allowed for easier
 interoperability of the TM sensor (Landsat 4) image series and have
 therefore been included in the update. Additionally, Landsat 9 came online
 in 2021, and have been added to the data product.</p></li>
 <li><p>sending tasks to GEE explicitly per path-row and limiting the Landsat stack
 to the explicit path-row to eliminate duplicate acquisitions. In the
-previous version of AquaSat, we acquired duplicate location/path-row data
-because we did not limit the extracted Landsat stack to the explicit WRS
-path-row the point was in. This meant that locations that were in a path-row
+previous products, duplicate location/path-row data were acquired because
+the extracted Landsat stack was not limited to the explicit WRS path-row
+that the point was in. This meant that locations that were in a path-row
 overlap would be extracted twice in two different WRS path-row extents. The
 code below is an example of this type of filtering that occurs as we run a
 path-row extraction, where we once clipped the stack to the AOI of the
@@ -281,7 +285,7 @@ path-row.</p>
 <span id="cb1-10"><a href="LS-SRST-pull.html#cb1-10" tabindex="-1"></a>  .filterDate(<span class="st">&#39;1999-05-28&#39;</span>, <span class="st">&#39;2019-12-31&#39;</span>))</span></code></pre></div></li>
 <li><p>filtering for valid mission dates at Landsat stack step. As seen in the code
 chunk above, we also filter for the valid mission dates as detailed in
-Section <a href="LS-C2-SRST.html#valid-dates">4.2</a> - in the previous version this was completed
+Section <a href="LS-C2-SRST.html#valid-dates">5.2</a> - in the previous version this was completed
 after the Landsat stack was acquired.</p></li>
 <li><p>implementation of Collection 2 updates, specifically scaling changes and
 updated QA band conventions. The updated scaling factor function is as
@@ -301,12 +305,9 @@ follows as directed by the <span class="citation">US Geological Survey (<a href=
 <span id="cb2-13"><a href="LS-SRST-pull.html#cb2-13" tabindex="-1"></a>  <span class="cf">return</span> (image</span>
 <span id="cb2-14"><a href="LS-SRST-pull.html#cb2-14" tabindex="-1"></a>    .addBands(opticalBands, <span class="va">None</span>, <span class="va">True</span>)</span>
 <span id="cb2-15"><a href="LS-SRST-pull.html#cb2-15" tabindex="-1"></a>    .addBands(thermalBands, <span class="va">None</span>, <span class="va">True</span>))</span></code></pre></div></li>
-</ul>
-<!-- -->
-<ul>
 <li><p>masking changes. Many updates were made to assure high quality data through
 the use of updated masking procedures. The following masks were added in
-this workflow and are detailed below in Section <a href="LS-SRST-pull.html#masking-functions">5.3.1</a>:
+this workflow and are detailed below in Section <a href="LS-SRST-pull.html#masking-functions">6.3.1</a>:
 <code>apply_fill_mask_457</code>, <code>apply_fill_mask_89</code>, <code>apply_realistic_mask_457</code>,
 <code>apply_realistic_mask_89</code>, <code>apply_opac_mask</code> (Landsat 4, 5, 7 only),
 <code>apply_sr_aero_mask</code> (Landsat 8, 9 only). The cloud mask was also updated to
@@ -318,18 +319,17 @@ GEE extraction.</p></li>
 <li><p>DSWE implementation. We have moved from using the JRC Global Surface Water
 Mapping Layers <span class="citation">Pekel et al. (<a href="#ref-pekel2016">2016</a>)</span> to using the Dynamic Surface Water Extent
 algorithm to identify water pixels in a given Landsat image. See Section
-<a href="LS-SRST-pull.html#dswe-implementation">5.3.2</a> for details.</p></li>
-<li><p>removing no-data acquisitions before GEE export. In the AquaSat update, we
-remove any rows from the summarized GEE product before export. This adds
+<a href="LS-SRST-pull.html#dswe-implementation">6.3.2</a> for details.</p></li>
+<li><p>removing no-data acquisitions before GEE export. In the AquaSat v2 update,
+we remove any rows from the summarized GEE product before export. This adds
 efficiency to the pull by removing those rows before export, which is a
 source of added time in the GEE bottleneck.</p></li>
 <li><p>checking for failed tasks. We added a sanity check for failed tasks, since
-task status is not conveyed from GEE and was not implemented in the original
-AquaSat workflow.</p></li>
+task status is not conveyed from GEE.</p></li>
 </ul>
 </div>
-<div id="overview-of-aqcuisition-steps" class="section level2 hasAnchor" number="5.2">
-<h2><span class="header-section-number">5.2</span> Overview of Aqcuisition Steps<a href="LS-SRST-pull.html#overview-of-aqcuisition-steps" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="overview-of-acquisition-steps" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Overview of Acquisition Steps<a href="LS-SRST-pull.html#overview-of-acquisition-steps" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The workflow for data acquisition is as follows:</p>
 <ol style="list-style-type: decimal">
 <li><p>read in and format the yaml configuration file for the GEE run
@@ -348,8 +348,8 @@ easier processing in Python (<code>b_poi_locs_filtered</code>)</p></li>
 <li><p>check to see if any tasks failed in GEE extraction which is not visible from
 the RStudio IDE (<code>b_check_for_failed_tasks</code>)</p></li>
 </ol>
-<div id="creating-a-custom-configuration-file" class="section level3 hasAnchor" number="5.2.1">
-<h3><span class="header-section-number">5.2.1</span> Creating a Custom Configuration File<a href="LS-SRST-pull.html#creating-a-custom-configuration-file" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="creating-a-custom-configuration-file" class="section level3 hasAnchor" number="6.2.1">
+<h3><span class="header-section-number">6.2.1</span> Creating a Custom Configuration File<a href="LS-SRST-pull.html#creating-a-custom-configuration-file" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>lakeSR can be modified to be run by a user by setting up a new config file and
 altering the {targets} workflow to point to that config file. To configure a new
 run of this workflow, fill out the yaml file at the file path
@@ -371,24 +371,24 @@ statistics for intermission comparison and timeseries analysis. See <strong>SECT
 HAND-OFF COEFFICIENTS TO BE UPDATED!</strong> for additional guidance.</p>
 </div>
 </div>
-<div id="technical-implementation-of-acquisition-script" class="section level2 hasAnchor" number="5.3">
-<h2><span class="header-section-number">5.3</span> Technical Implementation of Acquisition Script<a href="LS-SRST-pull.html#technical-implementation-of-acquisition-script" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="technical-implementation-of-acquisition-script" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Technical Implementation of Acquisition Script<a href="LS-SRST-pull.html#technical-implementation-of-acquisition-script" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In order to cue Python scripts and map along WRS-2 path-rows within the
 {targets} architecture, we use a function <code>run_GEE_per_pathrow()</code> which writes
 the current WRS-2 path-row to a text file, then sources a python script that
 uses that text file to run the acquisition for the path-row. Additional details
 are provided below to describe the steps in the python script
 (<code>run_GEE_per_pathrow.py</code>).</p>
-<div id="masking-functions" class="section level3 hasAnchor" number="5.3.1">
-<h3><span class="header-section-number">5.3.1</span> Custom Earth Engine Masking Functions<a href="LS-SRST-pull.html#masking-functions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="masking-functions" class="section level3 hasAnchor" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> Custom Earth Engine Masking Functions<a href="LS-SRST-pull.html#masking-functions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The first section of <code>run_GEE_per_pathrow.py</code> saves custom functions used in the
 Landsat stack acquisition. These include data manipulation to create Earth
 Engine (EE) objects, custom QA masks, DSWE algorithm, and the functions that
 perform the masking and extraction of data from the Landsat image. Below is an
 overview of some of the custom masking procedures and their justification, if
-applicable. We use the most aggressive masking procedures in the lakeSR product
-in order to attempt to have consistent and robust data across such a large area
-of data acquisition.</p>
+applicable. We use the most aggressive masking procedures in the lakeSR and
+siteSR products in order to attempt to have consistent and robust data across
+such a large area of data acquisition.</p>
 <ul>
 <li><p><code>apply_rad_mask</code>: Masks out all pixels that are radiometrically saturated in
 any optical band using the QA_RADSAT QA band. The Landsat User Guides
@@ -440,8 +440,8 @@ reflectance values to be sure we do not remove very deep, oligotrophic
 and/or high DOC water systems from our data set.</p></li>
 </ul>
 </div>
-<div id="dswe-implementation" class="section level3 hasAnchor" number="5.3.2">
-<h3><span class="header-section-number">5.3.2</span> Defining water area<a href="LS-SRST-pull.html#dswe-implementation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="dswe-implementation" class="section level3 hasAnchor" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> Defining water area<a href="LS-SRST-pull.html#dswe-implementation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>We use the Dynamic Surface Water Extent (DSWE) algorithm to define what pixels
 are water within the buffer of our specific locations. DSWE was defined in
 <span class="citation">Jones (<a href="#ref-jones2019">2019</a>)</span> for Landsat Collection 1 and re-implemented for Collection 2 as a
@@ -454,9 +454,9 @@ in the following values per pixel:</p>
 <li><p>3 is high confidence partial water (or vegetated water)</p></li>
 <li><p>4 is low confidence partial water</p></li>
 </ul>
-<p>Within the scope of lakeSR, we tabulate pixels that are a DSWE value of 1
-(DSWE1) for high confidence open water, or what we call DSWE1a - high confidence
-open water OR the pixel meets a threshold that may indicate there is
+<p>Within the scope of lakeSR and siteSR, we tabulate pixels that are a DSWE value
+of 1 (DSWE1) for high confidence open water, or what we call DSWE1a - high
+confidence open water OR the pixel meets a threshold that may indicate there is
 surface-level algae. The algae mask is defined as when a pixel has a DSWE value
 greater than 1 and the green band scaled value is greater than 0.05 and the red
 band sclaed value is less than 0.04. These values are based on optical
@@ -465,13 +465,13 @@ described by <span class="citation">Burket, Olmanson, and Brezonik (<a href="#re
 and DSWE1a summaries within lakeSR. We have found some omission error within
 DSWE1 for visible floating scum within river systems and this additional mask
 captures many of those pixels without adding unnecessary uncertainty. Users of
-the lakeSR data product can choose to use the DSWE1a product if applicable to
-their research, however, this threshold was defined in the Illinois and Ohio
-Rivers and may not be applicable in all environments.</p>
+the lakeSR and siteSR data products can choose to use the DSWE1a product if
+applicable to their research, however, this threshold was defined in the
+Illinois and Ohio Rivers and may not be applicable in all environments.</p>
 </div>
 </div>
-<div id="payload-handling" class="section level2 hasAnchor" number="5.4">
-<h2><span class="header-section-number">5.4</span> Payload handling<a href="LS-SRST-pull.html#payload-handling" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="payload-handling" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> Payload handling<a href="LS-SRST-pull.html#payload-handling" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Because GEE is a free service to those at academic or governmental institutions,
 there are limits to the total number of tasks being run co-currently on GEE’s
 platform. For this reason, tasks are sent to GEE as path-row groups as soon as
@@ -498,9 +498,6 @@ Jones, John W. 2019. <span>“Improved Automated Detection of Subpixel-Scale Inu
 </div>
 <div id="ref-pekel2016" class="csl-entry">
 Pekel, Jean-François, Andrew Cottam, Noel Gorelick, and Alan S. Belward. 2016. <span>“High-resolution mapping of global surface water and its long-term changes.”</span> <em>Nature</em> 540 (7633): 418–22. <a href="https://doi.org/10.1038/nature20584">https://doi.org/10.1038/nature20584</a>.
-</div>
-<div id="ref-ross2019" class="csl-entry">
-Ross, Matthew R. V., Simon N. Topp, Alison P. Appling, Xiao Yang, Catherine Kuhn, David Butman, Marc Simard, and Tamlin M. Pavelsky. 2019. <span>“AquaSat: A Data Set to Enable Remote Sensing of Water Quality for Inland Waters.”</span> <em>Water Resources Research</em> 55 (11): 10012–25. <a href="https://doi.org/10.1029/2019WR024883">https://doi.org/10.1029/2019WR024883</a>.
 </div>
 <div id="ref-usgs-ls47user" class="csl-entry">
 US Geological Survey. 2021. <span>“Landsat 4-7 Collection 2 (C2) Level 2 Science Product (L2SP) Guide.”</span> <a href="https://www.usgs.gov/media/files/landsat-4-7-collection-2-level-2-science-product-guide">https://www.usgs.gov/media/files/landsat-4-7-collection-2-level-2-science-product-guide</a>.

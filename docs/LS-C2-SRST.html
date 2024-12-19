@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>4 Landsat Collection 2 SRST | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</title>
+  <title>5 Landsat Collection 2 SRST | AquaSat v2: lakeSR and siteSR</title>
   <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="4 Landsat Collection 2 SRST | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  <meta property="og:title" content="5 Landsat Collection 2 SRST | AquaSat v2: lakeSR and siteSR" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="4 Landsat Collection 2 SRST | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  <meta name="twitter:title" content="5 Landsat Collection 2 SRST | AquaSat v2: lakeSR and siteSR" />
   
   <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2024-12-17" />
+<meta name="date" content="2024-12-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -159,58 +159,59 @@ div.csl-indent {
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>2</b> Background</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#code-architecture"><i class="fa fa-check"></i><b>1.1</b> Code Architecture</a></li>
+<li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#code-architecture"><i class="fa fa-check"></i><b>2.1</b> Code Architecture</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>2</b> Locations of Data Acquisition</a>
+<li class="chapter" data-level="3" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>3</b> Locations of Data Acquisition</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#changes-from-aquasat-v1"><i class="fa fa-check"></i><b>2.1</b> Changes from AquaSat v1</a></li>
-<li class="chapter" data-level="2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>2.2</b> Pole of Inaccessibility</a></li>
-<li class="chapter" data-level="2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>2.3</b> Waterbodies in AquaMatch-lakeSR</a></li>
-<li class="chapter" data-level="2.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation"><i class="fa fa-check"></i><b>2.4</b> Technical Implementation</a></li>
-<li class="chapter" data-level="2.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>2.5</b> Case Study: Wisconsin Waterbodies</a></li>
+<li class="chapter" data-level="3.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.1</b> Updates in AquaSat v2</a></li>
+<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>3.2</b> Pole of Inaccessibility</a></li>
+<li class="chapter" data-level="3.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>3.3</b> Waterbodies in AquaMatch-lakeSR</a></li>
+<li class="chapter" data-level="3.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation"><i class="fa fa-check"></i><b>3.4</b> Technical Implementation</a></li>
+<li class="chapter" data-level="3.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>3</b> Satellite Data Acquisition Software and Settings</a>
+<li class="chapter" data-level="4" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>4</b> Satellite Data Acquisition Software and Settings</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="software-settings.html"><a href="software-settings.html#reticulate-conda-environment"><i class="fa fa-check"></i><b>3.1</b> {reticulate} Conda Environment</a></li>
-<li class="chapter" data-level="3.2" data-path="software-settings.html"><a href="software-settings.html#google-earth-engine-setup"><i class="fa fa-check"></i><b>3.2</b> Google Earth Engine Setup</a>
+<li class="chapter" data-level="4.1" data-path="software-settings.html"><a href="software-settings.html#reticulate-conda-environment"><i class="fa fa-check"></i><b>4.1</b> {reticulate} Conda Environment</a></li>
+<li class="chapter" data-level="4.2" data-path="software-settings.html"><a href="software-settings.html#google-earth-engine-setup"><i class="fa fa-check"></i><b>4.2</b> Google Earth Engine Setup</a>
 <ul>
-<li class="chapter" data-level="3.2.1" data-path="software-settings.html"><a href="software-settings.html#create-a-gee-account"><i class="fa fa-check"></i><b>3.2.1</b> Create a GEE account</a></li>
-<li class="chapter" data-level="3.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud-cli"><i class="fa fa-check"></i><b>3.2.2</b> gcloud CLI</a></li>
-<li class="chapter" data-level="3.2.3" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>3.2.3</b> GEE Authentication</a></li>
-<li class="chapter" data-level="3.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-project-setting"><i class="fa fa-check"></i><b>3.2.4</b> GEE project setting</a></li>
+<li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-a-gee-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
+<li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud-cli"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
+<li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>4.2.3</b> GEE Authentication</a></li>
+<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-project-setting"><i class="fa fa-check"></i><b>4.2.4</b> GEE project setting</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>4</b> Landsat Collection 2 SRST</a>
+<li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#acronyms-and-landsat-jargon"><i class="fa fa-check"></i><b>4.1</b> Acronyms and Landsat Jargon</a></li>
-<li class="chapter" data-level="4.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#valid-dates"><i class="fa fa-check"></i><b>4.2</b> Background Information</a>
+<li class="chapter" data-level="5.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#initialisms-and-landsat-jargon"><i class="fa fa-check"></i><b>5.1</b> Initialisms and Landsat Jargon</a></li>
+<li class="chapter" data-level="5.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#valid-dates"><i class="fa fa-check"></i><b>5.2</b> Background Information</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#spectral-response"><i class="fa fa-check"></i><b>4.2.1</b> Spectral Response</a></li>
-<li class="chapter" data-level="4.2.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#sensor-resolution"><i class="fa fa-check"></i><b>4.2.2</b> Sensor Resolution</a></li>
+<li class="chapter" data-level="5.2.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#spectral-response"><i class="fa fa-check"></i><b>5.2.1</b> Spectral Response</a></li>
+<li class="chapter" data-level="5.2.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#sensor-resolution"><i class="fa fa-check"></i><b>5.2.2</b> Sensor Resolution</a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#surface-reflectance-product"><i class="fa fa-check"></i><b>4.3</b> Surface Reflectance Product</a>
+<li class="chapter" data-level="5.3" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#surface-reflectance-product"><i class="fa fa-check"></i><b>5.3</b> Surface Reflectance Product</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#sr-atmospheric-processing"><i class="fa fa-check"></i><b>4.3.1</b> SR Atmospheric Processing</a></li>
+<li class="chapter" data-level="5.3.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#sr-atmospheric-processing"><i class="fa fa-check"></i><b>5.3.1</b> SR Atmospheric Processing</a></li>
 </ul></li>
-<li class="chapter" data-level="4.4" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#surface-temperature"><i class="fa fa-check"></i><b>4.4</b> Surface Temperature</a></li>
+<li class="chapter" data-level="5.4" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#surface-temperature"><i class="fa fa-check"></i><b>5.4</b> Surface Temperature</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST Data Product</a>
+<li class="chapter" data-level="6" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html"><i class="fa fa-check"></i><b>6</b> Landsat Collection 2 SRST Data Product</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#changes-from-aquasat-v1-1"><i class="fa fa-check"></i><b>5.1</b> Changes from AquaSat v1</a></li>
-<li class="chapter" data-level="5.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#overview-of-aqcuisition-steps"><i class="fa fa-check"></i><b>5.2</b> Overview of Aqcuisition Steps</a>
+<li class="chapter" data-level="6.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#changes-from-aquasat-v1-and-limnosat-us"><i class="fa fa-check"></i><b>6.1</b> Changes from AquaSat v1 and LimnoSat-US</a></li>
+<li class="chapter" data-level="6.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#overview-of-acquisition-steps"><i class="fa fa-check"></i><b>6.2</b> Overview of Acquisition Steps</a>
 <ul>
-<li class="chapter" data-level="5.2.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#creating-a-custom-configuration-file"><i class="fa fa-check"></i><b>5.2.1</b> Creating a Custom Configuration File</a></li>
+<li class="chapter" data-level="6.2.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#creating-a-custom-configuration-file"><i class="fa fa-check"></i><b>6.2.1</b> Creating a Custom Configuration File</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#technical-implementation-of-acquisition-script"><i class="fa fa-check"></i><b>5.3</b> Technical Implementation of Acquisition Script</a>
+<li class="chapter" data-level="6.3" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#technical-implementation-of-acquisition-script"><i class="fa fa-check"></i><b>6.3</b> Technical Implementation of Acquisition Script</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#masking-functions"><i class="fa fa-check"></i><b>5.3.1</b> Custom Earth Engine Masking Functions</a></li>
-<li class="chapter" data-level="5.3.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#dswe-implementation"><i class="fa fa-check"></i><b>5.3.2</b> Defining water area</a></li>
+<li class="chapter" data-level="6.3.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#masking-functions"><i class="fa fa-check"></i><b>6.3.1</b> Custom Earth Engine Masking Functions</a></li>
+<li class="chapter" data-level="6.3.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#dswe-implementation"><i class="fa fa-check"></i><b>6.3.2</b> Defining water area</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>5.4</b> Payload handling</a></li>
+<li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.4</b> Payload handling</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>6</b> References</a></li>
+<li class="chapter" data-level="7" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>7</b> References</a></li>
 </ul>
 
       </nav>
@@ -220,7 +221,7 @@ div.csl-indent {
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AquaSat v2: lakeSR and siteSR</a>
           </h1>
         </div>
 
@@ -228,10 +229,10 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="LS-C2-SRST" class="section level1 hasAnchor" number="4">
-<h1><span class="header-section-number">4</span> Landsat Collection 2 SRST<a href="LS-C2-SRST.html#LS-C2-SRST" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="acronyms-and-landsat-jargon" class="section level2 hasAnchor" number="4.1">
-<h2><span class="header-section-number">4.1</span> Acronyms and Landsat Jargon<a href="LS-C2-SRST.html#acronyms-and-landsat-jargon" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="LS-C2-SRST" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">5</span> Landsat Collection 2 SRST<a href="LS-C2-SRST.html#LS-C2-SRST" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="initialisms-and-landsat-jargon" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Initialisms and Landsat Jargon<a href="LS-C2-SRST.html#initialisms-and-landsat-jargon" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><em>SR</em>: surface reflectance</p>
 <p><em>ST</em>: surface temperature</p>
 <p><em>Collection 2 (C2)</em>: The second version of the Landsat record - the transition
@@ -239,22 +240,24 @@ to C2 began in 2020. There were extensive changes to the data storage and
 metadata when moving from Collection 1 to C2. An overview of the differences is
 available as a PDF download
 <a href="https://www.usgs.gov/media/files/landsat-collection-1-vs-collection-2-summary">here</a>
-from the USGS.</p>
+from the USGS. AquaSat v1 and LimnoSat-US were based on Collection 1 data, which
+are no longer available from the USGS and have been superseded by Collection 2
+data.</p>
 <p><em>Data Tier</em>: a data tier for Landsat refers to data quality and processing.
 lakeSR uses Tier 1 data exclusively which conform to the highest level of data
 quality. To learn more about Landsat tiers, see <a href="https://www.usgs.gov/media/videos/landsat-collections-what-are-tiers">this video from the
 USGS</a>.</p>
-<p><em>Data Processing Level</em>: a data processing level for Landsat refers to how much
-the data have been processed. Level 1 (top of atmosphere) is less processed than
-Level 2 (surface reflectance). lakeSR uses Level 2 data exclusively, as it has
-gone through a standard atmospheric correction process that attempts to
-standardize data handling through out the Landsat record - it is <em>derived</em> from
-Level 1 data. NASA has compiled <a href="https://www.earthdata.nasa.gov/learn/earth-observation-data-basics/data-processing-levels">a list of general data processing levels and
-descriptions
+<p><em>Data Processing Level (Level)</em>: a data processing level for Landsat refers to
+how much the data have been processed. Level 1 (top of atmosphere) is less
+processed than Level 2 (surface reflectance). lakeSR uses Level 2 data
+exclusively, as it has gone through a standard atmospheric correction process
+that attempts to standardize data handling through out the Landsat record - it
+is <em>derived</em> from Level 1 data. NASA has compiled <a href="https://www.earthdata.nasa.gov/learn/earth-observation-data-basics/data-processing-levels">a list of general data
+processing levels and descriptions
 here</a>.</p>
 </div>
-<div id="valid-dates" class="section level2 hasAnchor" number="4.2">
-<h2><span class="header-section-number">4.2</span> Background Information<a href="LS-C2-SRST.html#valid-dates" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="valid-dates" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Background Information<a href="LS-C2-SRST.html#valid-dates" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><em>The information presented in this section originates from the <a href="https://landsat.gsfc.nasa.gov/">NASA Landsat
 Science website</a> and has been summarized here
 for the purpose of providing background information about the Landsat archive
@@ -263,16 +266,17 @@ relevant to the creation and use of lakeSR.</em></p>
 Landsat missions 4 through 9 and spans more than 40 years.</p>
 <table style="width:97%;">
 <colgroup>
-<col width="27%" />
-<col width="23%" />
-<col width="23%" />
-<col width="23%" />
+<col width="35%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th>Mission</th>
+<th>Mission and Sensor</th>
 <th align="center">Launch Date</th>
-<th align="center">End of Science
+<th align="center">End of
+Science
 Mission</th>
 <th align="center">Decommission
 Date</th>
@@ -280,44 +284,32 @@ Date</th>
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="h%20ttps://%2%200lands%20%20a%20t.%20g%2%20%200%20sfc%2%200.na%20s%20a.go%20%20v/s%20at%20%2%200e%20llites/landsat-4/">Landsat 4
-TM</a>
-<span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
+<td>Landsat 4 TM <span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
 <td align="center">1982-07-16</td>
 <td align="center">1993-12-14</td>
 <td align="center">2001-06-15</td>
 </tr>
 <tr class="even">
-<td><a href="h%20ttps://%2%200lands%20%20a%20t.%20g%2%20%200%20sfc%2%200.na%20s%20a.go%20%20v/s%20at%20%2%200e%20llites/landsat-5/">Landsat 5
-TM</a>
-<span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
+<td>Landsat 5 TM <span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
 <td align="center">1984-03-01</td>
 <td align="center">2011-11-18</td>
 <td align="center">2013-06-05</td>
 </tr>
 <tr class="odd">
-<td><a href="h%20ttps://%2%200lands%20%20a%20t.%20g%2%20%200%20sfc%2%200.na%20s%20a.go%20%20v/s%20at%20%2%200e%20llites/landsat-7/">Landsat 7
-E
-TM+</a>
-<span class="citation">(<a href="#ref-eros-7">EROS Center 2020b</a>)</span></td>
+<td>Landsat 7 ETM+ <span class="citation">(<a href="#ref-eros-7">EROS Center 2020b</a>)</span></td>
 <td align="center">1999-04-15</td>
 <td align="center">2022-04-06</td>
 <td align="center">N/A</td>
 </tr>
 <tr class="even">
-<td><a href="h%20ttps://%2%200lands%20%20a%20t.%20g%2%20%200%20sfc%2%200.na%20s%20a.go%20%20v/s%20at%20%2%200e%20llites/landsat-8/">Landsat 8 OLI/
-T
-IRS</a>
+<td>Landsat 8 OLI/TIRS
 <span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
 <td align="center">2013-02-11</td>
 <td align="center">N/A</td>
 <td align="center">N/A</td>
 </tr>
 <tr class="odd">
-<td><a href="h%20ttps://%2%200lands%20%20a%20t.%20g%2%20%200%20sfc%2%200.na%20s%20a.go%20%20v/s%20at%20%2%200e%20llites/landsat-9/">Landsat 9
-OLI-2/TI
-R
-S-2</a>
+<td>Landsat 9 OLI-2/TIRS-2
 <span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
 <td align="center">2021-09-27</td>
 <td align="center">N/A</td>
@@ -328,8 +320,8 @@ S-2</a>
 <p>The image record for Landsat 4 is not consistent nor robust due to a data
 transmitter failure early in service, however our pipeline acquires data as
 available. Landsat 6 did not achieve orbit.</p>
-<p>For the purposes of lakeSR, we truncate the data record for Landsat 4 and 5 at
-the end of the Science Mission of the satellite. No corrections were made for
+<p>For the purposes of AquaSat v2, we truncate the data record for Landsat 4 and 5
+at the end of the Science Mission of the satellite. No corrections were made for
 the Landsat 7 scanline error that began on May 31, 2003, data were collected as
 available despite the scanline error since the data are still of acceptable
 quality <a href="https://www.usgs.gov/faqs/what-landsat-7-etm-slc-data">per the USGS</a>.
@@ -339,8 +331,8 @@ growing uncertainties over time as the drift increased <span class="citation">(<
 <span class="citation">(<a href="#ref-qiu2021">2021</a>)</span> suggests that data are not robust enough for trend analysis after
 the start of the growing season in 2020, but because their analysis was of NDVI,
 we conservatively truncate the data at the end of 2019.</p>
-<div id="spectral-response" class="section level3 hasAnchor" number="4.2.1">
-<h3><span class="header-section-number">4.2.1</span> Spectral Response<a href="LS-C2-SRST.html#spectral-response" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="spectral-response" class="section level3 hasAnchor" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> Spectral Response<a href="LS-C2-SRST.html#spectral-response" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>While the nominal bands for each of the missions within the archive are
 relatively consistent (with the addition of an Aerosol band beginning Landsat
 8), the precise spectral response for each nominal band shifted beginning with
@@ -348,11 +340,11 @@ Landsat 8 OLI/TIRS. The image below visualizes the spectral response throughout
 the Landsat archive.</p>
 <p><a href="https://landsat.gsfc.nasa.gov/article/the-intervening-atmosphere-tracing-the-provenance-of-a-favorite-landsat-infographic/"><img src="images/Landsat-SpectralBands.png" alt="Image credit: L. Rocchio and J. Barsi; NASA" /></a></p>
 </div>
-<div id="sensor-resolution" class="section level3 hasAnchor" number="4.2.2">
-<h3><span class="header-section-number">4.2.2</span> Sensor Resolution<a href="LS-C2-SRST.html#sensor-resolution" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>The spatial resolution of the Level 1 data has not changed for optical bands
-over time (Aerosol, RGB, NIR, SWIR) but has varied over the historic record for
-thermal data:</p>
+<div id="sensor-resolution" class="section level3 hasAnchor" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> Sensor Resolution<a href="LS-C2-SRST.html#sensor-resolution" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The spatial resolution of the Level 1 data that the SR and ST products are
+derived from has not changed for optical bands over time (Aerosol, RGB, NIR,
+SWIR) but has varied over the historic record for thermal data:</p>
 <table style="width:99%;">
 <colgroup>
 <col width="32%" />
@@ -396,8 +388,8 @@ measurement in a given band. All Collection 2 Level 2 Surface Reflectance and
 Surface Temperature data have been rescaled to 16 bits.</p>
 </div>
 </div>
-<div id="surface-reflectance-product" class="section level2 hasAnchor" number="4.3">
-<h2><span class="header-section-number">4.3</span> Surface Reflectance Product<a href="LS-C2-SRST.html#surface-reflectance-product" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="surface-reflectance-product" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> Surface Reflectance Product<a href="LS-C2-SRST.html#surface-reflectance-product" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><em>The information presented in this section originates from the <a href="https://www.usgs.gov/landsat-missions/landsat-surface-reflectance">USGS Landsat
 Collection 2 Surface
 Reflectance</a>
@@ -416,8 +408,8 @@ surface change. Surface reflectance is generated from Level-1 inputs that meet
 the &lt;76 degrees Solar Zenith Angle constraint and include the required
 auxiliary data inputs to generate a scientifically viable product.</em></p>
 </blockquote>
-<div id="sr-atmospheric-processing" class="section level3 hasAnchor" number="4.3.1">
-<h3><span class="header-section-number">4.3.1</span> SR Atmospheric Processing<a href="LS-C2-SRST.html#sr-atmospheric-processing" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="sr-atmospheric-processing" class="section level3 hasAnchor" number="5.3.1">
+<h3><span class="header-section-number">5.3.1</span> SR Atmospheric Processing<a href="LS-C2-SRST.html#sr-atmospheric-processing" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The SR product for Landsat 4-7 is calculated using the Land Ecosystem
 Distrubance Adaptive Procesing System (LEDAPS) <span class="citation">(<a href="#ref-schmidt2013">Schmidt et al. 2013</a>)</span> and Landsat 8 and
 9 SR data are calculated using the Land Surface Reflectance Code (LaSRC)
@@ -429,8 +421,8 @@ website</a>
 for details.</p>
 </div>
 </div>
-<div id="surface-temperature" class="section level2 hasAnchor" number="4.4">
-<h2><span class="header-section-number">4.4</span> Surface Temperature<a href="LS-C2-SRST.html#surface-temperature" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="surface-temperature" class="section level2 hasAnchor" number="5.4">
+<h2><span class="header-section-number">5.4</span> Surface Temperature<a href="LS-C2-SRST.html#surface-temperature" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><em>The information presented in this section originates from the <a href="https://www.usgs.gov/landsat-missions/landsat-collection-2-surface-temperature">USGS Landsat
 Collection 2 Surface
 Temperature</a>

@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3 Satellite Data Acquisition Software and Settings | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</title>
+  <title>4 Satellite Data Acquisition Software and Settings | AquaSat v2: lakeSR and siteSR</title>
   <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3 Satellite Data Acquisition Software and Settings | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  <meta property="og:title" content="4 Satellite Data Acquisition Software and Settings | AquaSat v2: lakeSR and siteSR" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3 Satellite Data Acquisition Software and Settings | lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories" />
+  <meta name="twitter:title" content="4 Satellite Data Acquisition Software and Settings | AquaSat v2: lakeSR and siteSR" />
   
   <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2024-12-17" />
+<meta name="date" content="2024-12-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -159,58 +159,59 @@ div.csl-indent {
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>2</b> Background</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#code-architecture"><i class="fa fa-check"></i><b>1.1</b> Code Architecture</a></li>
+<li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#code-architecture"><i class="fa fa-check"></i><b>2.1</b> Code Architecture</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>2</b> Locations of Data Acquisition</a>
+<li class="chapter" data-level="3" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>3</b> Locations of Data Acquisition</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#changes-from-aquasat-v1"><i class="fa fa-check"></i><b>2.1</b> Changes from AquaSat v1</a></li>
-<li class="chapter" data-level="2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>2.2</b> Pole of Inaccessibility</a></li>
-<li class="chapter" data-level="2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>2.3</b> Waterbodies in AquaMatch-lakeSR</a></li>
-<li class="chapter" data-level="2.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation"><i class="fa fa-check"></i><b>2.4</b> Technical Implementation</a></li>
-<li class="chapter" data-level="2.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>2.5</b> Case Study: Wisconsin Waterbodies</a></li>
+<li class="chapter" data-level="3.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.1</b> Updates in AquaSat v2</a></li>
+<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>3.2</b> Pole of Inaccessibility</a></li>
+<li class="chapter" data-level="3.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>3.3</b> Waterbodies in AquaMatch-lakeSR</a></li>
+<li class="chapter" data-level="3.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation"><i class="fa fa-check"></i><b>3.4</b> Technical Implementation</a></li>
+<li class="chapter" data-level="3.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>3</b> Satellite Data Acquisition Software and Settings</a>
+<li class="chapter" data-level="4" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>4</b> Satellite Data Acquisition Software and Settings</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="software-settings.html"><a href="software-settings.html#reticulate-conda-environment"><i class="fa fa-check"></i><b>3.1</b> {reticulate} Conda Environment</a></li>
-<li class="chapter" data-level="3.2" data-path="software-settings.html"><a href="software-settings.html#google-earth-engine-setup"><i class="fa fa-check"></i><b>3.2</b> Google Earth Engine Setup</a>
+<li class="chapter" data-level="4.1" data-path="software-settings.html"><a href="software-settings.html#reticulate-conda-environment"><i class="fa fa-check"></i><b>4.1</b> {reticulate} Conda Environment</a></li>
+<li class="chapter" data-level="4.2" data-path="software-settings.html"><a href="software-settings.html#google-earth-engine-setup"><i class="fa fa-check"></i><b>4.2</b> Google Earth Engine Setup</a>
 <ul>
-<li class="chapter" data-level="3.2.1" data-path="software-settings.html"><a href="software-settings.html#create-a-gee-account"><i class="fa fa-check"></i><b>3.2.1</b> Create a GEE account</a></li>
-<li class="chapter" data-level="3.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud-cli"><i class="fa fa-check"></i><b>3.2.2</b> gcloud CLI</a></li>
-<li class="chapter" data-level="3.2.3" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>3.2.3</b> GEE Authentication</a></li>
-<li class="chapter" data-level="3.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-project-setting"><i class="fa fa-check"></i><b>3.2.4</b> GEE project setting</a></li>
+<li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-a-gee-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
+<li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud-cli"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
+<li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>4.2.3</b> GEE Authentication</a></li>
+<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-project-setting"><i class="fa fa-check"></i><b>4.2.4</b> GEE project setting</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>4</b> Landsat Collection 2 SRST</a>
+<li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#acronyms-and-landsat-jargon"><i class="fa fa-check"></i><b>4.1</b> Acronyms and Landsat Jargon</a></li>
-<li class="chapter" data-level="4.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#valid-dates"><i class="fa fa-check"></i><b>4.2</b> Background Information</a>
+<li class="chapter" data-level="5.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#initialisms-and-landsat-jargon"><i class="fa fa-check"></i><b>5.1</b> Initialisms and Landsat Jargon</a></li>
+<li class="chapter" data-level="5.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#valid-dates"><i class="fa fa-check"></i><b>5.2</b> Background Information</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#spectral-response"><i class="fa fa-check"></i><b>4.2.1</b> Spectral Response</a></li>
-<li class="chapter" data-level="4.2.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#sensor-resolution"><i class="fa fa-check"></i><b>4.2.2</b> Sensor Resolution</a></li>
+<li class="chapter" data-level="5.2.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#spectral-response"><i class="fa fa-check"></i><b>5.2.1</b> Spectral Response</a></li>
+<li class="chapter" data-level="5.2.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#sensor-resolution"><i class="fa fa-check"></i><b>5.2.2</b> Sensor Resolution</a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#surface-reflectance-product"><i class="fa fa-check"></i><b>4.3</b> Surface Reflectance Product</a>
+<li class="chapter" data-level="5.3" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#surface-reflectance-product"><i class="fa fa-check"></i><b>5.3</b> Surface Reflectance Product</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#sr-atmospheric-processing"><i class="fa fa-check"></i><b>4.3.1</b> SR Atmospheric Processing</a></li>
+<li class="chapter" data-level="5.3.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#sr-atmospheric-processing"><i class="fa fa-check"></i><b>5.3.1</b> SR Atmospheric Processing</a></li>
 </ul></li>
-<li class="chapter" data-level="4.4" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#surface-temperature"><i class="fa fa-check"></i><b>4.4</b> Surface Temperature</a></li>
+<li class="chapter" data-level="5.4" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#surface-temperature"><i class="fa fa-check"></i><b>5.4</b> Surface Temperature</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST Data Product</a>
+<li class="chapter" data-level="6" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html"><i class="fa fa-check"></i><b>6</b> Landsat Collection 2 SRST Data Product</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#changes-from-aquasat-v1-1"><i class="fa fa-check"></i><b>5.1</b> Changes from AquaSat v1</a></li>
-<li class="chapter" data-level="5.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#overview-of-aqcuisition-steps"><i class="fa fa-check"></i><b>5.2</b> Overview of Aqcuisition Steps</a>
+<li class="chapter" data-level="6.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#changes-from-aquasat-v1-and-limnosat-us"><i class="fa fa-check"></i><b>6.1</b> Changes from AquaSat v1 and LimnoSat-US</a></li>
+<li class="chapter" data-level="6.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#overview-of-acquisition-steps"><i class="fa fa-check"></i><b>6.2</b> Overview of Acquisition Steps</a>
 <ul>
-<li class="chapter" data-level="5.2.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#creating-a-custom-configuration-file"><i class="fa fa-check"></i><b>5.2.1</b> Creating a Custom Configuration File</a></li>
+<li class="chapter" data-level="6.2.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#creating-a-custom-configuration-file"><i class="fa fa-check"></i><b>6.2.1</b> Creating a Custom Configuration File</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#technical-implementation-of-acquisition-script"><i class="fa fa-check"></i><b>5.3</b> Technical Implementation of Acquisition Script</a>
+<li class="chapter" data-level="6.3" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#technical-implementation-of-acquisition-script"><i class="fa fa-check"></i><b>6.3</b> Technical Implementation of Acquisition Script</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#masking-functions"><i class="fa fa-check"></i><b>5.3.1</b> Custom Earth Engine Masking Functions</a></li>
-<li class="chapter" data-level="5.3.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#dswe-implementation"><i class="fa fa-check"></i><b>5.3.2</b> Defining water area</a></li>
+<li class="chapter" data-level="6.3.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#masking-functions"><i class="fa fa-check"></i><b>6.3.1</b> Custom Earth Engine Masking Functions</a></li>
+<li class="chapter" data-level="6.3.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#dswe-implementation"><i class="fa fa-check"></i><b>6.3.2</b> Defining water area</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>5.4</b> Payload handling</a></li>
+<li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.4</b> Payload handling</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>6</b> References</a></li>
+<li class="chapter" data-level="7" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>7</b> References</a></li>
 </ul>
 
       </nav>
@@ -220,7 +221,7 @@ div.csl-indent {
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AquaSat v2: lakeSR and siteSR</a>
           </h1>
         </div>
 
@@ -228,22 +229,20 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="software-settings" class="section level1 hasAnchor" number="3">
-<h1><span class="header-section-number">3</span> Satellite Data Acquisition Software and Settings<a href="software-settings.html#software-settings" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>Currently, all satellite data in AquaSat are obtained using the Python API for
-Google Earth Engine (GEE) <span class="citation">(<a href="#ref-gorelick2017">Gorelick et al. 2017</a>)</span>. While the orchestration of data
+<div id="software-settings" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">4</span> Satellite Data Acquisition Software and Settings<a href="software-settings.html#software-settings" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Currently, all satellite data in AquaSat v2 are obtained using the Python API
+for Google Earth Engine (GEE) <span class="citation">(<a href="#ref-gorelick2017">Gorelick et al. 2017</a>)</span>. While the orchestration of data
 acquisition is performed by the {targets} workflow, all code directly related to
 GEE data acquisition is written in Python.</p>
-<div id="reticulate-conda-environment" class="section level2 hasAnchor" number="3.1">
-<h2><span class="header-section-number">3.1</span> {reticulate} Conda Environment<a href="software-settings.html#reticulate-conda-environment" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="reticulate-conda-environment" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> {reticulate} Conda Environment<a href="software-settings.html#reticulate-conda-environment" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>RStudio <span class="citation">(<a href="#ref-positteam2023">Posit team 2023</a>)</span> is an IDE that, alongside the {reticulate} package
 <span class="citation">(<a href="#ref-ushey2023">Ushey, Allaire, and Tang 2023</a>)</span>, facilitates integration of R and Python code within the same
-environment. In lakeSR, we use <a href="https://github.com/AquaSat/lakeSR/blob/main/python/pySetup.R">a singular R
+environment. In AquaSat v2, we use <a href="https://github.com/AquaSat/lakeSR/blob/main/python/pySetup.R">a singular R
 script</a> to set up
 a {reticulate} Conda environment that is invoked at the beginning of a {targets}
-run (lines 8-12 of the
-<a href="https://github.com/AquaSat/lakeSR/blob/main/_targets.R">_targets.R</a> file) to
-be sure that our Python code runs consistently.</p>
+run to be sure that our Python code runs consistently.</p>
 <table>
 <caption>Python and python module</caption>
 <colgroup>
@@ -253,7 +252,7 @@ be sure that our Python code runs consistently.</p>
 </colgroup>
 <thead>
 <tr class="header">
-<th>Software/Py Module</th>
+<th>Software/Python Module</th>
 <th align="center">version</th>
 <th>citation</th>
 </tr>
@@ -295,38 +294,39 @@ be sure that our Python code runs consistently.</p>
 authenticate your GEE user. These steps should be run prior to running the
 pipeline to assure a smooth run of the workflow.</p>
 </div>
-<div id="google-earth-engine-setup" class="section level2 hasAnchor" number="3.2">
-<h2><span class="header-section-number">3.2</span> Google Earth Engine Setup<a href="software-settings.html#google-earth-engine-setup" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div id="create-a-gee-account" class="section level3 hasAnchor" number="3.2.1">
-<h3><span class="header-section-number">3.2.1</span> Create a GEE account<a href="software-settings.html#create-a-gee-account" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="google-earth-engine-setup" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Google Earth Engine Setup<a href="software-settings.html#google-earth-engine-setup" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="create-a-gee-account" class="section level3 hasAnchor" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> Create a GEE account<a href="software-settings.html#create-a-gee-account" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Creation of a GEE is easy and free. Click ‘Get Started’ at the far right side of
 the <a href="https://earthengine.google.com">earthengine.google.com</a> webpage to create
 an account:</p>
 <p><a href="https://earthengine.google.com"><img src="images/EE_header.png" alt="Header of earthengine.google.com with link to create a GEE account highlighted in the red box to the right." /></a></p>
 </div>
-<div id="gcloud-cli" class="section level3 hasAnchor" number="3.2.2">
-<h3><span class="header-section-number">3.2.2</span> gcloud CLI<a href="software-settings.html#gcloud-cli" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="gcloud-cli" class="section level3 hasAnchor" number="4.2.2">
+<h3><span class="header-section-number">4.2.2</span> gcloud CLI<a href="software-settings.html#gcloud-cli" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This workflow requires the installation and initiation of <a href="https://cloud.google.com/sdk/gcloud">gcloud
 CLI</a>, a command-line tool set for accessing
-Google Cloud Resources. All settings for lakeSR and siteSR are default <code>gcloud</code>
+Google Cloud Resources. All settings for AquaSat v2 are default <code>gcloud</code>
 configurations using a singular GEE project.</p>
 </div>
-<div id="gee-authentication" class="section level3 hasAnchor" number="3.2.3">
-<h3><span class="header-section-number">3.2.3</span> GEE Authentication<a href="software-settings.html#gee-authentication" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="gee-authentication" class="section level3 hasAnchor" number="4.2.3">
+<h3><span class="header-section-number">4.2.3</span> GEE Authentication<a href="software-settings.html#gee-authentication" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Once <code>gcloud</code> is installed and initialized and the Conda environment is set up,
 you can authenticate your GEE instance. For this workflow, this is completed in
 the <code>run_targets.Rmd</code> script at the root directory. This script provides
 explicit directions to complete this task before running the pipeline.</p>
 </div>
-<div id="gee-project-setting" class="section level3 hasAnchor" number="3.2.4">
-<h3><span class="header-section-number">3.2.4</span> GEE project setting<a href="software-settings.html#gee-project-setting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>lakeSR is run in a specific GEE project associated with our authenticated
-account. If you wish to re-run this code as written, you will not have proper
-access because the code refers to our specific GEE project. You will need to
-update the config yaml (<code>b_pull_Landsat_SRST_poi/config_files/config_poi.yml</code>)
-with your Google credentials and GEE project in order to run this locally. A
-blank yml file (<code>b_pull_Landsat_SRST_poi/config_files/config.yml</code>) is provided
-for further customization. If you are new to GEE, go to
+<div id="gee-project-setting" class="section level3 hasAnchor" number="4.2.4">
+<h3><span class="header-section-number">4.2.4</span> GEE project setting<a href="software-settings.html#gee-project-setting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>AquaSat v2 is run in a specific GEE project associated with our authenticated
+Google account. If you wish to re-run this code as written, you will not have
+proper access because the code refers to our specific GEE project. You will need
+to update the config yaml
+(<code>b_pull_Landsat_SRST_poi/config_files/config_poi.yml</code>) with your Google
+credentials and GEE project in order to run this locally. A blank yml file
+(<code>b_pull_Landsat_SRST_poi/config_files/config.yml</code>) is provided for further
+customization. If you are new to GEE, go to
 <a href="https://code.earthengine.google.com">code.earthengine.google.com</a> and enter the
 project name listed in the top right hand corner of your screen:</p>
 <p><a href="https://code.earthengine.com"><img src="images/code_ee_proj.png" alt="Header of code.earthengine.google.com with current Earth Engine project highlighted in the red box to the right." /></a></p>

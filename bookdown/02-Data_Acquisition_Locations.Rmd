@@ -46,7 +46,7 @@ impractical for most large lakes, especially those that cross multiple satellite
 path-rows or tiles. For both lakeSR and siteSR, we summarize the Landsat data
 within a 120 meter radius of a defined location.
 
-## Changes from AquaSat v1
+## Updates in AquaSat v2
 
 Some changes in lake polygon and center point have been made in modernizing and
 scaling from LimnoSat-US. The lake center aspect called "deepest point" of
@@ -79,7 +79,7 @@ For lakeSR, we use POI to determine the point in a waterbody that is furthest
 from the shoreline using the `polylabelr::poi()` function [@larsson2020], which
 calculates a point in space and the radius of the circle used to define the POI.
 
-## Waterbodies in AquaMatch-lakeSR {#waterbodies}
+## Waterbodies Included {#waterbodies}
 
 For lakeSR, we use the NHDPlusV2 dataset for lakes within the conterminous US
 and US Territories using the {nhdplusTools} R package [@blodgett2023] and the

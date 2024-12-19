@@ -16,14 +16,12 @@ GEE data acquisition is written in Python.
 
 RStudio [@positteam2023] is an IDE that, alongside the {reticulate} package
 [@ushey2023], facilitates integration of R and Python code within the same
-environment. In lakeSR, we use [a singular R
+environment. In AquaSat v2, we use [a singular R
 script](https://github.com/AquaSat/lakeSR/blob/main/python/pySetup.R) to set up
 a {reticulate} Conda environment that is invoked at the beginning of a {targets}
-run (lines 8-12 of the
-[\_targets.R](https://github.com/AquaSat/lakeSR/blob/main/_targets.R) file) to
-be sure that our Python code runs consistently.
+run to be sure that our Python code runs consistently.
 
-| Software/Py Module | version | citation |
+| Software/Python Module | version | citation |
 |---------------------------|:-------------------------:|---------------------------|
 | Python | 3.10.13 | Python Software Foundation, [www.python.org](www.python.org) |
 | earthengine-api | 1.4.0 | @gorelick2023 |
@@ -54,7 +52,7 @@ right.](images/EE_header.png)](https://earthengine.google.com)
 
 This workflow requires the installation and initiation of [gcloud
 CLI](https://cloud.google.com/sdk/gcloud), a command-line tool set for accessing
-Google Cloud Resources. All settings for lakeSR and siteSR are default `gcloud`
+Google Cloud Resources. All settings for AquaSat v2 are default `gcloud`
 configurations using a singular GEE project.
 
 ### GEE Authentication
@@ -66,13 +64,14 @@ explicit directions to complete this task before running the pipeline.
 
 ### GEE project setting
 
-lakeSR is run in a specific GEE project associated with our authenticated
-account. If you wish to re-run this code as written, you will not have proper
-access because the code refers to our specific GEE project. You will need to
-update the config yaml (`b_pull_Landsat_SRST_poi/config_files/config_poi.yml`)
-with your Google credentials and GEE project in order to run this locally. A
-blank yml file (`b_pull_Landsat_SRST_poi/config_files/config.yml`) is provided
-for further customization. If you are new to GEE, go to
+AquaSat v2 is run in a specific GEE project associated with our authenticated
+Google account. If you wish to re-run this code as written, you will not have
+proper access because the code refers to our specific GEE project. You will need
+to update the config yaml
+(`b_pull_Landsat_SRST_poi/config_files/config_poi.yml`) with your Google
+credentials and GEE project in order to run this locally. A blank yml file
+(`b_pull_Landsat_SRST_poi/config_files/config.yml`) is provided for further
+customization. If you are new to GEE, go to
 [code.earthengine.google.com](https://code.earthengine.google.com) and enter the
 project name listed in the top right hand corner of your screen:
 

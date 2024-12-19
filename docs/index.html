@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Page not found | AquaSat v2: lakeSR and siteSR</title>
+  <title>AquaSat v2: lakeSR and siteSR</title>
   <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Page not found | AquaSat v2: lakeSR and siteSR" />
+  <meta property="og:title" content="AquaSat v2: lakeSR and siteSR" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Page not found | AquaSat v2: lakeSR and siteSR" />
+  <meta name="twitter:title" content="AquaSat v2: lakeSR and siteSR" />
   
   <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
@@ -31,7 +31,7 @@
   
   
 
-
+<link rel="next" href="background.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -229,11 +229,36 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="page-not-found" class="section level1">
-<h1>Page not found</h1>
-<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
-<p>You may want to try searching to find the page's new location, or use
-the table of contents to find the page you are looking for.</p>
+<div id="header">
+<h1 class="title">AquaSat v2: lakeSR and siteSR</h1>
+<h2 class="subtitle"><em>Compiled Satellite Surface Reflectance and Surface Temperature for Waterbodies in the United States and US Territories</em></h2>
+<p class="author"><em>ROSSyndicate</em></p>
+<p class="date"><em>2024-12-19</em></p>
+</div>
+<div id="introduction" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">1</span> Introduction<a href="index.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This {bookdown} <span class="citation">(<a href="#ref-xie2016">Xie 2016</a>)</span> document explains the methodology we use in the acquisition and compilation of satellite surface reflectance and surface temperature data for the AquaSat v2 data suite. Specifically, this document describes data for all lakes greater than 1 hectacre in the United States and US Territories (“lakeSR”) and all sites associated with Water Quality Portal (WQP) data harmonized within the AquaMatch data product (“siteSR”).</p>
+<p>AquaSat v2 represents modular code and data infrastructure for:</p>
+<ol style="list-style-type: decimal">
+<li><p>harmonizing <em>in situ</em> data from the Water Quality Portal (WQP) and providing an interopoerability tiering structure to allow for easier downstream filtering (“AquaMatch”)</p></li>
+<li><p>acquiring remote sensing data of inland waterbodies and rivers (siteSR and riverSR)</p></li>
+<li><p>pairing <em>in situ</em> data and remote sensing data for parameter-specific algorithm development (e.g., AquaMatch-LandsatC2)</p></li>
+</ol>
+<p>The goal of these data products is to facilitate assessment and monitoring of waterbodies within the United States and Territories using both <em>in situ</em> and remote sensing data.</p>
+<p>AquaSat v2 builds upon AquaSat <span class="citation">(<a href="#ref-ross2019">Ross et al. 2019</a>)</span> (referred to here as “AquaSat v1”) and LimnoSat-US <span class="citation">(<a href="#ref-limnosat">Topp et al., n.d.</a>)</span>. AquaSat v1 focused on pairing remote sensing data with <em>in situ</em> observations and measurements while LimnoSat-US acquired remote sensing for all waterbodies greater than 10 hectares across the Continental United States (CONUS) regardless of whether <em>in situ</em> measurements were available for that waterbody. In AquaSat v2, we bring these products together to provide clear direction for how to use these products. For instance, lakeSR can define Landsat inter-mission handoffs (ADD REF LINK TO THAT SECTION HERE) to enable use of Landsat as a timeseries product, siteSR can be used to create parameter-specific algorithms, those algorithms can be applied to lakeSR to create a timeseries of water quality for waterbodies in the US and territories.</p>
+
+</div>
+<h3> References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-ross2019" class="csl-entry">
+Ross, Matthew R. V., Simon N. Topp, Alison P. Appling, Xiao Yang, Catherine Kuhn, David Butman, Marc Simard, and Tamlin M. Pavelsky. 2019. <span>“AquaSat: A Data Set to Enable Remote Sensing of Water Quality for Inland Waters.”</span> <em>Water Resources Research</em> 55 (11): 10012–25. <a href="https://doi.org/10.1029/2019WR024883">https://doi.org/10.1029/2019WR024883</a>.
+</div>
+<div id="ref-limnosat" class="csl-entry">
+Topp, Simon, Tamlin Pavelsky, Xiao Yang, John Gardner, and Matthew R. V. Ross. n.d. <span>“LimnoSat-US: A Remote Sensing Dataset for u.s. Lakes from 1984-2020.”</span> <a href="https://doi.org/10.5281/zenodo.4139695">https://doi.org/10.5281/zenodo.4139695</a>.
+</div>
+<div id="ref-xie2016" class="csl-entry">
+Xie, Yihui. 2016. <em>Bookdown: Authoring Books and Technical Documents with r Markdown</em>. Boca Raton, Florida: Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/bookdown">https://bookdown.org/yihui/bookdown</a>.
+</div>
 </div>
             </section>
 
@@ -241,7 +266,7 @@ the table of contents to find the page you are looking for.</p>
         </div>
       </div>
 
-
+<a href="background.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

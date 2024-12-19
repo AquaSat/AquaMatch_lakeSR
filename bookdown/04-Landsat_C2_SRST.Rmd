@@ -46,40 +46,39 @@ relevant to the creation and use of lakeSR.*
 The Landsat archive of multispectral and thermal data in lakeSR is composed of
 Landsat missions 4 through 9 and spans more than 40 years.
 
-+-----------------------------+--------------+--------------+---------------+
-| Mission and Sensor          | Launch Date  | End of       | Decommission  |
-|                             |              | Science      | Date          |
-|                             |              | Mission      |               |
-+=============================+:============:+:============:+:=============:+
-| Landsat 4 TM [@eros-45]     | 1982-07-16   | 1993-12-14   | 2001-06-15    |
-+-----------------------------+--------------+--------------+---------------+
-| Landsat 5 TM [@eros-45]     | 1984-03-01   | 2011-11-18   | 2013-06-05    |
-+-----------------------------+--------------+--------------+---------------+
-| Landsat 7 ETM+ [@eros-7]    | 1999-04-15   | 2022-04-06   | N/A           |
-+-----------------------------+--------------+--------------+---------------+
-| Landsat 8 OLI/TIRS          | 2013-02-11   | N/A          | N/A           |
-| [@eros-89]                  |              |              |               |
-+-----------------------------+--------------+--------------+---------------+
-| Landsat 9 OLI-2/TIRS-2      | 2021-09-27   | N/A          | N/A           |
-| [@eros-89]                  |              |              |               |
-+-----------------------------+--------------+--------------+---------------+
++--------------------------+---------------+---------------+---------------+
+| Mission and Sensor       | Launch Date   | End of        | Decommission  |
+|                          |               | Science       | Date          |
+|                          |               | Mission       |               |
++==========================+:=============:+:=============:+:=============:+
+| Landsat 4 TM [@eros-45]  | 1982-07-16    | 1993-12-14    | 2001-06-15    |
++--------------------------+---------------+---------------+---------------+
+| Landsat 5 TM [@eros-45]  | 1984-03-01    | 2011-11-18    | 2013-06-05    |
++--------------------------+---------------+---------------+---------------+
+| Landsat 7 ETM+ [@eros-7] | 1999-04-15    | 2022-04-06    | N/A           |
++--------------------------+---------------+---------------+---------------+
+| Landsat 8 OLI/TIRS       | 2013-02-11    | N/A           | N/A           |
+| [@eros-89]               |               |               |               |
++--------------------------+---------------+---------------+---------------+
+| Landsat 9 OLI-2/TIRS-2   | 2021-09-27    | N/A           | N/A           |
+| [@eros-89]               |               |               |               |
++--------------------------+---------------+---------------+---------------+
 
 The image record for Landsat 4 is not consistent nor robust due to a data
 transmitter failure early in service, however our pipeline acquires data as
 available. Landsat 6 did not achieve orbit.
 
-For the purposes of lakeSR and siteSR, we truncate the data record for Landsat 4
-and 5 at the end of the Science Mission of the satellite. No corrections were
-made for the Landsat 7 scanline error that began on May 31, 2003, data were
-collected as available despite the scanline error since the data are still of
-acceptable quality [per the
-USGS](https://www.usgs.gov/faqs/what-landsat-7-etm-slc-data). Additionally,
-Landsat 7 began to experience orbital drift beginning in 2017, resulting in
-top-of-atmosphere (and therefore also surface reflectance) that had growing
-uncertainties over time as the drift increased [@qiu2021]. Qui [-@qiu2021]
-suggests that data are not robust enough for trend analysis after the start of
-the growing season in 2020, but because their analysis was of NDVI, we
-conservatively truncate the data at the end of 2019.
+For the purposes of AquaSat v2, we truncate the data record for Landsat 4 and 5
+at the end of the Science Mission of the satellite. No corrections were made for
+the Landsat 7 scanline error that began on May 31, 2003, data were collected as
+available despite the scanline error since the data are still of acceptable
+quality [per the USGS](https://www.usgs.gov/faqs/what-landsat-7-etm-slc-data).
+Additionally, Landsat 7 began to experience orbital drift beginning in 2017,
+resulting in top-of-atmosphere (and therefore also surface reflectance) that had
+growing uncertainties over time as the drift increased [@qiu2021]. Qui
+[-@qiu2021] suggests that data are not robust enough for trend analysis after
+the start of the growing season in 2020, but because their analysis was of NDVI,
+we conservatively truncate the data at the end of 2019.
 
 ### Spectral Response
 
@@ -94,9 +93,9 @@ NASA](images/Landsat-SpectralBands.png)](https://landsat.gsfc.nasa.gov/article/t
 
 ### Sensor Resolution
 
-The spatial resolution of the Level 1 data has not changed for optical bands
-over time (Aerosol, RGB, NIR, SWIR) but has varied over the historic record for
-thermal data:
+The spatial resolution of the Level 1 data that the SR and ST products are
+derived from has not changed for optical bands over time (Aerosol, RGB, NIR,
+SWIR) but has varied over the historic record for thermal data:
 
 +-------------------------+-------------------------+-------------------------+
 | Sensors                 | Optical Bands           | Thermal Bands           |
