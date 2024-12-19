@@ -5,20 +5,10 @@ editor_options:
 bibliography: references.bib
 ---
 
-# Introduction
+# Background
 
-This {bookdown} [@xie2016] document explains the methodology we use in the
-acquisition and compilation of satellite surface reflectance and surface
-temperature data for all lakes greater than 1 hectacre in the United States and
-US Territories. This product, lakeSR, is a component of the [AquaSat
-suite](https://github.com/aquasat), an effort to create a database of lake and
-river water quality observations alongside remote sensing data. This is an
-update to the original AquaSat [@ross2019], the foundational effort towards
-making satellite and *in situ* water quality data accessible for freshwater
-monitoring.
-
-Currently, lakeSR is comprised of the historical Landsat record from 1984 until
-late 2024, comprised of data from the following missions:
+Currently, lakeSR is comprised of the historical Landsat Collection 2 record
+from 1984 until late 2024, comprised of data from the following missions:
 
 -   Landsat 4 Thematic Mapper (TM)
 -   Landsat 5 TM

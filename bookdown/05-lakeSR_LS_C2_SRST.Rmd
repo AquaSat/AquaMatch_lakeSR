@@ -15,13 +15,13 @@ a given waterbody (identified by its NHD unique identifier, see Section
 Collection 2 record - that is, all summarized Landsat data available from all
 Landsat missions that met our QA criteria.
 
-## Changes from AquaSat v1
+## Changes from AquaSat v1 and LimnoSat-US
 
-While much of the general architecture in AquaSat v1 has remained unchanged, we
-have added a number of features to the lakeSR acquisition, have increased
-efficiency of the data pull, and have made the aquired data more robust through
-additional masking. The bullets below summarize the changes implemented in this
-update.
+While much of the general architecture from the precedent data products remained
+unchanged, in AquaSat v2 have added a number of features to the remote sensing
+acquisition workflow, have increased efficiency of the data pull, and have made
+the acquired data more robust through additional masking. The bullets below
+summarize the changes implemented in this update.
 
 -   using yaml file for configuration of the workflow. This allows for greater
     flexibility in data acquisition including the use of custom configurations
@@ -35,18 +35,18 @@ update.
 
     [[insert drawing of this]]
 
--   inclusion of Landsat 4 and Landsat 9. At the time of the initial AquaSat,
-    Landsat 4 was not easily integrated with other Landsat missions due to data
-    storage differences [@ross2019]. Collection 2 updates allowed for easier
+-   inclusion of Landsat 4 and Landsat 9. At the time of AquaSat v1 and
+    LimnoSat-US, Landsat 4 was not easily integrated with other Landsat missions
+    due to data storage differences. Collection 2 updates allowed for easier
     interoperability of the TM sensor (Landsat 4) image series and have
     therefore been included in the update. Additionally, Landsat 9 came online
     in 2021, and have been added to the data product.
 
 -   sending tasks to GEE explicitly per path-row and limiting the Landsat stack
     to the explicit path-row to eliminate duplicate acquisitions. In the
-    previous version of AquaSat, we acquired duplicate location/path-row data
-    because we did not limit the extracted Landsat stack to the explicit WRS
-    path-row the point was in. This meant that locations that were in a path-row
+    previous products, duplicate location/path-row data were acquired because
+    the extracted Landsat stack was not limited to the explicit WRS path-row
+    that the point was in. This meant that locations that were in a path-row
     overlap would be extracted twice in two different WRS path-row extents. The
     code below is an example of this type of filtering that occurs as we run a
     path-row extraction, where we once clipped the stack to the AOI of the
@@ -99,8 +99,6 @@ update.
 
     ```
 
-<!-- -->
-
 -   masking changes. Many updates were made to assure high quality data through
     the use of updated masking procedures. The following masks were added in
     this workflow and are detailed below in Section \@ref(masking-functions):
@@ -118,16 +116,15 @@ update.
     algorithm to identify water pixels in a given Landsat image. See Section
     \@ref(dswe-implementation) for details.
 
--   removing no-data acquisitions before GEE export. In the AquaSat update, we
-    remove any rows from the summarized GEE product before export. This adds
+-   removing no-data acquisitions before GEE export. In the AquaSat v2 update,
+    we remove any rows from the summarized GEE product before export. This adds
     efficiency to the pull by removing those rows before export, which is a
     source of added time in the GEE bottleneck.
 
 -   checking for failed tasks. We added a sanity check for failed tasks, since
-    task status is not conveyed from GEE and was not implemented in the original
-    AquaSat workflow.
+    task status is not conveyed from GEE.
 
-## Overview of Aqcuisition Steps
+## Overview of Acquisition Steps
 
 The workflow for data acquisition is as follows:
 
@@ -193,9 +190,9 @@ Landsat stack acquisition. These include data manipulation to create Earth
 Engine (EE) objects, custom QA masks, DSWE algorithm, and the functions that
 perform the masking and extraction of data from the Landsat image. Below is an
 overview of some of the custom masking procedures and their justification, if
-applicable. We use the most aggressive masking procedures in the lakeSR product
-in order to attempt to have consistent and robust data across such a large area
-of data acquisition.
+applicable. We use the most aggressive masking procedures in the lakeSR and
+siteSR products in order to attempt to have consistent and robust data across
+such a large area of data acquisition.
 
 -   `apply_rad_mask`: Masks out all pixels that are radiometrically saturated in
     any optical band using the QA_RADSAT QA band. The Landsat User Guides
@@ -267,9 +264,9 @@ in the following values per pixel:
 
 -   4 is low confidence partial water
 
-Within the scope of lakeSR, we tabulate pixels that are a DSWE value of 1
-(DSWE1) for high confidence open water, or what we call DSWE1a - high confidence
-open water OR the pixel meets a threshold that may indicate there is
+Within the scope of lakeSR and siteSR, we tabulate pixels that are a DSWE value
+of 1 (DSWE1) for high confidence open water, or what we call DSWE1a - high
+confidence open water OR the pixel meets a threshold that may indicate there is
 surface-level algae. The algae mask is defined as when a pixel has a DSWE value
 greater than 1 and the green band scaled value is greater than 0.05 and the red
 band sclaed value is less than 0.04. These values are based on optical
@@ -278,9 +275,9 @@ described by @burket2023. This is an experimental mask, so we export both DSWE1
 and DSWE1a summaries within lakeSR. We have found some omission error within
 DSWE1 for visible floating scum within river systems and this additional mask
 captures many of those pixels without adding unnecessary uncertainty. Users of
-the lakeSR data product can choose to use the DSWE1a product if applicable to
-their research, however, this threshold was defined in the Illinois and Ohio
-Rivers and may not be applicable in all environments.
+the lakeSR and siteSR data products can choose to use the DSWE1a product if
+applicable to their research, however, this threshold was defined in the
+Illinois and Ohio Rivers and may not be applicable in all environments.
 
 ## Payload handling
 

@@ -1,5 +1,6 @@
 ---
-title: 'lakeSR: Compiled Satellite Surface Reflectance and Surface Temperature for Lakes in the United States and US Territories'
+title: 'AquaSat v2: lakeSR and siteSR'
+subtitle: 'Compiled Satellite Surface Reflectance and Surface Temperature for Waterbodies in the United States and US Territories'
 author: ROSSyndicate
 date: "`r Sys.Date()`"
 documentclass: book
@@ -12,3 +13,19 @@ params:
   poi: NA
   locs_run_date: NA
 ---
+
+# Introduction
+
+This {bookdown} [@xie2016] document explains the methodology we use in the acquisition and compilation of satellite surface reflectance and surface temperature data for the AquaSat v2 data suite. Specifically, this document describes data for all lakes greater than 1 hectacre in the United States and US Territories ("lakeSR") and all sites associated with Water Quality Portal (WQP) data harmonized within the AquaMatch data product ("siteSR").
+
+AquaSat v2 represents modular code and data infrastructure for:
+
+1.  harmonizing *in situ* data from the Water Quality Portal (WQP) and providing an interopoerability tiering structure to allow for easier downstream filtering ("AquaMatch")
+
+2.  acquiring remote sensing data of inland waterbodies and rivers (siteSR and riverSR)
+
+3.  pairing *in situ* data and remote sensing data for parameter-specific algorithm development (e.g., AquaMatch-LandsatC2)
+
+The goal of these data products is to facilitate assessment and monitoring of waterbodies within the United States and Territories using both *in situ* and remote sensing data.
+
+AquaSat v2 builds upon AquaSat [@ross2019] (referred to here as "AquaSat v1") and LimnoSat-US [@limnosat]. AquaSat v1 focused on pairing remote sensing data with *in situ* observations and measurements while LimnoSat-US acquired remote sensing for all waterbodies greater than 10 hectares across the Continental United States (CONUS) regardless of whether *in situ* measurements were available for that waterbody. In AquaSat v2, we bring these products together to provide clear direction for how to use these products. For instance, lakeSR can define Landsat inter-mission handoffs (ADD REF LINK TO THAT SECTION HERE) to enable use of Landsat as a timeseries product, siteSR can be used to create parameter-specific algorithms, those algorithms can be applied to lakeSR to create a timeseries of water quality for waterbodies in the US and territories.
