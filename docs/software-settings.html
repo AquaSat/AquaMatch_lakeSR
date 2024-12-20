@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2024-12-19" />
+<meta name="date" content="2024-12-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,13 +162,21 @@ div.csl-indent {
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>2</b> Background</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#code-architecture"><i class="fa fa-check"></i><b>2.1</b> Code Architecture</a></li>
+<li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#lakesr-code-architecture"><i class="fa fa-check"></i><b>2.1</b> lakeSR Code Architecture</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.1</b> {targets} groups</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="background.html"><a href="background.html#sitesr_wqp-code-architecture"><i class="fa fa-check"></i><b>2.2</b> siteSR_WQP Code Architecture</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="background.html"><a href="background.html#setup-description"><i class="fa fa-check"></i><b>2.2.1</b> Configuration Files</a></li>
+<li class="chapter" data-level="2.2.2" data-path="background.html"><a href="background.html#targets-groups-1"><i class="fa fa-check"></i><b>2.2.2</b> {targets} Groups</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>3</b> Locations of Data Acquisition</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.1</b> Updates in AquaSat v2</a></li>
 <li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>3.2</b> Pole of Inaccessibility</a></li>
-<li class="chapter" data-level="3.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>3.3</b> Waterbodies in AquaMatch-lakeSR</a></li>
+<li class="chapter" data-level="3.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>3.3</b> Waterbodies Included</a></li>
 <li class="chapter" data-level="3.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation"><i class="fa fa-check"></i><b>3.4</b> Technical Implementation</a></li>
 <li class="chapter" data-level="3.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
@@ -202,7 +210,7 @@ div.csl-indent {
 <li class="chapter" data-level="6.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#changes-from-aquasat-v1-and-limnosat-us"><i class="fa fa-check"></i><b>6.1</b> Changes from AquaSat v1 and LimnoSat-US</a></li>
 <li class="chapter" data-level="6.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#overview-of-acquisition-steps"><i class="fa fa-check"></i><b>6.2</b> Overview of Acquisition Steps</a>
 <ul>
-<li class="chapter" data-level="6.2.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#creating-a-custom-configuration-file"><i class="fa fa-check"></i><b>6.2.1</b> Creating a Custom Configuration File</a></li>
+<li class="chapter" data-level="6.2.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#custom-config"><i class="fa fa-check"></i><b>6.2.1</b> Creating a Custom Configuration File</a></li>
 </ul></li>
 <li class="chapter" data-level="6.3" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#technical-implementation-of-acquisition-script"><i class="fa fa-check"></i><b>6.3</b> Technical Implementation of Acquisition Script</a>
 <ul>
@@ -322,11 +330,10 @@ explicit directions to complete this task before running the pipeline.</p>
 <p>AquaSat v2 is run in a specific GEE project associated with our authenticated
 Google account. If you wish to re-run this code as written, you will not have
 proper access because the code refers to our specific GEE project. You will need
-to update the config yaml
-(<code>b_pull_Landsat_SRST_poi/config_files/config_poi.yml</code>) with your Google
-credentials and GEE project in order to run this locally. A blank yml file
-(<code>b_pull_Landsat_SRST_poi/config_files/config.yml</code>) is provided for further
-customization. If you are new to GEE, go to
+to update the config yaml (in lakeSR:
+<code>b_pull_Landsat_SRST_poi/config_files/config_poi.yml</code>, in siteSR_WQP:
+<code>gee_config.yml</code>) with your Google credentials and GEE project in order to run
+the pipeline locally. If you are new to GEE, go to
 <a href="https://code.earthengine.google.com">code.earthengine.google.com</a> and enter the
 project name listed in the top right hand corner of your screen:</p>
 <p><a href="https://code.earthengine.com"><img src="images/code_ee_proj.png" alt="Header of code.earthengine.google.com with current Earth Engine project highlighted in the red box to the right." /></a></p>

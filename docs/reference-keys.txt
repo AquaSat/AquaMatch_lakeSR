@@ -3,7 +3,11 @@ fig:v1-WI-lakes
 fig:v2-WI-lakes
 introduction
 background
-code-architecture
+lakesr-code-architecture
+targets-groups
+sitesr_wqp-code-architecture
+setup-description
+targets-groups-1
 locs-data-acq
 updates-in-aquasat-v2
 pole-of-inaccessibility
@@ -28,7 +32,7 @@ surface-temperature
 LS-SRST-pull
 changes-from-aquasat-v1-and-limnosat-us
 overview-of-acquisition-steps
-creating-a-custom-configuration-file
+custom-config
 technical-implementation-of-acquisition-script
 masking-functions
 dswe-implementation

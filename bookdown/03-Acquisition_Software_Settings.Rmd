@@ -67,11 +67,10 @@ explicit directions to complete this task before running the pipeline.
 AquaSat v2 is run in a specific GEE project associated with our authenticated
 Google account. If you wish to re-run this code as written, you will not have
 proper access because the code refers to our specific GEE project. You will need
-to update the config yaml
-(`b_pull_Landsat_SRST_poi/config_files/config_poi.yml`) with your Google
-credentials and GEE project in order to run this locally. A blank yml file
-(`b_pull_Landsat_SRST_poi/config_files/config.yml`) is provided for further
-customization. If you are new to GEE, go to
+to update the config yaml (in lakeSR:
+`b_pull_Landsat_SRST_poi/config_files/config_poi.yml`, in siteSR_WQP:
+`gee_config.yml`) with your Google credentials and GEE project in order to run
+the pipeline locally. If you are new to GEE, go to
 [code.earthengine.google.com](https://code.earthengine.google.com) and enter the
 project name listed in the top right hand corner of your screen:
 

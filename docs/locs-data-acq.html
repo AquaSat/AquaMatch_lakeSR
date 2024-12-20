@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2024-12-19" />
+<meta name="date" content="2024-12-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,13 +162,21 @@ div.csl-indent {
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>2</b> Background</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#code-architecture"><i class="fa fa-check"></i><b>2.1</b> Code Architecture</a></li>
+<li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#lakesr-code-architecture"><i class="fa fa-check"></i><b>2.1</b> lakeSR Code Architecture</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.1</b> {targets} groups</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="background.html"><a href="background.html#sitesr_wqp-code-architecture"><i class="fa fa-check"></i><b>2.2</b> siteSR_WQP Code Architecture</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="background.html"><a href="background.html#setup-description"><i class="fa fa-check"></i><b>2.2.1</b> Configuration Files</a></li>
+<li class="chapter" data-level="2.2.2" data-path="background.html"><a href="background.html#targets-groups-1"><i class="fa fa-check"></i><b>2.2.2</b> {targets} Groups</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>3</b> Locations of Data Acquisition</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.1</b> Updates in AquaSat v2</a></li>
 <li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>3.2</b> Pole of Inaccessibility</a></li>
-<li class="chapter" data-level="3.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>3.3</b> Waterbodies in AquaMatch-lakeSR</a></li>
+<li class="chapter" data-level="3.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>3.3</b> Waterbodies Included</a></li>
 <li class="chapter" data-level="3.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation"><i class="fa fa-check"></i><b>3.4</b> Technical Implementation</a></li>
 <li class="chapter" data-level="3.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
@@ -202,7 +210,7 @@ div.csl-indent {
 <li class="chapter" data-level="6.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#changes-from-aquasat-v1-and-limnosat-us"><i class="fa fa-check"></i><b>6.1</b> Changes from AquaSat v1 and LimnoSat-US</a></li>
 <li class="chapter" data-level="6.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#overview-of-acquisition-steps"><i class="fa fa-check"></i><b>6.2</b> Overview of Acquisition Steps</a>
 <ul>
-<li class="chapter" data-level="6.2.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#creating-a-custom-configuration-file"><i class="fa fa-check"></i><b>6.2.1</b> Creating a Custom Configuration File</a></li>
+<li class="chapter" data-level="6.2.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#custom-config"><i class="fa fa-check"></i><b>6.2.1</b> Creating a Custom Configuration File</a></li>
 </ul></li>
 <li class="chapter" data-level="6.3" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#technical-implementation-of-acquisition-script"><i class="fa fa-check"></i><b>6.3</b> Technical Implementation of Acquisition Script</a>
 <ul>
@@ -241,8 +249,8 @@ can then be applied to the data collected over the centrally-located point
 across all waterbodies in the lakeSR database. lakeSR does not acquire nor
 summarize data over the entire waterbody’s surface, as it is computationally
 impractical for most large lakes, especially those that cross multiple satellite
-path-rows or tiles. For both lakeSR and siteSR, we summarize the Landsat data
-within a 120 meter radius of a defined location.</p>
+path-rows or tiles. For both lakeSR and siteSR_WQP products, we summarize the
+Landsat data within a 120 meter radius of a defined location.</p>
 <div id="updates-in-aquasat-v2" class="section level2 hasAnchor" number="3.1">
 <h2><span class="header-section-number">3.1</span> Updates in AquaSat v2<a href="locs-data-acq.html#updates-in-aquasat-v2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Some changes in lake polygon and center point have been made in modernizing and
@@ -276,7 +284,7 @@ from the shoreline using the <code>polylabelr::poi()</code> function <span class
 calculates a point in space and the radius of the circle used to define the POI.</p>
 </div>
 <div id="waterbodies" class="section level2 hasAnchor" number="3.3">
-<h2><span class="header-section-number">3.3</span> Waterbodies in AquaMatch-lakeSR<a href="locs-data-acq.html#waterbodies" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">3.3</span> Waterbodies Included<a href="locs-data-acq.html#waterbodies" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>For lakeSR, we use the NHDPlusV2 dataset for lakes within the conterminous US
 and US Territories using the {nhdplusTools} R package <span class="citation">(<a href="#ref-blodgett2023">Blodgett and Johnson 2023</a>)</span> and the
 NHD Best Resolution <span class="citation">(e.g. <a href="#ref-usgs-nhd-ak">US Geological Survey 2023</a>)</span> data through The National Map. All

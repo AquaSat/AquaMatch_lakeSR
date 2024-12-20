@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2024-12-19" />
+<meta name="date" content="2024-12-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,13 +162,21 @@ div.csl-indent {
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>2</b> Background</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#code-architecture"><i class="fa fa-check"></i><b>2.1</b> Code Architecture</a></li>
+<li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#lakesr-code-architecture"><i class="fa fa-check"></i><b>2.1</b> lakeSR Code Architecture</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.1</b> {targets} groups</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="background.html"><a href="background.html#sitesr_wqp-code-architecture"><i class="fa fa-check"></i><b>2.2</b> siteSR_WQP Code Architecture</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="background.html"><a href="background.html#setup-description"><i class="fa fa-check"></i><b>2.2.1</b> Configuration Files</a></li>
+<li class="chapter" data-level="2.2.2" data-path="background.html"><a href="background.html#targets-groups-1"><i class="fa fa-check"></i><b>2.2.2</b> {targets} Groups</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>3</b> Locations of Data Acquisition</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.1</b> Updates in AquaSat v2</a></li>
 <li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>3.2</b> Pole of Inaccessibility</a></li>
-<li class="chapter" data-level="3.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>3.3</b> Waterbodies in AquaMatch-lakeSR</a></li>
+<li class="chapter" data-level="3.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>3.3</b> Waterbodies Included</a></li>
 <li class="chapter" data-level="3.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation"><i class="fa fa-check"></i><b>3.4</b> Technical Implementation</a></li>
 <li class="chapter" data-level="3.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
@@ -202,7 +210,7 @@ div.csl-indent {
 <li class="chapter" data-level="6.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#changes-from-aquasat-v1-and-limnosat-us"><i class="fa fa-check"></i><b>6.1</b> Changes from AquaSat v1 and LimnoSat-US</a></li>
 <li class="chapter" data-level="6.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#overview-of-acquisition-steps"><i class="fa fa-check"></i><b>6.2</b> Overview of Acquisition Steps</a>
 <ul>
-<li class="chapter" data-level="6.2.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#creating-a-custom-configuration-file"><i class="fa fa-check"></i><b>6.2.1</b> Creating a Custom Configuration File</a></li>
+<li class="chapter" data-level="6.2.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#custom-config"><i class="fa fa-check"></i><b>6.2.1</b> Creating a Custom Configuration File</a></li>
 </ul></li>
 <li class="chapter" data-level="6.3" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#technical-implementation-of-acquisition-script"><i class="fa fa-check"></i><b>6.3</b> Technical Implementation of Acquisition Script</a>
 <ul>
@@ -256,8 +264,17 @@ for the pull.</p></li>
 prior to pulling the data. This reduces erroneous counts of pixels for
 locations and buffers that are at the edge of a path-row, assuring that the
 buffer distance and included area is consistent per location if it is in the
-area of path-row overlap.</p>
-<p>[[insert drawing of this]]</p></li>
+area of path-row overlap.</p></li>
+</ul>
+<div class="float">
+<img src="images/pathrow-ex.png" width="300" alt="Cartoon example: Locations (and their buffers) are the blue circles and the extent of the path-row is indicated by the large dark blue or orange boxes. In this example, location 1 would be extracted for both path-row 1 and 2, location 2 only extracted for path-row 2, and location 3 only extracted for path-row 1." />
+<div class="figcaption">Cartoon example: Locations (and their buffers) are the blue circles and the
+extent of the path-row is indicated by the large dark blue or orange boxes. In
+this example, location 1 would be extracted for both path-row 1 and 2, location
+2 only extracted for path-row 2, and location 3 only extracted for path-row
+1.</div>
+</div>
+<ul>
 <li><p>inclusion of Landsat 4 and Landsat 9. At the time of AquaSat v1 and
 LimnoSat-US, Landsat 4 was not easily integrated with other Landsat missions
 due to data storage differences. Collection 2 updates allowed for easier
@@ -348,11 +365,11 @@ easier processing in Python (<code>b_poi_locs_filtered</code>)</p></li>
 <li><p>check to see if any tasks failed in GEE extraction which is not visible from
 the RStudio IDE (<code>b_check_for_failed_tasks</code>)</p></li>
 </ol>
-<div id="creating-a-custom-configuration-file" class="section level3 hasAnchor" number="6.2.1">
-<h3><span class="header-section-number">6.2.1</span> Creating a Custom Configuration File<a href="LS-SRST-pull.html#creating-a-custom-configuration-file" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>lakeSR can be modified to be run by a user by setting up a new config file and
-altering the {targets} workflow to point to that config file. To configure a new
-run of this workflow, fill out the yaml file at the file path
+<div id="custom-config" class="section level3 hasAnchor" number="6.2.1">
+<h3><span class="header-section-number">6.2.1</span> Creating a Custom Configuration File<a href="LS-SRST-pull.html#custom-config" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>lakeSR (and siteSR) can be modified to be run by a user by setting up a new
+config file and altering the {targets} workflow to point to that config file. To
+configure a new run of this workflow, fill out the yaml file at the file path
 <code>b_pull_Landsat_SRST_poi/config_files/config.yml</code> and modify the <code>_targets.R</code>
 script at line 28 to reflect the updated config file.</p>
 <p>To run the pipeline with this custom configuration, follow the steps in
@@ -388,7 +405,10 @@ perform the masking and extraction of data from the Landsat image. Below is an
 overview of some of the custom masking procedures and their justification, if
 applicable. We use the most aggressive masking procedures in the lakeSR and
 siteSR products in order to attempt to have consistent and robust data across
-such a large area of data acquisition.</p>
+such a large area of data acquisition. An interactive masking viewer is
+available for <a href="https://ee-aquamatch.projects.earthengine.app/view/asv2landsat57interactivemask">Landsat
+4/5/7</a>
+and Landsat 8/9 to see these masks in action.</p>
 <ul>
 <li><p><code>apply_rad_mask</code>: Masks out all pixels that are radiometrically saturated in
 any optical band using the QA_RADSAT QA band. The Landsat User Guides

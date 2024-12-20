@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2024-12-19" />
+<meta name="date" content="2024-12-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,13 +162,21 @@ div.csl-indent {
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>2</b> Background</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#code-architecture"><i class="fa fa-check"></i><b>2.1</b> Code Architecture</a></li>
+<li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#lakesr-code-architecture"><i class="fa fa-check"></i><b>2.1</b> lakeSR Code Architecture</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.1</b> {targets} groups</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="background.html"><a href="background.html#sitesr_wqp-code-architecture"><i class="fa fa-check"></i><b>2.2</b> siteSR_WQP Code Architecture</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="background.html"><a href="background.html#setup-description"><i class="fa fa-check"></i><b>2.2.1</b> Configuration Files</a></li>
+<li class="chapter" data-level="2.2.2" data-path="background.html"><a href="background.html#targets-groups-1"><i class="fa fa-check"></i><b>2.2.2</b> {targets} Groups</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>3</b> Locations of Data Acquisition</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.1</b> Updates in AquaSat v2</a></li>
 <li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>3.2</b> Pole of Inaccessibility</a></li>
-<li class="chapter" data-level="3.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>3.3</b> Waterbodies in AquaMatch-lakeSR</a></li>
+<li class="chapter" data-level="3.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>3.3</b> Waterbodies Included</a></li>
 <li class="chapter" data-level="3.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation"><i class="fa fa-check"></i><b>3.4</b> Technical Implementation</a></li>
 <li class="chapter" data-level="3.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
@@ -202,7 +210,7 @@ div.csl-indent {
 <li class="chapter" data-level="6.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#changes-from-aquasat-v1-and-limnosat-us"><i class="fa fa-check"></i><b>6.1</b> Changes from AquaSat v1 and LimnoSat-US</a></li>
 <li class="chapter" data-level="6.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#overview-of-acquisition-steps"><i class="fa fa-check"></i><b>6.2</b> Overview of Acquisition Steps</a>
 <ul>
-<li class="chapter" data-level="6.2.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#creating-a-custom-configuration-file"><i class="fa fa-check"></i><b>6.2.1</b> Creating a Custom Configuration File</a></li>
+<li class="chapter" data-level="6.2.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#custom-config"><i class="fa fa-check"></i><b>6.2.1</b> Creating a Custom Configuration File</a></li>
 </ul></li>
 <li class="chapter" data-level="6.3" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#technical-implementation-of-acquisition-script"><i class="fa fa-check"></i><b>6.3</b> Technical Implementation of Acquisition Script</a>
 <ul>
@@ -231,8 +239,9 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="background" class="section level1 hasAnchor" number="2">
 <h1><span class="header-section-number">2</span> Background<a href="background.html#background" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>Currently, lakeSR is comprised of the historical Landsat Collection 2 record
-from 1984 until late 2024, comprised of data from the following missions:</p>
+<p>Currently, AquaSat v2 remote sensing products include the historical Landsat
+Collection 2 record from 1984 until late 2024, comprised of data from the
+following missions:</p>
 <ul>
 <li>Landsat 4 Thematic Mapper (TM)</li>
 <li>Landsat 5 TM</li>
@@ -240,35 +249,24 @@ from 1984 until late 2024, comprised of data from the following missions:</p>
 <li>Landsat 8 Operational Land Imager/Thermal Infrared Sensor (OLI/TIRS)</li>
 <li>Landsat 9 OLI/TIRS</li>
 </ul>
-<p>There will be additional satellite data incorporated into the lakeSR data
-product in the future.</p>
-<p>lakeSR acquires tabular data summaries of satellite-derived surface reflectance
-and surface temperature data at central locations within a lake. The sibling
-product to this is <a href="https://github.com/AquaSat/AquaMatch_siteSR_WQP">siteSR</a>,
-which acquires the same data at locations identified with monitoring records
-from the Water Quality Portal from the
-<a href="https://aquasat.github.io/AquaMatch_harmonize_WQP/">AquaMatch</a> component of
-AquaSat.</p>
-<div id="code-architecture" class="section level2 hasAnchor" number="2.1">
-<h2><span class="header-section-number">2.1</span> Code Architecture<a href="background.html#code-architecture" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>lakeSR is built on the {targets} workflow management system for R <span class="citation">(<a href="#ref-landau2021">Landau 2021</a>)</span>.
-The {targets} architecture is based on lists of functions performed in a
-specific order, each function called a <em>target</em>. The primary benefit of
-{targets} workflows is that code is only run if a target, a target’s code, or a
-target’s dependencies have changed (or become “outdated” in {targets} speak).</p>
-<p>lakeSR is broken down into groups of targets that perform specific tasks, listed
-below with a brief summary about what task(s) each group completes. This
-particular workflow incorporates both R and Python programming languages to
-complete these tasks.</p>
+<p>There will be additional satellite data incorporated into AquaSat v2 in the
+future.</p>
+<div id="lakesr-code-architecture" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> lakeSR Code Architecture<a href="background.html#lakesr-code-architecture" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><a href="https://github.com/AquaSat/AquaMatch_lakeSR">lakeSR code</a> is broken down into
+groups of targets that perform specific tasks, listed below with a brief summary
+about what task(s) each group completes. This particular workflow incorporates
+both R and Python programming languages to complete these tasks.</p>
+<div id="targets-groups" class="section level3 hasAnchor" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> {targets} groups<a href="background.html#targets-groups" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p><strong>a_Calculate_Centers</strong>:</p>
 <p>This {targets} list calculates “Pole of Inaccessibility” (POI)
 <span class="citation">(<a href="#ref-garcia-castellanos2007">Garcia-Castellanos and Lombardo 2007</a>)</span> for all non-intermittent lakes, ponds, and reservoirs
 greater than 1 hectare in surface area and intermittent lakes, ponds, and
 reservoirs greater than 4 hectares using the NHDPlusV2 polygons using the
-{nhdplusTools} package <span class="citation">(<a href="#ref-blodgett2023">Blodgett and Johnson 2023</a>)</span> and the <code>poi()</code> function in the
-{polylabelr} package <span class="citation">(<a href="#ref-larsson2020">Larsson 2020</a>)</span>. For all waterbodies outside of CONUS, POI
-were calculated based on the NHD Best Resolution file for the entire state or
-territory.</p>
+{nhdplusTools} package <span class="citation">(<a href="#ref-blodgett2023">Blodgett and Johnson 2023</a>)</span>, NHD Best Resolution files for non-CONUS
+waterbodies, and the <code>poi()</code> function in the {polylabelr} package
+<span class="citation">(<a href="#ref-larsson2020">Larsson 2020</a>)</span>.</p>
 <p>See Section <a href="locs-data-acq.html#locs-data-acq">3</a> for additional background and detailed
 methodology.</p>
 <p><strong>b_pull_Landsat_SRST_poi</strong>:</p>
@@ -289,7 +287,87 @@ processing than weekday during business hours.</p>
 <p>See Section <a href="software-settings.html#software-settings">4</a> for details on software used in this
 workflow, Section <a href="LS-C2-SRST.html#LS-C2-SRST">5</a> for additional background on Landsat data,
 and Section <a href="LS-SRST-pull.html#LS-SRST-pull">6</a> for detailed methodology of the Landsat pull.</p>
+<p><strong>c_collate_filter_lakeSR:</strong></p>
+<p><strong>d_calculate_apply_handoff:</strong></p>
+</div>
+</div>
+<div id="sitesr_wqp-code-architecture" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> siteSR_WQP Code Architecture<a href="background.html#sitesr_wqp-code-architecture" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><a href="https://github.com/AquaSat/AquaMatch_siteSR_WQP">siteSR_WQP code</a> is built upon
+the output of
+<a href="https://github.com/AquaSat/AquaMatch_harmonize_WQP">AquaMatch_hamronize_WQP</a>
+and <a href="https://github.com/AquaSat/AquaMatch_lakeSR">lakeSR</a>.
+AquaMatch_harmonize_WQP provides harmonized <em>in situ</em> data from the Water
+Quality Portal for pairing with remote sensing data acquired at the sites of <em>in
+situ</em> data. This workflow picks up where AquaMatch_harmonize_WQP ends, with the
+output of harmonized, tiered, and aggregated datasets per water quality
+parameter. lakeSR provides calculated Landsat intermission handoff coefficients
+for interoperability between sensors. In order to run the siteSR_WQP workflow,
+you must have a cloned version of AquaMatch_harmonize_WQP and AquaMatch_lakeSR
+codebase on your local computer. Section <a href="background.html#setup-description">2.2.1</a> covers details
+about this requirement.</p>
+<div id="setup-description" class="section level3 hasAnchor" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> Configuration Files<a href="background.html#setup-description" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>config.yml:</strong></p>
+<p>siteSR_WQP relies on this configuration file to run specific profiles that
+determine what operations are being run. The file contains three configuration
+profiles: “default”, “admin_update”, and “use_stable”.</p>
+<ul>
+<li><p>“default” runs the pipeline <strong>without</strong> using any stable versions of
+datasets made with AquaMatch_harmonize_WQP. This requires that the
+AquaMatch_harmonize_WQP pipeline has been run locally.</p></li>
+<li><p>“use_stable” uses publicly-posted stable versions of datasets from
+AquaMatch_harmonize_WQP and is intended for those who wish to modify choices
+made in siteSR_WQP or for those who wish to have the complete pipeline on
+their local device</p></li>
+<li><p>“admin_update” is intended for use by ROSSyndicate members when updating
+siteSR datasets and create publicly-stable versions of the siteSR_WQP to be
+stored in the AquaMatch_siteSR_WQP repository</p></li>
+</ul>
+<p>All configurations will be reliant on the stable version of handoff coefficients
+calculated in AquaMatch_lakeSR, as re-running that workflow takes multiple days.
+Advanced users are welcome to adapt the pipeline to incorporate other handoff
+methods. <strong>The Landsat Surface Reflectance product should not be used without
+applying a handoff coefficient if you are using data from multiple Landsat
+missions.</strong></p>
+<p>Proper configuration of <code>harmonize_repo_directory</code> and <code>lakeSR_repo_directory</code>
+is imperative as the siteSR_WQP workflow references files inside
+AquaMatch_harmonize_WQP and AquaMatch_lakeSR file structures. If this is
+incorrectly set up, users will receive a message to communicate this. All
+repositories stored on the AquaSat v2 GitHub will contain files that link to
+versions of the data that the AquaSat v2 team has harmonized so that a local run
+is not necessitated. Any run of the “default” configuration will require that
+the harmonize pipeline has been run locally.</p>
+<p><strong>gee_config.yml</strong>:</p>
+<p>This configuration file defines parameters of the GEE pull. This configuration
+can be customized. To create a different configuration of the GEE pull, fill out
+the yaml file at the file path <code>gee_config.yml</code>. If you change the name of this
+file, you will need to update the file name at line 13 of the <code>5_siteSR_stack.R</code>
+file.</p>
+</div>
+<div id="targets-groups-1" class="section level3 hasAnchor" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> {targets} Groups<a href="background.html#targets-groups-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>_targets.R:</strong></p>
+<p>This initial group of targets checks the configuration settings in <code>config.yml</code>,
+checks for the harmonization and lakeSR pipelines, and checks for Google Drive
+folder architecture. This group also acquires target objects from the
+harmonization and lakeSR pipelines.</p>
+<p><strong>4_compile_sites:</strong></p>
+<p>This {targets} group collates the sites from the harmonization pipeline,
+creating a list of locations to acquire remote sensing data. All locations are
+associated with a HUC8 if one is not listed in the metadata for the site from
+the WQP, then the unique HUC4s are used to associate points with waterbodies and
+flowlines of the NHDPlusV2 (CONUS) or NHD Best Resolution (non-CONUS HUCs)
+files.</p>
+<p><strong>5_siteSR_stack:</strong></p>
+<p>The resulting list of <em>in situ</em> locations are used to acquire Landsat Collection
+2 SRST data in this {targets} group. Sites are assessed for visibility using the
+JRC Global Surface Water <span class="citation">(<a href="#ref-pekel2016">Pekel et al. 2016</a>)</span> which is based on the historical Landsat
+record. Sites determined to be visible are used to define the GEE Landsat pull.</p>
+<p><strong>6_siteSR_collate_filter_handoff:</strong></p>
+<p><strong>7_siteSR_matchup:</strong></p>
 
+</div>
 </div>
 </div>
 <h3> References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -300,11 +378,11 @@ Blodgett, David, and Mike Johnson. 2023. <em>nhdplusTools: Tools for Accessing a
 <div id="ref-garcia-castellanos2007" class="csl-entry">
 Garcia-Castellanos, Daniel, and Umberto Lombardo. 2007. <span>“Poles of Inaccessibility: A Calculation Algorithm for the Remotest Places on Earth.”</span> <em>Scottish Geographical Journal</em> 123 (3): 227–33. <a href="https://doi.org/10.1080/14702540801897809">https://doi.org/10.1080/14702540801897809</a>.
 </div>
-<div id="ref-landau2021" class="csl-entry">
-Landau, William Michael. 2021. <span>“The Targets r Package: A Dynamic Make-Like Function-Oriented Pipeline Toolkit for Reproducibility and High-Performance Computing.”</span> <em>Journal of Open Source Software</em> 6 (57): 2959. <a href="https://doi.org/10.21105/joss.02959">https://doi.org/10.21105/joss.02959</a>.
-</div>
 <div id="ref-larsson2020" class="csl-entry">
 Larsson, Johan. 2020. <em>Polylabelr: Find the Pole of Inaccessibility (Visual Center) of a Polygon</em>. <a href="https://cran.r-project.org/package=polylabelr">https://cran.r-project.org/package=polylabelr</a>.
+</div>
+<div id="ref-pekel2016" class="csl-entry">
+Pekel, Jean-François, Andrew Cottam, Noel Gorelick, and Alan S. Belward. 2016. <span>“High-resolution mapping of global surface water and its long-term changes.”</span> <em>Nature</em> 540 (7633): 418–22. <a href="https://doi.org/10.1038/nature20584">https://doi.org/10.1038/nature20584</a>.
 </div>
 </div>
             </section>

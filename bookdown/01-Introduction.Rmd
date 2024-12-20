@@ -35,10 +35,9 @@ This {targets} list calculates "Pole of Inaccessibility" (POI)
 [@garcia-castellanos2007] for all non-intermittent lakes, ponds, and reservoirs
 greater than 1 hectare in surface area and intermittent lakes, ponds, and
 reservoirs greater than 4 hectares using the NHDPlusV2 polygons using the
-{nhdplusTools} package [@blodgett2023] and the `poi()` function in the
-{polylabelr} package [@larsson2020]. For all waterbodies outside of CONUS, POI
-were calculated based on the NHD Best Resolution file for the entire state or
-territory.
+{nhdplusTools} package [@blodgett2023], NHD Best Resolution files for non-CONUS
+waterbodies, and the `poi()` function in the {polylabelr} package
+[@larsson2020].
 
 See Section \@ref(locs-data-acq) for additional background and detailed
 methodology.
@@ -64,30 +63,31 @@ See Section \@ref(software-settings) for details on software used in this
 workflow, Section \@ref(LS-C2-SRST) for additional background on Landsat data,
 and Section \@ref(LS-SRST-pull) for detailed methodology of the Landsat pull.
 
-**c_collate_filter_lakeSR**
+**c_collate_filter_lakeSR:**
 
-**d_calculate_apply_handoff**
+**d_calculate_apply_handoff:**
 
-## siteSR-WQP Code Architecture
+## siteSR_WQP Code Architecture
 
-[siteSR-WQP code](https://github.com/AquaSat/AquaMatch_siteSR_WQP) is built upon
+[siteSR_WQP code](https://github.com/AquaSat/AquaMatch_siteSR_WQP) is built upon
 the output of
-[AquaMatch-WQP](https://github.com/AquaSat/AquaMatch_harmonize_WQP) and
-AquaMatch-lakeSR. AquaMatch-WQP provides harmonized *in situ* data from the
-Water Quality Portal for pairing with remote sensing data acquired at the sites
-of *in situ* data. This workflow picks up where AquaMatch-WQP ends, with the
+[AquaMatch_hamronize_WQP](https://github.com/AquaSat/AquaMatch_harmonize_WQP)
+and [lakeSR](https://github.com/AquaSat/AquaMatch_lakeSR).
+AquaMatch_harmonize_WQP provides harmonized *in situ* data from the Water
+Quality Portal for pairing with remote sensing data acquired at the sites of *in
+situ* data. This workflow picks up where AquaMatch_harmonize_WQP ends, with the
 output of harmonized, tiered, and aggregated datasets per water quality
-parameter. AquaMatch-lakeSR provides calculated Landast intermission handoff
-coefficients for interoperability between sensors. In order to run the
-siteSR-WQP workflow, you must have a cloned version of AquaMatch-WQP and
-AquaMatch-lakeSR codebase on your local computer. Section
-\@ref(setup-description) covers details about this requirement.
+parameter. lakeSR provides calculated Landsat intermission handoff coefficients
+for interoperability between sensors. In order to run the siteSR_WQP workflow,
+you must have a cloned version of AquaMatch_harmonize_WQP and AquaMatch_lakeSR
+codebase on your local computer. Section \@ref(setup-description) covers details
+about this requirement.
 
 ### Configuration Files {#setup-description}
 
 **config.yml:**
 
-siteSR-WQP relies on this configuration file to run specific profiles that
+siteSR_WQP relies on this configuration file to run specific profiles that
 determine what operations are being run. The file contains three configuration
 profiles: "default", "admin_update", and "use_stable".
 
@@ -97,22 +97,22 @@ profiles: "default", "admin_update", and "use_stable".
 
 -   "use_stable" uses publicly-posted stable versions of datasets from
     AquaMatch_harmonize_WQP and is intended for those who wish to modify choices
-    made in siteSR-WQP or for those who wish to have the complete pipeline on
+    made in siteSR_WQP or for those who wish to have the complete pipeline on
     their local device
 
 -   "admin_update" is intended for use by ROSSyndicate members when updating
-    siteSR datasets and create publicly-stable versions of the siteSR-WQP to be
+    siteSR datasets and create publicly-stable versions of the siteSR_WQP to be
     stored in the AquaMatch_siteSR_WQP repository
 
 All configurations will be reliant on the stable version of handoff coefficients
-calculated in AquaMatch-lakeSR, as re-running that workflow takes multiple days.
+calculated in AquaMatch_lakeSR, as re-running that workflow takes multiple days.
 Advanced users are welcome to adapt the pipeline to incorporate other handoff
 methods. **The Landsat Surface Reflectance product should not be used without
 applying a handoff coefficient if you are using data from multiple Landsat
 missions.**
 
 Proper configuration of `harmonize_repo_directory` and `lakeSR_repo_directory`
-is imperative as the siteSR-WQP workflow references files inside
+is imperative as the siteSR_WQP workflow references files inside
 AquaMatch_harmonize_WQP and AquaMatch_lakeSR file structures. If this is
 incorrectly set up, users will receive a message to communicate this. All
 repositories stored on the AquaSat v2 GitHub will contain files that link to

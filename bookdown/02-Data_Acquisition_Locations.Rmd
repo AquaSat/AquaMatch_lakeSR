@@ -43,8 +43,8 @@ can then be applied to the data collected over the centrally-located point
 across all waterbodies in the lakeSR database. lakeSR does not acquire nor
 summarize data over the entire waterbody's surface, as it is computationally
 impractical for most large lakes, especially those that cross multiple satellite
-path-rows or tiles. For both lakeSR and siteSR, we summarize the Landsat data
-within a 120 meter radius of a defined location.
+path-rows or tiles. For both lakeSR and siteSR_WQP products, we summarize the
+Landsat data within a 120 meter radius of a defined location.
 
 ## Updates in AquaSat v2
 

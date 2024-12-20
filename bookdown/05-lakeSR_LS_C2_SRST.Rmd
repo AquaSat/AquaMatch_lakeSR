@@ -37,7 +37,11 @@ summarize the changes implemented in this update.
     buffer distance and included area is consistent per location if it is in the
     area of path-row overlap.
 
-    [[insert drawing of this]]
+![Cartoon example: Locations (and their buffers) are the blue circles and the
+extent of the path-row is indicated by the large dark blue or orange boxes. In
+this example, location 1 would be extracted for both path-row 1 and 2, location
+2 only extracted for path-row 2, and location 3 only extracted for path-row
+1.](images/pathrow-ex.png){width="300"}
 
 -   inclusion of Landsat 4 and Landsat 9. At the time of AquaSat v1 and
     LimnoSat-US, Landsat 4 was not easily integrated with other Landsat missions
@@ -196,7 +200,10 @@ perform the masking and extraction of data from the Landsat image. Below is an
 overview of some of the custom masking procedures and their justification, if
 applicable. We use the most aggressive masking procedures in the lakeSR and
 siteSR products in order to attempt to have consistent and robust data across
-such a large area of data acquisition.
+such a large area of data acquisition. An interactive masking viewer is
+available for [Landsat
+4/5/7](https://ee-aquamatch.projects.earthengine.app/view/asv2landsat57interactivemask)
+and Landsat 8/9 to see these masks in action.
 
 -   `apply_rad_mask`: Masks out all pixels that are radiometrically saturated in
     any optical band using the QA_RADSAT QA band. The Landsat User Guides
