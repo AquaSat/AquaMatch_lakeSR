@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>7 References | AquaSat v2: lakeSR and siteSR</title>
+  <title>5 Landsat Collection 2 SRST | AquaSat v2: lakeSR and siteSR</title>
   <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="7 References | AquaSat v2: lakeSR and siteSR" />
+  <meta property="og:title" content="5 Landsat Collection 2 SRST | AquaSat v2: lakeSR and siteSR" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="7 References | AquaSat v2: lakeSR and siteSR" />
+  <meta name="twitter:title" content="5 Landsat Collection 2 SRST | AquaSat v2: lakeSR and siteSR" />
   
   <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="LS-SRST-pull.html"/>
-
+<link rel="prev" href="software-settings.html"/>
+<link rel="next" href="LS-SRST-pull.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -237,112 +237,239 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 hasAnchor" number="7">
-<h1><span class="header-section-number">7</span> References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="LS-C2-SRST" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">5</span> Landsat Collection 2 SRST<a href="LS-C2-SRST.html#LS-C2-SRST" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="initialisms-and-landsat-jargon" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Initialisms and Landsat Jargon<a href="LS-C2-SRST.html#initialisms-and-landsat-jargon" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>SR</em>: surface reflectance</p>
+<p><em>ST</em>: surface temperature</p>
+<p><em>Collection 2 (C2)</em>: The second version of the Landsat record - the transition
+to C2 began in 2020. There were extensive changes to the data storage and
+metadata when moving from Collection 1 to C2. An overview of the differences is
+available as a PDF download
+<a href="https://www.usgs.gov/media/files/landsat-collection-1-vs-collection-2-summary">here</a>
+from the USGS. AquaSat v1 and LimnoSat-US were based on Collection 1 data, which
+are no longer available from the USGS and have been superseded by Collection 2
+data.</p>
+<p><em>Data Tier</em>: a data tier for Landsat refers to data quality and processing.
+lakeSR uses Tier 1 data exclusively which conform to the highest level of data
+quality. To learn more about Landsat tiers, see <a href="https://www.usgs.gov/media/videos/landsat-collections-what-are-tiers">this video from the
+USGS</a>.</p>
+<p><em>Data Processing Level (Level)</em>: a data processing level for Landsat refers to
+how much the data have been processed. Level 1 (top of atmosphere) is less
+processed than Level 2 (surface reflectance). lakeSR uses Level 2 data
+exclusively, as it has gone through a standard atmospheric correction process
+that attempts to standardize data handling through out the Landsat record - it
+is <em>derived</em> from Level 1 data. NASA has compiled <a href="https://www.earthdata.nasa.gov/learn/earth-observation-data-basics/data-processing-levels">a list of general data
+processing levels and descriptions
+here</a>.</p>
+</div>
+<div id="valid-dates" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Background Information<a href="LS-C2-SRST.html#valid-dates" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>The information presented in this section originates from the <a href="https://landsat.gsfc.nasa.gov/">NASA Landsat
+Science website</a> and has been summarized here
+for the purpose of providing background information about the Landsat archive
+relevant to the creation and use of lakeSR.</em></p>
+<p>The Landsat archive of multispectral and thermal data in lakeSR is composed of
+Landsat missions 4 through 9 and spans more than 40 years.</p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Mission and Sensor</th>
+<th align="center">Launch Date</th>
+<th align="center">End of Science Mission</th>
+<th align="center">Decommission Date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Landsat 4 TM <span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
+<td align="center">1982-07-16</td>
+<td align="center">1993-12-14</td>
+<td align="center">2001-06-15</td>
+</tr>
+<tr class="even">
+<td>Landsat 5 TM <span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
+<td align="center">1984-03-01</td>
+<td align="center">2011-11-18</td>
+<td align="center">2013-06-05</td>
+</tr>
+<tr class="odd">
+<td>Landsat 7 ETM+ <span class="citation">(<a href="#ref-eros-7">EROS Center 2020b</a>)</span></td>
+<td align="center">1999-04-15</td>
+<td align="center">2022-04-06</td>
+<td align="center">N/A</td>
+</tr>
+<tr class="even">
+<td>Landsat 8 OLI/TIRS <span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
+<td align="center">2013-02-11</td>
+<td align="center">N/A</td>
+<td align="center">N/A</td>
+</tr>
+<tr class="odd">
+<td>Landsat 9 OLI-2/TIRS-2 <span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
+<td align="center">2021-09-27</td>
+<td align="center">N/A</td>
+<td align="center">N/A</td>
+</tr>
+</tbody>
+</table>
+<p>The image record for Landsat 4 is not consistent nor robust due to a data
+transmitter failure early in service, however our pipeline acquires data as
+available. Landsat 6 did not achieve orbit.</p>
+<p>For the purposes of AquaSat v2, we truncate the data record for Landsat 4 and 5
+at the end of the Science Mission of the satellite. No corrections were made for
+the Landsat 7 scanline error that began on May 31, 2003, data were collected as
+available despite the scanline error since the data are still of acceptable
+quality <a href="https://www.usgs.gov/faqs/what-landsat-7-etm-slc-data">per the USGS</a>.
+Additionally, Landsat 7 began to experience orbital drift beginning in 2017,
+resulting in top-of-atmosphere (and therefore also surface reflectance) that had
+growing uncertainties over time as the drift increased <span class="citation">(<a href="#ref-qiu2021">Qiu et al. 2021</a>)</span>. Qui
+<span class="citation">(<a href="#ref-qiu2021">2021</a>)</span> suggests that data are not robust enough for trend analysis after
+the start of the growing season in 2020, but because their analysis was of NDVI,
+we conservatively truncate the data at the end of 2019.</p>
+<div id="spectral-response" class="section level3 hasAnchor" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> Spectral Response<a href="LS-C2-SRST.html#spectral-response" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>While the nominal bands for each of the missions within the archive are
+relatively consistent (with the addition of an Aerosol band beginning Landsat
+8), the precise spectral response for each nominal band shifted beginning with
+Landsat 8 OLI/TIRS. The image below visualizes the spectral response throughout
+the Landsat archive.</p>
+<div class="float">
+<img src="images/Landsat-SpectralBands.png" alt="Image credit: L. Rocchio and J. Barsi; NASA. (https://landsat.gsfc.nasa.gov/article/the-intervening-atmosphere-tracing-the-provenance-of-a-favorite-landsat-infographic/)" />
+<div class="figcaption">Image credit: L. Rocchio and J. Barsi; NASA.
+(<a href="https://landsat.gsfc.nasa.gov/article/the-intervening-atmosphere-tracing-the-provenance-of-a-favorite-landsat-infographic/" class="uri">https://landsat.gsfc.nasa.gov/article/the-intervening-atmosphere-tracing-the-provenance-of-a-favorite-landsat-infographic/</a>)</div>
+</div>
+</div>
+<div id="sensor-resolution" class="section level3 hasAnchor" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> Sensor Resolution<a href="LS-C2-SRST.html#sensor-resolution" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The spatial resolution of the Level 1 data that the SR and ST products are
+derived from has not changed for optical bands over time (Aerosol, RGB, NIR,
+SWIR) but has varied over the historic record for thermal data:</p>
+<table style="width:65%;">
+<colgroup>
+<col width="20%" />
+<col width="22%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Sensors</th>
+<th align="center">Optical Bands</th>
+<th align="center">Thermal Bands</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">TM</td>
+<td align="center">30</td>
+<td align="center">120</td>
+</tr>
+<tr class="even">
+<td align="center">ETM+</td>
+<td align="center">30</td>
+<td align="center">60</td>
+</tr>
+<tr class="odd">
+<td align="center"><p>OLI/TIRS</p>
+<p>OLI-2/TIRS-2</p></td>
+<td align="center">30</td>
+<td align="center">100</td>
+</tr>
+</tbody>
+</table>
+<p>All Collection 2 Level 2 Surface Reflectance and Surface Temperature data have
+been resampled to 30m.</p>
+<p>Alongside the pixel resolution of the sensors is the radiometric resolution at
+which the data are stored. TM and ETM+ data are stored as 8-bit data products,
+OLI data are quantitized to 12 bits and Landsat 9 to 14 bits. This equates to
+256 shades per band for Landsat 4-7, 4,096 shades for Landsat 8 and 16,384
+shades for Landsat 9, where higher numbers allow for greater precision of
+measurement in a given band. All Collection 2 Level 2 Surface Reflectance and
+Surface Temperature data have been rescaled to 16 bits.</p>
+</div>
+</div>
+<div id="surface-reflectance-product" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> Surface Reflectance Product<a href="LS-C2-SRST.html#surface-reflectance-product" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>The information presented in this section originates from the <a href="https://www.usgs.gov/landsat-missions/landsat-surface-reflectance">USGS Landsat
+Collection 2 Surface
+Reflectance</a>
+product page and has been summarized here for the purpose of providing
+background information about the Landsat archive relevant to the creation and
+use of lakeSR.</em></p>
+<p>The Landsat C2 SR product is a Level 2 data product that has been
+atmospherically corrected from the Level 1 Top of Atmosphere product using a
+myriad of inputs to create a reasonably consistent data product across space and
+time. The USGS EROS describes the SR product as follows:</p>
+<blockquote>
+<p><em>Surface reflectance improves comparison between multiple images over the same
+region by accounting for atmospheric effects such as aerosol scattering and
+thin clouds, which can help in the detection and characterization of Earth
+surface change. Surface reflectance is generated from Level-1 inputs that meet
+the &lt;76 degrees Solar Zenith Angle constraint and include the required
+auxiliary data inputs to generate a scientifically viable product.</em></p>
+</blockquote>
+<div id="sr-atmospheric-processing" class="section level3 hasAnchor" number="5.3.1">
+<h3><span class="header-section-number">5.3.1</span> SR Atmospheric Processing<a href="LS-C2-SRST.html#sr-atmospheric-processing" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The SR product for Landsat 4-7 is calculated using the Land Ecosystem
+Distrubance Adaptive Procesing System (LEDAPS) <span class="citation">(<a href="#ref-schmidt2013">Schmidt et al. 2013</a>)</span> and Landsat 8 and
+9 SR data are calculated using the Land Surface Reflectance Code (LaSRC)
+algorithm <span class="citation">(<a href="#ref-vermote2018">Vermote et al. 2018</a>)</span>. The two algorithms are functionally different, but the
+outcome is the same: a consistently-processed surface reflectance product that
+is available worldwide. See the table under section heading <a href="https://www.usgs.gov/landsat-missions/landsat-collection-2-surface-reflectance">‘Differences in
+Surface Reflectance Processing Algorithms’ on the USGS Landsat C2
+website</a>
+for details.</p>
+</div>
+</div>
+<div id="surface-temperature" class="section level2 hasAnchor" number="5.4">
+<h2><span class="header-section-number">5.4</span> Surface Temperature<a href="LS-C2-SRST.html#surface-temperature" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>The information presented in this section originates from the <a href="https://www.usgs.gov/landsat-missions/landsat-collection-2-surface-temperature">USGS Landsat
+Collection 2 Surface
+Temperature</a>
+product page and has been summarized here for the purpose of providing
+background information about the Landsat archive relevant to the creation and
+use of lakeSR.</em></p>
+<p>The Landsat Collection 2 Surface Temperature (ST) product is calculated using a
+single-channel algorithm <span class="citation">(<a href="#ref-cook2014a">M. J. Cook 2014</a>; <a href="#ref-cook2014b">M. Cook et al. 2014</a>)</span> to convert the thermal band
+data to temperature estimates in degrees Kelvin. These data are considered
+interoperable over space and time with few differences in the ST algorithm
+product within Collection 2, with the acknowledgement of the
+previously-documented spectral and radiometric resolution differences.</p>
 
+</div>
+</div>
+<h3> References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
-<div class="csl-entry">
-Blodgett, David, and Mike Johnson. 2023. <em>nhdplusTools: Tools for Accessing and Working with the NHDPlus</em>. Reston, VA: U.S. Geological Survey. <a href="https://doi.org/10.5066/P97AS8JD">https://doi.org/10.5066/P97AS8JD</a>.
-</div>
-<div class="csl-entry">
-Burket, Martha Otte, Leif G. Olmanson, and Patrick L. Brezonik. 2023. <span>“Comparison of Two Water Color Algorithms: Implications for the Remote Sensing of Water Bodies with Moderate to High CDOM or Chlorophyll Levels.”</span> <em>Sensors</em> 23 (3): 1071. <a href="https://doi.org/10.3390/s23031071">https://doi.org/10.3390/s23031071</a>.
-</div>
-<div class="csl-entry">
+<div id="ref-cook2014a" class="csl-entry">
 Cook, M J. 2014. <span>“Atmospheric Compensation for a Landsat Land Surface Temperature Product.”</span> PhD thesis, Rochester, NY. <a href="https://scholarworks.rit.edu/theses/8513">https://scholarworks.rit.edu/theses/8513</a>.
 </div>
-<div class="csl-entry">
+<div id="ref-cook2014b" class="csl-entry">
 Cook, Monica, John R. Schott, John Mandel, and Nina Raqueno. 2014. <span>“Development of an Operational Calibration Methodology for the Landsat Thermal Data Archive and Initial Testing of the Atmospheric Compensation Component of a Land Surface Temperature (LST) Product from the Archive.”</span> <em>Remote Sensing</em> 6 (11): 1124411266. <a href="https://doi.org/10.3390/rs61111244">https://doi.org/10.3390/rs61111244</a>.
 </div>
-<div class="csl-entry">
+<div id="ref-eros-45" class="csl-entry">
 EROS Center. 2020a. <span>“USGS EROS Archive - Landsat Archives - Landsat 4-5 TM Collection 2 Level-2 Science Products.”</span> <a href="https://doi.org/doi.org/10.5066/P9IAXOVV">https://doi.org/doi.org/10.5066/P9IAXOVV</a>.
 </div>
-<div class="csl-entry">
+<div id="ref-eros-7" class="csl-entry">
 ———. 2020b. <span>“USGS EROS Archive - Landsat Archives - Landsat 7 ETM Plus Collection 2 Level-2 Science Products.”</span> <a href="https://doi.org/doi.org/10.5066/P9C7I13B">https://doi.org/doi.org/10.5066/P9C7I13B</a>.
 </div>
-<div class="csl-entry">
+<div id="ref-eros-89" class="csl-entry">
 ———. 2020c. <span>“USGS EROS Archive - Landsat Archives - Landsat 8-9 OLI/TIRS Collection 2 Level-2 Science Products.”</span> <a href="https://doi.org/doi.org/10.5066/P9OGBGM6">https://doi.org/doi.org/10.5066/P9OGBGM6</a>.
 </div>
-<div class="csl-entry">
-Fajardo, Otto. 2023. <em>Pyreadr: Reads/Writes r RData and Rds Files into/from Pandas Data Frames</em>. <a href="https://github.com/ofajardo/pyreadr">https://github.com/ofajardo/pyreadr</a>.
-</div>
-<div class="csl-entry">
-Garcia-Castellanos, Daniel, and Umberto Lombardo. 2007. <span>“Poles of Inaccessibility: A Calculation Algorithm for the Remotest Places on Earth.”</span> <em>Scottish Geographical Journal</em> 123 (3): 227–33. <a href="https://doi.org/10.1080/14702540801897809">https://doi.org/10.1080/14702540801897809</a>.
-</div>
-<div class="csl-entry">
-Gorelick, N. 2023. <em>Earthengine-Api: Earth Engine Python API</em>. Google. <a href="https://github.com/google/earthengine-api">https://github.com/google/earthengine-api</a>.
-</div>
-<div class="csl-entry">
-Gorelick, N, M Hancher, M Dixon, S Ilyushchenko, D Thau, and R Moore. 2017. <span>“Google Earth Engine: Planetary-Scale Geospatial Analysis for Everyone.”</span> <em>Remote Sensing of Environment</em>. <a href="https://doi.org/10.1016/j.rse.2017.06.031">https://doi.org/10.1016/j.rse.2017.06.031</a>.
-</div>
-<div class="csl-entry">
-Harris, Charles R., K. Jarrod Millman, Stéfan J. van der Walt, Ralf Gommers, Pauli Virtanen, David Cournapeau, Eric Wieser, et al. 2020. <span>“Array Programming with NumPy.”</span> <em>Nature</em> 585 (7825): 357–62. <a href="https://doi.org/10.1038/s41586-020-2649-2">https://doi.org/10.1038/s41586-020-2649-2</a>.
-</div>
-<div class="csl-entry">
-Jones, John W. 2019. <span>“Improved Automated Detection of Subpixel-Scale Inundation<span></span>revised Dynamic Surface Water Extent (DSWE) Partial Surface Water Tests.”</span> <em>Remote Sensing</em> 11 (4). <a href="https://doi.org/10.3390/rs11040374">https://doi.org/10.3390/rs11040374</a>.
-</div>
-<div class="csl-entry">
-Landau, William Michael. 2021. <span>“The Targets r Package: A Dynamic Make-Like Function-Oriented Pipeline Toolkit for Reproducibility and High-Performance Computing.”</span> <em>Journal of Open Source Software</em> 6 (57): 2959. <a href="https://doi.org/10.21105/joss.02959">https://doi.org/10.21105/joss.02959</a>.
-</div>
-<div class="csl-entry">
-Larsson, Johan. 2020. <em>Polylabelr: Find the Pole of Inaccessibility (Visual Center) of a Polygon</em>. <a href="https://cran.r-project.org/package=polylabelr">https://cran.r-project.org/package=polylabelr</a>.
-</div>
-<div class="csl-entry">
-Messager, Mathis Loïc, Bernhard Lehner, Günther Grill, Irena Nedeva, and Oliver Schmitt. 2016. <span>“Estimating the Volume and Age of Water Stored in Global Lakes Using a Geo-Statistical Approach.”</span> <em>Nature Communications</em> 7 (1): 13603. <a href="https://doi.org/10.1038/ncomms13603">https://doi.org/10.1038/ncomms13603</a>.
-</div>
-<div class="csl-entry">
-Pekel, Jean-François, Andrew Cottam, Noel Gorelick, and Alan S. Belward. 2016. <span>“High-resolution mapping of global surface water and its long-term changes.”</span> <em>Nature</em> 540 (7633): 418–22. <a href="https://doi.org/10.1038/nature20584">https://doi.org/10.1038/nature20584</a>.
-</div>
-<div class="csl-entry">
-Posit team. 2023. <em>RStudio: Integrated Development Environment for r</em>. Boston, MA: Posit Software, PBC. <a href="http://www.posit.co/">http://www.posit.co/</a>.
-</div>
-<div class="csl-entry">
+<div id="ref-qiu2021" class="csl-entry">
 Qiu, Shirley, Zhe Zhu, Rong Shang, and Christopher J. Crawford. 2021. <span>“Can Landsat 7 Preserve Its Science Capability with a Drifting Orbit?”</span> <em>Science of Remote Sensing</em> 4. <a href="https://doi.org/10.1016/j.srs.2021.100026">https://doi.org/10.1016/j.srs.2021.100026</a>.
 </div>
-<div class="csl-entry">
-Ross, Matthew R. V., Simon N. Topp, Alison P. Appling, Xiao Yang, Catherine Kuhn, David Butman, Marc Simard, and Tamlin M. Pavelsky. 2019. <span>“AquaSat: A Data Set to Enable Remote Sensing of Water Quality for Inland Waters.”</span> <em>Water Resources Research</em> 55 (11): 10012–25. <a href="https://doi.org/10.1029/2019WR024883">https://doi.org/10.1029/2019WR024883</a>.
-</div>
-<div class="csl-entry">
+<div id="ref-schmidt2013" class="csl-entry">
 Schmidt, Gail, Calli B. Jenkerson, Jeffrey Masek, Eric Vermote, and Feng Gao. 2013. <span>“Landsat Ecosystem Disturbance Adaptive Processing System (LEDAPS) Algorithm Description.”</span> Reston, VA. <a href="https://doi.org/10.3133/ofr20131057">https://doi.org/10.3133/ofr20131057</a>.
 </div>
-<div class="csl-entry">
-Stefansson, Vilhjalmur. 1920. <span>“The Region of Maximum Inaccessibility in the Arctic.”</span> <em>Geographical Review</em> 10 (3): 167–72. <a href="https://doi.org/10.2307/207749">https://doi.org/10.2307/207749</a>.
-</div>
-<div class="csl-entry">
-The pandas development team. 2023. <em>Pandas-Dev/Pandas: Pandas</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.8092754">https://doi.org/10.5281/zenodo.8092754</a>.
-</div>
-<div class="csl-entry">
-Topp, Simon, Tamlin Pavelsky, Xiao Yang, John Gardner, and Matthew R. V. Ross. n.d. <span>“LimnoSat-US: A Remote Sensing Dataset for u.s. Lakes from 1984-2020.”</span> <a href="https://doi.org/10.5281/zenodo.4139695">https://doi.org/10.5281/zenodo.4139695</a>.
-</div>
-<div class="csl-entry">
-US Geological Survey. 2021. <span>“Landsat 4-7 Collection 2 (C2) Level 2 Science Product (L2SP) Guide.”</span> <a href="https://www.usgs.gov/media/files/landsat-4-7-collection-2-level-2-science-product-guide">https://www.usgs.gov/media/files/landsat-4-7-collection-2-level-2-science-product-guide</a>.
-</div>
-<div class="csl-entry">
-———. 2022. <span>“Landsat Collection 2 Level-3 Dynamic Surface Water Extent Algorithm Description Document.”</span>
-</div>
-<div class="csl-entry">
-———. 2023. <span>“USGS National Hydrography Dataset Best Resolution (NHD) - Alaska (Published 20230506) GeoPackage.”</span>
-</div>
-<div class="csl-entry">
-———. 2024. <span>“Landsat 8-9 Collection 2 (C2) Level 2 Science Product (L2SP) Guide.”</span> <a href="https://www.usgs.gov/media/files/landsat-8-9-collection-2-level-2-science-product-guide">https://www.usgs.gov/media/files/landsat-8-9-collection-2-level-2-science-product-guide</a>.
-</div>
-<div class="csl-entry">
-Ushey, Kevin, J. J. Allaire, and Yuan Tang. 2023. <em>Reticulate: Interface to ’Python’</em>. <a href="https://CRAN.R-project.org/package=reticulate">https://CRAN.R-project.org/package=reticulate</a>.
-</div>
-<div class="csl-entry">
+<div id="ref-vermote2018" class="csl-entry">
 Vermote, E., J. C. Roger, B. Franch, and Sergii Skakun. 2018. <span>“LaSRC (Land Surface Reflectance Code): Overview, Application and Validation Using MODIS, VIIRS, LANDSAT and Sentinel 2 Data’s.”</span> In, 8173–76. <a href="https://doi.org/10.1109/IGARSS.2018.8517622">https://doi.org/10.1109/IGARSS.2018.8517622</a>.
-</div>
-<div class="csl-entry">
-Verpoorter, Charles, Tiit Kutser, David A. Seekell, and Lars J. Tranvik. 2014. <span>“A Global Inventory of Lakes Based on High-Resolution Satellite Imagery.”</span> <em>Geophysical Research Letters</em> 41 (18): 6396–6402. <a href="https://doi.org/10.1002/2014GL060641">https://doi.org/10.1002/2014GL060641</a>.
-</div>
-<div class="csl-entry">
-Walker, Kyle. 2023. <em>Tigris: Load Census TIGER/Line Shapefiles</em>. <a href="https://CRAN.R-project.org/package=tigris">https://CRAN.R-project.org/package=tigris</a>.
-</div>
-<div class="csl-entry">
-Xie, Yihui. 2016. <em>Bookdown: Authoring Books and Technical Documents with r Markdown</em>. Boca Raton, Florida: Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/bookdown">https://bookdown.org/yihui/bookdown</a>.
-</div>
-<div class="csl-entry">
-Yang, Xiao. 2020. <em>Deepest Point Calculation for Any Given Polygon Using Google Earth Engine JavaScript API</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.6341960">https://doi.org/10.5281/zenodo.6341960</a>.
-</div>
 </div>
 </div>
             </section>
@@ -350,8 +477,8 @@ Yang, Xiao. 2020. <em>Deepest Point Calculation for Any Given Polygon Using Goog
           </div>
         </div>
       </div>
-<a href="LS-SRST-pull.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="software-settings.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="LS-SRST-pull.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

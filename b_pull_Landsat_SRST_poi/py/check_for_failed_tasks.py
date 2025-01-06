@@ -14,7 +14,9 @@ run_date = yml["run_date"][0]
 # make task error file name
 fn = "GEE_task_errors_v" + run_date + ".csv"
 
-# get a list of all the submitted tasks (this times out at 10d, FYI)
+# get a list of all the submitted tasks (these data time out at 10 days, so any 
+# failed tasks may not be indicative of ALL failed tasks if the runtime of the
+# pull is greater than 10 days)
 ts = list(ee.batch.Task.list())
 
 # for each of the tasks, see if any failed, if so, add a line to a csv file with the task id

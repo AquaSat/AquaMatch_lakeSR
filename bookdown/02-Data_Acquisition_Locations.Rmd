@@ -34,24 +34,24 @@ ts <- tar_timestamp(a_combined_poi)
 # Locations of Data Acquisition {#locs-data-acq}
 
 As noted in the Introduction (Section \@ref(introduction)), for the purposes of
-**AquaSat**, surface reflectance and surface temperature data are acquired at
+AquaSat v2, surface reflectance and surface temperature data are acquired at
 specific, centrally-located points within waterbodies (typically in pelagic
-locations of lakes, **lakeSR**) and at locations where there are *in situ* data
-(**siteSR**). The data acquired at locations where there are *in situ* data are
-meant to create location-specific algorithms using the **AquaMatch** database,
-which can then be applied to the data collected over the centrally-located point
-across all waterbodies in the **lakeSR** database. **lakeSR** does not acquire
-nor summarize data over the entire waterbody's surface, as it is computationally
+locations of lakes, lakeSR) and at locations where there are *in situ* data
+(siteSR). The data acquired at locations where there are *in situ* data are
+meant to create location-specific algorithms using the AquaMatch database, which
+can then be applied to the data collected over the centrally-located point
+across all waterbodies in the lakeSR database. lakeSR does not acquire nor
+summarize data over the entire waterbody's surface, as it is computationally
 impractical for most large lakes, especially those that cross multiple satellite
-path-rows or tiles. For both **lakeSR** and **siteSR**, we summarize the Landsat
-data within a 120m radius of a defined location.
+path-rows or tiles. For both lakeSR and siteSR_WQP products, we summarize the
+Landsat data within a 120 meter radius of a defined location.
 
-## Changes from AquaSat v1
+## Updates in AquaSat v2
 
 Some changes in lake polygon and center point have been made in modernizing and
-scaling from the original AquaSat. The lake center aspect called "deepest point"
-of AquaSat v1 was built upon HydroLakes [@messager2016], a global database of
-lakes greater than 10 hectares accounting for 1.4 million waterbodies and a 
+scaling from LimnoSat-US. The lake center aspect called "deepest point" of
+LimnoSat-US was built upon HydroLakes [@messager2016], a global database of
+lakes greater than 10 hectares accounting for 1.4 million waterbodies and a
 total surface area of 2.67 million km² worldwide. While this dataset of lakes
 represents \~55% of the worldwide surface area of lakes greater than 1 hectare,
 it is only a sliver of the estimated 27 million waterbodies in the world
@@ -65,29 +65,27 @@ States and permanently inhabited territories.
 
 The USGS National Hydrography products contain smaller waterbodies and higher
 resolution polygons than the HydroLakes shapes, which makes it computationally
-impossible to use the Chebyshev Center ("deepest point", @yang2020) calculation
-used in AquaSat v1 due to the number of vertices in each polygon. To replace
+impossible to use the Chebyshev Center ["deepest point", @yang2020] calculation
+used in LimnoSat-US due to the number of vertices in each polygon. To replace
 this important step in the update, we employ the concept of "pole of
-inaccessibility" (POI) [@stefansson1920], which can handle complex polygons in
-the R environment with minimal computational investment.
+inaccessibility" [POI, @stefansson1920].
 
 The concept of POI is used to define the geographic center of a circle with the
 largest circumference within any complex polygon. The foundational principle is
 used widely to describe the arctic pole of inaccessiblity, that is the point in
 the northern arctic circle that is the furthest from land, but has also been
 used to describe the geographic center of landmasses [@garcia-castellanos2007].
-For **lakeSR**, we use POI to determine the point in a waterbody that is
-furthest from the shoreline using the `polylabelr::poi()` function
-[@larsson2020], which calculates a point in space and the radius of the circle
-used to define the POI.
+For lakeSR, we use POI to determine the point in a waterbody that is furthest
+from the shoreline using the `polylabelr::poi()` function [@larsson2020], which
+calculates a point in space and the radius of the circle used to define the POI.
 
-## Waterbodies in AquaMatch-lakeSR {#waterbodies}
+## Waterbodies Included {#waterbodies}
 
-For **lakeSR**, we use the NHDPlusV2 dataset for lakes within the conterminous
-US and US Territories using the {nhdplusTools} R package [@blodgett2023] and the
-NHD Best Resolution [@usgeologicalsurvey] data through The National Map. All
-HUC4s were downloaded and processed in `r params$locs_run_date` using the most
-updated version available at the time of download.
+For lakeSR, we use the NHDPlusV2 dataset for lakes within the conterminous US
+and US Territories using the {nhdplusTools} R package [@blodgett2023] and the
+NHD Best Resolution [e.g. @usgs-nhd-ak] data through The National Map. All
+waterbody polygons were downloaded and processed in `r params$locs_run_date` by
+HUC4 using the most updated version available at the time of download.
 
 ```{r NHDPlusV2-HUC4, echo=F, fig.cap="NHD HUC4 map for the United States and Territories, courtesy of the USGS."}
 knitr::include_graphics("https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/thumbnails/image/WBD_SubRegions_24x18.png")
@@ -196,13 +194,14 @@ WI_for_viz <- state_boundaries_wgs84 %>%
 
 ```
 
-The state of Wisconsin contains more than 15,000 freshwater lakes. AquaSat v1
+The state of Wisconsin contains more than 15,000 freshwater lakes. LimnoSat-US
 contained just `r format(nrow(WI_HL_DP), big.mark = ",")` waterbodies within
-Wisconsin (Figure \@ref(fig:v1-WI-lakes)), whereas the our update includes
-`r format(nrow(WI_poi), big.mark = ",")` (Figure \@ref(fig:v2-WI-lakes)) -
-accounting for a majority of the state's freshwater water bodies.
+Wisconsin (Figure \@ref(fig:v1-WI-lakes)), whereas AquaSat v2 via the lakeSR
+product includes `r format(nrow(WI_poi), big.mark = ",")` (Figure
+\@ref(fig:v2-WI-lakes)) - accounting for a majority of the state's freshwater
+water bodies.
 
-```{r v1-WI-lakes, echo=F, fig.cap="Deepest point of Wisconsin lakes included in AquaSat v1, defined by the Hydrolakes data product. Deepest point for each lake is indicated with a black dot."}
+```{r v1-WI-lakes, echo=F, fig.cap="Deepest point of Wisconsin lakes included in LimnoSat-US, defined by the Hydrolakes data product. Deepest point for each lake is indicated with a black dot."}
 tm_shape(WI_for_viz) +
   tm_borders() +
   tm_shape(WI_HL) +
@@ -213,7 +212,7 @@ tm_shape(WI_for_viz) +
 
 ```
 
-```{r v2-WI-lakes, fig.cap="Point of inaccessibility for Wisconsin lakes included in AquaSat v2, defined by the NHDPlusV2 data product. Point of inaccessibility for each lake is indicated with a black dot."}
+```{r v2-WI-lakes, fig.cap="Point of inaccessibility for Wisconsin lakes included in AquaSat v2 via lakeSR, defined by the NHDPlusV2 data product. Point of inaccessibility for each lake is indicated with a black dot."}
 tm_shape(WI_for_viz) +
   tm_borders() +
   tm_shape(WI_wbd_poi) +

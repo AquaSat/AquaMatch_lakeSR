@@ -5,145 +5,303 @@ editor_options:
 bibliography: references.bib
 ---
 
-# lakeSR-LS_C2_SRST Data Product {#LS-C2-SRST}
+# Landsat Collection 2 SRST Data Product {#LS-SRST-pull}
 
-The **lakeSR-LS_C2_SRST** data product is a set of tabular datasets,
-representing either the SR and ST data summarized for the POI location which is
-meant to represent pelagic conditions at a given waterbody (identified by its
-NHD Permanent Identifier, see Section \@ref(locs-data-acq)) or representing the
-SR and ST data summarized for any sampling location(s) within a waterbody
-detected in the WQP in the early stages of **AquaMatch**. Both types of data
-contain "full stacks" of the Landsat Collection 2 record - that is, all
-summarized Landsat data available from all Landsat missions.
+The lakeSR-Landsat data product is a set of tabular datasets, representing the
+Landsat surface reflectance (SR) and surface tempearture (ST) data summarized
+for the point of inaccessibility (POI) location which is meant to represent
+pelagic conditions at a given waterbody (identified by its NHD unique
+identifier, see Section \@ref(locs-data-acq)). This data product contains "full
+stacks" of the Landsat Collection 2 record - that is, all summarized Landsat
+data available from all Landsat missions that met our QA criteria.
 
-## Overview
+The siteSR-Landsat data product is similar, but is acquired at unique sampling
+locations identified in Section INSERT REFERENCE TO FUTURE SECTION ABOUT
+COLLATING SITESR LOCS.
 
-At a high level, the workflow for data acquisition is as follows:
+## Changes from AquaSat v1 and LimnoSat-US
+
+While much of the general architecture from the precedent data products remained
+unchanged, in AquaSat v2 we have added a number of features to the remote sensing
+acquisition workflow, have increased efficiency of the data pull, and have made
+the acquired data more robust through additional masking. The bullets below
+summarize the changes implemented in this update.
+
+-   using yaml file for configuration of the workflow. This allows for greater
+    flexibility in data acquisition including the use of custom configurations
+    for the pull.
+
+-   assuring location and buffer area are completely contained in a path-row
+    prior to pulling the data. This reduces erroneous counts of pixels for
+    locations and buffers that are at the edge of a path-row, assuring that the
+    buffer distance and included area is consistent per location if it is in the
+    area of path-row overlap.
+
+![Cartoon example: Locations (and their buffers) are the blue circles and the
+extent of the path-row is indicated by the large dark blue or orange boxes. In
+this example, location 1 would be extracted for both path-row 1 and 2, location
+2 only extracted for path-row 2, and location 3 only extracted for path-row
+1.](images/pathrow-ex.png){width="300"}
+
+-   inclusion of Landsat 4 and Landsat 9. At the time of AquaSat v1 and
+    LimnoSat-US, Landsat 4 was not easily integrated with other Landsat missions
+    due to data storage differences. Collection 2 updates allowed for easier
+    interoperability of the TM sensor (Landsat 4) image series and have
+    therefore been included in the update. Additionally, Landsat 9 came online
+    in 2021, and has been added to the data product.
+
+-   sending tasks to GEE explicitly per path-row and limiting the Landsat stack
+    to the explicit path-row to eliminate duplicate acquisitions. In the
+    previous products, duplicate location/path-row data were acquired because
+    the extracted Landsat stack was not limited to the explicit WRS path-row
+    that the point was in. This meant that locations that were in a path-row
+    overlap would be extracted twice in two different WRS path-row extents. The
+    code below is an example of this type of filtering that occurs as we run a
+    path-row extraction, where we once clipped the stack to the AOI of the
+    path-row.
+
+    ```{python}
+    #| eval: false
+    #| echo: true
+
+    # separate the path-row into path and row values
+    wrs_pathrow = "013031"
+    w_p = int(str(wrs_pathrow)[:3])
+    w_r = int(str(wrs_pathrow)[-3:])
+
+    # filter the Landsat 7 Collection 2 Tier 1 Level 2 product for the path, row, and valid dates
+    l7 = (ee.ImageCollection("LANDSAT/LE07/C02/T1_L2")
+      .filter(ee.Filter.eq("WRS_PATH", w_p))
+      .filter(ee.Filter.eq("WRS_ROW", w_r))
+      .filterDate('1999-05-28', '2019-12-31'))
+    ```
+
+-   filtering for valid mission dates at Landsat stack step. As seen in the code
+    chunk above, we also filter for the valid mission dates as detailed in
+    Section \@ref(valid-dates) - in the previous version this was completed
+    after the Landsat stack was acquired.
+
+-   implementation of Collection 2 updates, specifically scaling changes and
+    updated QA band conventions. The updated scaling factor function is as
+    follows as directed by the @usgs-ls47user and @usgs-ls89user documents.
+
+    ```{python}
+    #| eval: false
+    #| echo: true
+
+    def apply_scale_factors(image):
+      """ Applies scaling factors for Landsat Collection 2 surface reflectance 
+      and surface temperature products
+
+      Args:
+          image: one ee.Image of an ee.ImageCollection
+
+      Returns:
+          ee.Image with band values overwritten by scaling factors
+      """
+      opticalBands = image.select('SR_B.').multiply(0.0000275).add(-0.2)
+      thermalBands = image.select('ST_B.*').multiply(0.00341802).add(149.0)
+      return (image
+        .addBands(opticalBands, None, True)
+        .addBands(thermalBands, None, True))
+
+    ```
+
+-   masking changes. Many updates were made to assure high quality data through
+    the use of updated masking procedures. The following masks were added in
+    this workflow and are detailed below in Section \@ref(masking-functions):
+    `apply_fill_mask_457`, `apply_fill_mask_89`, `apply_realistic_mask_457`,
+    `apply_realistic_mask_89`, `apply_opac_mask` (Landsat 4, 5, 7 only),
+    `apply_sr_aero_mask` (Landsat 8, 9 only). The cloud mask was also updated to
+    include all sources of contamination (including cloud shadow and dilated
+    clouds) in addition to clouds, snow, and ice. The proportion of pixels
+    within the location buffer that were masked out due to clouds is now tracked
+    as `prop_clouds` as an additional method of QA handling downstream of the
+    GEE extraction.
+
+-   DSWE implementation. We have moved from using the JRC Global Surface Water
+    Mapping Layers @pekel2016 to using the Dynamic Surface Water Extent
+    algorithm to identify water pixels in a given Landsat image. See Section
+    \@ref(dswe-implementation) for details.
+
+-   removing no-data acquisitions before GEE export. In the AquaSat v2 update,
+    we remove any rows from the summarized GEE product before export. This adds
+    efficiency to the pull by removing those rows before export, which is a
+    source of added time in the GEE bottleneck.
+
+-   checking for failed tasks. We added a sanity check for failed tasks, since
+    task status is not conveyed from GEE.
+
+## Overview of Acquisition Steps
+
+The workflow for data acquisition is as follows:
 
 1.  read in and format the yaml configuration file for the GEE run
-
-    -   for POI: completed in `config_file_poi`, `yml_file_poi`, `yml_poi`
+    (`b_config_file_poi`, `b_yml_poi`)
 
 2.  reformat the locations file for the GEE run using the configuration file
+    (`b_ref_locations_poi`)
 
-    -   for POI: completed in `ref_locs_poi_file`, `ref_locations_poi`
+3.  determine the WRS-2 path-rows that intersect with the locations file
+    (`b_WRS_pathrow_poi`)
 
-3.  determine the WRS-2 path rows (or 'tiles') that intersect with the locations
-    file
+4.  filter the locations for those that are completely contained by the WRS-2
+    path-row when the automated buffer is added, add the WRS-2 path-rows to the
+    reformatted locations, and save distinct location files by path-row for
+    easier processing in Python (`b_poi_locs_filtered`)
 
-    -   for POI: completed in `WRS_tiles_poi`
-
-4.  add the WRS-2 path rows to the reformatted locations file for quicker
-    processing
-
-    -   for POI: completed in `poi_locs_WRS_file`, `poi_locs_WRS`,
-        `poi_locs_WRS_latlon`
-
-5.  iteratively run the GEE script per WRS-2 tile
-
-    -   for POI: completed in `eeRun_poi`
+5.  iteratively run the GEE script per WRS-2 path-row (`b_eeRun_poi`)
 
 6.  check to see that all tasks are complete in GEE before moving to next step
+    (`b_poi_tasks_complete`)
 
-    -   for POI: completed in `poi_tasks_complete`
+7.  check to see if any tasks failed in GEE extraction which is not visible from
+    the RStudio IDE (`b_check_for_failed_tasks`)
 
-```{r b-group-vis, fig.cap= "Network graph of the *targets* in the b_pull_Landsat_SRST_poi {targets} group."}
- with_dir("..", {
-    tar_visnetwork(targets_only = T, 
-                   shortcut = T,
-                   label = "branches",
-                   names = c("yml_file_poi",
-                             "yml_poi_file",
-                             "yml_poi",
-                             "yml_poi", 
-                             "ref_locs_poi_file",
-                             "ref_locations_poi",
-                             "WRS_tiles_poi",
-                             "poi_locs_WRS_file",
-                             "poi_locs_with_WRS",
-                             "poi_locs_WRS_latlon",
-                             "eeRun_poi",
-                             "poi_tasks_complete"))
-    })
-```
+### Creating a Custom Configuration File {#custom-config}
 
-## Data Acquisition Script
+lakeSR (and siteSR) can be modified to be run by a user by setting up a new
+config file and altering the {targets} workflow to point to that config file. To
+configure a new run of this workflow, fill out the yaml file at the file path
+`b_pull_Landsat_SRST_poi/config_files/config.yml` and modify the `_targets.R`
+script at line 28 to reflect the updated config file.
 
-The data acquisition pipeline for POIs and sampling locations for the
-**lakeSR-LS_C2_SRST** data product is the same, but the pipeline is initialized
-with two different yaml configuration files. This section will walk through the
-code in `b_pull_Landsat_SRST_poi/py/runGEEperTile.py`.
+To run the pipeline with this custom configuration, follow the steps in
+`run_targets.Rmd`, which will run the pipeline.
 
-### Setup
+If you wish to make changes to any processes that are not indicated in the
+config file (using a different set of lakes/source files, remote sensing masking
+procedures, summary statistics, QAQC filtering, mission handoff corrections,
+etc.) we encourage you to do so. Just remember, this pipeline takes DAYS to run
+due to the bottleneck when submitting tasks to Google Earth Engine. If you wish
+to extract remote sensing data for specific locations in a lake, we encourage
+you to look to our [siteSR data
+product](https://github.com/AquaSat/AquaMatch_siteSR_WQP) which is more suited
+to extracting data of that nature. Please note, calculating hand-off
+coefficients from small numbers of lakes may not provide robust enough summary
+statistics for intermission comparison and timeseries analysis. See **SECTION
+HAND-OFF COEFFICIENTS TO BE UPDATED!** for additional guidance.
 
-The first 50 lines of the `runGEEperTile.py` file import Python modules (lines
-2-8), read in the formatted configuration file (line 11) and assign environment
-variables (lines 13-41), read in the text file that stores the current tile
-(lines 43-45) created by the `run_GEE_per_tile()` function called in the
-`eeRun_poi` target), and read in the locations file created in the target
-`poi_locs_WRS_latlon` then subset it for locations that are within the current
-tile (lines 47-50).
+## Technical Implementation of Acquisition Script
 
-### Collating Earth Engine objects for extraction
+In order to cue Python scripts and map along WRS-2 path-rows within the
+{targets} architecture, we use a function `run_GEE_per_pathrow()` which writes
+the current WRS-2 path-row to a text file, then sources a python script that
+uses that text file to run the acquisition for the path-row. Additional details
+are provided below to describe the steps in the python script
+(`run_GEE_per_pathrow.py`).
 
-The next section of code (lines 52-129) collates the Landsat stacks and formats
-them for data extraction.
+### Custom Earth Engine Masking Functions {#masking-functions}
 
-Each Earth Engine Image Collection (`ee.ImageCollection` in the script) for each
-Landsat mission is filtered for total cloud cover in the scene (`CLOUD_COVER`,
-set at \<90%), the date range of interest (all images until 2023-07-01), the
-current `tile` path and row value, and then unscaled from the digital number
-(DN) values that the data are stored in. Below is a code chunk as an example of
-this process for Landsat 7 (lines 61-66). Note that `cloud_thresh`, `yml_start`,
-`yml_end` are configuration settings, `w_p` and `w_r` represent the current
-*path* and *row* of the WRS-2 tile.
+The first section of `run_GEE_per_pathrow.py` saves custom functions used in the
+Landsat stack acquisition. These include data manipulation to create Earth
+Engine (EE) objects, custom QA masks, DSWE algorithm, and the functions that
+perform the masking and extraction of data from the Landsat image. Below is an
+overview of some of the custom masking procedures and their justification, if
+applicable. We use the most aggressive masking procedures in the lakeSR and
+siteSR products in order to attempt to have consistent and robust data across
+such a large area of data acquisition. An interactive masking viewer is
+available for [Landsat
+4/5/7](https://ee-aquamatch.projects.earthengine.app/view/asv2landsat57interactivemask)
+and Landsat 8/9 to see these masks in action.
 
-```{python}
-#| eval: false
-#| echo: true
-l7 = (ee.ImageCollection("LANDSAT/LE07/C02/T1_L2")
-    .filter(ee.Filter.lt("CLOUD_COVER", ee.Number.parse(str(cloud_thresh))))
-    .filterDate(yml_start, yml_end)
-    .filter(ee.Filter.eq("WRS_PATH", w_p))
-    .filter(ee.Filter.eq("WRS_ROW", w_r))
-    .map(apply_scale_factors))
-```
+-   `apply_rad_mask`: Masks out all pixels that are radiometrically saturated in
+    any optical band using the QA_RADSAT QA band. The Landsat User Guides
+    [@usgs-ls47user; @usgs-ls89user] note that radiometrically saturated data
+    are "unusable". Saturated bands happen infrequently in Landsat 8 and 9, but
+    we still apply this mask to all Landat mission data for continuity.
 
-The function `apply_scale_factors()` is a prescribed function which is
-consistent across all Landsat Collection 2 Level 2 SR and ST products to
-transform the DN to remote sensing reflectance (Rrs) values with the following
-function:
+-   `apply_cf_mask`: Applies mask for any pixels obstructed by clouds and
+    snow/ice using the CLOUD_QA band. This is a general QA band that describes
+    clouds/snow/ice detected by algorithms defined by the atmospheric processing
+    procedure. We have elected to only include pixels that do not contain
+    clouds, cloud shadows, dispersed clouds, or snow/ice as defined by this
+    band. In particular, we follow the suggestions in the product User Guide
+    [@usgs-ls47user; @usgs-ls89user]
 
-```{python}
-#| eval: false
-#| echo: true
-def apply_scale_factors(image):
-  """ Applies scaling factors for Landsat Collection 2 surface reflectance 
-  and surface temperature products
+    > Users are advised to engage the QA “Dilated Cloud” (bit 1) AND “Cloud”
+    > (bit 3) OFF condition to correctly identify clear pixels over water.
 
-  Args:
-      image: one ee.Image of an ee.ImageCollection
+-   `apply_sr_aero_mask`: Applies mask for any pixels in Landsat 8 and 9 that
+    have 'medium' or 'high' aerosol QA flags from the SR_QA_AEROSOL band.
+    Because water is particularly difficult to assess from space, we are more
+    aggressive in this mask than suggested by the Landsat 8 and 9 User Guide
+    [@usgs-ls89user] which states: "Note that pixels classified as high aerosol
+    content are not recommended for use."
 
-  Returns:
-      ee.Image with band values overwritten by scaling factors
-  """
-  opticalBands = image.select("SR_B.").multiply(0.0000275).add(-0.2)
-  thermalBands = image.select("ST_B.*").multiply(0.00341802).add(149.0)
-  return image.addBands(opticalBands, None, True).addBands(thermalBands, None,True)
-```
+-   `apply_opac_mask`: Applies mask to remove pixels where atmospheric opacity
+    is greater than 0.3 in Landsat 4, 5, and 7 using the SR_ATMOS_OPACITY band.
+    For similar reasons as a more aggressive aerosol mask in Landsat 8 & 9, we
+    use this mask in addition to the cloud mask (`apply_cf_mask`). The Landsat
+    4-7 User Guide [@usgs-ls47user] states the following about the atmospheric
+    opacity values:
 
-The resulting Landsat 4-7 collections are collated into a single
-ee.ImageCollection (line 81), and bands are renamed for continuity (lines
-83-96). The same is done for Landsat 8 and 9 (lines 99-129). These two
-ee.ImageCollections are handled separately, as the pixel-level metadata within
-the scenes from these missions is slightly different and processing must be
-completed separately.
+    > A general interpretation of atmospheric opacity is that values less than
+    > 0.1 are clear, 0.1-0.3 are average, and values greater than 0.3 indicate
+    > haze or other cloud situations. SR values from pixels with high
+    > atmospheric opacity will be less reliable, especially under high solar
+    > zenith angle conditions.
 
-### Payload handling
+-   `apply_fill_mask_457` and `apply_fill_mask_89`: Applies a mask where any
+    band value is 0 before applying scaling factors to bands. Filled values are
+    infrequent; however, when acquiring data across such a large area and time
+    they are bound to happen.
 
-Because GEE is a free service, there are limits to the total size of a task sent
-to GEE for completion. For this reason, tasks are sent to GEE in 10k location
-increments per tile (for-loop encompassing lines 132-321). This is an additional
-step that is taken in addition to processing per tile to avoid failed tasks.
+-   `apply_realistic_mask_457` and `apply_realistic_mask_89`: Applies a mask
+    where any band is less than -0.01 after scaling, indicating overcorrection
+    of SR product. While the stated minimum value of the 'valid range' for the
+    SR product is 7273 prior to application of scaling factors (0.0000075 after
+    scaling), we know that this product has been fine-tuned on terrestrial data
+    and small over-corrections of the surface reflectance, especially over dark
+    surfaces, is likely to happen. We explicitly allow for very small negative
+    reflectance values to be sure we do not remove very deep, oligotrophic
+    and/or high DOC water systems from our data set.
 
-### Creating an ee.FeatureCollection from a dataframe
+### Defining water area {#dswe-implementation}
+
+We use the Dynamic Surface Water Extent (DSWE) algorithm to define what pixels
+are water within the buffer of our specific locations. DSWE was defined in
+@jones2019 for Landsat Collection 1 and re-implemented for Collection 2 as a
+Level-3 data product in @usgs-dswe. Implementation of the DSWE algorithm results
+in the following values per pixel:
+
+-   a value of 0 indicates no water/fill
+
+-   1 is confident water
+
+-   2 is low confidence water
+
+-   3 is high confidence partial water (or vegetated water)
+
+-   4 is low confidence partial water
+
+Within the scope of lakeSR and siteSR, we tabulate pixels that are a DSWE value
+of 1 (DSWE1) for high confidence open water, or what we call DSWE1a - high
+confidence open water OR the pixel meets a threshold that may indicate there is
+surface-level algae. The algae mask is defined as when a pixel has a DSWE value
+greater than 1 and the green band scaled value is greater than 0.05 and the red
+band scaled value is less than 0.04. These values are based on optical
+properties intended to mimic the spectral response of chlorophyll *a* as
+described by @burket2023. This is an experimental mask, so we export both DSWE1
+and DSWE1a summaries within lakeSR. We have found some omission error within
+DSWE1 for visible floating scum within river systems and this additional mask
+captures many of those pixels without adding unnecessary uncertainty. Users of
+the lakeSR and siteSR data products can choose to use the DSWE1a product if
+applicable to their research, however, this threshold was defined in the
+Illinois and Ohio Rivers and may not be applicable in all environments.
+
+## Payload handling
+
+Because GEE is a free service to those at academic or governmental institutions,
+there are limits to the total number of tasks being run co-currently on GEE's
+platform. For this reason, tasks are sent to GEE as path-row groups as soon as
+there are fewer than 10 tasks in the GEE tasks queue. Additionally, any pathrow
+containing more than 5,000 POI locations are sent as separate tasks in 5000
+location chunks. This is an additional step that is taken in addition to
+processing per path-row to avoid failed tasks. We have also implemented a status
+check for tasks sent to GEE to determine if any have failed (target
+`b_check_for_failed_tasks`), as once the tasks are sent from the RStudio IDE,
+you can not tell whether or not they have completed or failed. This stores a
+text file at the filepath
+`b_pull_Landsat_SRST_poi/out/GEE_task_errors_vRUN_DATE.csv` containing the names
+of the tasks that have failed.

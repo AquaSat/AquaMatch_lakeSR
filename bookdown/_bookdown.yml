@@ -1,6 +1,9 @@
 book_filename: AquaMatch_lakeSR
 rmd_files: ["index.Rmd", 
-"01-Introduction.Rmd", 
+"01-Background.Rmd", 
 "02-Data_Acquisition_Locations.Rmd",
+"03-Acquisition_Software_Settings.Rmd",
+"04-Landsat_C2_SRST.Rmd",
+"05-lakeSR_LS_C2_SRST.Rmd",
 "z-Refs.Rmd"]
 output_dir: "../docs"

@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>7 References | AquaSat v2: lakeSR and siteSR</title>
+  <title>AquaSat v2: lakeSR and siteSR</title>
   <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="7 References | AquaSat v2: lakeSR and siteSR" />
+  <meta property="og:title" content="AquaSat v2: lakeSR and siteSR" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="7 References | AquaSat v2: lakeSR and siteSR" />
+  <meta name="twitter:title" content="AquaSat v2: lakeSR and siteSR" />
   
   <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="LS-SRST-pull.html"/>
 
+<link rel="next" href="background.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -237,112 +237,39 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 hasAnchor" number="7">
-<h1><span class="header-section-number">7</span> References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="header">
+<h1 class="title">AquaSat v2: lakeSR and siteSR</h1>
+<h2 class="subtitle"><em>Compiled Satellite Surface Reflectance and Surface Temperature for Waterbodies in the United States and US Territories</em></h2>
+<p class="author"><em>ROSSyndicate</em></p>
+<p class="date"><em>2025-01-06</em></p>
+</div>
+<div id="introduction" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">1</span> Introduction<a href="index.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This {bookdown} <span class="citation">(<a href="#ref-xie2016">Xie 2016</a>)</span> document explains the methodology we use in the acquisition and compilation of satellite surface reflectance and surface temperature data for the AquaSat v2 data suite. Specifically, this document describes data for all lakes greater than 1 hectare in the United States and US Territories (“lakeSR”) and sites associated with Water Quality Portal (“WQP”) data harmonized within the AquaMatch_harmonize_WQP data product (“siteSR_WQP”). We include the suffix “WQP” for siteSR to indicate the data originate from the WQP, allowing for future development of <em>in situ</em> data that may come from other sources. Generally speaking, siteSR refers to remote sensing data acquired at locations with <em>in situ</em> data and lakeSR refers to remote sensing data acquired at centrally-located points of waterbodies.</p>
+<p>AquaSat v2 represents modular code and data infrastructure for:</p>
+<ol style="list-style-type: decimal">
+<li><p>harmonizing <em>in situ</em> data from the Water Quality Portal and providing an interoperability tiering structure to allow for easier downstream filtering (“AquaMatch_harmonize_WQP”)</p></li>
+<li><p>acquiring remote sensing data of inland waterbodies and rivers (lakeSR, siteSR, and riverSR)</p></li>
+<li><p>pairing <em>in situ</em> data and remote sensing data for parameter-specific algorithm development (e.g., AquaMatch_WQP_LandsatC2)</p></li>
+</ol>
+<p>The goal of these data products is to facilitate assessment and monitoring of waterbodies within the United States and Territories using both <em>in situ</em> and remote sensing data.</p>
+<p>AquaSat v2 builds upon AquaSat <span class="citation">(<a href="#ref-ross2019">Ross et al. 2019</a>)</span> (referred to here as “AquaSat v1”) and LimnoSat-US <span class="citation">(<a href="#ref-limnosat">Topp et al., n.d.</a>)</span>. AquaSat v1 focused on pairing remote sensing data with <em>in situ</em> observations and measurements while LimnoSat-US acquired remote sensing for all waterbodies greater than 10 hectares across the Continental United States (CONUS) regardless of whether <em>in situ</em> measurements were available for that waterbody. In AquaSat v2, we bring these products together. For instance, lakeSR can define Landsat inter-mission handoffs (ADD REF LINK TO THAT SECTION HERE) to enable use of Landsat as a timeseries product, siteSR products can be used to create parameter-specific algorithms, and those algorithms can be applied to lakeSR to create a timeseries of water quality for waterbodies in the US and territories.</p>
+<p>AquaSat v2 code is built on the {targets} workflow management system for R <span class="citation">(<a href="#ref-landau2021">Landau 2021</a>)</span>. The {targets} architecture is based on lists of functions performed in a specific order, each function called a <em>target</em>. The primary benefit of {targets} workflows is that code is only run if a target, a target’s code, or a target’s dependencies have changed (or become “outdated” in {targets} speak).</p>
 
+</div>
+<h3> References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
-<div class="csl-entry">
-Blodgett, David, and Mike Johnson. 2023. <em>nhdplusTools: Tools for Accessing and Working with the NHDPlus</em>. Reston, VA: U.S. Geological Survey. <a href="https://doi.org/10.5066/P97AS8JD">https://doi.org/10.5066/P97AS8JD</a>.
-</div>
-<div class="csl-entry">
-Burket, Martha Otte, Leif G. Olmanson, and Patrick L. Brezonik. 2023. <span>“Comparison of Two Water Color Algorithms: Implications for the Remote Sensing of Water Bodies with Moderate to High CDOM or Chlorophyll Levels.”</span> <em>Sensors</em> 23 (3): 1071. <a href="https://doi.org/10.3390/s23031071">https://doi.org/10.3390/s23031071</a>.
-</div>
-<div class="csl-entry">
-Cook, M J. 2014. <span>“Atmospheric Compensation for a Landsat Land Surface Temperature Product.”</span> PhD thesis, Rochester, NY. <a href="https://scholarworks.rit.edu/theses/8513">https://scholarworks.rit.edu/theses/8513</a>.
-</div>
-<div class="csl-entry">
-Cook, Monica, John R. Schott, John Mandel, and Nina Raqueno. 2014. <span>“Development of an Operational Calibration Methodology for the Landsat Thermal Data Archive and Initial Testing of the Atmospheric Compensation Component of a Land Surface Temperature (LST) Product from the Archive.”</span> <em>Remote Sensing</em> 6 (11): 1124411266. <a href="https://doi.org/10.3390/rs61111244">https://doi.org/10.3390/rs61111244</a>.
-</div>
-<div class="csl-entry">
-EROS Center. 2020a. <span>“USGS EROS Archive - Landsat Archives - Landsat 4-5 TM Collection 2 Level-2 Science Products.”</span> <a href="https://doi.org/doi.org/10.5066/P9IAXOVV">https://doi.org/doi.org/10.5066/P9IAXOVV</a>.
-</div>
-<div class="csl-entry">
-———. 2020b. <span>“USGS EROS Archive - Landsat Archives - Landsat 7 ETM Plus Collection 2 Level-2 Science Products.”</span> <a href="https://doi.org/doi.org/10.5066/P9C7I13B">https://doi.org/doi.org/10.5066/P9C7I13B</a>.
-</div>
-<div class="csl-entry">
-———. 2020c. <span>“USGS EROS Archive - Landsat Archives - Landsat 8-9 OLI/TIRS Collection 2 Level-2 Science Products.”</span> <a href="https://doi.org/doi.org/10.5066/P9OGBGM6">https://doi.org/doi.org/10.5066/P9OGBGM6</a>.
-</div>
-<div class="csl-entry">
-Fajardo, Otto. 2023. <em>Pyreadr: Reads/Writes r RData and Rds Files into/from Pandas Data Frames</em>. <a href="https://github.com/ofajardo/pyreadr">https://github.com/ofajardo/pyreadr</a>.
-</div>
-<div class="csl-entry">
-Garcia-Castellanos, Daniel, and Umberto Lombardo. 2007. <span>“Poles of Inaccessibility: A Calculation Algorithm for the Remotest Places on Earth.”</span> <em>Scottish Geographical Journal</em> 123 (3): 227–33. <a href="https://doi.org/10.1080/14702540801897809">https://doi.org/10.1080/14702540801897809</a>.
-</div>
-<div class="csl-entry">
-Gorelick, N. 2023. <em>Earthengine-Api: Earth Engine Python API</em>. Google. <a href="https://github.com/google/earthengine-api">https://github.com/google/earthengine-api</a>.
-</div>
-<div class="csl-entry">
-Gorelick, N, M Hancher, M Dixon, S Ilyushchenko, D Thau, and R Moore. 2017. <span>“Google Earth Engine: Planetary-Scale Geospatial Analysis for Everyone.”</span> <em>Remote Sensing of Environment</em>. <a href="https://doi.org/10.1016/j.rse.2017.06.031">https://doi.org/10.1016/j.rse.2017.06.031</a>.
-</div>
-<div class="csl-entry">
-Harris, Charles R., K. Jarrod Millman, Stéfan J. van der Walt, Ralf Gommers, Pauli Virtanen, David Cournapeau, Eric Wieser, et al. 2020. <span>“Array Programming with NumPy.”</span> <em>Nature</em> 585 (7825): 357–62. <a href="https://doi.org/10.1038/s41586-020-2649-2">https://doi.org/10.1038/s41586-020-2649-2</a>.
-</div>
-<div class="csl-entry">
-Jones, John W. 2019. <span>“Improved Automated Detection of Subpixel-Scale Inundation<span></span>revised Dynamic Surface Water Extent (DSWE) Partial Surface Water Tests.”</span> <em>Remote Sensing</em> 11 (4). <a href="https://doi.org/10.3390/rs11040374">https://doi.org/10.3390/rs11040374</a>.
-</div>
-<div class="csl-entry">
+<div id="ref-landau2021" class="csl-entry">
 Landau, William Michael. 2021. <span>“The Targets r Package: A Dynamic Make-Like Function-Oriented Pipeline Toolkit for Reproducibility and High-Performance Computing.”</span> <em>Journal of Open Source Software</em> 6 (57): 2959. <a href="https://doi.org/10.21105/joss.02959">https://doi.org/10.21105/joss.02959</a>.
 </div>
-<div class="csl-entry">
-Larsson, Johan. 2020. <em>Polylabelr: Find the Pole of Inaccessibility (Visual Center) of a Polygon</em>. <a href="https://cran.r-project.org/package=polylabelr">https://cran.r-project.org/package=polylabelr</a>.
-</div>
-<div class="csl-entry">
-Messager, Mathis Loïc, Bernhard Lehner, Günther Grill, Irena Nedeva, and Oliver Schmitt. 2016. <span>“Estimating the Volume and Age of Water Stored in Global Lakes Using a Geo-Statistical Approach.”</span> <em>Nature Communications</em> 7 (1): 13603. <a href="https://doi.org/10.1038/ncomms13603">https://doi.org/10.1038/ncomms13603</a>.
-</div>
-<div class="csl-entry">
-Pekel, Jean-François, Andrew Cottam, Noel Gorelick, and Alan S. Belward. 2016. <span>“High-resolution mapping of global surface water and its long-term changes.”</span> <em>Nature</em> 540 (7633): 418–22. <a href="https://doi.org/10.1038/nature20584">https://doi.org/10.1038/nature20584</a>.
-</div>
-<div class="csl-entry">
-Posit team. 2023. <em>RStudio: Integrated Development Environment for r</em>. Boston, MA: Posit Software, PBC. <a href="http://www.posit.co/">http://www.posit.co/</a>.
-</div>
-<div class="csl-entry">
-Qiu, Shirley, Zhe Zhu, Rong Shang, and Christopher J. Crawford. 2021. <span>“Can Landsat 7 Preserve Its Science Capability with a Drifting Orbit?”</span> <em>Science of Remote Sensing</em> 4. <a href="https://doi.org/10.1016/j.srs.2021.100026">https://doi.org/10.1016/j.srs.2021.100026</a>.
-</div>
-<div class="csl-entry">
+<div id="ref-ross2019" class="csl-entry">
 Ross, Matthew R. V., Simon N. Topp, Alison P. Appling, Xiao Yang, Catherine Kuhn, David Butman, Marc Simard, and Tamlin M. Pavelsky. 2019. <span>“AquaSat: A Data Set to Enable Remote Sensing of Water Quality for Inland Waters.”</span> <em>Water Resources Research</em> 55 (11): 10012–25. <a href="https://doi.org/10.1029/2019WR024883">https://doi.org/10.1029/2019WR024883</a>.
 </div>
-<div class="csl-entry">
-Schmidt, Gail, Calli B. Jenkerson, Jeffrey Masek, Eric Vermote, and Feng Gao. 2013. <span>“Landsat Ecosystem Disturbance Adaptive Processing System (LEDAPS) Algorithm Description.”</span> Reston, VA. <a href="https://doi.org/10.3133/ofr20131057">https://doi.org/10.3133/ofr20131057</a>.
-</div>
-<div class="csl-entry">
-Stefansson, Vilhjalmur. 1920. <span>“The Region of Maximum Inaccessibility in the Arctic.”</span> <em>Geographical Review</em> 10 (3): 167–72. <a href="https://doi.org/10.2307/207749">https://doi.org/10.2307/207749</a>.
-</div>
-<div class="csl-entry">
-The pandas development team. 2023. <em>Pandas-Dev/Pandas: Pandas</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.8092754">https://doi.org/10.5281/zenodo.8092754</a>.
-</div>
-<div class="csl-entry">
+<div id="ref-limnosat" class="csl-entry">
 Topp, Simon, Tamlin Pavelsky, Xiao Yang, John Gardner, and Matthew R. V. Ross. n.d. <span>“LimnoSat-US: A Remote Sensing Dataset for u.s. Lakes from 1984-2020.”</span> <a href="https://doi.org/10.5281/zenodo.4139695">https://doi.org/10.5281/zenodo.4139695</a>.
 </div>
-<div class="csl-entry">
-US Geological Survey. 2021. <span>“Landsat 4-7 Collection 2 (C2) Level 2 Science Product (L2SP) Guide.”</span> <a href="https://www.usgs.gov/media/files/landsat-4-7-collection-2-level-2-science-product-guide">https://www.usgs.gov/media/files/landsat-4-7-collection-2-level-2-science-product-guide</a>.
-</div>
-<div class="csl-entry">
-———. 2022. <span>“Landsat Collection 2 Level-3 Dynamic Surface Water Extent Algorithm Description Document.”</span>
-</div>
-<div class="csl-entry">
-———. 2023. <span>“USGS National Hydrography Dataset Best Resolution (NHD) - Alaska (Published 20230506) GeoPackage.”</span>
-</div>
-<div class="csl-entry">
-———. 2024. <span>“Landsat 8-9 Collection 2 (C2) Level 2 Science Product (L2SP) Guide.”</span> <a href="https://www.usgs.gov/media/files/landsat-8-9-collection-2-level-2-science-product-guide">https://www.usgs.gov/media/files/landsat-8-9-collection-2-level-2-science-product-guide</a>.
-</div>
-<div class="csl-entry">
-Ushey, Kevin, J. J. Allaire, and Yuan Tang. 2023. <em>Reticulate: Interface to ’Python’</em>. <a href="https://CRAN.R-project.org/package=reticulate">https://CRAN.R-project.org/package=reticulate</a>.
-</div>
-<div class="csl-entry">
-Vermote, E., J. C. Roger, B. Franch, and Sergii Skakun. 2018. <span>“LaSRC (Land Surface Reflectance Code): Overview, Application and Validation Using MODIS, VIIRS, LANDSAT and Sentinel 2 Data’s.”</span> In, 8173–76. <a href="https://doi.org/10.1109/IGARSS.2018.8517622">https://doi.org/10.1109/IGARSS.2018.8517622</a>.
-</div>
-<div class="csl-entry">
-Verpoorter, Charles, Tiit Kutser, David A. Seekell, and Lars J. Tranvik. 2014. <span>“A Global Inventory of Lakes Based on High-Resolution Satellite Imagery.”</span> <em>Geophysical Research Letters</em> 41 (18): 6396–6402. <a href="https://doi.org/10.1002/2014GL060641">https://doi.org/10.1002/2014GL060641</a>.
-</div>
-<div class="csl-entry">
-Walker, Kyle. 2023. <em>Tigris: Load Census TIGER/Line Shapefiles</em>. <a href="https://CRAN.R-project.org/package=tigris">https://CRAN.R-project.org/package=tigris</a>.
-</div>
-<div class="csl-entry">
+<div id="ref-xie2016" class="csl-entry">
 Xie, Yihui. 2016. <em>Bookdown: Authoring Books and Technical Documents with r Markdown</em>. Boca Raton, Florida: Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/bookdown">https://bookdown.org/yihui/bookdown</a>.
-</div>
-<div class="csl-entry">
-Yang, Xiao. 2020. <em>Deepest Point Calculation for Any Given Polygon Using Google Earth Engine JavaScript API</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.6341960">https://doi.org/10.5281/zenodo.6341960</a>.
-</div>
 </div>
 </div>
             </section>
@@ -350,8 +277,8 @@ Yang, Xiao. 2020. <em>Deepest Point Calculation for Any Given Polygon Using Goog
           </div>
         </div>
       </div>
-<a href="LS-SRST-pull.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
+<a href="background.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
