@@ -7,8 +7,8 @@ bibliography: references.bib
 
 # Background
 
-Currently, AquaSat v2 remote sensing products include the historical Landsat
-Collection 2 record from 1984 until late 2024, comprised of data from the
+Currently, AquaSat v2 remote sensing products contain data from the historical Landsat
+Collection 2 record from 1984 until late 2024, including the
 following missions:
 
 -   Landsat 4 Thematic Mapper (TM)
