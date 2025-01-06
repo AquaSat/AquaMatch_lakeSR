@@ -116,7 +116,8 @@ b_pull_Landsat_SRST_poi_list <- list(
       b_eeRun_poi
       source_python("b_pull_Landsat_SRST_poi/py/poi_wait_for_completion.py")
     },
-    packages = "reticulate"
+    packages = "reticulate",
+    deployment = "main"
   ),
   
   # since we can't easily track if tasks have failed, and we send a lot of tasks
@@ -129,7 +130,8 @@ b_pull_Landsat_SRST_poi_list <- list(
       b_poi_tasks_complete
       source_python("b_pull_Landsat_SRST_poi/py/check_for_failed_tasks.py")
     },
-    packages = "reticulate"
+    packages = "reticulate",
+    deployment = "main"
   )
 )
 
