@@ -16,7 +16,7 @@ GEE data acquisition is written in Python.
 
 RStudio [@positteam2023] is an IDE that, alongside the {reticulate} package
 [@ushey2023], facilitates integration of R and Python code within the same
-environment. In AquaSat v2, we use [a singular R
+environment. In AquaSat v2, we use [a single R
 script](https://github.com/AquaSat/lakeSR/blob/main/python/pySetup.R) to set up
 a {reticulate} Conda environment that is invoked at the beginning of a {targets}
 run to be sure that our Python code runs consistently.
