@@ -185,10 +185,10 @@ div.csl-indent {
 <li class="chapter" data-level="4.1" data-path="software-settings.html"><a href="software-settings.html#reticulate-conda-environment"><i class="fa fa-check"></i><b>4.1</b> {reticulate} Conda Environment</a></li>
 <li class="chapter" data-level="4.2" data-path="software-settings.html"><a href="software-settings.html#google-earth-engine-setup"><i class="fa fa-check"></i><b>4.2</b> Google Earth Engine Setup</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-a-gee-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
-<li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud-cli"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
-<li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>4.2.3</b> GEE Authentication</a></li>
-<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-project-setting"><i class="fa fa-check"></i><b>4.2.4</b> GEE project setting</a></li>
+<li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
+<li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
+<li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#proj-setting"><i class="fa fa-check"></i><b>4.2.3</b> GEE project setting</a></li>
+<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
@@ -304,29 +304,28 @@ pipeline to assure a smooth run of the workflow.</p>
 </div>
 <div id="google-earth-engine-setup" class="section level2 hasAnchor" number="4.2">
 <h2><span class="header-section-number">4.2</span> Google Earth Engine Setup<a href="software-settings.html#google-earth-engine-setup" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div id="create-a-gee-account" class="section level3 hasAnchor" number="4.2.1">
-<h3><span class="header-section-number">4.2.1</span> Create a GEE account<a href="software-settings.html#create-a-gee-account" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Creation of a GEE is easy and free. Click ‘Get Started’ at the far right side of
+<p>In order to run any GEE-related targets, you will need to have a Google Earth
+Engine account (see <a href="software-settings.html#create-account">4.2.1</a>), a Google Earth Engine Cloud Project
+(described in <a href="software-settings.html#proj-setting">4.2.3</a>) , gcloud CLI set up on your computer (see
+<a href="software-settings.html#gcloud">4.2.2</a>), and you will need to alter the configuration file (described in
+<a href="software-settings.html#proj-setting">4.2.3</a>).</p>
+<div id="create-account" class="section level3 hasAnchor" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> Create a GEE account<a href="software-settings.html#create-account" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Creation of a GEE account is free. Click ‘Get Started’ at the far right side of
 the <a href="https://earthengine.google.com">earthengine.google.com</a> webpage to create
 an account:</p>
 <p><a href="https://earthengine.google.com"><img src="images/EE_header.png" alt="Header of earthengine.google.com with link to create a GEE account highlighted in the red box to the right." /></a></p>
 </div>
-<div id="gcloud-cli" class="section level3 hasAnchor" number="4.2.2">
-<h3><span class="header-section-number">4.2.2</span> gcloud CLI<a href="software-settings.html#gcloud-cli" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="gcloud" class="section level3 hasAnchor" number="4.2.2">
+<h3><span class="header-section-number">4.2.2</span> gcloud CLI<a href="software-settings.html#gcloud" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This workflow requires the installation and initiation of <a href="https://cloud.google.com/sdk/gcloud">gcloud
 CLI</a>, a command-line tool set for accessing
 Google Cloud Resources. All settings for AquaSat v2 are default <code>gcloud</code>
-configurations using a single GEE project.</p>
+configurations using a single GEE project. The link above documents how to set
+up gcloud.</p>
 </div>
-<div id="gee-authentication" class="section level3 hasAnchor" number="4.2.3">
-<h3><span class="header-section-number">4.2.3</span> GEE Authentication<a href="software-settings.html#gee-authentication" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Once <code>gcloud</code> is installed and initialized and the Conda environment is set up,
-you can authenticate your GEE instance. For this workflow, this is completed in
-the <code>run_targets.Rmd</code> script at the root directory. This script provides
-explicit directions to complete this task before running the pipeline.</p>
-</div>
-<div id="gee-project-setting" class="section level3 hasAnchor" number="4.2.4">
-<h3><span class="header-section-number">4.2.4</span> GEE project setting<a href="software-settings.html#gee-project-setting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="proj-setting" class="section level3 hasAnchor" number="4.2.3">
+<h3><span class="header-section-number">4.2.3</span> GEE project setting<a href="software-settings.html#proj-setting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>AquaSat v2 is run in a specific GEE project associated with our authenticated
 Google account. If you wish to re-run this code as written, you will not have
 proper access because the code refers to our specific GEE project. You will need
@@ -336,11 +335,23 @@ to update the config yaml (in lakeSR:
 the pipeline locally. If you are new to GEE, go to
 <a href="https://code.earthengine.google.com">code.earthengine.google.com</a> and enter the
 project name listed in the top right hand corner of your screen:</p>
-<p><a href="https://code.earthengine.com"><img src="images/code_ee_proj.png" alt="Header of code.earthengine.google.com with current Earth Engine project highlighted in the red box to the right." /></a></p>
+<div class="float">
+<img src="images/code_ee_proj.png" alt="Header of code.earthengine.google.com with current Earth Engine project highlighted in the red box to the right." />
+<div class="figcaption">Header of code.earthengine.google.com with current Earth Engine project
+highlighted in the red box to the right.</div>
+</div>
 <p>Alternatively, you can create an GEE project for this task in the dropdown menu
 accessed by clicking on the icon to the right of the highlighted box in the
 figure above. This workflow will not run without specifying an Earth Engine
 Project that is managed by the Google Account you authenticate this run with.</p>
+</div>
+<div id="gee-authentication" class="section level3 hasAnchor" number="4.2.4">
+<h3><span class="header-section-number">4.2.4</span> GEE Authentication<a href="software-settings.html#gee-authentication" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Once <code>gcloud</code> is installed and initialized, the configuration file is properly
+set up, and the Conda environment is set up, you can authenticate your GEE
+instance. For this workflow, this is completed in the <code>run_targets.Rmd</code> script
+at the root directory. This script provides explicit directions to complete this
+task before running the pipeline.</p>
 
 </div>
 </div>

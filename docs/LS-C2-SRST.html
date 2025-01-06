@@ -185,10 +185,10 @@ div.csl-indent {
 <li class="chapter" data-level="4.1" data-path="software-settings.html"><a href="software-settings.html#reticulate-conda-environment"><i class="fa fa-check"></i><b>4.1</b> {reticulate} Conda Environment</a></li>
 <li class="chapter" data-level="4.2" data-path="software-settings.html"><a href="software-settings.html#google-earth-engine-setup"><i class="fa fa-check"></i><b>4.2</b> Google Earth Engine Setup</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-a-gee-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
-<li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud-cli"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
-<li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>4.2.3</b> GEE Authentication</a></li>
-<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-project-setting"><i class="fa fa-check"></i><b>4.2.4</b> GEE project setting</a></li>
+<li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
+<li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
+<li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#proj-setting"><i class="fa fa-check"></i><b>4.2.3</b> GEE project setting</a></li>
+<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
@@ -272,56 +272,48 @@ for the purpose of providing background information about the Landsat archive
 relevant to the creation and use of lakeSR.</em></p>
 <p>The Landsat archive of multispectral and thermal data in lakeSR is composed of
 Landsat missions 4 through 9 and spans more than 40 years.</p>
-<table style="width:97%;">
+<table>
 <colgroup>
-<col width="29%" />
-<col width="22%" />
-<col width="22%" />
-<col width="22%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>Mission and Sensor</th>
 <th align="center">Launch Date</th>
-<th align="center">End of Science
-Mission</th>
-<th align="center">Decommission
-Date</th>
+<th align="center">End of Science Mission</th>
+<th align="center">Decommission Date</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Landsat 4 TM
-<span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
+<td>Landsat 4 TM <span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
 <td align="center">1982-07-16</td>
 <td align="center">1993-12-14</td>
 <td align="center">2001-06-15</td>
 </tr>
 <tr class="even">
-<td>Landsat 5 TM
-<span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
+<td>Landsat 5 TM <span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
 <td align="center">1984-03-01</td>
 <td align="center">2011-11-18</td>
 <td align="center">2013-06-05</td>
 </tr>
 <tr class="odd">
-<td>Landsat 7 ETM+
-<span class="citation">(<a href="#ref-eros-7">EROS Center 2020b</a>)</span></td>
+<td>Landsat 7 ETM+ <span class="citation">(<a href="#ref-eros-7">EROS Center 2020b</a>)</span></td>
 <td align="center">1999-04-15</td>
 <td align="center">2022-04-06</td>
 <td align="center">N/A</td>
 </tr>
 <tr class="even">
-<td>Landsat 8 OLI/TIRS
-<span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
+<td>Landsat 8 OLI/TIRS <span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
 <td align="center">2013-02-11</td>
 <td align="center">N/A</td>
 <td align="center">N/A</td>
 </tr>
 <tr class="odd">
-<td>Landsat 9
-OLI-2/TIRS-2
-<span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
+<td>Landsat 9 OLI-2/TIRS-2 <span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
 <td align="center">2021-09-27</td>
 <td align="center">N/A</td>
 <td align="center">N/A</td>
@@ -360,11 +352,11 @@ the Landsat archive.</p>
 <p>The spatial resolution of the Level 1 data that the SR and ST products are
 derived from has not changed for optical bands over time (Aerosol, RGB, NIR,
 SWIR) but has varied over the historic record for thermal data:</p>
-<table style="width:99%;">
+<table style="width:65%;">
 <colgroup>
-<col width="32%" />
-<col width="32%" />
-<col width="32%" />
+<col width="20%" />
+<col width="22%" />
+<col width="22%" />
 </colgroup>
 <thead>
 <tr class="header">

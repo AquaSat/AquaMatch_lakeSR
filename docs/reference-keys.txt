@@ -17,10 +17,10 @@ case-study-wisconsin-waterbodies
 software-settings
 reticulate-conda-environment
 google-earth-engine-setup
-create-a-gee-account
-gcloud-cli
+create-account
+gcloud
+proj-setting
 gee-authentication
-gee-project-setting
 LS-C2-SRST
 initialisms-and-landsat-jargon
 valid-dates
