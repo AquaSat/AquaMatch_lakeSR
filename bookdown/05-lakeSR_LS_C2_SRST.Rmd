@@ -280,7 +280,7 @@ of 1 (DSWE1) for high confidence open water, or what we call DSWE1a - high
 confidence open water OR the pixel meets a threshold that may indicate there is
 surface-level algae. The algae mask is defined as when a pixel has a DSWE value
 greater than 1 and the green band scaled value is greater than 0.05 and the red
-band sclaed value is less than 0.04. These values are based on optical
+band scaled value is less than 0.04. These values are based on optical
 properties intended to mimic the spectral response of chlorophyll *a* as
 described by @burket2023. This is an experimental mask, so we export both DSWE1
 and DSWE1a summaries within lakeSR. We have found some omission error within
