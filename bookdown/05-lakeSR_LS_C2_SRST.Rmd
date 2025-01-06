@@ -48,7 +48,7 @@ this example, location 1 would be extracted for both path-row 1 and 2, location
     due to data storage differences. Collection 2 updates allowed for easier
     interoperability of the TM sensor (Landsat 4) image series and have
     therefore been included in the update. Additionally, Landsat 9 came online
-    in 2021, and have been added to the data product.
+    in 2021, and has been added to the data product.
 
 -   sending tasks to GEE explicitly per path-row and limiting the Landsat stack
     to the explicit path-row to eliminate duplicate acquisitions. In the
