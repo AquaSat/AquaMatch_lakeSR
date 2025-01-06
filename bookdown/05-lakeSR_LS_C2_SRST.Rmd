@@ -113,7 +113,7 @@ this example, location 1 would be extracted for both path-row 1 and 2, location
     `apply_fill_mask_457`, `apply_fill_mask_89`, `apply_realistic_mask_457`,
     `apply_realistic_mask_89`, `apply_opac_mask` (Landsat 4, 5, 7 only),
     `apply_sr_aero_mask` (Landsat 8, 9 only). The cloud mask was also updated to
-    include all sources of contamination (including cloud shadow and dialated
+    include all sources of contamination (including cloud shadow and dilated
     clouds) in addition to clouds, snow, and ice. The proportion of pixels
     within the location buffer that were masked out due to clouds is now tracked
     as `prop_clouds` as an additional method of QA handling downstream of the
