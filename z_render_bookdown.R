@@ -2,8 +2,8 @@ z_render_bookdown <- list(
   # track files for changes
   tar_file(name = index,
            command = "bookdown/index.Rmd"),
-  tar_file(name = intro,
-           command = "bookdown/01-Introduction.Rmd"),
+  tar_file(name = background,
+           command = "bookdown/01-Background.Rmd"),
   tar_file(name = locations,
            command = "bookdown/02-Data_Acquisition_Locations.Rmd"),
   tar_file(name = settings,
@@ -18,7 +18,7 @@ z_render_bookdown <- list(
   tar_target(name = render_bookdown,
              command = {
                index
-               intro
+               background
                locations
                settings
                landsat_background
