@@ -1,0 +1,52 @@
+#' @title Download csv files from specified Drive folder
+#' 
+#' @description
+#' function to download csv files from a specific drive folder 
+#' to the untracked `c_collate_Landsat_data/down/` folder
+#'
+#' @param file_type text string; unique string for filtering files to be 
+#' downloaded from Drive. Some options: "457" (Landsat 4, 5, 7), "metadata", 
+#' "89" (Landsat 8/9). Defaults to NULL.
+#' @param yml dataframe; name of the target object from the -b- group that
+#' stores the GEE run configuration settings as a data frame.
+#' @param drive_contents dataframe; name of the target object that contains the 
+#' Drive folder contents of the destination folder specified in the GEE run 
+#' configuration
+#' @param requries target object; any target that must be run prior to this 
+#' function. Defaults to NULL.
+#' 
+#' @returns downloads .csvs from the specified folder name to the
+#' c_collate_Landsat_data/down/ folder. If file_type is set to default, all 
+#' files from the folder specified in the yml will be downloaded.
+#' 
+#' 
+download_csvs_from_drive <- function(file_type = NULL, yml, drive_contents, requires = NULL) {
+  # authorize Google
+  drive_auth(email = yml$google_email)
+  # make sure they are only .csv files
+  drive_contents <- drive_contents %>% 
+    filter(grepl(".csv", name))
+  # check to see if any further filtering needs to be done per file_type argument
+  if (!is.null(file_type)) {
+    drive_contents <- drive_contents %>% 
+      filter(grepl(file_type, name))
+  }
+  # make sure run date folder has been created
+  if (!dir.exists(file.path("c_collate_Landsat_data/down/", yml$run_date))) {
+    directory <- file.path("c_collate_Landsat_data/down/", yml$run_date)
+    dir.create(directory)
+  }
+  if (!is.null(file_type)) {
+    directory <- file.path("c_collate_Landsat_data/down/", yml$run_date, file_type)
+    dir.create(directory)
+  }
+  # download files to run date folder in `c_collate_Landsat_data/down/`
+  walk2(.x = drive_contents$id,
+        .y = drive_contents$name, 
+        .f = function(.x, .y) {
+          try(drive_download(file = .x,
+                             path = file.path(directory,
+                                              .y),
+                             overwrite = FALSE)) # just pass if already downloaded
+        })
+}

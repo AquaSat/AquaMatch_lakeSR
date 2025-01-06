@@ -20,7 +20,10 @@ tar_option_set(
   # packages that {targets} need to run for this workflow
   packages = c("tidyverse", "sf"),
   # set up crew controller
-  controller = controller_cores
+  controller = controller_cores,
+  # add memory helpers
+  garbage_collection = TRUE,
+  memory = "transient"
 )
 
 # Point to config files: ---------------------------------------
@@ -28,17 +31,20 @@ tar_option_set(
 poi_config <- "b_pull_Landsat_SRST_poi/config_files/config_poi.yml"
 
 # Source targets groups: ---------------------------------------
-# Run the R scripts with custom functions:
+
 tar_source(files = c(
   "a_Calculate_Centers.R",
   "b_pull_Landsat_SRST_poi.R",
+  "c_collate_Landsat_data.R",
   "z_render_bookdown.R"
   )
 )
 
 # Collate targets groups: ---------------------------------------
+
 list(
   a_Calculate_Centers_list,
   b_pull_Landsat_SRST_poi_list,
+  c_collate_Landsat_data,
   z_render_bookdown
 )
