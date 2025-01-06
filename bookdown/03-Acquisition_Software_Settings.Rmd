@@ -53,7 +53,7 @@ right.](images/EE_header.png)](https://earthengine.google.com)
 This workflow requires the installation and initiation of [gcloud
 CLI](https://cloud.google.com/sdk/gcloud), a command-line tool set for accessing
 Google Cloud Resources. All settings for AquaSat v2 are default `gcloud`
-configurations using a singular GEE project.
+configurations using a single GEE project.
 
 ### GEE Authentication
 
