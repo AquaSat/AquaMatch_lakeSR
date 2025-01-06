@@ -22,7 +22,7 @@ COLLATING SITESR LOCS.
 ## Changes from AquaSat v1 and LimnoSat-US
 
 While much of the general architecture from the precedent data products remained
-unchanged, in AquaSat v2 have added a number of features to the remote sensing
+unchanged, in AquaSat v2 we have added a number of features to the remote sensing
 acquisition workflow, have increased efficiency of the data pull, and have made
 the acquired data more robust through additional masking. The bullets below
 summarize the changes implemented in this update.
