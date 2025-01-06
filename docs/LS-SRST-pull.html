@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2024-12-20" />
+<meta name="date" content="2025-01-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -252,7 +252,7 @@ COLLATING SITESR LOCS.</p>
 <div id="changes-from-aquasat-v1-and-limnosat-us" class="section level2 hasAnchor" number="6.1">
 <h2><span class="header-section-number">6.1</span> Changes from AquaSat v1 and LimnoSat-US<a href="LS-SRST-pull.html#changes-from-aquasat-v1-and-limnosat-us" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>While much of the general architecture from the precedent data products remained
-unchanged, in AquaSat v2 have added a number of features to the remote sensing
+unchanged, in AquaSat v2 we have added a number of features to the remote sensing
 acquisition workflow, have increased efficiency of the data pull, and have made
 the acquired data more robust through additional masking. The bullets below
 summarize the changes implemented in this update.</p>
@@ -280,7 +280,7 @@ LimnoSat-US, Landsat 4 was not easily integrated with other Landsat missions
 due to data storage differences. Collection 2 updates allowed for easier
 interoperability of the TM sensor (Landsat 4) image series and have
 therefore been included in the update. Additionally, Landsat 9 came online
-in 2021, and have been added to the data product.</p></li>
+in 2021, and has been added to the data product.</p></li>
 <li><p>sending tasks to GEE explicitly per path-row and limiting the Landsat stack
 to the explicit path-row to eliminate duplicate acquisitions. In the
 previous products, duplicate location/path-row data were acquired because
@@ -328,7 +328,7 @@ this workflow and are detailed below in Section <a href="LS-SRST-pull.html#maski
 <code>apply_fill_mask_457</code>, <code>apply_fill_mask_89</code>, <code>apply_realistic_mask_457</code>,
 <code>apply_realistic_mask_89</code>, <code>apply_opac_mask</code> (Landsat 4, 5, 7 only),
 <code>apply_sr_aero_mask</code> (Landsat 8, 9 only). The cloud mask was also updated to
-include all sources of contamination (including cloud shadow and dialated
+include all sources of contamination (including cloud shadow and dilated
 clouds) in addition to clouds, snow, and ice. The proportion of pixels
 within the location buffer that were masked out due to clouds is now tracked
 as <code>prop_clouds</code> as an additional method of QA handling downstream of the
@@ -447,7 +447,7 @@ zenith angle conditions.</p>
 </blockquote></li>
 <li><p><code>apply_fill_mask_457</code> and <code>apply_fill_mask_89</code>: Applies a mask where any
 band value is 0 before applying scaling factors to bands. Filled values are
-infrequent, however, when acquiring data across such a large area and time,
+infrequent; however, when acquiring data across such a large area and time
 they are bound to happen.</p></li>
 <li><p><code>apply_realistic_mask_457</code> and <code>apply_realistic_mask_89</code>: Applies a mask
 where any band is less than -0.01 after scaling, indicating overcorrection
@@ -479,7 +479,7 @@ of 1 (DSWE1) for high confidence open water, or what we call DSWE1a - high
 confidence open water OR the pixel meets a threshold that may indicate there is
 surface-level algae. The algae mask is defined as when a pixel has a DSWE value
 greater than 1 and the green band scaled value is greater than 0.05 and the red
-band sclaed value is less than 0.04. These values are based on optical
+band scaled value is less than 0.04. These values are based on optical
 properties intended to mimic the spectral response of chlorophyll <em>a</em> as
 described by <span class="citation">Burket, Olmanson, and Brezonik (<a href="#ref-burket2023">2023</a>)</span>. This is an experimental mask, so we export both DSWE1
 and DSWE1a summaries within lakeSR. We have found some omission error within
