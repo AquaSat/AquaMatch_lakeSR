@@ -244,7 +244,7 @@ and Landsat 8/9 to see these masks in action.
 
 -   `apply_fill_mask_457` and `apply_fill_mask_89`: Applies a mask where any
     band value is 0 before applying scaling factors to bands. Filled values are
-    infrequent, however, when acquiring data across such a large area and time,
+    infrequent; however, when acquiring data across such a large area and time
     they are bound to happen.
 
 -   `apply_realistic_mask_457` and `apply_realistic_mask_89`: Applies a mask
