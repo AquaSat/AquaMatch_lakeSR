@@ -20,7 +20,7 @@ This {bookdown} [@xie2016] document explains the methodology we use in the acqui
 
 AquaSat v2 represents modular code and data infrastructure for:
 
-1.  harmonizing *in situ* data from the Water Quality Portal (WQP) and providing an interopoerability tiering structure to allow for easier downstream filtering ("AquaMatch_harmonize_WQP")
+1.  harmonizing *in situ* data from the Water Quality Portal and providing an interoperability tiering structure to allow for easier downstream filtering ("AquaMatch_harmonize_WQP")
 
 2.  acquiring remote sensing data of inland waterbodies and rivers (lakeSR, siteSR, and riverSR)
 
