@@ -62,30 +62,70 @@ c_collate_Landsat_data <- list(
     command = c("metadata", "LS457", "LS89")
   ),
   
+  # set mission groups
+  tar_target(
+    name = c_mission_groups,
+    command = c("LS457", "LS89")
+  ),
+  
+  # set dswe types
+  tar_target(
+    name = c_dswe_types,
+    command = {
+      dswe = NULL
+      if (grepl("1", yml$DSWE_setting)) {
+        dswe = c(dswe, "DSWE1")
+      } 
+      if (grepl("1a", yml$DSWE_setting)) {
+        dswe = c(dswe, "DSWE1a")
+      } 
+      if (grepl("3", yml$DSWE_setting)) {
+        dswe = c(dswe, "DSWE3")
+      } 
+    }
+  ), 
+  
   # download all files, branched by data segments
   tar_target(
     name = c_download_files,
     command = download_csvs_from_drive(file_type = c_data_segments,
                                        drive_contents = c_Drive_folder_contents,
                                        yml = b_yml_poi,
-                                       requires = c_check_dir_structure),
+                                       depends = c_check_dir_structure),
     packages = c("tidyverse", "googledrive"),
     pattern = map(c_data_segments)
   ),
   
-  # collate all metadata files into one file
+  # collate all files - these end up being pretty big without filtering, so we 
+  # need to break them up as metadata, then site pulls. The site pulls also need
+  # to be split by dswe type and mission, otherwise the files are too big for R
+  # to handle
+  
+  # make metadata file - this doesn't require filtering of dswe or mission
   tar_target(
-    name = c_make_collated_files,
-    command = collate_csvs_from_drive(file_type = c_data_segments,
+    name = c_make_collated_metadata,
+    command = collate_csvs_from_drive(file_type = "metadata",
                                       yml = b_yml_poi,
-                                      requires = c_download_files),
-    packages = c("tidyverse", "feather"),
-    pattern = map(c_data_segments)
+                                      dswe = NULL,
+                                      separate_missions = FALSE,
+                                      depends = c_download_files),
+    packages = c("tidyverse", "feather")
   ),
+  
+  tar_target(
+    name = c_make_collated_point_files,
+    command = collate_csvs_from_drive(file_type = c_mission_groups,
+                                      yml = b_yml_poi,
+                                      dswe = c_dswe_types,
+                                      separate_missions = TRUE,
+                                      depends = c_download_files),
+    packages = c("tidyverse", "feather"),
+    pattern = cross(c_misison_groups, c_dswe_types)
+  )
    
 
   # Save collated files to Drive, create csv with ids -----------------------
-
+  
   
   # # and collate the data with metadata
   # tar_target(

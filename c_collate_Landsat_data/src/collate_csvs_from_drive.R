@@ -1,25 +1,33 @@
 #' @title Collate downloaded csv files into a feather file
 #' 
 #' @description
-#' Function to grab all downloaded .csv files from the data_acquisition/in/ folder with a specific
-#' file prefix, collate them into a .feather files with version identifiers
+#' Function to grab all downloaded .csv files from the c_collate_Landsat_Data/down/ 
+#' folder, and collate them into .feather files subsetted per arguments in the
+#' function. If left to default, this will create 3 files per DSWE setting: a 
+#' metadata file, a LS457 file, and a LS89 file.
 #'
 #' @param file_type text string; unique string for filtering files to be 
-#' downloaded from Drive. Some options: "457" (Landsat 4, 5, 7), "metadata", 
-#' "89" (Landsat 8/9). Defaults to NULL.
+#' downloaded from Drive. Some options: "LS457" (Landsat 4, 5, 7), "metadata", 
+#' "LS89" (Landsat 8/9). Defaults to NULL. Use this arguemnt if using mulitcore.
 #' @param yml dataframe; name of the target object from the -b- group that
 #' stores the GEE run configuration settings as a data frame.
-#' @param requries target object; any target that must be run prior to this 
+#' @param dswe text string; dswe value to filter input files by. Defaults to NULL.
+#' Use this argument if multiple dswe settings have been extracted from GEE
+#' @param separate_missions boolean; indication of whether the output should be
+#' separated by individual Landsat missions. Defaults to FALSE. Use this if file
+#' size is anticipated to be large. LS457 files will often push the limits of R 
+#' memory on large GEE pulls.
+#' @param depends target object; any target that must be run prior to this 
 #' function. Defaults to NULL.
-
-#' @returns list of feather files created by this function. This function  
-#' collates all .csv's containing the file_prefix, and saves up to 4 files
-#' by type of data summarized within the file (polygon, point, center). The types
-#' of data are automatically detected. Data type is created in the config.yml 
-#' file of the associated Landsat-C2-SRST branch. 
+#' 
+#' @returns none. Silently saves files to 'c_collate_Landsat_data/mid/'
 #' 
 #' 
-collate_csvs_from_drive <- function(file_type = NULL, yml, requires = NULL) {
+collate_csvs_from_drive <- function(file_type = NULL, 
+                                    yml, 
+                                    dswe = NULL, 
+                                    separate_missions = FALSE,
+                                    depends = NULL) {
   
   # make directory path based on function arguments
   if (is.null(file_type)) {
@@ -38,71 +46,193 @@ collate_csvs_from_drive <- function(file_type = NULL, yml, requires = NULL) {
   files <- list.files(from_directory,
                       full.names = TRUE) 
   
-  # check for metadata files
-  meta_files <- files[grepl("metadata", files)]
-  if (length(meta_files) > 0) {
-    meta_457 <- meta_files[grepl("457", meta_files)]
-    if (length(meta_457) > 0) {
-      all_meta_457 <- map_dfr(meta_457, read_csv) 
-      write_feather(all_meta_457, file.path(to_directory,
-                                            paste0(yml$proj, "_collated_metadata_457_",
-                                                   yml$run_date, ".feather")))
+  # check to see if files need to subset for type
+  if (!is.null(file_type)) {
+    # subset for file type  
+    type_subset <- files[grepl(file_type, files)]
+    # if file type isn't metadata, then remove "metadata" from the filtered files,
+    # since that has the LS label too
+    if (file_type != "metadata") {
+      type_subset <- type_subset[!grepl("metadata", type_subset)]
     }
-    meta_89 <- meta_files[grepl("89", meta_files)]
-    if (length(meta_89) > 0) {
-      all_meta_89 <- map_dfr(meta_89, read_csv) 
-      write_feather(all_meta_89, file.path(to_directory,
-                                           paste0(yml$proj, "_collated_metadata_89_",
-                                                  yml$run_date, ".feather")))
-    }
+    # make sure there are files present in this filter
+    if (length(type_subset) == 0) {
+      stop("You have used a `file_type` argument that is unrecognized.\n
+              Acceptable `file_type` arguments are 'metadata', 'LS457', 'LS89'.",
+           call. = TRUE)
+    } 
+    # rename to match workflow of non-subset files
+    files <- type_subset
   }
   
-  # if data from 457 (and not metatdata) are present, save those per mission group
-  LS457_files <- files[grepl("457", files)]
-  LS457_files <- LS457_files[!grepl("metadata", LS457_files)]
-  if (length(LS457_files) > 0) {
-    # collate files, but add the filename, since this *could be* is DSWE 1 + 3
-    all_457_points <- map_dfr(.x = LS457_files, 
-                              .f = function(.x) {
-                                file_name = last(str_split(.x, "/")[[1]])
-                                df <- read_csv(.x) 
-                                # grab all column names except system:index
-                                df_names <- colnames(df)[2:length(colnames(df))]
-                                # and coerce those columns to numeric for joining later
-                                df %>% 
-                                  mutate(across(all_of(df_names),
-                                                ~ as.numeric(.)))%>% 
-                                  mutate(source = file_name)
-                              }) 
-    write_feather(all_457_points, file.path(to_directory,
-                                            paste0(file_prefix, "_collated_points_457_",
-                                                   version_identifier, ".feather")))
+  # check to see if files need to subset for dswe
+  if (!is.null(dswe)) {
+    # subset for dswe - but need to add "_" before and after
+    dswe <- paste0("_", dswe, "_")
+    dswe_subset <- files[grepl(dswe, files)]
+    # make sure there are files present in this filter
+    if (length(dswe_subset) == 0) {
+      stop("You have used a `dswe` argument that is unrecognized.\n
+              Acceptable `dswe` arguments are 'DSWE1', 'DSWE1a', 'DSWE3'.",
+           call. = TRUE)
+    } 
+    # rename to match workflow of non-subset files
+    files <- dswe_subset
   }
   
-  # if data from 89 (and not metatdata) are present, save those per mission group
-  LS89_files <- files[grepl("89", files)]
-  LS89_files <- LS89_files[!grepl("metadata", LS89_files)]
-  if (length(LS89_files) > 0) {
-    # collate files, but add the filename, since this *could be* is DSWE 1 + 3
-    all_89_points <- map_dfr(.x = LS89_files, 
-                             .f = function(.x) {
-                               file_name = last(str_split(.x, "/")[[1]])
-                               df <- read_csv(.x) 
-                               # grab all column names except system:index
-                               df_names <- colnames(df)[2:length(colnames(df))]
-                               # and coerce those columns to numeric for joining later
-                               df %>% 
-                                 mutate(across(all_of(df_names),
-                                               ~ as.numeric(.)))%>% 
-                                 mutate(source = file_name)
-                             }) 
-    write_feather(all_89_points, file.path(to_directory,
-                                           paste0(file_prefix, "_collated_points_89_",
-                                                  version_identifier, ".feather")))
+  # process metadata separately from site data
+  metadata <- files[grepl("metadata", files)]
+  
+  if (length(metadata) > 0) {
+    
+    # process LS457 and LS89 mission groups separately
+    misson_groups <- c("LS457", "LS89")
+    walk(misson_groups,
+         ~ function(mg) {
+           if (any(grepl(mg, metadata))) {
+             
+             subset_mg <- metadata[grepl(mg, metadata)]
+             
+             # if separating missions, iterate over mission to save independent files
+             if (separate_missions) {
+               
+               missions = c("LT04", "LT05", "LE07")
+               walk(missions,
+                    ~ function(m) {
+                      m_collated <- walk(.x = subset_mg, 
+                                         .f = function(.x) {
+                                           read_csv(.x) %>% 
+                                             filter(grepl(m, `system:index`))
+                                         })
+                      # check for dswe subset
+                      if (!is.null(dswe)) {
+                        write_feather(m_collated, file.path(to_directory,
+                                                            paste0(yml$proj, 
+                                                                   "_collated_metadata_",
+                                                                   dswe,
+                                                                   m,
+                                                                   "_",
+                                                                   yml$run_date, 
+                                                                   ".feather")))
+                        
+                      } else {
+                        write_feather(m_collated, file.path(to_directory,
+                                                            paste0(yml$proj, 
+                                                                   "_collated_metadata_",
+                                                                   m,
+                                                                   "_",
+                                                                   yml$run_date, 
+                                                                   ".feather")))
+                      }
+                    })
+               
+             } else { 
+               
+               # otherwise, read all the data and save the file
+               data_mg <- map_dfr(subset_mg, read_csv) 
+               # check for dswe subset
+               if (!is.null(dswe)) {
+                 write_feather(data_mg, file.path(to_directory,
+                                                  paste0(yml$proj, 
+                                                         "_collated_metadata",
+                                                         dswe, 
+                                                         mg, 
+                                                         "_",
+                                                         yml$run_date, 
+                                                         ".feather"))) 
+               } else {
+                 write_feather(data_mg, file.path(to_directory,
+                                                  paste0(yml$proj, 
+                                                         "_collated_metadata_",
+                                                         mg, 
+                                                         "_",
+                                                         yml$run_date, 
+                                                         ".feather")))
+               }
+               
+             }
+             
+           }
+         })
+    
   }
   
-  # return the list of files from this process
-  list.files(to_directory,
-             pattern = file_type,
-             full.names = TRUE) 
+  
+  # process sites separately from metadata
+  sites <- files[!grepl("metadata", files)]
+  
+  if (length(sites) > 0) {
+    
+    # process LS457 and LS89 mission groups separately
+    misson_groups <- c("LS457", "LS89")
+    walk(misson_groups,
+         ~ function(mg) {
+           if (any(grepl(mg, sites))) {
+             subset_mg <- sites[grepl(mg, sites)]
+             
+             # if separating missions, iterate over mission to save independent files
+             if (separate_missions) {
+               
+               missions = c("LT04", "LT05", "LE07")
+               walk(missions,
+                    ~ function(m) {
+                      m_collated <- walk(.x = subset_mg, 
+                                         .f = function(.x) {
+                                           read_csv(.x) %>% 
+                                             filter(grepl(m, `system:index`))
+                                         })
+                      # check for dswe subset
+                      if (!is.null(dswe)) {
+                        write_feather(m_collated, file.path(to_directory,
+                                                            paste0(yml$proj, 
+                                                                   "_collated_sites_",
+                                                                   dswe,
+                                                                   m,
+                                                                   "_",
+                                                                   yml$run_date, 
+                                                                   ".feather")))
+                      } else {
+                        write_feather(m_collated, file.path(to_directory,
+                                                            paste0(yml$proj, 
+                                                                   "_collated_sites_",
+                                                                   m,
+                                                                   "_",
+                                                                   yml$run_date, 
+                                                                   ".feather")))
+                      }
+                    })
+               
+             } else {
+               
+               # otherwise, read all the data and save the file
+               data_mg <- map_dfr(subset_mg, read_csv) 
+               # check for dswe subset
+               if (!is.null(dswe)) {
+                 write_feather(data_mg, file.path(to_directory,
+                                                  paste0(yml$proj, 
+                                                         "_collated_sites_",
+                                                         dswe,
+                                                         mg, 
+                                                         "_",
+                                                         yml$run_date, 
+                                                         ".feather")))
+               } else {
+                 write_feather(data_mg, file.path(to_directory,
+                                                  paste0(yml$proj, 
+                                                         "_collated_sites_",
+                                                         mg, 
+                                                         "_",
+                                                         yml$run_date, 
+                                                         ".feather")))
+                 
+               }
+               
+             }
+             
+           }
+         })
+    
+  }
+  
+  return ( NULL )
 }

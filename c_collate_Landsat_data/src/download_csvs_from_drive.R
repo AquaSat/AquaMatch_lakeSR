@@ -12,7 +12,7 @@
 #' @param drive_contents dataframe; name of the target object that contains the 
 #' Drive folder contents of the destination folder specified in the GEE run 
 #' configuration
-#' @param requries target object; any target that must be run prior to this 
+#' @param depends target object; any target that must be run prior to this 
 #' function. Defaults to NULL.
 #' 
 #' @returns downloads .csvs from the specified folder name to the
@@ -20,7 +20,10 @@
 #' files from the folder specified in the yml will be downloaded.
 #' 
 #' 
-download_csvs_from_drive <- function(file_type = NULL, yml, drive_contents, requires = NULL) {
+download_csvs_from_drive <- function(file_type = NULL, 
+                                     yml, 
+                                     drive_contents, 
+                                     depends = NULL) {
   # authorize Google
   drive_auth(email = yml$google_email)
   # make sure they are only .csv files
@@ -30,6 +33,11 @@ download_csvs_from_drive <- function(file_type = NULL, yml, drive_contents, requ
   if (!is.null(file_type)) {
     drive_contents <- drive_contents %>% 
       filter(grepl(file_type, name))
+    # if file type is not metadata, further filtering to remove metadata necessary
+    if (file_type != "metadata") {
+      drive_contents <- drive_contents %>% 
+        filter(!grepl("metadata", name))
+    }
   }
   # make sure run date folder has been created
   if (!dir.exists(file.path("c_collate_Landsat_data/down/", yml$run_date))) {
@@ -38,8 +46,11 @@ download_csvs_from_drive <- function(file_type = NULL, yml, drive_contents, requ
   }
   if (!is.null(file_type)) {
     directory <- file.path("c_collate_Landsat_data/down/", yml$run_date, file_type)
-    dir.create(directory)
+    if (!dir.exists(directory)) {
+      dir.create(directory)
+    }
   }
+  
   # download files to run date folder in `c_collate_Landsat_data/down/`
   walk2(.x = drive_contents$id,
         .y = drive_contents$name, 
