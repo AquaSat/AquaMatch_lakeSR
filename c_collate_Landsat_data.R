@@ -59,13 +59,15 @@ c_collate_Landsat_data <- list(
   # target with list of data segments:
   tar_target(
     name = c_data_segments,
-    command = c("metadata", "LS457", "LS89")
+    command = c("metadata", "LS457", "LS89"),
+    deployment = "main"
   ),
   
   # set mission groups
   tar_target(
     name = c_mission_groups,
-    command = c("LS457", "LS89")
+    command = c("LS457", "LS89"),
+    deployment = "main"
   ),
   
   # set dswe types
@@ -73,16 +75,18 @@ c_collate_Landsat_data <- list(
     name = c_dswe_types,
     command = {
       dswe = NULL
-      if (grepl("1", yml$DSWE_setting)) {
+      if (grepl("1", b_yml_poi$DSWE_setting)) {
         dswe = c(dswe, "DSWE1")
       } 
-      if (grepl("1a", yml$DSWE_setting)) {
+      if (grepl("1a", b_yml_poi$DSWE_setting)) {
         dswe = c(dswe, "DSWE1a")
       } 
-      if (grepl("3", yml$DSWE_setting)) {
+      if (grepl("3", b_yml_poi$DSWE_setting)) {
         dswe = c(dswe, "DSWE3")
       } 
-    }
+      dswe
+    },
+    deployment = "main"
   ), 
   
   # download all files, branched by data segments
@@ -109,7 +113,8 @@ c_collate_Landsat_data <- list(
                                       dswe = NULL,
                                       separate_missions = FALSE,
                                       depends = c_download_files),
-    packages = c("tidyverse", "feather")
+    packages = c("tidyverse", "feather"),
+    deployment = "main"
   ),
   
   tar_target(
@@ -120,13 +125,25 @@ c_collate_Landsat_data <- list(
                                       separate_missions = TRUE,
                                       depends = c_download_files),
     packages = c("tidyverse", "feather"),
-    pattern = cross(c_misison_groups, c_dswe_types)
-  )
+    pattern = cross(c_mission_groups, c_dswe_types)
+  ),
    
-
   # Save collated files to Drive, create csv with ids -----------------------
   
+  # get list of files to save to drive
+  tar_target(
+    name = c_collated_files,
+    command = list.files(file.path("c_collate_Landsat_data/mid/", 
+                                   b_yml_poi$run_date),
+                         full.names = TRUE)
+  ),
   
+  tar_target(
+    name = c_send_collated_files_to_drive,
+    command = {
+      
+    }
+  )
   # # and collate the data with metadata
   # tar_target(
   #   name = make_files_with_metadata,
