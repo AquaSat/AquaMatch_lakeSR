@@ -8,6 +8,10 @@ library(crew)
 
 tar_source("python/pySetup.R")
 
+# Source general functions ------------------------------------------------
+
+tar_source("src/")
+
 # Set up crew controller for multicore processing ------------------------
 controller_cores <- crew_controller_local(
   workers = parallel::detectCores()-1,

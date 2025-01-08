@@ -148,8 +148,10 @@ following code chunk:
 ```{r run_targets}
 library(targets)
 
-# run the portion pipeline that includes the GEE pull
-tar_make(c_make_collated_files)
+# run the portion pipeline that includes the GEE pull through collation steps, 
+# with the final output of a .csv file with the drive file ids for easy downstream
+# access
+tar_make(c_save_collated_drive_info)
 
 # run the portion of the pipeline that relies on the publicly-available collated
 # data files from the a, b, and c groups ... BLAH BLAH 

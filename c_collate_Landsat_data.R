@@ -127,34 +127,41 @@ c_collate_Landsat_data <- list(
     packages = c("tidyverse", "feather"),
     pattern = cross(c_mission_groups, c_dswe_types)
   ),
-   
+  
   # Save collated files to Drive, create csv with ids -----------------------
   
   # get list of files to save to drive
   tar_target(
     name = c_collated_files,
-    command = list.files(file.path("c_collate_Landsat_data/mid/", 
-                                   b_yml_poi$run_date),
-                         full.names = TRUE)
+    command = {
+      c_make_collated_metadata
+      c_make_collated_point_files
+      list.files(file.path("c_collate_Landsat_data/mid/", 
+                           b_yml_poi$run_date),
+                 full.names = TRUE)
+    },
+    deployment = "main"
   ),
   
   tar_target(
     name = c_send_collated_files_to_drive,
-    command = {
-      
-    }
+    command = export_single_file(file_path = c_collated_files,
+                                 drive_path = '~/lakeSR_Landsat_C2/collated_raw/',
+                                 google_email = b_yml_poi$google_email),
+    packages = c("tidyverse", "googledrive"),
+    pattern = c_collated_files
+  ),
+  
+  tar_target(
+    name = c_save_collated_drive_info,
+    command = write_csv(c_send_collated_files_to_drive,
+                        file.path("c_collate_Landsat_data/out/",
+                                  paste0("raw_collated_files_drive_ids_",
+                                         b_yml_poi$run_date,
+                                         ".csv")
+                                  )
+                        )
   )
-  # # and collate the data with metadata
-  # tar_target(
-  #   name = make_files_with_metadata,
-  #   command = {
-  #     make_collated_data_files
-  #     add_metadata(yaml = yml,
-  #                  file_prefix = yml$proj,
-  #                  version_identifier = yml$run_date)
-  #   },
-  #   packages = c("tidyverse", "feather")
-  # )
   
 )
 

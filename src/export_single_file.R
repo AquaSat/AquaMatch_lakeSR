@@ -4,85 +4,62 @@
 #' A function to export a single target (as a file) to Google Drive and return
 #' the shareable Drive link as a file path.
 #' 
-#' @param target The name of the target to be exported (as an object not a string).
+#' @param file_path string; file.path() for file to be exported to Drive
 #' 
 #' @param drive_path A path to the folder on Google Drive where the file
-#' should be saved.
-#' 
-#' @param stable Logical value. If TRUE, also export the file to the "stable"
-#' subfolder in Google Drive. If FALSE, use the path as provided by the user.
+#' should be exported to. This must begin with "~/", the path relative to the 
+#' root directory
 #' 
 #' @param google_email A string containing the gmail address to use for
 #' Google Drive authentication.
 #' 
-#' @param feather Logical value. If TRUE, export the file as a feather file. If
-#' FALSE, then ".rds". Defaults to FALSE.
+#' @returns shareable link as a .csv file
 #' 
-#' @returns 
-#' Returns a local path to a csv file containing a text link to the uploaded
-#' file in Google Drive.
 #' 
-export_single_file <- function(target, drive_path, stable, google_email,
-                               date_stamp, feather = FALSE){
-  
-  # Feather or RDS?
-  if(feather){extension <- ".feather"} else {extension <- ".rds"}
+export_single_file <- function(file_path, 
+                               drive_path,
+                               google_email) {
   
   # Authorize using the google email provided
   drive_auth(google_email)
   
-  # Get target name as a string
-  target_string <- deparse(substitute(target))
+  # get the file name we care about
+  file = last(str_split(file_path, "/")[[1]])
   
-  # Create a temporary file exported locally, which can then be used to upload
-  # to Google Drive
-  file_local_path <- tempfile(fileext = extension)
   
-  # If feather == TRUE then .feather; else .rds
-  if(feather){
-    write_feather(x = target,
-                  path = file_local_path)
-  } else {
-    write_rds(x = target,
-              file = file_local_path)
-  }
-  
-  # Once locally exported, send to Google Drive
-  out_file <- drive_put(media = file_local_path,
+  # check to see if path exists, if it doesn't, create it
+  with_drive_quiet({
+    return <- drive_get(path = drive_path)
+    # if the return has no rows, the folder path doesn't exist, and we need to
+    # create it.
+    if (nrow(return) == 0) {
+      folders <- unlist(str_split(drive_path, "/"))
+      folders <- folders[nchar(folders)>1]
+      walk(
+        # make a variable of position
+        .x = 1:length(folders),
+        .f = \(p) {
+          current_path <- str_replace(drive_path, paste0("^(([^/]*/){", p+1, "}).*"), "\\1") 
+          return <- drive_get(path = current_path)
+          if (nrow(return) == 0) {
+            drive_mkdir(name = folders[p], # current folder name
+                        path = str_replace(drive_path, paste0("^(([^/]*/){", p, "}).*"), "\\1")) # one parent folder path
+          }
+        })
+    }
+  })
+    
+  # send to Google Drive
+  out_file <- drive_put(media = file_path,
                         # The folder on Google Drive
                         path = drive_path,
                         # The filename on Google Drive
-                        name = paste0(target_string, extension))
+                        name = file)
   
   # Make the Google Drive link shareable: anyone can view
   drive_share_anyone(out_file)
   
-  # If stable == TRUE then export a second, dated file to the stable/ subfolder
-  if(stable){
-    drive_path_stable <- paste0(drive_path, "stable/")
-    
-    # Once locally exported, send to Google Drive
-    out_file_stable <- drive_upload(media = file_local_path,
-                                    # The folder on Google Drive
-                                    path = drive_path_stable,
-                                    # The filename on Google Drive
-                                    name = paste0(target_string,
-                                                  "_",
-                                                  gsub(pattern = "-",
-                                                       replacement = "",
-                                                       x = date_stamp),
-                                                  extension),
-                                    # Error if file exists with same date
-                                    # Note that we don't do this before this
-                                    # instance because files will always have the
-                                    # same name: no dates attached unless "stable"
-                                    overwrite = FALSE)
-    
-    # Make the Google Drive link shareable: anyone can view
-    drive_share_anyone(out_file_stable)
-  }
-  
-  # Now remove the local file after upload is complete
-  file.remove(file_local_path)
+  # return the information about the uploaded file
+  out_file
   
 }
