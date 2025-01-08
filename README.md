@@ -48,9 +48,11 @@ points in them, resulting in run time on the order of days.
 **c_collate_Landsat_data**:
 
 This {targets} list collates the data from the Google Earth Engine run 
-orchestrated in the {targets} group "b_pull_Landsat_SRST_poi" and creates "stable"
-files for downstream use.
+orchestrated in the {targets} group "b_pull_Landsat_SRST_poi" and creates publicly-
+available files for downstream use, storing a list of Drive ids in a .csv in the
+`c_collate_Landsat_data/out/` folder.
 
-**Note**: this group of targets takes a few hours to run, as the download and 
-collation process is quite time consuming, even with mulitcore processing.
+**Note**: this group of targets takes a few hours to run, as the download, 
+collation, and upload process is quite time consuming, even with mulitcore 
+processing.
 
