@@ -154,13 +154,12 @@ c_collate_Landsat_data <- list(
   
   tar_target(
     name = c_save_collated_drive_info,
-    command = write_csv(c_send_collated_files_to_drive,
+    command = write_csv(c_send_collated_files_to_drive %>% 
+                          select(-drive_resource),
                         file.path("c_collate_Landsat_data/out/",
                                   paste0("raw_collated_files_drive_ids_",
                                          b_yml_poi$run_date,
-                                         ".csv")
-                                  )
-                        )
+                                         ".csv")))
   )
   
 )

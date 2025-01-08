@@ -13,7 +13,7 @@
 #' @param google_email A string containing the gmail address to use for
 #' Google Drive authentication.
 #' 
-#' @returns shareable link as a .csv file
+#' @returns Drive information about the uploaded file in a 'dribble'
 #' 
 #' 
 export_single_file <- function(file_path, 
