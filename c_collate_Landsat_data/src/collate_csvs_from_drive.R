@@ -148,9 +148,9 @@ collate_csvs_from_drive <- function(file_type = NULL,
     # process LS457 and LS89 mission groups separately
     if (is.null(file_type)) {
       
-      misson_groups <- c("LS457", "LS89")
+      mission_groups <- c("LS457", "LS89")
       
-      walk(misson_groups,
+      walk(mission_groups,
            .f = \(mg) {
              if (any(grepl(mg, sites))) {
                subset_mg <- sites[grepl(mg, sites)]
