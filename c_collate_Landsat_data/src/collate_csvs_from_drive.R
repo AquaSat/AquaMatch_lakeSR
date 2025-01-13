@@ -273,7 +273,7 @@ collate_csvs_from_drive <- function(file_type = NULL,
                                      # get column names that need to be 
                                      # coerced to numeric (all but index)
                                      df_names <- names(df)[2:length(names(df))]
-                                     # corece columns to numeric and add
+                                     # coerce columns to numeric and add
                                      # source/file name
                                      df %>% 
                                        mutate(across(all_of(df_names),
