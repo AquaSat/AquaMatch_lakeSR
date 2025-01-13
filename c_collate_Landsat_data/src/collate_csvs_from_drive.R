@@ -7,8 +7,8 @@
 #' metadata file, a LS457 file, and a LS89 file.
 #'
 #' @param file_type text string; unique string for filtering files to be 
-#' downloaded from Drive. Some options: "LS457" (Landsat 4, 5, 7), "metadata", 
-#' "LS89" (Landsat 8/9). Defaults to NULL. Use this arguemnt if using mulitcore.
+#' downloaded from Drive.  - current options: "LS457", "LS89", "metadata", 
+#' "pekel", NULL. Defaults to NULL. Use this arguemnt if using mulitcore.
 #' @param yml dataframe; name of the target object from the -b- group that
 #' stores the GEE run configuration settings as a data frame.
 #' @param dswe text string; dswe value to filter input files by. Defaults to NULL.
@@ -28,6 +28,13 @@ collate_csvs_from_drive <- function(file_type = NULL,
                                     dswe = NULL, 
                                     separate_missions = FALSE,
                                     depends = NULL) {
+  
+  if (!is.null(file_type)) {
+    if (!file_type %in% c("LS457", "LS89", "metadata", "pekel")) {
+      warning("The file type argument provided is not recognized.\n
+              This may result in unintended dowloads.")
+    }
+  }
   
   # make directory path based on function arguments
   if (is.null(file_type)) {

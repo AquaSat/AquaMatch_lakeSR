@@ -92,7 +92,8 @@ c_collate_Landsat_data <- list(
   # download all files, branched by data segments
   tar_target(
     name = c_download_files,
-    command = download_csvs_from_drive(file_type = c_data_segments,
+    command = download_csvs_from_drive(local_folder = "c_collate_Landsat_data/down/",
+                                       file_type = c_data_segments,
                                        drive_contents = c_Drive_folder_contents,
                                        yml = b_yml_poi,
                                        depends = c_check_dir_structure),
