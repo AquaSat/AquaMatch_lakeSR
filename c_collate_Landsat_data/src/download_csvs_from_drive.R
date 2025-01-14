@@ -27,12 +27,14 @@ download_csvs_from_drive <- function(local_folder,
                                      yml, 
                                      drive_contents, 
                                      depends = NULL) {
+  
   if (!is.null(file_type)) {
     if (!file_type %in% c("LS457", "LS89", "metadata", "pekel")) {
       warning("The file type argument provided is not recognized.\n
-              This may result in unintended dowloads.")
+              This may result in unintended downloads.")
     }
   }
+  
   # authorize Google
   drive_auth(email = yml$google_email)
   # make sure they are only .csv files

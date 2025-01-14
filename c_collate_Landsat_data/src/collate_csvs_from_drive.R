@@ -32,7 +32,7 @@ collate_csvs_from_drive <- function(file_type = NULL,
   if (!is.null(file_type)) {
     if (!file_type %in% c("LS457", "LS89", "metadata", "pekel")) {
       warning("The file type argument provided is not recognized.\n
-              This may result in unintended dowloads.")
+              This may result in unintended downloads.")
     }
   }
   
