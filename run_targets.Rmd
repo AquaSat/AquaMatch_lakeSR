@@ -124,29 +124,50 @@ well.
 
 ## Run the targets pipeline and output a network graph.
 
-Just as a heads up, running this workflow will take multiple hours, mostly because
+Just as a heads up, running the complete workflow will take multiple days, mostly because
 of the bottleneck at GEE - only 10 tasks are cued at any given time, and GEE determines
 how many tasks are running at any given time (usually just 1-3 at any given time). 
-
 We use multiple cores for processing using {crew} workers integration with {targets} wherever 
-possible to increase efficiency of this process. Without multicores, -a- group
-takes about 2 hours and decrease in process time is directly correlated to the 
-number of CPU cores on your computer, the more cores, the more time savings. 
-This workflow currently uses n-1 cores as detected by the {parallel} package. The
-GEE steps can not be run using multi-core processes since the processing bottleneck
-is not local. 
+possible to increase efficiency of this process. This workflow currently uses 
+n-1 cores as detected by the {parallel} package. The GEE steps can not be run 
+using multi-core processes since the processing bottleneck is not local. 
 
 ```{r}
 parallel::detectCores()
 ```
 
-Now that you know this will take a while, go ahead and run the pipeline!
+We have also created an alternative to running the entire pipeline if users do
+not wish to change any GEE masking or summarization settings. To make this more 
+accessible and allow for users to make independent QA/QC decisions
+after the Landsat pull ({targets} group "b_pull_Landsat_SRST"), you can run 
+only the last few groups of targets independently of the full GEE workflow. 
+
+If you want to run the entire pipeline (including the GEE pull), run the 
+following code chunk:
 
 ```{r run_targets}
 library(targets)
 
-# run the pipeline
-tar_make(b_check_for_failed_tasks)
+# run the portion pipeline that includes the GEE pull through collation steps, 
+# with the final output of a .csv file with the drive file ids for easy downstream
+# access
+tar_make(c_save_collated_drive_info)
+
+# run the portion of the pipeline that relies on the publicly-available collated
+# data files from the a, b, and c groups ... BLAH BLAH 
+#tar_make(ADD THIS LATER)
+```
+
+If you want to run the pipeline without updating the Landsat pull, run the
+following chunk:
+
+```{r}
+library(targets)
+
+# run only the portion of the pipeline that relies on the publicly-available 
+# collated data files from the a, b, and c groups ... BLAH BLAH 
+#tar_make(ADD THIS LATER)
+
 ```
 
 
