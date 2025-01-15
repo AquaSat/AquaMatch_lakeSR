@@ -6,6 +6,8 @@ bibliography: references.bib
 params:
   poi: NA
   locs_run_date: NA
+  sites: NA
+  visible_sites: NA
 ---
 
 ```{r chunk-opts, echo=FALSE}
@@ -43,43 +45,10 @@ can then be applied to the data collected over the centrally-located point
 across all waterbodies in the lakeSR database. lakeSR does not acquire nor
 summarize data over the entire waterbody's surface, as it is computationally
 impractical for most large lakes, especially those that cross multiple satellite
-path-rows or tiles. For both lakeSR and siteSR_WQP products, we summarize the
-Landsat data within a 120 meter radius of a defined location.
+path-rows or tiles. For the lakeSR product, we summarize the Landsat data within
+a 120 meter radius of a defined location. For siteSR, we use a 200 meter buffer.
 
-## Updates in AquaSat v2
-
-Some changes in lake polygon and center point have been made in modernizing and
-scaling from LimnoSat-US. The lake center aspect called "deepest point" of
-LimnoSat-US was built upon HydroLakes [@messager2016], a global database of
-lakes greater than 10 hectares accounting for 1.4 million waterbodies and a
-total surface area of 2.67 million km² worldwide. While this dataset of lakes
-represents \~55% of the worldwide surface area of lakes greater than 1 hectare,
-it is only a sliver of the estimated 27 million waterbodies in the world
-[@verpoorter2014]. AquaSat v2 uses the [USGS's National Hydrography
-products](https://www.usgs.gov/national-hydrography) which map the surface
-waters of the United States, and allows for reduction in minimum size of
-waterbody and an increase in coverage of freshwater systems across the United
-States and permanently inhabited territories.
-
-## Pole of Inaccessibility
-
-The USGS National Hydrography products contain smaller waterbodies and higher
-resolution polygons than the HydroLakes shapes, which makes it computationally
-impossible to use the Chebyshev Center ["deepest point", @yang2020] calculation
-used in LimnoSat-US due to the number of vertices in each polygon. To replace
-this important step in the update, we employ the concept of "pole of
-inaccessibility" [POI, @stefansson1920].
-
-The concept of POI is used to define the geographic center of a circle with the
-largest circumference within any complex polygon. The foundational principle is
-used widely to describe the arctic pole of inaccessiblity, that is the point in
-the northern arctic circle that is the furthest from land, but has also been
-used to describe the geographic center of landmasses [@garcia-castellanos2007].
-For lakeSR, we use POI to determine the point in a waterbody that is furthest
-from the shoreline using the `polylabelr::poi()` function [@larsson2020], which
-calculates a point in space and the radius of the circle used to define the POI.
-
-## Waterbodies Included {#waterbodies}
+## Waterbodies Included in lakeSR {#waterbodies}
 
 For lakeSR, we use the NHDPlusV2 dataset for lakes within the conterminous US
 and US Territories using the {nhdplusTools} R package [@blodgett2023] and the
@@ -108,14 +77,48 @@ non-CONUS waterbodies. This is a
 `r format(round((nrow(params$poi)-56792)*100/56792, 0), big.mark = ",")` percent
 increase over the 56,792 lakes included in the original AquaSat product.
 
-For each waterbody, the POI and distance-to-shore radius was calculated using
-the `polylabelr::poi()` function. It is important to note that the `poi()`
-function can sometimes attribute a POI to a location other than the point
-furthest away from a shoreline. This occurs in polygons with a very large number
-of indices (due to sheer area or geomorphological complexity); however the
-points calculated should be an acceptable proxy for pelagic lake conditions.
+For each waterbody, the Pole of Inaccessibility (see Section \@ref(poi)) and
+distance-to-shore radius was calculated using the `polylabelr::poi()` function.
+It is important to note that the `poi()` function can sometimes attribute a POI
+to a location other than the point furthest away from a shoreline. This occurs
+in polygons with a very large number of indices (due to sheer area or
+geomorphological complexity); however the points calculated should be an
+acceptable proxy for pelagic lake conditions.
 
-## Technical Implementation
+### Updates in AquaSat v2
+
+Some changes in lake polygon and center point have been made in modernizing and
+scaling from LimnoSat-US. The lake center aspect called "deepest point" of
+LimnoSat-US was built upon HydroLakes [@messager2016], a global database of
+lakes greater than 10 hectares accounting for 1.4 million waterbodies and a
+total surface area of 2.67 million km² worldwide. While this dataset of lakes
+represents \~55% of the worldwide surface area of lakes greater than 1 hectare,
+it is only a sliver of the estimated 27 million waterbodies in the world
+[@verpoorter2014]. AquaSat v2 uses the [USGS's National Hydrography
+products](https://www.usgs.gov/national-hydrography) which map the surface
+waters of the United States, and allows for reduction in minimum size of
+waterbody and an increase in coverage of freshwater systems across the United
+States and permanently inhabited territories.
+
+### Pole of Inaccessibility {#poi}
+
+The USGS National Hydrography products contain smaller waterbodies and higher
+resolution polygons than the HydroLakes shapes, which makes it computationally
+impossible to use the Chebyshev Center ["deepest point", @yang2020] calculation
+used in LimnoSat-US due to the number of vertices in each polygon. To replace
+this important step in the update, we employ the concept of "pole of
+inaccessibility" [POI, @stefansson1920].
+
+The concept of POI is used to define the geographic center of a circle with the
+largest circumference within any complex polygon. The foundational principle is
+used widely to describe the arctic pole of inaccessiblity, that is the point in
+the northern arctic circle that is the furthest from land, but has also been
+used to describe the geographic center of landmasses [@garcia-castellanos2007].
+For lakeSR, we use POI to determine the point in a waterbody that is furthest
+from the shoreline using the `polylabelr::poi()` function [@larsson2020], which
+calculates a point in space and the radius of the circle used to define the POI.
+
+### Technical Implementation of lakeSR
 
 The code for gathering NHD waterbodies and calculating their respective POIs is
 found in {targets} group *a_Calculate_Centers* which is located in the script
@@ -153,7 +156,7 @@ of cores you allow for processing (we used `r parallel::detectCores()-1` cores
 during the development of this workflow and it takes on the order of tens of
 minutes).
 
-## Case Study: Wisconsin Waterbodies
+### Case Study: Wisconsin Waterbodies
 
 ```{r}
 # grab state of Wisconsin
@@ -221,3 +224,131 @@ tm_shape(WI_for_viz) +
   tm_shape(WI_poi) +
   tm_dots("black")
 ```
+
+## siteSR Acquisition Locations {#siteSR-locs}
+
+The AquaMatch_harmonize_WQP workflow outputs site metadata for all sites that
+are present after the harmonization procedure for each parameter. siteSR
+collates these sites, then reduces that collation to only distinct sites. Across
+chlorophyll-*a*, Secchi disc depth, and DOC, there are currently
+`r format(nrow(params$sites), big.mark = ",")` distinct sites in the United
+States and Territories for which we create stacks.
+
+Every site in the WQP has a `MonitoringLocationTypeName` associated with it. For
+the purposes of siteSR, we do not subset the sites by these types, but they are
+helpful for understanding the type of data included in siteSR.
+
+```{r siteSR-types, fig.cap="Water Quality Portal data location types present in siteSR. Unique WQP monitoring location count above bar, divided by `MonitoringLocationTypeName`."}
+ggplot(p4_WQP_site_NHD_info, aes(x = MonitoringLocationTypeName)) +
+  geom_bar() +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  geom_text(aes(label = ..count..), stat = "count", vjust = -0.5, colour = "black", size = 3)
+```
+
+For siteSR, we will acquire Landsat stacks for all sites deemed "visible" by
+remote sensing (see Section \@ref(rs-vis)). Note that this is different from
+lakeSR, where we only acquire data for lakes, reservoirs, ponds, and streams
+according to the NHD. This was a functional choice, as most canal sites will not
+be RS-visible and estuary extents are limited in the NHD (and when present the
+technique to determine the POI may not be appropriate).
+
+### Assessing for RS visibility {#rs-vis}
+
+We use the JRC Global Surface Water Mapping Layers v1.4 [@pekel2016] to
+determine whether or not sites are visible by remote sensing and should
+therefore be sent through the GEE data acquisition process detailed in Section
+\@ref(LS-SRST-pull). This dataset is a compilation of 38 years of the Landsat
+record and enumerates the proportion of time a single 30x30 meter pixel has the
+presence of water. As long as a WQP monitoring location has at least one pixel
+within a 200m radius that has had water at least 80% of the time during that 38
+year period, we include it in the list of sites we acquire Landsat stacks for.
+After this assessment, `r format(nrow(params$visible_sites), big.mark = ",")`
+sites were deemed to be visible by remote sensing.
+
+```{r siteSR-filtered, fig.cap="Water Quality Portal data location types present in siteSR after filitering for those that are deemed visible by remote sensing. Count of sites provided above bar, divided by `MonitoringLocationTypeName`."}
+p5_visible_sites %>% 
+  rename(siteSR_id = id) %>% 
+  left_join(., p4_WQP_site_NHD_info) %>% 
+  ggplot(., aes(x = MonitoringLocationTypeName)) +
+  geom_bar() +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  geom_text(aes(label = ..count..), stat = "count", vjust = -0.5, colour = "black", size = 3)
+```
+
+### Assignment of NHD flowline and waterbodies {#fl-wb-assignment}
+
+For each WQP montioring location, we attempt to assign HUC8's wherever they are
+missing from the `HUCEightDigitCode` column output from the WQP (n =
+`r params$sites %>% filter(flag_HUC8 != 0) %>% nrow(.)`). To do this we use the
+`get_huc()` function from {nhdplusTools} [@blodgett2023] package in R. After
+HUC8 assignment is finished only
+`r params$sites %>% filter(flag_HUC8 == 2) %>% nrow(.)` sites remained without a
+HUC8 assignment. All of these sites were coastal sites outside of the extent of
+NHD boundaries. In siteSR, the `flag_HUC8` column indicates whether this HUC8
+was assigned within the WQP (value of 0), assigned in this process (value of 1),
+or was unable to be assigned (value of 2).
+
+Using the HUC8 information to iterate, we then can use {nhdplusTools} to assign
+waterbodies and flowlines to sites within the CONUS and data from The National
+Map best resolution files ([e.g. @usgs-nhd-ak]) for sites outside of CONUS by
+HUC4. For all sites with a `MonitoringLocationTypeName` that contains "lake" or
+"reservoir", we assign NHD ids to each point for the waterbody it is contained
+by or the waterbody it is closest to. NHD waterbody file has been filtered to
+only contain Lake, Ponds, and Reservoirs (NHD feature types 390 and 436). We
+flag (`flag_wb`) the results of this assignment as follows:
+
+> 0: point inside NHD waterbody polygon
+>
+> 1: point \<= 500m proximate to NHD waterbody polygon
+>
+> 2: point unable to be assigned to waterbody (it is \> 500m proximate to NHD
+> waterbody polygon)
+>
+> 3: point does not have HUC8 assignment or MonitoringLocationTypeName does not
+> contain "lake" or "reservoir", so no waterbody assigned
+
+For all points with a flag 0/1 we provide the NHD identifier for the polygon the
+monitoring location is associated with (comid for NHDPlusV2 and permanent
+identifier for NHD Best Resolution), for all points with a flag value of 1/2, we
+provide the distance (in meters) to the nearest NHD waterbody of feature type
+390 or 436.
+
+Flowlines are assigned to sites with a MonitoringLocationTypeName that contains
+"lake", "reservoir", "stream", or "river". NHD flowlines are filtered to contain
+streams/rivers and artificial paths (that is flowlines in waterbodies) (NHD
+feature types 460 and 558). We flag (`flag_fl`) the results of this assignment
+as follows:
+
+> 0: point \<= 100m proximate to flowline
+>
+> 1: point \<= 500m proximate to flowline
+>
+> 2: point is a lake or reservoir site and is \> 500m proximate to flowline
+>
+> 3: point is a stream/river site, unable to be assigned to flowline (distance
+> to flowline is greater than 500 meters)
+>
+> 4: point does not have HUC8 assignment or MonitoringLocationTypeName does not
+> contain "stream", "river", "lake", or "reservoir", so no flowline assigned
+
+For all points with a flag 0/1/2 we provide the NHD identifier for the flowline
+the monitoring location is associated with (comid for NHDPlusV2 and permanent
+identifier for NHD Best Resolution), for all points with a flag value of 1-3, we
+provide the distance (in meters) to the nearest NHD flowline of feature type 460
+or 558.
+
+We provide these identifiers and additional metadata to help users make informed
+decisions about data quality that may be inferred through the information
+included in these columns relative to the remote sensing data obtained in
+siteSR, they are present to assist in data interpretation.
+
+### siteSR updates in AquaSat v2
+
+In our updated workflow, we acquire and provide the historical Landsat stacks
+for all sites collated from the harmonization pipeline, regardless of whether
+they are associated with a specific *in situ* observation. In the previous
+iteration, we only provided a matchup dataset for *in situ* data. Assigning
+flowlines and waterbodies to all siteSR sites is also a feature introduced in
+AquaSat v2.

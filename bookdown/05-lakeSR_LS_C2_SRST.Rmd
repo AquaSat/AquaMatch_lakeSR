@@ -16,16 +16,15 @@ stacks" of the Landsat Collection 2 record - that is, all summarized Landsat
 data available from all Landsat missions that met our QA criteria.
 
 The siteSR-Landsat data product is similar, but is acquired at unique sampling
-locations identified in Section INSERT REFERENCE TO FUTURE SECTION ABOUT
-COLLATING SITESR LOCS.
+locations as described in \@ref(siteSR-locs).
 
 ## Changes from AquaSat v1 and LimnoSat-US
 
 While much of the general architecture from the precedent data products remained
-unchanged, in AquaSat v2 we have added a number of features to the remote sensing
-acquisition workflow, have increased efficiency of the data pull, and have made
-the acquired data more robust through additional masking. The bullets below
-summarize the changes implemented in this update.
+unchanged, in AquaSat v2 we have added a number of features to the remote
+sensing acquisition workflow, have increased efficiency of the data pull, and
+have made the acquired data more robust through additional masking. The bullets
+below summarize the changes implemented in this update.
 
 -   using yaml file for configuration of the workflow. This allows for greater
     flexibility in data acquisition including the use of custom configurations
@@ -49,6 +48,10 @@ this example, location 1 would be extracted for both path-row 1 and 2, location
     interoperability of the TM sensor (Landsat 4) image series and have
     therefore been included in the update. Additionally, Landsat 9 came online
     in 2021, and has been added to the data product.
+
+-   Landsat Collection 2 offers a Surface Temperature product derived from the
+    thermal band. In AquaSat v2, we include data from this band. See Section
+    \@ref(st-product) for additional considerations in use of these data.
 
 -   sending tasks to GEE explicitly per path-row and limiting the Landsat stack
     to the explicit path-row to eliminate duplicate acquisitions. In the
@@ -134,29 +137,25 @@ this example, location 1 would be extracted for both path-row 1 and 2, location
 
 ## Overview of Acquisition Steps
 
-The workflow for data acquisition is as follows:
+The workflow for data acquisition from GEE for lakeSR and siteSR is as follows:
 
 1.  read in and format the yaml configuration file for the GEE run
-    (`b_config_file_poi`, `b_yml_poi`)
 
 2.  reformat the locations file for the GEE run using the configuration file
-    (`b_ref_locations_poi`)
 
 3.  determine the WRS-2 path-rows that intersect with the locations file
-    (`b_WRS_pathrow_poi`)
 
 4.  filter the locations for those that are completely contained by the WRS-2
     path-row when the automated buffer is added, add the WRS-2 path-rows to the
     reformatted locations, and save distinct location files by path-row for
-    easier processing in Python (`b_poi_locs_filtered`)
+    easier processing in Python
 
-5.  iteratively run the GEE script per WRS-2 path-row (`b_eeRun_poi`)
+5.  iteratively run the GEE script per WRS-2 path-row
 
 6.  check to see that all tasks are complete in GEE before moving to next step
-    (`b_poi_tasks_complete`)
 
 7.  check to see if any tasks failed in GEE extraction which is not visible from
-    the RStudio IDE (`b_check_for_failed_tasks`)
+    the RStudio IDE
 
 ### Creating a Custom Configuration File {#custom-config}
 
@@ -179,10 +178,10 @@ you to look to our [siteSR data
 product](https://github.com/AquaSat/AquaMatch_siteSR_WQP) which is more suited
 to extracting data of that nature. Please note, calculating hand-off
 coefficients from small numbers of lakes may not provide robust enough summary
-statistics for intermission comparison and timeseries analysis. See **SECTION
-HAND-OFF COEFFICIENTS TO BE UPDATED!** for additional guidance.
+statistics for intermission comparison and timeseries analysis. See Section
+\@ref(handoff) for additional guidance.
 
-## Technical Implementation of Acquisition Script
+## Technical Implementation of GEE Acquisition Script
 
 In order to cue Python scripts and map along WRS-2 path-rows within the
 {targets} architecture, we use a function `run_GEE_per_pathrow()` which writes

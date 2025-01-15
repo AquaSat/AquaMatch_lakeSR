@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-01-06" />
+<meta name="date" content="2025-01-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="LS-C2-SRST.html"/>
-<link rel="next" href="references.html"/>
+<link rel="next" href="handoff.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -174,11 +174,19 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>3</b> Locations of Data Acquisition</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.1</b> Updates in AquaSat v2</a></li>
-<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#pole-of-inaccessibility"><i class="fa fa-check"></i><b>3.2</b> Pole of Inaccessibility</a></li>
-<li class="chapter" data-level="3.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>3.3</b> Waterbodies Included</a></li>
-<li class="chapter" data-level="3.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation"><i class="fa fa-check"></i><b>3.4</b> Technical Implementation</a></li>
-<li class="chapter" data-level="3.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.5</b> Case Study: Wisconsin Waterbodies</a></li>
+<li class="chapter" data-level="3.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>3.1</b> Waterbodies Included in lakeSR</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.1.1</b> Updates in AquaSat v2</a></li>
+<li class="chapter" data-level="3.1.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#poi"><i class="fa fa-check"></i><b>3.1.2</b> Pole of Inaccessibility</a></li>
+<li class="chapter" data-level="3.1.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation-of-lakesr"><i class="fa fa-check"></i><b>3.1.3</b> Technical Implementation of lakeSR</a></li>
+<li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.4</b> Case Study: Wisconsin Waterbodies</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR Acquisition Locations</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#rs-vis"><i class="fa fa-check"></i><b>3.2.1</b> Assessing for RS visibility</a></li>
+<li class="chapter" data-level="3.2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#fl-wb-assignment"><i class="fa fa-check"></i><b>3.2.2</b> Assignment of NHD flowline and waterbodies</a></li>
+<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR updates in AquaSat v2</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>4</b> Satellite Data Acquisition Software and Settings</a>
 <ul>
@@ -203,7 +211,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="5.3.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#sr-atmospheric-processing"><i class="fa fa-check"></i><b>5.3.1</b> SR Atmospheric Processing</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#surface-temperature"><i class="fa fa-check"></i><b>5.4</b> Surface Temperature</a></li>
+<li class="chapter" data-level="5.4" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#st-product"><i class="fa fa-check"></i><b>5.4</b> Surface Temperature</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html"><i class="fa fa-check"></i><b>6</b> Landsat Collection 2 SRST Data Product</a>
 <ul>
@@ -212,14 +220,23 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="6.2.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#custom-config"><i class="fa fa-check"></i><b>6.2.1</b> Creating a Custom Configuration File</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#technical-implementation-of-acquisition-script"><i class="fa fa-check"></i><b>6.3</b> Technical Implementation of Acquisition Script</a>
+<li class="chapter" data-level="6.3" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#technical-implementation-of-gee-acquisition-script"><i class="fa fa-check"></i><b>6.3</b> Technical Implementation of GEE Acquisition Script</a>
 <ul>
 <li class="chapter" data-level="6.3.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#masking-functions"><i class="fa fa-check"></i><b>6.3.1</b> Custom Earth Engine Masking Functions</a></li>
 <li class="chapter" data-level="6.3.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#dswe-implementation"><i class="fa fa-check"></i><b>6.3.2</b> Defining water area</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.4</b> Payload handling</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>7</b> References</a></li>
+<li class="chapter" data-level="7" data-path="handoff.html"><a href="handoff.html"><i class="fa fa-check"></i><b>7</b> Calculating Intermission Handoffs</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="handoff.html"><a href="handoff.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR stacks</a></li>
+<li class="chapter" data-level="7.2" data-path="handoff.html"><a href="handoff.html#define-handoff"><i class="fa fa-check"></i><b>7.2</b> Calculating handoffs</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="handoff.html"><a href="handoff.html#corr7-handoff-coefficients"><i class="fa fa-check"></i><b>7.2.1</b> <code>corr7</code> handoff coefficients</a></li>
+<li class="chapter" data-level="7.2.2" data-path="handoff.html"><a href="handoff.html#corr8-handoff-coefficients"><i class="fa fa-check"></i><b>7.2.2</b> <code>corr8</code> handoff coefficients</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>8</b> References</a></li>
 </ul>
 
       </nav>
@@ -247,15 +264,14 @@ identifier, see Section <a href="locs-data-acq.html#locs-data-acq">3</a>). This 
 stacks” of the Landsat Collection 2 record - that is, all summarized Landsat
 data available from all Landsat missions that met our QA criteria.</p>
 <p>The siteSR-Landsat data product is similar, but is acquired at unique sampling
-locations identified in Section INSERT REFERENCE TO FUTURE SECTION ABOUT
-COLLATING SITESR LOCS.</p>
+locations as described in <a href="locs-data-acq.html#siteSR-locs">3.2</a>.</p>
 <div id="changes-from-aquasat-v1-and-limnosat-us" class="section level2 hasAnchor" number="6.1">
 <h2><span class="header-section-number">6.1</span> Changes from AquaSat v1 and LimnoSat-US<a href="LS-SRST-pull.html#changes-from-aquasat-v1-and-limnosat-us" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>While much of the general architecture from the precedent data products remained
-unchanged, in AquaSat v2 we have added a number of features to the remote sensing
-acquisition workflow, have increased efficiency of the data pull, and have made
-the acquired data more robust through additional masking. The bullets below
-summarize the changes implemented in this update.</p>
+unchanged, in AquaSat v2 we have added a number of features to the remote
+sensing acquisition workflow, have increased efficiency of the data pull, and
+have made the acquired data more robust through additional masking. The bullets
+below summarize the changes implemented in this update.</p>
 <ul>
 <li><p>using yaml file for configuration of the workflow. This allows for greater
 flexibility in data acquisition including the use of custom configurations
@@ -281,6 +297,9 @@ due to data storage differences. Collection 2 updates allowed for easier
 interoperability of the TM sensor (Landsat 4) image series and have
 therefore been included in the update. Additionally, Landsat 9 came online
 in 2021, and has been added to the data product.</p></li>
+<li><p>Landsat Collection 2 offers a Surface Temperature product derived from the
+thermal band. In AquaSat v2, we include data from this band. See Section
+<a href="LS-C2-SRST.html#st-product">5.4</a> for additional considerations in use of these data.</p></li>
 <li><p>sending tasks to GEE explicitly per path-row and limiting the Landsat stack
 to the explicit path-row to eliminate duplicate acquisitions. In the
 previous products, duplicate location/path-row data were acquired because
@@ -347,23 +366,19 @@ task status is not conveyed from GEE.</p></li>
 </div>
 <div id="overview-of-acquisition-steps" class="section level2 hasAnchor" number="6.2">
 <h2><span class="header-section-number">6.2</span> Overview of Acquisition Steps<a href="LS-SRST-pull.html#overview-of-acquisition-steps" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The workflow for data acquisition is as follows:</p>
+<p>The workflow for data acquisition from GEE for lakeSR and siteSR is as follows:</p>
 <ol style="list-style-type: decimal">
-<li><p>read in and format the yaml configuration file for the GEE run
-(<code>b_config_file_poi</code>, <code>b_yml_poi</code>)</p></li>
-<li><p>reformat the locations file for the GEE run using the configuration file
-(<code>b_ref_locations_poi</code>)</p></li>
-<li><p>determine the WRS-2 path-rows that intersect with the locations file
-(<code>b_WRS_pathrow_poi</code>)</p></li>
+<li><p>read in and format the yaml configuration file for the GEE run</p></li>
+<li><p>reformat the locations file for the GEE run using the configuration file</p></li>
+<li><p>determine the WRS-2 path-rows that intersect with the locations file</p></li>
 <li><p>filter the locations for those that are completely contained by the WRS-2
 path-row when the automated buffer is added, add the WRS-2 path-rows to the
 reformatted locations, and save distinct location files by path-row for
-easier processing in Python (<code>b_poi_locs_filtered</code>)</p></li>
-<li><p>iteratively run the GEE script per WRS-2 path-row (<code>b_eeRun_poi</code>)</p></li>
-<li><p>check to see that all tasks are complete in GEE before moving to next step
-(<code>b_poi_tasks_complete</code>)</p></li>
+easier processing in Python</p></li>
+<li><p>iteratively run the GEE script per WRS-2 path-row</p></li>
+<li><p>check to see that all tasks are complete in GEE before moving to next step</p></li>
 <li><p>check to see if any tasks failed in GEE extraction which is not visible from
-the RStudio IDE (<code>b_check_for_failed_tasks</code>)</p></li>
+the RStudio IDE</p></li>
 </ol>
 <div id="custom-config" class="section level3 hasAnchor" number="6.2.1">
 <h3><span class="header-section-number">6.2.1</span> Creating a Custom Configuration File<a href="LS-SRST-pull.html#custom-config" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -384,12 +399,12 @@ you to look to our <a href="https://github.com/AquaSat/AquaMatch_siteSR_WQP">sit
 product</a> which is more suited
 to extracting data of that nature. Please note, calculating hand-off
 coefficients from small numbers of lakes may not provide robust enough summary
-statistics for intermission comparison and timeseries analysis. See <strong>SECTION
-HAND-OFF COEFFICIENTS TO BE UPDATED!</strong> for additional guidance.</p>
+statistics for intermission comparison and timeseries analysis. See Section
+<a href="handoff.html#handoff">7</a> for additional guidance.</p>
 </div>
 </div>
-<div id="technical-implementation-of-acquisition-script" class="section level2 hasAnchor" number="6.3">
-<h2><span class="header-section-number">6.3</span> Technical Implementation of Acquisition Script<a href="LS-SRST-pull.html#technical-implementation-of-acquisition-script" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="technical-implementation-of-gee-acquisition-script" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Technical Implementation of GEE Acquisition Script<a href="LS-SRST-pull.html#technical-implementation-of-gee-acquisition-script" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In order to cue Python scripts and map along WRS-2 path-rows within the
 {targets} architecture, we use a function <code>run_GEE_per_pathrow()</code> which writes
 the current WRS-2 path-row to a text file, then sources a python script that
@@ -535,7 +550,7 @@ US Geological Survey. 2021. <span>“Landsat 4-7 Collection 2 (C2) Level 2 Scien
         </div>
       </div>
 <a href="LS-C2-SRST.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="handoff.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

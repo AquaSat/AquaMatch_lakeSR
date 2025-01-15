@@ -36,6 +36,13 @@ is *derived* from Level 1 data. NASA has compiled [a list of general data
 processing levels and descriptions
 here](https://www.earthdata.nasa.gov/learn/earth-observation-data-basics/data-processing-levels).
 
+*Landsat stack*: this is the collated Landsat historical dataset at a specific
+location.
+
+*Matchup*: a pair of observations, one from an *in situ* source, one from a
+remote sensing source. Matchups are often defined by a time window relative to
+the time of the *in situ* measurement, both before and after.
+
 ## Background Information {#valid-dates}
 
 *The information presented in this section originates from the [NASA Landsat
@@ -81,7 +88,7 @@ the Landsat archive.
 ![Image credit: L. Rocchio and J. Barsi; NASA.
 (<https://landsat.gsfc.nasa.gov/article/the-intervening-atmosphere-tracing-the-provenance-of-a-favorite-landsat-infographic/>)](images/Landsat-SpectralBands.png)
 
-### Sensor Resolution
+### Sensor Resolution {#sensor-resolution}
 
 The spatial resolution of the Level 1 data that the SR and ST products are
 derived from has not changed for optical bands over time (Aerosol, RGB, NIR,
@@ -143,7 +150,7 @@ Surface Reflectance Processing Algorithms' on the USGS Landsat C2
 website](https://www.usgs.gov/landsat-missions/landsat-collection-2-surface-reflectance)
 for details.
 
-## Surface Temperature
+## Surface Temperature {#st-product}
 
 *The information presented in this section originates from the [USGS Landsat
 Collection 2 Surface
@@ -158,3 +165,29 @@ data to temperature estimates in degrees Kelvin. These data are considered
 interoperable over space and time with few differences in the ST algorithm
 product within Collection 2, with the acknowledgement of the
 previously-documented spectral and radiometric resolution differences.
+
+It is important to note that the thermal band resolution is coarser than the
+optical bands in all Landsat missions (see Section \@ref(sensor-resolution)). At
+this time we do not account for mixed thermal pixel boundaries due to the
+difference in pixel resolution between optical and thermal sensors in lakeSR or
+siteSR, however the median value of the POI in lakeSR should be a reasonable
+estimate and without contamination as long as the reported distance to shore is
+at least 100 meters greater than the 120 meter buffer around the POI to account
+for the resolution differences. Note that reservoirs and lakes with fluctuating
+water levels may require more careful considerations. While we provide summary
+statistics of these data for comparative and QAQC purposes, additional data
+handling may be necessary to use these data as precise estimates of water
+surface temperature. @herrick2023 provides an example of ST product debiasing.
+
+We do provide surface temperature summary statistics in the siteSR product as
+well, and users should approach the data with caution when a WQP monitoring site
+is near to a shoreline. While we do not have explicit guidance for the use of
+the surface temperature estimates for siteSR, we do provide some characteristics
+of sites and their relationships to NHD flowlines and waterbodies (see Section
+\@ref(fl-wb-assignment) for a description of these additional descriptors).
+Users could use a combination of `MonitoringLocationTypeName`, the flags
+assigned from our NHD assignment process, and the distance columns from that
+process to assess whether or not the temperature data is appropriate for a given
+site. Additional assessments (e.g. distance to shore) may be necessary to assess
+whether it is appropriate to use the temperature data for discrete analysis of
+temperature trends/patterns.

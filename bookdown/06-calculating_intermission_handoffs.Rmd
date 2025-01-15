@@ -1,0 +1,66 @@
+---
+editor_options:
+  markdown:
+    wrap: 80
+bibliography: references.bib
+---
+
+# Calculating Intermission Handoffs {#handoff}
+
+It is necessary to standardize band values between Landsat missions in order to
+create a robust timeseries. @maciel2023 notes the issues in using the Landsat
+Surface Reflectance product as a timeseries without careful handling of data
+between missions. This standardization process attempts to address changes in
+senosr spectral response and atmospheric correction procedures. For the purposes
+of AquaSat v2, we call this standardization process "intermission handoffs".
+Intermission handoffs are defined by the data obtained in the overlapping period
+of time between two adjacent-in-time missions (details provided in Section
+\@ref(define-handoff). In AquaSat v2, we standardize values relative to Landsat
+7 (`corr7`) and Landsat 8 (`corr8`). The Landsat 7 intermission handoffs can be
+applied the entire Landsat 4-9 because it overlapped with early Landsat (4/5)
+and modern Landsat (8/9). For the `corr7` standardization, we treat Landsat 4
+and 5 as interchangable, given that the satellites contained the same payload
+and radiometric resolution. We also treat Landsat 8 and 9 as interchangable
+despite the slight differences in spectral response and radiometric resolution.
+Landsat 8 handoffs (`corr8`) can only be applied to Landsat 7 and 9 due to
+mission overlap, so the standardized data timeseries is shorter; however, it may
+be more robust for analyses focused in the recent past that rely on Landsat 9
+data given the previously-mentioned caveats for application of `corr7` to that
+mission.
+
+## Raw lakeSR stacks {#raw-lakesr}
+
+The data exported from the GEE tasks described in SEction \@ref(LS-SRST-pull)
+were collated into large .feather files per DSWE type (DSWE1 and DSWE1a) and per
+Landsat mission. These files are stored in Google Drive for posterity and to add
+functionality to this workflow. The Google Drive ids can be found at the file
+path `c_collate_Landsat_data/out/` and can be accessed without special
+permissions by downstream users. Many of these files are quite large (on the
+order of many GBs) and are very difficult to handle outside of a programming or
+database environment. We provide these files for advanced users who wish to make
+changes to the QAQC or intermission handoff procedures.
+
+## Calculating handoffs {#define-handoff}
+
+We follow the practice described in @gardner2021 to calculate intermission
+handoffs, where all band values during the period of overlap between two
+missions (e.g. 1999-04-15 through 2011-11-18 for Landsat 5 and 7 - see Section
+\@ref(valid-dates)) are considered. These data are summarized to each mission's
+1st-99th percentile value per band, and the handoff coefficients between
+missions are defined by the second-order polynomial relationship between them.
+Because we use a second-order polynomial, all values outside of the 1st and 99th
+percentile values used to define the intermission handoff are flagged and should
+be used with extreme caution. All `corr7` and `corr8` relationships and their
+derived coefficients are provided in the sections below.
+
+### `corr7` handoff coefficients
+
+[[pull figs from functions here]]
+
+[[insert table of calcs, \# of points, etc]]
+
+### `corr8` handoff coefficients
+
+[[pull figs from functions here]]
+
+[[insert table of calcs, \# of points, etc]]
