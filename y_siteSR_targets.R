@@ -17,7 +17,8 @@ y_siteSR_list <- list(
                             local_folder = tempdir(),
                             stable = FALSE,
                             google_email = b_yml_poi$google_email),
-    packages = c("tidyverse", "googledrive")
+    packages = c("tidyverse", "googledrive"),
+    cue = tar_cue("always")
   ),
   
   tar_target(
@@ -27,7 +28,8 @@ y_siteSR_list <- list(
                             local_folder = tempdir(),
                             stable = FALSE,
                             google_email = b_yml_poi$google_email),
-    packages = c("tidyverse", "googledrive")
+    packages = c("tidyverse", "googledrive"),
+    cue = tar_cue("always")
   )
   
 )
