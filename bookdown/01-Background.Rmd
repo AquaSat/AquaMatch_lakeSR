@@ -7,9 +7,9 @@ bibliography: references.bib
 
 # Background
 
-Currently, AquaSat v2 remote sensing products contain data from the historical Landsat
-Collection 2 record from 1984 until late 2024, including the
-following missions:
+Currently, AquaSat v2 remote sensing products contain data from the historical
+Landsat Collection 2 record from 1984 until late 2024, including the following
+missions:
 
 -   Landsat 4 Thematic Mapper (TM)
 -   Landsat 5 TM
@@ -63,9 +63,16 @@ See Section \@ref(software-settings) for details on software used in this
 workflow, Section \@ref(LS-C2-SRST) for additional background on Landsat data,
 and Section \@ref(LS-SRST-pull) for detailed methodology of the Landsat pull.
 
-**c_collate_filter_lakeSR:**
+**c_collate_Landsat_data:**
+
+This {targets} list collates the data from the Google Earth Engine run
+orchestrated in the {targets} group `b_pull_Landsat_SRST_poi` and creates
+publicly-available files for downstream use, storing a dataframe of Drive ids in
+a .csv in the `c_collate_Landsat_data/out/` folder.
 
 **d_calculate_apply_handoff:**
+
+*forthcoming*
 
 ## siteSR_WQP Code Architecture
 
@@ -78,10 +85,10 @@ Quality Portal for pairing with remote sensing data acquired at the sites of *in
 situ* data. This workflow picks up where AquaMatch_harmonize_WQP ends, with the
 output of harmonized, tiered, and aggregated datasets per water quality
 parameter. lakeSR provides calculated Landsat intermission handoff coefficients
-for interoperability between sensors. In order to run the siteSR_WQP workflow,
-you must have a cloned version of AquaMatch_harmonize_WQP and AquaMatch_lakeSR
-codebase on your local computer. Section \@ref(setup-description) covers details
-about this requirement.
+for interoperability between sensors (see Section \@ref(handoff)). In order to
+run the siteSR_WQP workflow, you must have a cloned version of
+AquaMatch_harmonize_WQP and AquaMatch_lakeSR codebase on your local computer.
+Section \@ref(setup-description) covers details about this requirement.
 
 ### Configuration Files {#setup-description}
 
@@ -109,7 +116,7 @@ calculated in AquaMatch_lakeSR, as re-running that workflow takes multiple days.
 Advanced users are welcome to adapt the pipeline to incorporate other handoff
 methods. **The Landsat Surface Reflectance product should not be used without
 applying a handoff coefficient if you are using data from multiple Landsat
-missions.**
+missions.** See Section \@ref(handoff) for details on this process.
 
 Proper configuration of `harmonize_repo_directory` and `lakeSR_repo_directory`
 is imperative as the siteSR_WQP workflow references files inside
@@ -155,4 +162,8 @@ record. Sites determined to be visible are used to define the GEE Landsat pull.
 
 **6_siteSR_collate_filter_handoff:**
 
+*forthcoming*
+
 **7_siteSR_matchup:**
+
+*forthcoming*
