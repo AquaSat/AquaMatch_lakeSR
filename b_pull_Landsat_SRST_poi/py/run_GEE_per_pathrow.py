@@ -1350,7 +1350,7 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_457_D1.start()
-      print('Completed Landsat 4, 5, 7 DSWE 1 stack acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
+      print('Task sent: Landsat 4, 5, 7 DSWE 1 acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
       locs_out_457_D1a = locs_stack_ls457.map(lambda image: ref_pull_457_DSWE1a(image, feat)).flatten()
       locs_out_457_D1a = locs_out_457_D1a.filter(ee.Filter.notNull(['med_Blue']))
       locs_srname_457_D1a = proj+'_site_LS457_C2_SRST_DSWE1a_'+str(pr)+'_'+str(chunk)+'_v'+run_date
@@ -1368,7 +1368,7 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_457_D1a.start()
-      print('Completed Landsat 4, 5, 7 DSWE 1a stack acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
+      print('Task sent: Landsat 4, 5, 7 DSWE 1a acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
     
     else: 
       # only pull DSWE1
@@ -1389,7 +1389,7 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_457_D1.start()
-      print('Completed Landsat 4, 5, 7 DSWE 1 stack acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
+      print('Task sent: Landsat 4, 5, 7 DSWE 1 acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
     
   else: print('Not configured to acquire DSWE 1 or DSWE 1a stack for Landsat 4, 5, 7 for site configuration')
   
@@ -1413,7 +1413,7 @@ def process_subset(df_subset, chunk, chunk_size):
                                             'prop_clouds','prop_hillShadow','mean_hillShade']))
     #Send next task.                                        
     locs_dataOut_457_D3.start()
-    print('Completed Landsat 4, 5, 7 DSWE 3 stack acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
+    print('Task sent: Landsat 4, 5, 7 DSWE 3 acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
     
   else: print('Not configured to acquire DSWE 3 stack for Landsat 4, 5, 7 for site configuration')
   
@@ -1458,7 +1458,8 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_89_D1.start()
-      print('Completed Landsat 8, 9 DSWE 1 stack acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
+      print('Task sent: Landsat 8, 9 DSWE 1  acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
+      
       locs_out_89_D1a = locs_stack_ls89.map(lambda image: ref_pull_89_DSWE1a(image, feat)).flatten()
       locs_out_89_D1a = locs_out_89_D1a.filter(ee.Filter.notNull(['med_Blue']))
       locs_srname_89_D1a = proj+'_site_LS89_C2_SRST_DSWE1a_'+str(pr)+'_'+str(chunk)+'_v'+run_date
@@ -1476,7 +1477,8 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_89_D1a.start()
-      print('Completed Landsat 8, 9 DSWE 1a stack acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
+      print('Task sent: Landsat 8, 9 DSWE 1a acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
+      
     else:
       locs_out_89_D1 = locs_stack_ls89.map(lambda image: ref_pull_89_DSWE1(image, feat)).flatten()
       locs_out_89_D1 = locs_out_89_D1.filter(ee.Filter.notNull(['med_Blue']))
@@ -1495,7 +1497,7 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_89_D1.start()
-      print('Completed Landsat 8, 9 DSWE 1 stack acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
+      print('Task sent: Landsat 8, 9 DSWE 1 acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
   
   else: print('Not configured to acquire DSWE 1 stack for Landsat 8, 9 for site configuration')
   
@@ -1517,7 +1519,7 @@ def process_subset(df_subset, chunk, chunk_size):
                                             'prop_clouds','prop_hillShadow','mean_hillShade']))
     #Send next task.                                        
     locs_dataOut_89_D3.start()
-    print('Completed Landsat 8, 9 DSWE 3 stack acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
+    print('Task sent: Landsat 8, 9 DSWE 3 acquisitions for site configuration at tile ' + str(pr) + ' chunk ' + str(chunk + 1))
   
   else: print('Not configured to acquire DSWE 3 stack for Landsat 8,9 for sites')
 
@@ -1556,8 +1558,6 @@ def process_dataframe_in_chunks(df, chunk_size=5000):
 process_dataframe_in_chunks(locations_subset)
    
 
-print("Starting metadata acquisition for tile " +str(pr))
-
 ##############################################
 ##---- LANDSAT 457 METADATA ACQUISITION ----##
 ##############################################
@@ -1588,4 +1588,4 @@ meta_dataOut_89 = (ee.batch.Export.table.toDrive(collection = ls89,
 #Send next task.                                        
 meta_dataOut_89.start()
 
-print("Completed metadata acquisition for tile " +str(pr))
+print("Task sent: metadata acquisition for tile " +str(pr))
