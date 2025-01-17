@@ -116,24 +116,6 @@ def apply_cf_mask(image):
   return image.updateMask(cloud_mask)
 
 
-def apply_sr_aero_mask(image):
-  """Creates a binary maks for any pixels in Landsat 8 and 9 that have 'medium' 
-  or 'high' aerosol QA flags from the SR_QA_AEROSOL band
-
-  Args:
-      image: ee.Image of an ee.ImageCollection
-
-  Returns:
-      ee.Image with additional band called 'medHighAero', where pixels are given a value of 1
-      if the aerosol QA flag is medium or high and 0 otherwise
-  """
-  aerosolQA = image.select('aerosol_qa')
-  # pull out mask out where aeorosol is med and high
-  medHighAero = aerosolQA.bitwiseAnd(1 << 7).rename('medHighAero')
-  sr_aero_mask = medHighAero.eq(0)
-  return image.updateMask(sr_aero_mask)
-
-
 def apply_fill_mask_457(image):
   """ mask any fill values (0) in scaled raster for Landsat 4, 5, 7
   
@@ -286,6 +268,23 @@ def extract_qa_bits(qa_band, start_bit, end_bit, band_name):
     # (0 or 1 for single bit,  0-3 or 0-N for multiple bits)
     .rightShift(start_bit))
 
+
+def apply_sr_aero_mask(image):
+  """Creates a binary maks for any pixels in Landsat 8 and 9 that have 'medium' 
+  or 'high' aerosol QA flags from the SR_QA_AEROSOL band
+
+  Args:
+      image: ee.Image of an ee.ImageCollection
+
+  Returns:
+      ee.Image with additional band called 'medHighAero', where pixels are given a value of 1
+      if the aerosol QA flag is medium or high and 0 otherwise
+  """
+  aerosolQA = image.select('aerosol_qa')
+  # pull out mask out where aeorosol is med and high
+  medHighAero = aerosolQA.bitwiseAnd(1 << 7).rename('medHighAero')
+  sr_aero_mask = medHighAero.eq(0)
+  return image.updateMask(sr_aero_mask)
 
 
 def Mndwi(image):
