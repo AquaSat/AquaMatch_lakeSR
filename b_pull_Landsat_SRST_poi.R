@@ -8,6 +8,7 @@ tar_source("b_pull_Landsat_SRST_poi/src/")
 
 # create list of targets to perform this task
 b_pull_Landsat_SRST_poi_list <- list(
+  
   tar_target(
     name = b_check_dir_structure,
     command = {
