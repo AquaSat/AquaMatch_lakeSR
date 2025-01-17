@@ -1103,6 +1103,7 @@ def ref_pull_89_DSWE3(image, feat):
           .addBands(gt0)
           .addBands(dswe1)
           .addBands(dswe3)
+          .addBands(dswe1a)
           .addBands(clouds)
           .addBands(hs)
           .addBands(h)
