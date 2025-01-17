@@ -29,16 +29,14 @@ a_Calculate_Centers_list <- list(
         }
       })
     },
-    cue = tar_cue("always"),
-    deployment = "main"
+    cue = tar_cue("always")
   ),
   
   # get {sf}s for all US states and territories from {tigris} to grab all the HUC4s
   tar_target(
     name = a_US_states_territories,
     command = states() %>% st_make_valid(),
-    packages = c("tigris", "sf", "tidyverse"),
-    deployment = "main"
+    packages = c("tigris", "sf", "tidyverse")
   ),
   
   # for each state/territory, get a list of HUC4s
@@ -58,16 +56,13 @@ a_Calculate_Centers_list <- list(
     name = a_HUC4_list,
     command = a_HUC4_dataframe %>% 
       pull("huc4") %>% 
-      unique(),
-    packages = "tidyverse",
-    deployment = "main"
+      unique()
   ),
   
   # now filter out for HUC4s that are in CONUS (and have NHDPlusV2 waterbodies)
   tar_target(
     name = a_CONUS_HUC4,
-    command = a_HUC4_list[as.numeric(a_HUC4_list) < 1900],
-    deployment = "main"
+    command = a_HUC4_list[as.numeric(a_HUC4_list) < 1900]
   ),
   
   # for each HUC4, grab the NHDPlus waterbodies, subset to lakes/res/
@@ -88,8 +83,7 @@ a_Calculate_Centers_list <- list(
   # and then grab the non-CONUS HUC4s
   tar_target(
     name = a_nonCONUS_HUC4,
-    command = a_HUC4_list[as.numeric(a_HUC4_list) >= 1900],
-    deployment = "main"
+    command = a_HUC4_list[as.numeric(a_HUC4_list) >= 1900]
   ),
   
   # now download the NHD Best Resolution file from the National Map, filter
@@ -120,7 +114,6 @@ a_Calculate_Centers_list <- list(
         mutate(nhd_id = if_else(!is.na(comid), comid, permanent_identifier)) %>% 
         select(-c(comid, permanent_identifier))
     },
-    packages = c("tidyverse", "feather"),
-    deployment = "main"
+    packages = c("tidyverse", "feather")
   )
 )

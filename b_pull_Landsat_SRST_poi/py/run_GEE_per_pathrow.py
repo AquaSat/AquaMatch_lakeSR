@@ -25,13 +25,17 @@ def csv_to_eeFeat(df, proj, chunk, chunk_size):
   # Calculate start and end indices for the current chunk
   range_min = chunk_size * chunk
   range_max = min(chunk_size * (chunk + 1), len(df)) + range_min
-  for i in range(range_min + 1, range_max):
-    x,y = df.Longitude[i],df.Latitude[i]
-    latlong =[x,y]
-    loc_properties = {'system:index':str(df.id[i]), 'id':str(df.id[i])}
-    g=ee.Geometry.Point(latlong, proj) 
-    feature = ee.Feature(g, loc_properties)
-    features.append(feature)
+  for i in range(range_min, range_max):
+    try:
+      x,y = df.Longitude[i],df.Latitude[i]
+      latlong =[x,y]
+      loc_properties = {'system:index':str(df.id[i]), 'id':str(df.id[i])}
+      g=ee.Geometry.Point(latlong, proj) 
+      feature = ee.Feature(g, loc_properties)
+      features.append(feature)
+    except KeyError as e:
+      print(f"KeyError at index {i}, skipping to next iteration")
+      continue  # skip to the next iteration
   return ee.FeatureCollection(features)
 
 
@@ -79,7 +83,8 @@ def apply_rad_mask(image):
   satMask = satQA.eq(0)
   return image.updateMask(satMask)
 
-def cf_mask(image):
+
+def add_cf_mask(image):
   """Creates a binary band for contaminated or clear pixels
   
   Args:
@@ -98,26 +103,7 @@ def cf_mask(image):
   return image.addBands(cloudqa)
 
 
-def apply_cf_mask(image):
-  """Applies masks for any pixels obstructed by clouds and snow/ice
-
-  Args:
-      image: ee.Image of an ee.ImageCollection
-
-  Returns:
-      ee.Image with maksed to remove contaminated pixels
-  """
-  #grab just the pixel_qa info
-  qa = image.select('pixel_qa')
-  cloudqa = (qa.bitwiseAnd(1 << 1) #dialated clouds value 1
-    # high aerosol for LS8/9 is taken care of in sr_aerosol function
-    .where(qa.bitwiseAnd(1 << 3), ee.Image(2)) # clouds value 2
-    .where(qa.bitwiseAnd(1 << 4), ee.Image(3)) # cloud shadows value 3
-    .where(qa.bitwiseAnd(1 << 5), ee.Image(4))) # snow value 4
-  cloud_mask = cloudqa.eq(0)
-  return image.updateMask(cloud_mask)
-
-
+### update these to use renamed bands
 def apply_fill_mask_457(image):
   """ mask any fill values (0) in scaled raster for Landsat 4, 5, 7
   
@@ -174,14 +160,14 @@ def apply_fill_mask_89(image):
 
 # This should be applied AFTER scaling factors
 # Mask values less than -0.01
-def apply_realistic_mask_457(image):
+def add_realistic_mask_457(image):
   """ mask out unrealistic SR values (those less than -0.01) in Landsat 4, 5, 7
   
   Args:
       image: ee.Image of an ee.ImageCollection
 
   Returns:
-      an ee.Image where any re-scaled values <-0.01 are masked
+      an ee.Image with a 1/0 mask for realistic values
   """
   b1_mask = image.select('SR_B1').gt(-0.01)
   b2_mask = image.select('SR_B2').gt(-0.01)
@@ -195,18 +181,18 @@ def apply_realistic_mask_457(image):
     .And(b4_mask.eq(1))
     .And(b5_mask.eq(1))
     .And(b7_mask.eq(1))
-    .selfMask())
-  return image.updateMask(realistic.eq(1))
+    .selfMask()).rename('real')
+  return image.addBands(realistic)
 
 
-def apply_realistic_mask_89(image):
+def add_realistic_mask_89(image):
   """ mask out unrealistic SR values (those less than -0.01) in Landsat 8, 9
   
   Args:
       image: ee.Image of an ee.ImageCollection
 
   Returns:
-      an ee.Image where any re-scaled values <-0.01 are masked
+      an ee.Image with new band for realistic mask
   """
   b1_mask = image.select('SR_B1').gt(-0.01)
   b2_mask = image.select('SR_B2').gt(-0.01)
@@ -223,11 +209,12 @@ def apply_realistic_mask_89(image):
     .And(b6_mask.eq(1))
     .And(b7_mask.eq(1))
     .selfMask())
-  return image.updateMask(realistic.eq(1))
+  return image.addBands(realistic)
+
 
 
 # mask high opacity (>0.3 after scaling) pixels
-def apply_opac_mask(image):
+def add_opac_mask(image):
   """ mask out instances where atmospheric opacity is greater than 0.3 in Landsat 
       5&7
   
@@ -235,11 +222,11 @@ def apply_opac_mask(image):
       image: ee.Image of an ee.ImageCollection
 
   Returns:
-      an ee.Image where any pixels with SR_ATMOS_OPACITY greater than 0.3 are
-      masked
+      an ee.Image with an addition mask band where any pixels with SR_ATMOS_OPACITY 
+      greater than 0.3 are a value of 0
   """
-  opac = image.select("SR_ATMOS_OPACITY").multiply(0.001).lt(0.3)
-  return image.updateMask(opac)
+  opac = image.select("SR_ATMOS_OPACITY").multiply(0.001).lt(0.3).rename('opac')
+  return image.addBands(opac)
 
 
 # function to split QA bits
@@ -273,7 +260,7 @@ def extract_qa_bits(qa_band, start_bit, end_bit, band_name):
     .rightShift(start_bit))
 
 
-def apply_sr_aero_mask(image):
+def add_sr_aero_mask(image):
   """Creates a binary maks for any pixels in Landsat 8 and 9 that have 'medium' 
   or 'high' aerosol QA flags from the SR_QA_AEROSOL band
 
@@ -288,7 +275,7 @@ def apply_sr_aero_mask(image):
   # pull out mask out where aeorosol is med and high
   medHighAero = aerosolQA.bitwiseAnd(1 << 7).rename('medHighAero')
   sr_aero_mask = medHighAero.eq(0)
-  return image.updateMask(sr_aero_mask)
+  return image.addBands(sr_aero_mask)
 
 
 def Mndwi(image):
@@ -387,14 +374,14 @@ def DSWE(image):
   t2 = mbsrv.gt(mbsrn) # MBSRV greater than MBSRN
   t3 = awesh.gt(0) #AWESH greater than 0
   t4 = (mndwi.gt(-0.44)  #Partial Surface Water 1 thresholds
-   .And(swir1.lt(0.09)) #900 for no scaling (LS Collection 1)
-   .And(nir.lt(0.15)) #1500 for no scaling (LS Collection 1)
+   .And(swir1.lt(0.09))
+   .And(nir.lt(0.15)) 
    .And(ndvi.lt(0.7)))
   t5 = (mndwi.gt(-0.5) #Partial Surface Water 2 thresholds
-   .And(blue.lt(0.1)) #1000 for no scaling (LS Collection 1)
-   .And(swir1.lt(0.3)) #3000 for no scaling (LS Collection 1)
-   .And(swir2.lt(0.1)) #1000 for no scaling (LS Collection 1)
-   .And(nir.lt(0.25))) #2500 for no scaling (LS Collection 1)
+   .And(blue.lt(0.1))
+   .And(swir1.lt(0.3))
+   .And(swir2.lt(0.1))
+   .And(nir.lt(0.25)))
   t = (t1
     .add(t2.multiply(10))
     .add(t3.multiply(100))
@@ -507,7 +494,9 @@ def ref_pull_457_DSWE1(image, feat):
   # process image with cfmask
   # where the mask is > 1 (clouds and cloud shadow)
   # call that 1 (otherwise 0) and rename as clouds.
-  clouds = cf_mask(image).select('cfmask').gte(1).rename('clouds')
+  clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
+  opac = add_opac_mask(image).select('opac').eq(1).rename('opacity')
+  real = add_realistic_mask(image).select('real').eq(1).rename('realistic')
   # calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
   # calculate hillshadow
@@ -565,12 +554,16 @@ def ref_pull_457_DSWE1(image, feat):
                                   'mean_Swir1', 'mean_Swir2', 
                                   'mean_SurfaceTemp']))
             # mask the image
+            .updateMask(opac) # opacity mask
+            .updateMask(real) # realistic mask
             .updateMask(dswe1) # high confidence water mask
             # add bands back in for QA (prior to masking of dswe/hs/f/r)
             .addBands(gt0) 
             .addBands(dswe1)
             .addBands(dswe3)
             .addBands(dswe1a)
+            .addBands(opac)
+            .addBands(real)
             .addBands(clouds) 
             .addBands(hs)
             .addBands(h)
@@ -586,7 +579,7 @@ def ref_pull_457_DSWE1(image, feat):
       .forEachBand(pixOut.select(['mean_Blue', 'mean_Green', 'mean_Red', 
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
-      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a'])), outputPrefix = 'pCount_', sharedInputs = False)
+      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'no_opac', 'is_real'])), outputPrefix = 'pCount_', sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted()
       .forEachBand(pixOut.select(['clouds', 'hillShadow'])), outputPrefix = 'prop_', sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted()
@@ -1319,18 +1312,14 @@ def process_subset(df_subset, chunk, chunk_size):
     .filterBounds(feat.geometry()) 
     # apply fill mask and scaling factors
     .map(apply_fill_mask_457)
-    .map(apply_scale_factors)
-    .map(apply_realistic_mask_457)
-    # apply opacity mask
-    .map(apply_opac_mask))
+    .map(apply_scale_factors))
   
   # rename bands for ease
   locs_stack_ls457 = locs_stack_ls457.select(bn457, bns457)
   
   # apply masks that require above rename
   locs_stack_ls457 = (locs_stack_ls457
-    .map(apply_rad_mask)
-    .map(apply_cf_mask))
+    .map(apply_rad_mask))
   
   # pull DSWE1 variations as configured
   if '1' in dswe:

@@ -23,8 +23,7 @@ b_pull_Landsat_SRST_poi_list <- list(
         }
       })
     },
-    cue = tar_cue("always"),
-    deployment = "main"
+    cue = tar_cue("always")
   ),
   
   
@@ -35,8 +34,7 @@ b_pull_Landsat_SRST_poi_list <- list(
     name = b_config_file_poi,
     command = poi_config,
     read = read_yaml(!!.x),
-    packages = "yaml",
-    deployment = "main"
+    packages = "yaml"
   ),
   
   # load, format, save yml as a csv
@@ -48,8 +46,7 @@ b_pull_Landsat_SRST_poi_list <- list(
       b_check_dir_structure
       format_yaml(yml = b_config_file_poi)
     },
-    packages = c("yaml", "tidyverse"),
-    deployment = "main"
+    packages = c("yaml", "tidyverse")
   ),
   
   # check for Drive folders and architecture per config setup
@@ -100,16 +97,14 @@ b_pull_Landsat_SRST_poi_list <- list(
   tar_target(
     name = b_ref_locations_poi,
     command = reformat_locations(yml = b_yml_poi, 
-                                 locations = a_combined_poi),
-    deployment = "main"
+                                 locations = a_combined_poi)
   ),
   
   # get WRS tiles/indication of whether buffered points are contained by them
   tar_target(
     name = b_WRS_pathrow_poi,
     command = get_WRS_pathrow_poi(locations = b_ref_locations_poi, 
-                                  yml = b_yml_poi),
-    deployment = "main"
+                                  yml = b_yml_poi)
   ),
   
   # check to see if geometry is completely contained in pathrow
@@ -164,9 +159,8 @@ b_pull_Landsat_SRST_poi_list <- list(
   tar_target(
     name = b_poi_tasks_complete,
     command = {
-      b_ee_complete_script
       b_eeRun_poi
-      source_python("b_pull_Landsat_SRST_poi/py/poi_wait_for_completion.py")
+      source_python(b_ee_complete_script)
     },
     packages = "reticulate",
     deployment = "main"
@@ -178,9 +172,8 @@ b_pull_Landsat_SRST_poi_list <- list(
   tar_target(
     name = b_check_for_failed_tasks,
     command = {
-      b_ee_fail_script
       b_poi_tasks_complete
-      source_python("b_pull_Landsat_SRST_poi/py/check_for_failed_tasks.py")
+      source_python(b_ee_fail_script)
     },
     packages = "reticulate",
     deployment = "main"
