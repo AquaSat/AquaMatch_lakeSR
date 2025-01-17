@@ -15,6 +15,8 @@ def csv_to_eeFeat(df, proj, chunk, chunk_size):
   Args:
       df: point locations .csv file with Latitude and Longitude
       proj: CRS projection of the points
+      chunk: iteration through the dataframe (defined in process chunks)
+      chunk_size: number of sites in chunk
 
   Returns:
       ee.FeatureCollection of the points 
@@ -22,8 +24,8 @@ def csv_to_eeFeat(df, proj, chunk, chunk_size):
   features=[]
   # Calculate start and end indices for the current chunk
   range_min = chunk_size * chunk
-  range_max = min(chunk_size * (chunk + 1), len(df))
-  for i in range(range_min, range_max):
+  range_max = min(chunk_size * (chunk + 1), len(df)) + range_min
+  for i in range(range_min + 1, range_max):
     x,y = df.Longitude[i],df.Latitude[i]
     latlong =[x,y]
     loc_properties = {'system:index':str(df.id[i]), 'id':str(df.id[i])}
@@ -196,6 +198,7 @@ def apply_realistic_mask_457(image):
     .selfMask())
   return image.updateMask(realistic.eq(1))
 
+
 def apply_realistic_mask_89(image):
   """ mask out unrealistic SR values (those less than -0.01) in Landsat 8, 9
   
@@ -221,6 +224,7 @@ def apply_realistic_mask_89(image):
     .And(b7_mask.eq(1))
     .selfMask())
   return image.updateMask(realistic.eq(1))
+
 
 # mask high opacity (>0.3 after scaling) pixels
 def apply_opac_mask(image):
