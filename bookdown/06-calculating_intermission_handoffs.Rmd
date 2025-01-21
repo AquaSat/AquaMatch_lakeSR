@@ -30,7 +30,7 @@ mission.
 
 ## Raw lakeSR stacks {#raw-lakesr}
 
-The data exported from the GEE tasks described in SEction \@ref(LS-SRST-pull)
+The data exported from the GEE tasks described in Section \@ref(LS-SRST-pull)
 were collated into large .feather files per DSWE type (DSWE1 and DSWE1a) and per
 Landsat mission. These files are stored in Google Drive for posterity and to add
 functionality to this workflow. The Google Drive ids can be found at the file
