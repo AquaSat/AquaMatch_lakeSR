@@ -659,7 +659,7 @@ def ref_pull_457_DSWE1a(image, feat):
   # process image with cfmask
   # where the mask is > 1 (clouds and cloud shadow)
   # call that 1 (otherwise 0) and rename as clouds.
-  clouds = cf_mask(image).select('cfmask').gte(1).rename('clouds')
+  clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
   # add mask FOR opacity and realistic values
   opac = add_opac_mask(image).select('opac').eq(1).rename('low_opac')
   real = add_realistic_mask_457(image).select('real').eq(1).rename('is_real')
@@ -823,7 +823,7 @@ def ref_pull_457_DSWE3(image, feat):
   # process image with cfmask
   # where the mask is > 1 (clouds and cloud shadow)
   # call that 1 (otherwise 0) and rename as clouds.
-  clouds = cf_mask(image).select('cfmask').gte(1).rename('clouds')
+  clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
   # add mask FOR opacity and realistic values
   opac = add_opac_mask(image).select('opac').eq(1).rename('low_opac')
   real = add_realistic_mask_457(image).select('real').eq(1).rename('is_real')
@@ -984,7 +984,7 @@ def ref_pull_89_DSWE1(image, feat):
       summaries for band data within any given geometry area where the DSWE is 1
   """
   # where the f mask is > 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
-  clouds = cf_mask(image).select('cfmask').gte(1).rename('clouds')
+  clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
   # add mask FOR low aerosol and realistic values
   aero = add_sr_aero_mask(image).select('aero').eq(1).rename('low_aero')
   real = add_realistic_mask_89(image).select('real').eq(1).rename('is_real')
@@ -1153,7 +1153,7 @@ def ref_pull_89_DSWE1a(image, feat):
       threshold has been met
   """
   # where the f mask is > 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
-  clouds = cf_mask(image).select('cfmask').gte(1).rename('clouds')
+  clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
   # add mask FOR low aerosol and realistic values
   aero = add_sr_aero_mask(image).select('aero').eq(1).rename('low_aero')
   real = add_realistic_mask_89(image).select('real').eq(1).rename('is_real')
@@ -1321,7 +1321,7 @@ def ref_pull_89_DSWE3(image, feat):
       summaries for band data within any given geometry area where the DSWE value is 3
   """
   # where the f mask is > 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
-  clouds = cf_mask(image).select('cfmask').gte(1).rename('clouds')
+  clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
   # add mask FOR low aerosol and realistic values
   aero = add_sr_aero_mask(image).select('aero').eq(1).rename('low_aero')
   real = add_realistic_mask_89(image).select('real').eq(1).rename('is_real')
