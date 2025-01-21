@@ -12,6 +12,8 @@ z_render_bookdown <- list(
            command = "bookdown/04-Landsat_C2_SRST.Rmd"),
   tar_file(name = srst_pull,
            command = "bookdown/05-lakeSR_LS_C2_SRST.Rmd"),
+  tar_file(name = handoffs,
+           command = "bookdown/06-calculating_intermission_handoffs.Rmd"),
   tar_file(name = refs,
            command = "bookdown/z-Refs.Rmd"),
   # render bookdown, add req's of the above files in command prompt 
@@ -23,11 +25,14 @@ z_render_bookdown <- list(
                settings
                landsat_background
                srst_pull
+               handoffs
                refs
                render_book(input = "bookdown/",
                            params = list(
                              poi = a_combined_poi,
-                             locs_run_date = "November 2024"
+                             locs_run_date = "November 2024",
+                             sites = p4_WQP_site_NHD_info,
+                             visible_sites = p5_visible_sites
                            ))
              },
              packages = c("tidyverse", "bookdown", "sf", "tigris", "nhdplusTools", "tmap"),

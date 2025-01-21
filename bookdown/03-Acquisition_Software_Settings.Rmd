@@ -22,7 +22,7 @@ a {reticulate} Conda environment that is invoked at the beginning of a {targets}
 run to be sure that our Python code runs consistently.
 
 | Software/Python Module | version | citation |
-|---------------------------|:-------------------------:|---------------------------|
+|----|:--:|----|
 | Python | 3.10.13 | Python Software Foundation, [www.python.org](www.python.org) |
 | earthengine-api | 1.4.0 | @gorelick2023 |
 | pandas | 2.0.3 | @thepandasdevelopmentteam2023 |
