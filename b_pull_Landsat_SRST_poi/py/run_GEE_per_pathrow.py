@@ -7,7 +7,7 @@ from pandas import read_csv
 import math
 
 # LOAD ALL THE CUSTOM FUNCTIONS -----------------------------------------------
-# pull code begins on line 1185
+# pull code begins ~ line 1500
 
 def csv_to_eeFeat(df, proj, chunk, chunk_size):
   """Function to create an eeFeature from the location data
@@ -595,8 +595,8 @@ def ref_pull_457_DSWE1(image, feat):
             .addBands(dswe1)
             .addBands(dswe3)
             .addBands(dswe1a)
-            .addBands(opac)
-            .addBands(real)
+            .addBands(opac.eq(0)).rename('high_opac')
+            .addBands(real.eq(0)).rename('unreal_val')
             .addBands(blue_zero)
             .addBands(blue_thresh)
             .addBands(green_zero)
@@ -625,7 +625,7 @@ def ref_pull_457_DSWE1(image, feat):
       .forEachBand(pixOut.select(['mean_Blue', 'mean_Green', 'mean_Red', 
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
-      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'low_opac', 'is_real',
+      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'high_opac', 'unreal_val',
               'blue_zero', 'blue_thresh', 'green_zero', 'green_thresh', 'red_zero', 'red_thresh',
               'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh'])), 
       outputPrefix = 'pCount_', sharedInputs = False)
@@ -761,8 +761,8 @@ def ref_pull_457_DSWE1a(image, feat):
             .addBands(dswe1)
             .addBands(dswe3)
             .addBands(dswe1a)
-            .addBands(opac)
-            .addBands(real)
+            .addBands(opac.eq(0)).rename('high_opac')
+            .addBands(real.eq(0)).rename('unreal_val')
             .addBands(blue_zero)
             .addBands(blue_thresh)
             .addBands(green_zero)
@@ -791,7 +791,7 @@ def ref_pull_457_DSWE1a(image, feat):
       .forEachBand(pixOut.select(['mean_Blue', 'mean_Green', 'mean_Red', 
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
-      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'low_opac', 'is_real',
+      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'high_opac', 'unreal_val',
               'blue_zero', 'blue_thresh', 'green_zero', 'green_thresh', 'red_zero', 'red_thresh',
               'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh'])), 
       outputPrefix = 'pCount_', sharedInputs = False)
@@ -924,8 +924,8 @@ def ref_pull_457_DSWE3(image, feat):
             .addBands(dswe1)
             .addBands(dswe3)
             .addBands(dswe1a)
-            .addBands(opac)
-            .addBands(real)
+            .addBands(opac.eq(0)).rename('high_opac')
+            .addBands(real.eq(0)).rename('unreal_val')
             .addBands(blue_zero)
             .addBands(blue_thresh)
             .addBands(green_zero)
@@ -954,7 +954,7 @@ def ref_pull_457_DSWE3(image, feat):
       .forEachBand(pixOut.select(['mean_Blue', 'mean_Green', 'mean_Red', 
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
-      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'low_opac', 'is_real',
+      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'high_opac', 'unreal_val',
               'blue_zero', 'blue_thresh', 'green_zero', 'green_thresh', 'red_zero', 'red_thresh',
               'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh'])), 
       outputPrefix = 'pCount_', sharedInputs = False)
@@ -1088,8 +1088,8 @@ def ref_pull_89_DSWE1(image, feat):
           .addBands(dswe1)
           .addBands(dswe3)
           .addBands(dswe1a)
-          .addBands(aero)
-          .addBands(real)
+          .addBands(aero.eq(0)).rename('high_aero')
+          .addBands(real.eq(0)).rename('unreal_val')
           .addBands(aero_zero)
           .addBands(aero_thresh)
           .addBands(blue_zero)
@@ -1121,7 +1121,7 @@ def ref_pull_89_DSWE1(image, feat):
       .forEachBand(pixOut.select(['mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
-      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'low_aero', 'is_real',
+      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'high_aero', 'unreal_val',
               'blue_zero', 'blue_thresh', 'green_zero', 'green_thresh', 'red_zero', 'red_thresh',
               'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh'])), 
       outputPrefix = 'pCount_', sharedInputs = False)
@@ -1153,6 +1153,9 @@ def ref_pull_89_DSWE1a(image, feat):
   """
   # where the f mask is > 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
   clouds = cf_mask(image).select('cfmask').gte(1).rename('clouds')
+  # add mask FOR low aerosol and realistic values
+  aero = add_sr_aero_mask(image).select('aero').eq(1).rename('low_aero')
+  real = add_realistic_mask(image).select('real').eq(1).rename('is_real')
   #calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
   #calculate hillshadow
@@ -1253,8 +1256,8 @@ def ref_pull_89_DSWE1a(image, feat):
           .addBands(dswe1)
           .addBands(dswe3)
           .addBands(dswe1a)
-          .addBands(aero)
-          .addBands(real)
+          .addBands(aero.eq(0)).rename('high_aero')
+          .addBands(real.eq(0)).rename('unreal_val')
           .addBands(aero_zero)
           .addBands(aero_thresh)
           .addBands(blue_zero)
@@ -1286,7 +1289,7 @@ def ref_pull_89_DSWE1a(image, feat):
       .forEachBand(pixOut.select(['mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
-      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'low_aero', 'is_real',
+      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'high_aero', 'unreal_val',
               'blue_zero', 'blue_thresh', 'green_zero', 'green_thresh', 'red_zero', 'red_thresh',
               'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh'])), 
       outputPrefix = 'pCount_', sharedInputs = False)
@@ -1317,6 +1320,9 @@ def ref_pull_89_DSWE3(image, feat):
   """
   # where the f mask is > 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
   clouds = cf_mask(image).select('cfmask').gte(1).rename('clouds')
+  # add mask FOR low aerosol and realistic values
+  aero = add_sr_aero_mask(image).select('aero').eq(1).rename('low_aero')
+  real = add_realistic_mask(image).select('real').eq(1).rename('is_real')
   #calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
   #calculate hillshadow
@@ -1421,8 +1427,8 @@ def ref_pull_89_DSWE3(image, feat):
           .addBands(dswe1)
           .addBands(dswe3)
           .addBands(dswe1a)
-          .addBands(aero)
-          .addBands(real)
+          .addBands(aero.eq(0)).rename('high_aero')
+          .addBands(real.eq(0)).rename('unreal_val')
           .addBands(aero_zero)
           .addBands(aero_thresh)
           .addBands(blue_zero)
@@ -1454,7 +1460,7 @@ def ref_pull_89_DSWE3(image, feat):
       .forEachBand(pixOut.select(['mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
-      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'low_aero', 'is_real',
+      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'high_aero', 'unreal_val',
               'blue_zero', 'blue_thresh', 'green_zero', 'green_thresh', 'red_zero', 'red_thresh',
               'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh'])), 
       outputPrefix = 'pCount_', sharedInputs = False)
@@ -1683,7 +1689,7 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 'mean_Swir1', 'mean_Swir2', 
                                               'mean_SurfaceTemp',
                                               'pCount_dswe_gt0', 'pCount_dswe1', 'pCount_dswe3', 'pCount_dswe1a',
-                                              'pCount_low_opac', 'pCount_is_real',
+                                              'pCount_high_opac', 'pCount_unreal_val',
                                               'pCount_blue_zero', 'pCount_blue_thresh', 'pCount_green_zero', 'pCount_green_thresh', 
                                               'pCount_red_zero', 'pCount_red_thresh', 'pCount_nir_zero', 'pCount_nir_thresh', 
                                               'pCount_swir1_zero', 'pCount_swir1_thresh', 'pCount_swir2_zero', 'pCount_swir2_thresh', 
@@ -1705,7 +1711,7 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 'mean_Swir1', 'mean_Swir2', 
                                               'mean_SurfaceTemp',
                                               'pCount_dswe_gt0', 'pCount_dswe1', 'pCount_dswe3', 'pCount_dswe1a',
-                                              'pCount_low_opac', 'pCount_is_real',
+                                              'pCount_high_opac', 'pCount_unreal_val',
                                               'pCount_blue_zero', 'pCount_blue_thresh', 'pCount_green_zero', 'pCount_green_thresh', 
                                               'pCount_red_zero', 'pCount_red_thresh', 'pCount_nir_zero', 'pCount_nir_thresh', 
                                               'pCount_swir1_zero', 'pCount_swir1_thresh', 'pCount_swir2_zero', 'pCount_swir2_thresh', 
@@ -1730,7 +1736,7 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 'mean_Swir1', 'mean_Swir2', 
                                               'mean_SurfaceTemp',
                                               'pCount_dswe_gt0', 'pCount_dswe1', 'pCount_dswe3', 'pCount_dswe1a',
-                                              'pCount_low_opac', 'pCount_is_real',
+                                              'pCount_high_opac', 'pCount_unreal_val',
                                               'pCount_blue_zero', 'pCount_blue_thresh', 'pCount_green_zero', 'pCount_green_thresh', 
                                               'pCount_red_zero', 'pCount_red_thresh', 'pCount_nir_zero', 'pCount_nir_thresh', 
                                               'pCount_swir1_zero', 'pCount_swir1_thresh', 'pCount_swir2_zero', 'pCount_swir2_thresh', 
@@ -1758,7 +1764,7 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 'mean_Swir1', 'mean_Swir2', 
                                               'mean_SurfaceTemp',
                                               'pCount_dswe_gt0', 'pCount_dswe1', 'pCount_dswe3', 'pCount_dswe1a',
-                                              'pCount_low_opac', 'pCount_is_real',
+                                              'pCount_high_opac', 'pCount_unreal_val',
                                               'pCount_blue_zero', 'pCount_blue_thresh', 'pCount_green_zero', 'pCount_green_thresh', 
                                               'pCount_red_zero', 'pCount_red_thresh', 'pCount_nir_zero', 'pCount_nir_thresh', 
                                               'pCount_swir1_zero', 'pCount_swir1_thresh', 'pCount_swir2_zero', 'pCount_swir2_thresh', 
@@ -1807,7 +1813,7 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 'mean_Swir1', 'mean_Swir2', 
                                               'mean_SurfaceTemp',
                                               'pCount_dswe_gt0', 'pCount_dswe1', 'pCount_dswe3', 'pCount_dswe1a',
-                                              'pCount_low_aero', 'pCount_is_real',
+                                              'pCount_high_aero', 'pCount_unreal_val',
                                               'pCount_blue_zero', 'pCount_blue_thresh', 'pCount_green_zero', 'pCount_green_thresh', 
                                               'pCount_red_zero', 'pCount_red_thresh', 'pCount_nir_zero', 'pCount_nir_thresh', 
                                               'pCount_swir1_zero', 'pCount_swir1_thresh', 'pCount_swir2_zero', 'pCount_swir2_thresh', 
@@ -1830,7 +1836,7 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 'mean_Swir1', 'mean_Swir2', 
                                               'mean_SurfaceTemp',
                                               'pCount_dswe_gt0', 'pCount_dswe1', 'pCount_dswe3', 'pCount_dswe1a',
-                                              'pCount_low_aero', 'pCount_is_real',
+                                              'pCount_high_aero', 'pCount_unreal_val',
                                               'pCount_blue_zero', 'pCount_blue_thresh', 'pCount_green_zero', 'pCount_green_thresh', 
                                               'pCount_red_zero', 'pCount_red_thresh', 'pCount_nir_zero', 'pCount_nir_thresh', 
                                               'pCount_swir1_zero', 'pCount_swir1_thresh', 'pCount_swir2_zero', 'pCount_swir2_thresh', 
@@ -1854,7 +1860,7 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 'mean_Swir1', 'mean_Swir2', 
                                               'mean_SurfaceTemp',
                                               'pCount_dswe_gt0', 'pCount_dswe1', 'pCount_dswe3', 'pCount_dswe1a',
-                                              'pCount_low_aero', 'pCount_is_real',
+                                              'pCount_high_aero', 'pCount_unreal_val',
                                               'pCount_blue_zero', 'pCount_blue_thresh', 'pCount_green_zero', 'pCount_green_thresh', 
                                               'pCount_red_zero', 'pCount_red_thresh', 'pCount_nir_zero', 'pCount_nir_thresh', 
                                               'pCount_swir1_zero', 'pCount_swir1_thresh', 'pCount_swir2_zero', 'pCount_swir2_thresh', 
@@ -1880,7 +1886,7 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 'mean_Swir1', 'mean_Swir2', 
                                               'mean_SurfaceTemp',
                                               'pCount_dswe_gt0', 'pCount_dswe1', 'pCount_dswe3', 'pCount_dswe1a',
-                                              'pCount_low_aero', 'pCount_is_real',
+                                              'pCount_high_aero', 'pCount_unreal_val',
                                               'pCount_blue_zero', 'pCount_blue_thresh', 'pCount_green_zero', 'pCount_green_thresh', 
                                               'pCount_red_zero', 'pCount_red_thresh', 'pCount_nir_zero', 'pCount_nir_thresh', 
                                               'pCount_swir1_zero', 'pCount_swir1_thresh', 'pCount_swir2_zero', 'pCount_swir2_thresh', 
