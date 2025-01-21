@@ -78,7 +78,7 @@ a .csv in the `c_collate_Landsat_data/out/` folder.
 
 [siteSR_WQP code](https://github.com/AquaSat/AquaMatch_siteSR_WQP) is built upon
 the output of
-[AquaMatch_hamronize_WQP](https://github.com/AquaSat/AquaMatch_harmonize_WQP)
+[AquaMatch_harmonize_WQP](https://github.com/AquaSat/AquaMatch_harmonize_WQP)
 and [lakeSR](https://github.com/AquaSat/AquaMatch_lakeSR).
 AquaMatch_harmonize_WQP provides harmonized *in situ* data from the Water
 Quality Portal for pairing with remote sensing data acquired at the sites of *in
