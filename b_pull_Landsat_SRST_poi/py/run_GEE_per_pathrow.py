@@ -222,7 +222,7 @@ def add_opac_mask(image):
 
   Returns:
       an ee.Image with an additional mask band where any pixels with SR_ATMOS_OPACITY 
-      greater than 0.3 are a value of 0
+      greater than 0.3 are set to a value of 0 in the 'opac' band
   """
   opac = image.select("opacity_qa").multiply(0.001).lt(0.3).rename('opac')
   return image.addBands(opac)
