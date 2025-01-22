@@ -1329,7 +1329,7 @@ def ref_pull_89_DSWE3(image, feat):
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
   #calculate hillshadow
   hs = calc_hill_shadows(image, wrs.geometry()).select('hillShadow')
-  # calculage DSWE
+  # calculate DSWE
   d = DSWE(image).select('dswe')
   
   # create additive masks for dswe>0 (water of any type)
