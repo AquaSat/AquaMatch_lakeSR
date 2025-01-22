@@ -2,7 +2,7 @@
 # {targets} workflow
 
 local_settings:
-- unique_id: "r_id" # this is the column that stores the unique identifier for each site, should not contain any special characters
+- unique_id: "lakeSR_id" # this is the column that stores the unique identifier for each site, should not contain any special characters
 - latitude: "poi_Latitude" # this is the column that stores the latitude of the site, must be in decimal degrees
 - longitude: "poi_Longitude" # this is the column that stores the longitude of the site, must be in decimal degrees
 - location_crs: "EPSG:4326" # this is the coordinate reference system of the location data, must be in EPSG format (e.g. EPSG:4326)
@@ -12,11 +12,12 @@ google_settings:
 - proj: "LSC2_poi" # this is a short name for file naming conventions. All output files will include this prefix.
 - proj_folder: "ls_c2_srst_poi" # this is the folder name where the GEE data will be save to Google Drive. If it doesn't exist, it will be created.
 - ee_proj: "ee-aquamatch" # this is the ee project name you are running your pulls from
-- run_date: "2024-12-16" # date of run for versioning, must be in YYYY-MM-DD foramt
+- run_date: "2025-01-21" # date of run for versioning, must be in YYYY-MM-DD foramt
+- parent_folder: "lakeSR_Landsat_C2" # optional, name of parent folder in Drive to save versioned run folders
 
 temporal_settings: 
 - start_date: "1983-01-01" # earliest data of satellite data to be acquired; earliest data available is 1983-01-01
-- end_date: "today" # latest data of satellite data to be acquired; if 'today' is used, the date will be set to the current date
+- end_date: "2024-12-31" # latest data of satellite data to be acquired; if 'today' is used, the date will be set to the current date
 
 spatial_settings: 
 - extent: "site"

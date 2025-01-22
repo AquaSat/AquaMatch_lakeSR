@@ -71,7 +71,7 @@ calculate_centers_HUC4 <- function(HUC4) {
       # union the geos by feature
       st_union(by_feature = TRUE) %>% 
       # add a rowid for future steps
-      rowid_to_column("r_id") %>% 
+      rowid_to_column("lakeSR_id") %>% 
       ungroup()
     
     # some HUC4s have very few waterbodies that meet the above filtering. If we try 
@@ -81,7 +81,7 @@ calculate_centers_HUC4 <- function(HUC4) {
       # for each polygon, calculate a center. Because sf doesn't map easily, using a 
       # loop. Each loop adds a row the the poi_df dataframe.
       poi_df <- tibble(
-        r_id = numeric(),
+        lakeSR_id = numeric(),
         comid = character(),
         poi_Longitude = numeric(),
         poi_Latitude = numeric(),
@@ -116,7 +116,7 @@ calculate_centers_HUC4 <- function(HUC4) {
         # using coordinates, get the poi distance
         poly_poi <- poi(x,y, precision = 0.01)
         # add info to poi_df
-        poi_df$r_id[i] = wbd_valid[i, ]$r_id
+        poi_df$lakeSR_id[i] = wbd_valid[i, ]$lakeSR_id
         poi_df$comid[i] = wbd_valid[i, ]$comid
         poi_df$poi_dist_m[i] = poly_poi$dist
         # make a point feature and re-calculate decimal degrees in WGS84
@@ -150,8 +150,8 @@ calculate_centers_HUC4 <- function(HUC4) {
     
     #return the dataframe with location info
     return(poi %>% 
-             mutate(r_id = paste(HUC4, r_id, sep = '_')) %>% 
-             select(r_id, comid, poi_Latitude, poi_Longitude, poi_dist_m))
+             mutate(lakeSR_id = paste(HUC4, lakeSR_id, sep = '_')) %>% 
+             select(lakeSR_id, comid, poi_Latitude, poi_Longitude, poi_dist_m))
     
   } else { # if the object is null note it in a text doc to come back to. 
     message(paste0("HUC4 ", HUC4, " contains no waterbodies, noting in 'a_Calculate_Centers/mid/no_wbd_huc4.txt'"))

@@ -8,6 +8,9 @@ tar_source("b_pull_Landsat_SRST_poi/src/")
 
 # create list of targets to perform this task
 b_pull_Landsat_SRST_poi_list <- list(
+  
+  # Check local directory structure -----------------------------------------
+  
   tar_target(
     name = b_check_dir_structure,
     command = {
@@ -20,17 +23,18 @@ b_pull_Landsat_SRST_poi_list <- list(
         }
       })
     },
-    cue = tar_cue("always"),
-    deployment = "main"
+    cue = tar_cue("always")
   ),
+  
+  
+  # Set up GEE configuration ------------------------------------------------
   
   # read and track the config file
   tar_file_read(
     name = b_config_file_poi,
     command = poi_config,
     read = read_yaml(!!.x),
-    packages = "yaml",
-    deployment = "main"
+    packages = "yaml"
   ),
   
   # load, format, save yml as a csv
@@ -42,25 +46,65 @@ b_pull_Landsat_SRST_poi_list <- list(
       b_check_dir_structure
       format_yaml(yml = b_config_file_poi)
     },
-    packages = c("yaml", "tidyverse"),
-    deployment = "main"
+    packages = c("yaml", "tidyverse")
   ),
   
+  # check for Drive folders and architecture per config setup
+  tar_target(
+    name = b_check_Drive_parent_folder,
+    command = if (b_yml_poi$parent_folder != "") {
+      tryCatch({
+        drive_auth(b_yml_poi$google_email)
+        drive_ls(b_yml_poi$parent_folder)
+      }, error = function(e) {
+        drive_mkdir(b_yml_poi$parent_folder)
+      })
+    },
+    packages = "googledrive",
+    cue = tar_cue("always")
+  ),
+  
+  tar_target(
+    name = b_check_Drive_GEE_folder,
+    command =  {
+      b_check_Drive_parent_folder
+      tryCatch({
+        drive_auth(b_yml_poi$google_email)
+        if (b_yml_poi$parent_folder != "") {
+          path <- file.path(b_yml_poi$parent_folder, 
+                            paste0(b_yml_poi$proj_folder, 
+                                   "_v",
+                                   b_yml_poi$run_date))
+        } else {
+          path <- paste0(b_yml_poi$proj_folder, 
+                         "_v",
+                         b_yml_poi$run_date)
+        }
+        drive_ls(path)
+      }, error = function(e) {
+        drive_mkdir(path)
+      })
+    },
+    packages = "googledrive",
+    cue = tar_cue("always")
+  ),
+  
+
+  # Format locations and check for containment in WRS -----------------------
+
   # reformat location file for run_GEE_per_tile using the combined_poi_points
   # from the a_Calculate_Centers group
   tar_target(
     name = b_ref_locations_poi,
     command = reformat_locations(yml = b_yml_poi, 
-                                 locations = a_combined_poi),
-    deployment = "main"
+                                 locations = a_combined_poi)
   ),
   
   # get WRS tiles/indication of whether buffered points are contained by them
   tar_target(
     name = b_WRS_pathrow_poi,
     command = get_WRS_pathrow_poi(locations = b_ref_locations_poi, 
-                                  yml = b_yml_poi),
-    deployment = "main"
+                                  yml = b_yml_poi)
   ),
   
   # check to see if geometry is completely contained in pathrow
@@ -73,6 +117,9 @@ b_pull_Landsat_SRST_poi_list <- list(
     packages = c("tidyverse", "sf", "feather")
   ),
   
+
+  # Get the Landsat Stacks! -------------------------------------------------
+
   # track python files for changes
   tar_file(
     name = b_eeRun_script,
@@ -95,6 +142,7 @@ b_pull_Landsat_SRST_poi_list <- list(
   tar_target(
     name = b_eeRun_poi,
     command = {
+      b_check_Drive_GEE_folder
       b_eeRun_script
       run_GEE_per_pathrow(WRS_pathrow = b_WRS_pathrow_poi)
     },
@@ -112,9 +160,8 @@ b_pull_Landsat_SRST_poi_list <- list(
   tar_target(
     name = b_poi_tasks_complete,
     command = {
-      b_ee_complete_script
       b_eeRun_poi
-      source_python("b_pull_Landsat_SRST_poi/py/poi_wait_for_completion.py")
+      source_python(b_ee_complete_script)
     },
     packages = "reticulate",
     deployment = "main"
@@ -126,9 +173,8 @@ b_pull_Landsat_SRST_poi_list <- list(
   tar_target(
     name = b_check_for_failed_tasks,
     command = {
-      b_ee_fail_script
       b_poi_tasks_complete
-      source_python("b_pull_Landsat_SRST_poi/py/check_for_failed_tasks.py")
+      source_python(b_ee_fail_script)
     },
     packages = "reticulate",
     deployment = "main"

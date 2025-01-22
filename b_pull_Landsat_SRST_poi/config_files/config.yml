@@ -16,6 +16,7 @@ google_settings:
 - proj_folder: "" # this is the folder name where the GEE data will be save to Google Drive. If it doesn't exist, it will be created.
 - ee_proj: "" # this is the ee project name you are running your pulls from
 - run_date: "" # date of run for versioning, must be in YYYY-MM-DD foramt
+- parent_folder: "" # optional, name of parent folder in Drive to save versioned run folders
 
 # The following parameters are optional and have default values listed below. 
 # If these key-values remain unaltered, date will be acquired for the entire satellite data record at the specified location only.

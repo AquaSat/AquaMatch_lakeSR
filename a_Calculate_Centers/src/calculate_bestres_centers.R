@@ -72,13 +72,13 @@ calculate_bestres_centers <- function(HUC4) {
     # union the geos by feature
     st_union(by_feature = TRUE) %>% 
     # add a rowid for future steps
-    rowid_to_column("r_id") %>% 
+    rowid_to_column("lakeSR_id") %>% 
     ungroup()
   
   # for each polygon, calculate a center. Because sf doesn't map easily, using a 
   # loop. Each loop adds a row the the poi_df dataframe.
   poi_df <- tibble(
-    r_id = numeric(),
+    lakeSR_id = numeric(),
     permanent_identifier = character(),
     poi_Longitude = numeric(),
     poi_Latitude = numeric(),
@@ -114,7 +114,7 @@ calculate_bestres_centers <- function(HUC4) {
       # using coordinates, get the poi distance
       poly_poi <- poi(x, y, precision = 0.01)
       # add info to poi_df
-      poi_df$r_id[i] = wbd_valid[i, ]$r_id
+      poi_df$lakeSR_id[i] = wbd_valid[i, ]$lakeSR_id
       poi_df$permanent_identifier[i] = as.character(wbd_valid[i, ]$permanent_identifier)
       poi_df$poi_dist_m[i] = poly_poi$dist
       # make a point feature and re-calculate decimal degrees in WGS84
@@ -152,8 +152,8 @@ calculate_bestres_centers <- function(HUC4) {
     
     # return the dataframe with location info
     return(poi %>% 
-             mutate(r_id = paste(HUC4, r_id, sep = "_")) %>% 
-             select(r_id, permanent_identifier, poi_Latitude, poi_Longitude, poi_dist_m))
+             mutate(lakeSR_id = paste(HUC4, lakeSR_id, sep = "_")) %>% 
+             select(lakeSR_id, permanent_identifier, poi_Latitude, poi_Longitude, poi_dist_m))
   } else { # if there are no waterbodies that meet criteria, return null
     NULL
   }
