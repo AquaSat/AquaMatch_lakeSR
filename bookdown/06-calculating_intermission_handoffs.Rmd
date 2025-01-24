@@ -40,6 +40,29 @@ order of many GBs) and are very difficult to handle outside of a programming or
 database environment. We provide these files for advanced users who wish to make
 changes to the QAQC or intermission handoff procedures.
 
+## Post-hoc filters {#post-hoc-filters}
+
+We acknowledge that our workflow may still result in erroneous or misleading SR
+values, to address that we have a few post-hoc filters that we apply to the
+stack to reduce uncertainty in the remote sensing data as much as possible.
+
+pCount_dswe1 \>= 8 - change from ASv1, with 10. Due to the more rigorous masks,
+we think this is acceptable.
+
+all med\_*band* data must be \< 0.2, which aligns with the expected optical
+properties of water and helps reduce errors associated with sun glint.
+
+either NIR or SWIR1 and SWIR2 must be \< 0.1, this is to remove any extracted
+samples where sun glint has likely affected the data. In aquatic environments,
+NIR, SWIR1, and SWIR2 surface reflectance values should be very low and these
+bands can be used for detecting sun glint affected areas [e.g. @mondejar2019,
+@vanhellemont2019]. Since NIR bands can be elevated in high-sediment waters
+[e.g., @doxaran2002] and SWIR can be elevated in high chlorophyll environments
+[e.g, @hu2009], and we did not wish to bias our dataset and remove data of this
+nature, we embraced this conditional approach. Very few instances occur where
+both NIR and at least one of th SWIR bands were greater than 0.1 after filtering
+for all bands \<0.2.
+
 ## Calculating handoffs {#define-handoff}
 
 We follow the practice described in @gardner2021 to calculate intermission
