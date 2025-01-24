@@ -123,7 +123,10 @@ b_pull_Landsat_SRST_poi_list <- list(
   # track python files for changes
   tar_file(
     name = b_eeRun_script,
-    command = "b_pull_Landsat_SRST_poi/py/run_GEE_per_pathrow.py"
+    command = {
+      b_check_Drive_GEE_folder
+      "b_pull_Landsat_SRST_poi/py/run_GEE_per_pathrow.py"
+    }
   ),
   
   tar_file(
@@ -142,7 +145,6 @@ b_pull_Landsat_SRST_poi_list <- list(
   tar_target(
     name = b_eeRun_poi,
     command = {
-      b_check_Drive_GEE_folder
       b_eeRun_script
       run_GEE_per_pathrow(WRS_pathrow = b_WRS_pathrow_poi)
     },

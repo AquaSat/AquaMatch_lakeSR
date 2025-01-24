@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-01-21" />
+<meta name="date" content="2025-01-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -272,7 +272,7 @@ a 120 meter radius of a defined location. For siteSR, we use a 200 meter buffer.
 <h2><span class="header-section-number">3.1</span> Waterbodies Included in lakeSR<a href="locs-data-acq.html#waterbodies" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>For lakeSR, we use the NHDPlusV2 dataset for lakes within the conterminous US
 and US Territories using the {nhdplusTools} R package <span class="citation">(<a href="#ref-blodgett2023">Blodgett and Johnson 2023</a>)</span> and the
-NHD Best Resolution <span class="citation">(e.g. <a href="#ref-usgs-nhd-ak">US Geological Survey 2023</a>)</span> data through The National Map. All
+NHD Best Resolution <span class="citation">(e.g. <a href="#ref-usgs-nhd-ak">US Geological Survey 2023b</a>)</span> data through The National Map. All
 waterbody polygons were downloaded and processed in November 2024 by
 HUC4 using the most updated version available at the time of download.</p>
 <div class="figure"><span style="display:block;" id="fig:NHDPlusV2-HUC4"></span>
@@ -449,7 +449,7 @@ was assigned within the WQP (value of 0), assigned in this process (value of 1),
 or was unable to be assigned (value of 2).</p>
 <p>Using the HUC8 information to iterate, we then can use {nhdplusTools} to assign
 waterbodies and flowlines to sites within the CONUS and data from The National
-Map best resolution files (<span class="citation">(e.g. <a href="#ref-usgs-nhd-ak">US Geological Survey 2023</a>)</span>) for sites outside of CONUS by
+Map best resolution files (<span class="citation">(e.g. <a href="#ref-usgs-nhd-ak">US Geological Survey 2023b</a>)</span>) for sites outside of CONUS by
 HUC4. For all sites with a <code>MonitoringLocationTypeName</code> that contains “lake” or
 “reservoir”, we assign NHD ids to each point for the waterbody it is contained
 by or the waterbody it is closest to. NHD waterbody file has been filtered to
@@ -525,7 +525,7 @@ Pekel, Jean-François, Andrew Cottam, Noel Gorelick, and Alan S. Belward. 2016. 
 Stefansson, Vilhjalmur. 1920. <span>“The Region of Maximum Inaccessibility in the Arctic.”</span> <em>Geographical Review</em> 10 (3): 167–72. <a href="https://doi.org/10.2307/207749">https://doi.org/10.2307/207749</a>.
 </div>
 <div id="ref-usgs-nhd-ak" class="csl-entry">
-———. 2023. <span>“USGS National Hydrography Dataset Best Resolution (NHD) - Alaska (Published 20230506) GeoPackage.”</span>
+———. 2023b. <span>“USGS National Hydrography Dataset Best Resolution (NHD) - Alaska (Published 20230506) GeoPackage.”</span>
 </div>
 <div id="ref-verpoorter2014" class="csl-entry">
 Verpoorter, Charles, Tiit Kutser, David A. Seekell, and Lars J. Tranvik. 2014. <span>“A Global Inventory of Lakes Based on High-Resolution Satellite Imagery.”</span> <em>Geophysical Research Letters</em> 41 (18): 6396–6402. <a href="https://doi.org/10.1002/2014GL060641">https://doi.org/10.1002/2014GL060641</a>.
