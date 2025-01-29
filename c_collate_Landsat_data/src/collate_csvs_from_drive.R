@@ -4,7 +4,8 @@
 #' Function to grab all downloaded .csv files from the c_collate_Landsat_Data/down/ 
 #' folder, and collate them into .feather files subsetted per arguments in the
 #' function. If left to default, this will create 3 files per DSWE setting: a 
-#' metadata file, a LS457 file, and a LS89 file.
+#' metadata file, a LS457 file, and a LS89 file. For the purposes of this workflow
+#' all files are compressed using the "lz4" method.
 #'
 #' @param file_type text string; unique string for filtering files to be 
 #' downloaded from Drive.  - current options: "LS457", "LS89", "metadata", 
@@ -111,18 +112,20 @@ collate_csvs_from_drive <- function(file_type = NULL,
                walk(missions,
                     .f = \(m) {
                       m_collated <- map(subset_mg, 
-                                         .f = \(s) {
-                                           read_csv(s) %>% 
-                                             filter(grepl(m, `system:index`))
-                                         }) %>% 
+                                        .f = \(s) {
+                                          read_csv(s) %>% 
+                                            filter(grepl(m, `system:index`))
+                                        }) %>% 
                         bind_rows()
-                      write_feather(m_collated, file.path(to_directory,
-                                                          paste0(yml$proj, 
-                                                                 "_collated_metadata_",
-                                                                 m,
-                                                                 "_",
-                                                                 yml$run_date, 
-                                                                 ".feather")))
+                      write_feather(m_collated, 
+                                    file.path(to_directory,
+                                              paste0(yml$proj, 
+                                                     "_collated_metadata_",
+                                                     m,
+                                                     "_",
+                                                     yml$run_date, 
+                                                     ".feather")),
+                                    compression = "lz4")
                     })
                
              } else { 
@@ -131,13 +134,15 @@ collate_csvs_from_drive <- function(file_type = NULL,
                data_mg <- map(subset_mg, read_csv) %>% 
                  bind_rows()
                
-               write_feather(data_mg, file.path(to_directory,
-                                                paste0(yml$proj, 
-                                                       "_collated_metadata_",
-                                                       mg, 
-                                                       "_",
-                                                       yml$run_date, 
-                                                       ".feather")))
+               write_feather(data_mg, 
+                             file.path(to_directory,
+                                       paste0(yml$proj, 
+                                              "_collated_metadata_",
+                                              mg, 
+                                              "_",
+                                              yml$run_date, 
+                                              ".feather")),
+                             compression = "lz4")
                
              }
              
@@ -172,40 +177,44 @@ collate_csvs_from_drive <- function(file_type = NULL,
                  walk(missions,
                       .f = \(m) {
                         m_collated <- map(subset_mg, 
-                                           .f = \(s) {
-                                             df <- read_csv(s) %>% 
-                                               filter(grepl(m, `system:index`))
-                                             filename = last(str_split(s, pattern = "/")[[1]])
-                                             # get column names that need to be 
-                                             # coerced to numeric (all but index)
-                                             df_names <- names(df)[2:length(names(df))]
-                                             # coerce columns to numeric and add
-                                             # source/file name
-                                             df %>% 
-                                               mutate(across(all_of(df_names),
-                                                             ~ as.numeric(.))) %>% 
-                                               mutate(source = filename)
-                                           }) %>% 
+                                          .f = \(s) {
+                                            df <- read_csv(s) %>% 
+                                              filter(grepl(m, `system:index`))
+                                            filename = last(str_split(s, pattern = "/")[[1]])
+                                            # get column names that need to be 
+                                            # coerced to numeric (all but index)
+                                            df_names <- names(df)[2:length(names(df))]
+                                            # coerce columns to numeric and add
+                                            # source/file name
+                                            df %>% 
+                                              mutate(across(all_of(df_names),
+                                                            ~ as.numeric(.))) %>% 
+                                              mutate(source = filename)
+                                          }) %>% 
                           bind_rows()
                         
                         # check for dswe subset
                         if (!is.null(dswe)) {
-                          write_feather(m_collated, file.path(to_directory,
-                                                              paste0(yml$proj, 
-                                                                     "_collated_sites",
-                                                                     dswe,
-                                                                     m,
-                                                                     "_",
-                                                                     yml$run_date, 
-                                                                     ".feather")))
+                          write_feather(m_collated, 
+                                        file.path(to_directory,
+                                                  paste0(yml$proj, 
+                                                         "_collated_sites",
+                                                         dswe,
+                                                         m,
+                                                         "_",
+                                                         yml$run_date, 
+                                                         ".feather")),
+                                        compression = "lz4")
                         } else {
-                          write_feather(m_collated, file.path(to_directory,
-                                                              paste0(yml$proj, 
-                                                                     "_collated_sites_",
-                                                                     m,
-                                                                     "_",
-                                                                     yml$run_date, 
-                                                                     ".feather")))
+                          write_feather(m_collated, 
+                                        file.path(to_directory,
+                                                  paste0(yml$proj, 
+                                                         "_collated_sites_",
+                                                         m,
+                                                         "_",
+                                                         yml$run_date, 
+                                                         ".feather")),
+                                        compression = "lz4")
                         }
                       })
                  
@@ -230,22 +239,26 @@ collate_csvs_from_drive <- function(file_type = NULL,
                  
                  # check for dswe subset
                  if (!is.null(dswe)) {
-                   write_feather(data_mg, file.path(to_directory,
-                                                    paste0(yml$proj, 
-                                                           "_collated_sites",
-                                                           dswe,
-                                                           mg, 
-                                                           "_",
-                                                           yml$run_date, 
-                                                           ".feather")))
+                   write_feather(data_mg, 
+                                 file.path(to_directory,
+                                           paste0(yml$proj, 
+                                                  "_collated_sites",
+                                                  dswe,
+                                                  mg, 
+                                                  "_",
+                                                  yml$run_date, 
+                                                  ".feather")),
+                                 compression = "lz4")
                  } else {
-                   write_feather(data_mg, file.path(to_directory,
-                                                    paste0(yml$proj, 
-                                                           "_collated_sites_",
-                                                           mg, 
-                                                           "_",
-                                                           yml$run_date, 
-                                                           ".feather")))
+                   write_feather(data_mg, 
+                                 file.path(to_directory,
+                                           paste0(yml$proj, 
+                                                  "_collated_sites_",
+                                                  mg, 
+                                                  "_",
+                                                  yml$run_date, 
+                                                  ".feather")),
+                                 compression = "lz4")
                    
                  }
                  
@@ -288,25 +301,29 @@ collate_csvs_from_drive <- function(file_type = NULL,
                                        mutate(source = filename)
                                    }) %>% 
                    bind_rows()
-
+                 
                  # check for dswe subset
                  if (!is.null(dswe)) {
-                   write_feather(m_collated, file.path(to_directory,
-                                                       paste0(yml$proj, 
-                                                              "_collated_sites",
-                                                              dswe,
-                                                              m,
-                                                              "_",
-                                                              yml$run_date, 
-                                                              ".feather")))
+                   write_feather(m_collated, 
+                                 file.path(to_directory,
+                                           paste0(yml$proj, 
+                                                  "_collated_sites",
+                                                  dswe,
+                                                  m,
+                                                  "_",
+                                                  yml$run_date, 
+                                                  ".feather")),
+                                 compression = "lz4")
                  } else {
-                   write_feather(m_collated, file.path(to_directory,
-                                                       paste0(yml$proj, 
-                                                              "_collated_sites_",
-                                                              m,
-                                                              "_",
-                                                              yml$run_date, 
-                                                              ".feather")))
+                   write_feather(m_collated, 
+                                 file.path(to_directory,
+                                           paste0(yml$proj, 
+                                                  "_collated_sites_",
+                                                  m,
+                                                  "_",
+                                                  yml$run_date, 
+                                                  ".feather")),
+                                 compression = "lz4")
                  }
                })
           
@@ -331,22 +348,26 @@ collate_csvs_from_drive <- function(file_type = NULL,
           
           # check for dswe subset
           if (!is.null(dswe)) {
-            write_feather(data_mg, file.path(to_directory,
-                                             paste0(yml$proj, 
-                                                    "_collated_sites",
-                                                    dswe,
-                                                    file_type, 
-                                                    "_",
-                                                    yml$run_date, 
-                                                    ".feather")))
+            write_feather(data_mg, 
+                          file.path(to_directory,
+                                    paste0(yml$proj, 
+                                           "_collated_sites",
+                                           dswe,
+                                           file_type, 
+                                           "_",
+                                           yml$run_date, 
+                                           ".feather")),
+                          compression = "lz4")
           } else {
-            write_feather(data_mg, file.path(to_directory,
-                                             paste0(yml$proj, 
-                                                    "_collated_sites_",
-                                                    file_type, 
-                                                    "_",
-                                                    yml$run_date, 
-                                                    ".feather")))
+            write_feather(data_mg, 
+                          file.path(to_directory,
+                                    paste0(yml$proj, 
+                                           "_collated_sites_",
+                                           file_type, 
+                                           "_",
+                                           yml$run_date, 
+                                           ".feather")),
+                          compression = "lz4")
             
           }
           
