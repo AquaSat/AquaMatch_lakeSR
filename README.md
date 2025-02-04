@@ -29,7 +29,7 @@ function in the {polylabelr} package. Alaska, HI, and some other HUC4 waterbodie
 are not included in the NHDPlusv2, so they are downloaded by url from The 
 National Map and are processed in a separate target. 
 
-**Note**: this group of targets will take up to 2h to complete.
+**Note**: this group of targets will take a few hours to complete.
 
 
 **b_pull_Landsat_SRST_poi**:
@@ -42,7 +42,7 @@ path rows that intersect with the points.
 
 **Note**: this group of targets takes a very, very long time, ranging between 8 
 and 45 minutes per path row branch. There are just under 800 path rows with 
-points in them, resulting in run time on the order of days.
+points in them, resulting in run time on the order of days to a week.
 
 
 **c_collate_Landsat_data**:
@@ -55,4 +55,11 @@ available files for downstream use, storing a list of Drive ids in a .csv in the
 **Note**: this group of targets takes a few hours to run, as the download, 
 collation, and upload process is quite time consuming, even with mulitcore 
 processing.
+
+
+**d_calculate_handoffs**:
+
+This {targets} list applies some rudimentary QA to the Landsat stacks, and then
+calculates 'intermission handoffs' that standardize the SR values relative to LS7
+and to LS8.
 

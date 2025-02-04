@@ -59,6 +59,13 @@ config_list = list(
            the pipeline can not continue.")
     },
     cue = tar_cue("always")
+  ),
+  
+  # store general configuration file
+  tar_target(
+    name = lakeSR_config,
+    command = config::get(config = "admin_update"),
+    cue = tar_cue("always")
   )
 
 )
