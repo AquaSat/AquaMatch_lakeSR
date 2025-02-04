@@ -29,12 +29,16 @@ z_render_bookdown <- list(
                refs
                render_book(input = "bookdown/",
                            params = list(
+                             cfg = lakeSR_config,
                              poi = a_combined_poi,
                              locs_run_date = "November 2024",
                              sites = p4_WQP_site_NHD_info,
-                             visible_sites = p5_visible_sites
+                             visible_sites = p5_visible_sites,
+                             yml = b_yml_poi,
+                             LS_files = c_collated_files
                            ))
              },
-             packages = c("tidyverse", "bookdown", "sf", "tigris", "nhdplusTools", "tmap"),
+             packages = c("tidyverse", "bookdown", "sf", "tigris", "nhdplusTools", 
+                          "tmap", "googledrive", "feather"),
              deployment = "main")
 )

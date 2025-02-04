@@ -26,7 +26,6 @@ export_single_file <- function(file_path,
   # get the file name we care about
   file = last(str_split(file_path, "/")[[1]])
   
-  
   # check to see if path exists, if it doesn't, create it
   with_drive_quiet({
     return <- drive_get(path = drive_path)
