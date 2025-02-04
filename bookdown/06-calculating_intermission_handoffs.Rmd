@@ -3,7 +3,25 @@ editor_options:
   markdown:
     wrap: 80
 bibliography: references.bib
+params:
+  cfg: NA
+  LS_files: NA
 ---
+
+```{r chunk-opts, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      message = FALSE, 
+                      warning = FALSE, 
+                      error = FALSE)
+
+library(tidyverse)
+library(googledrive)
+library(feather)
+
+drive_auth(params$cfg$google_email)
+
+#LS_files <- read_csv("c_collate_Landsat_data/out/raw_collated_files_drive_ids_2024-12-16.csv")
+```
 
 # Calculating Intermission Handoffs {#handoff}
 
@@ -49,7 +67,7 @@ stack to reduce uncertainty in the remote sensing data as much as possible.
 pCount_dswe1 \>= 8 - change from ASv1, with 10. Due to the more rigorous masks,
 we think this is acceptable.
 
-all med\_*band* data must be \< 0.2, which aligns with the expected optical
+all med_band data must be \< 0.2, which aligns with the expected optical
 properties of water and helps reduce errors associated with sun glint.
 
 either NIR or SWIR1 and SWIR2 must be \< 0.1, this is to remove any extracted
@@ -62,6 +80,157 @@ bands can be used for detecting sun glint affected areas [e.g. @mondejar2019,
 nature, we embraced this conditional approach. Very few instances occur where
 both NIR and at least one of th SWIR bands were greater than 0.1 after filtering
 for all bands \<0.2.
+
+if n_masked \<-0.01 \> pCount_dswe1/5, drop
+
+```{r}
+make_LS_QA_step_graphic <- function(mission, 
+                                    drive_info, landsat, dswe, version_date) {
+  # get specific file
+  filtered_files <- drive_info %>%
+    filter(str_detect(name, landsat) & 
+             str_detect(name, dswe) &
+             str_detect(name, version_date))
+  
+  # make sure there is only one file
+  if (nrow(filtered_files) > 1) {
+    stop("Landsat, DSWE, and version_date arguments resulted in more than one file. Check format.")
+  }
+  
+  tmp_file <- tempfile()
+  drive_download(as_id(filtered_files$id[1]), tmp_file)
+  data <- read_feather(tmp_file)
+  unlink(tmp_file)
+  
+  # filter for at least 8 pixels
+  valid_px <- data %>% 
+    filter(pCount_dswe1 >= 8)
+  # filter for all optical bands < 0.2
+  bands <- names(valid_px)[grepl("med_", names(valid_px))]
+  optical <- bands[!bands %in% "med_SurfaceTemp"]
+  valid_band <- valid_px %>% 
+    filter(if_all(all_of(optical),
+                  ~ . < 0.2))
+  # filter thermal for > 273.15 (above freezing)
+  gt_zero <- valid_band %>% 
+    filter(med_SurfaceTemp > 273.15)
+  # filter for nir/swir thresholds
+  remove_glint <- gt_zero %>% 
+    filter(med_Nir < 0.1 | (med_Swir1 < 0.1 & med_Swir2 < 0.1))
+  
+
+  row_summary <- tibble(all_data = nrow(data),
+    valid_px = nrow(valid_px),
+    valid_band = nrow(valid_band),
+    gt_zero = nrow(gt_zero),
+    remove_glint = nrow(remove_glint)) %>% 
+    pivot_longer(cols = all_data:remove_glint) 
+  
+  drop_reason <- tibble(all_data = " unfiltered Landsat data",
+    valid_px = " at least 8 pixels contribute to summary",
+    valid_band = " all optical bands < 0.2",
+    gt_zero = " thermal band > 273.15",
+    remove_glint = " NIR/SWIR thresholds met") %>% 
+    pivot_longer(cols = all_data:remove_glint,
+                 values_to = "reason") 
+  
+  drops <- full_join(row_summary, drop_reason) %>% 
+    mutate(name = factor(name, levels = c("remove_glint",
+                                          "gt_zero",
+                                          "valid_band",
+                                          "valid_px",
+                                          "all_data")),
+           lab = paste0(reason, ": ", format(value, big.mark = ","), " records"))
+  
+  ggplot(drops) +
+    geom_bar(aes(x = name, y = value, fill = name),
+             stat = "identity")  +
+    geom_text_repel(aes(x = name, y = 0.1, label = lab),
+                    bg.color = "white", bg.r = 0.15,
+                    point.size = NA,
+                    xlim = c(-Inf, Inf),
+                    ylim =  c(-Inf, Inf),
+                    nudge_y = 100,
+                    hjust = "left") +
+    labs(title = paste0("Summary of ", mission, " data QA records"), 
+         x = NULL, y = NULL) +
+    scale_fill_manual(values = viridis(n = nrow(drops),
+                                       direction = -1)) +
+    scale_x_discrete(drop = F) +
+    coord_flip() +
+    theme_bw() +
+    theme(axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          plot.title = element_text(size = 14, face = "bold", hjust = 0.5), 
+          legend.position = "none")
+  }
+
+```
+
+```{r}
+make_LS_QA_step_graphic(mission = "Landsat 4 - DSWE1 - lakeSR", 
+                        drive_info = LS_files, 
+                        landsat = "LT04", 
+                        dswe = "DSWE1_", 
+                        version_date = "2024-12-16")
+make_LS_QA_step_graphic(mission = "Landsat 4 - DSWE1a - lakeSR", 
+                        drive_info = LS_files, 
+                        landsat = "LT04", 
+                        dswe = "DSWE1a_", 
+                        version_date = "2024-12-16")
+```
+
+```{r}
+make_LS_QA_step_graphic(mission = "Landsat 5 - DSWE1 - lakeSR", 
+                        drive_info = LS_files, 
+                        landsat = "LT05", 
+                        dswe = "DSWE1_", 
+                        version_date = "2024-12-16")
+make_LS_QA_step_graphic(mission = "Landsat 5 - DSWE1a - lakeSR", 
+                        drive_info = LS_files, 
+                        landsat = "LT05", 
+                        dswe = "DSWE1a_", 
+                        version_date = "2024-12-16")
+```
+
+```{r}
+make_LS_QA_step_graphic(mission = "Landsat 7 - DSWE1 - lakeSR", 
+                        drive_info = LS_files, 
+                        landsat = "LE07", 
+                        dswe = "DSWE1_", 
+                        version_date = "2024-12-16")
+make_LS_QA_step_graphic(mission = "Landsat 7 - DSWE1a - lakeSR", 
+                        drive_info = LS_files, 
+                        landsat = "LE07", 
+                        dswe = "DSWE1a_", 
+                        version_date = "2024-12-16")
+```
+
+```{r}
+make_LS_QA_step_graphic(mission = "Landsat 8 - DSWE1 - lakeSR", 
+                        drive_info = LS_files, 
+                        landsat = "LC08", 
+                        dswe = "DSWE1_", 
+                        version_date = "2024-12-16")
+make_LS_QA_step_graphic(mission = "Landsat 8 - DSWE1a - lakeSR", 
+                        drive_info = LS_files, 
+                        landsat = "LC08", 
+                        dswe = "DSWE1a_", 
+                        version_date = "2024-12-16")
+```
+
+```{r}
+make_LS_QA_step_graphic(mission = "Landsat 9 - DSWE1 - lakeSR", 
+                        drive_info = LS_files, 
+                        landsat = "LC09", 
+                        dswe = "DSWE1_", 
+                        version_date = "2024-12-16")
+make_LS_QA_step_graphic(mission = "Landsat 9 - DSWE1a - lakeSR", 
+                        drive_info = LS_files, 
+                        landsat = "LC09", 
+                        dswe = "DSWE1a_", 
+                        version_date = "2024-12-16")
+```
 
 ## Calculating handoffs {#define-handoff}
 
