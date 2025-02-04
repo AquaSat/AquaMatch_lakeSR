@@ -44,6 +44,8 @@ and walk the function along them all.
 packages <- c("arrow",
               "bookdown",
               "crew",
+              "data.table",
+              "googledrive",
               "nhdplusTools",
               "parallel",
               "polylabelr",
@@ -55,6 +57,7 @@ packages <- c("arrow",
               "tidyverse",
               "tigris",
               "yaml")
+
 # note we use base-r lapply and not map since tidy is not loaded (and possibly
 # not installed) yet
 lapply(packages, package_installer)
@@ -82,7 +85,7 @@ for guidance. Users can create custom configurations as well, we provide the
 it is important to confirm that the desired general configuration is noted in the 
 following scripts:
 
-1. _targets.R line 67
+1. _targets.R line 64
 2. a_Calculate_Centers.R line 19
 3. b_pull_Landsat_SRST_poi.R line 10
 4. c_collate_Landsat_data line 10
@@ -90,17 +93,17 @@ following scripts:
 ### Google Earth Engine Configuration
 
 The configuration file for GEE is only necessary if the general configuration
-file argument `run_GEE` is set to `TRUE`. If this setting is set to `FALSE`, you 
+file argument `run_GEE: TRUE`. If this setting is set to `FALSE`, you 
 do not need to augment the GEE configuration file located at
 `b_pull_Landsat_SRST_poi/config_files/config_poi.yml`.
 
-If `run_GEE` is set to `TRUE`, you will need to modify the GEE configuration 
+If `run_GEE: TRUE`, you will need to modify the GEE configuration 
 file in order for this workflow to run successfully. The GEE configuration file
 is located at `b_pull_Landsat_SRST_poi/config_files/config_poi.yml` and we
 also provide a blank config file with default settings at the path 
 `b_pull_Landsat_SRST_poi/config_files/config.yml`. Comments are provided in these
-files as guidance. In order for {targets} to use an updated config file, you will 
-need to change the file path on line 35 of the `_targets.R` script.
+files as guidance. In order for {targets} to use an updated config file, you may 
+need to change the file path on line 32 of the `_targets.R` script.
 
 
 ## Confirm GEE access via API
@@ -109,6 +112,7 @@ In order to use the configuration `run_GEE: TRUE`, you must have a
 [Google Earth Engine account](https://earthengine.google.com/signup/) 
 and a configured [Google Cloud Project](https://developers.google.com/earth-engine/cloud/projects). 
 You will also need to [download, install, and initialize gcloud](https://cloud.google.com/sdk/docs/install). 
+If you are running with the configuration `run_GEE: FALSE`, you can skip this section.
 
 After the above steps have been taken, create a virtual environment for this use 
 of Python. In order for this chunk of code to run properly, you will need to 

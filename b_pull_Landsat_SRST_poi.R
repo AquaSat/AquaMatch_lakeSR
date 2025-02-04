@@ -9,6 +9,10 @@ tar_source("b_pull_Landsat_SRST_poi/src/")
 # check for configuration setting to run gee, if present, run GEE acquisition
 if (config::get(config = "admin_update")$run_GEE) {
   
+  # Set up python virtual environment ---------------------------------------
+  
+  tar_source("python/pySetup.R")
+  
   b_pull_Landsat_SRST_poi_list <- list(
     
     # Check local directory structure -----------------------------------------

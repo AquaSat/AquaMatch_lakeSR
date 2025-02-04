@@ -113,7 +113,7 @@ collate_csvs_from_drive <- function(file_type = NULL,
                     .f = \(m) {
                       m_collated <- map(subset_mg, 
                                         .f = \(s) {
-                                          read_csv(s) %>% 
+                                          fread(s) %>% 
                                             filter(grepl(m, `system:index`))
                                         }) %>% 
                         bind_rows()
@@ -131,7 +131,7 @@ collate_csvs_from_drive <- function(file_type = NULL,
              } else { 
                
                # otherwise, read all the data and save the file
-               data_mg <- map(subset_mg, read_csv) %>% 
+               data_mg <- map(subset_mg, fread) %>% 
                  bind_rows()
                
                write_feather(data_mg, 
@@ -148,7 +148,6 @@ collate_csvs_from_drive <- function(file_type = NULL,
              
            }
          })
-    
   }
   
   
@@ -178,7 +177,7 @@ collate_csvs_from_drive <- function(file_type = NULL,
                       .f = \(m) {
                         m_collated <- map(subset_mg, 
                                           .f = \(s) {
-                                            df <- read_csv(s) %>% 
+                                            df <- fread(s) %>% 
                                               filter(grepl(m, `system:index`))
                                             filename = last(str_split(s, pattern = "/")[[1]])
                                             # get column names that need to be 
@@ -223,7 +222,7 @@ collate_csvs_from_drive <- function(file_type = NULL,
                  # otherwise, read all the data and save the file
                  data_mg <- map(subset_mg, 
                                 .f = \(s) {
-                                  df <- read_csv(s) 
+                                  df <- fread(s) 
                                   filename = last(str_split(s, pattern = "/")[[1]])
                                   # get column names that need to be 
                                   # coerced to numeric (all but index)
@@ -287,7 +286,7 @@ collate_csvs_from_drive <- function(file_type = NULL,
                .f = \(m) {
                  m_collated <- map(subset_mg, 
                                    .f = \(s) {
-                                     df <- read_csv(s) %>% 
+                                     df <- fread(s) %>% 
                                        filter(grepl(m, `system:index`))
                                      filename = last(str_split(s, pattern = "/")[[1]])
                                      # get column names that need to be 
@@ -332,7 +331,7 @@ collate_csvs_from_drive <- function(file_type = NULL,
           # otherwise, read all the data and save the file
           data_mg <- map(subset_mg, 
                          .f = \(s) {
-                           df <- read_csv(s) 
+                           df <- fread(s) 
                            filename = last(str_split(s, pattern = "/")[[1]])
                            # get column names that need to be 
                            # coerced to numeric (all but index)

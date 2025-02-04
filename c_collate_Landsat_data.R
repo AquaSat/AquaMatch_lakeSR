@@ -127,7 +127,7 @@ if (config::get(config = "admin_update")$run_GEE) {
                                         dswe = c_dswe_types,
                                         separate_missions = TRUE,
                                         depends = c_download_files),
-      packages = c("tidyverse", "arrow"),
+      packages = c("data.table", "tidyverse", "arrow"),
       pattern = cross(c_mission_groups, c_dswe_types)
     ),
     
@@ -211,7 +211,8 @@ if (config::get(config = "admin_update")$run_GEE) {
                               local_folder = "c_collate_Landsat_data/mid/", 
                               google_email = lakeSR_config$google_email, 
                               file_type = ".feather", 
-                              version_date = lakeSR_config$collated_version)
+                              version_date = lakeSR_config$collated_version),
+      packages = c("tidyverse", "arrow", "googledrive")
     ),
     
     tar_target(

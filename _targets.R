@@ -4,10 +4,6 @@ library(tarchetypes)
 library(reticulate)
 library(crew)
 
-# Set up python virtual environment ---------------------------------------
-
-tar_source("python/pySetup.R")
-
 # Source general functions ------------------------------------------------
 
 tar_source("src/")
@@ -29,6 +25,7 @@ tar_option_set(
   garbage_collection = TRUE,
   memory = "transient"
 )
+
 
 # Point to config files: ---------------------------------------
 
