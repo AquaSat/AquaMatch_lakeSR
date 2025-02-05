@@ -11,6 +11,7 @@ default:
   # data will be used
   collated_version: "2025-01-23" # yyyy-mm-dd of version, must be a date listed in the 
   # suffix of the .csv files stored in c_collate_Landsat_data/out/
+  update_bookdown: FALSE # the bookdown will not be re-rendered
 
 admin_update:
   # this setting creates publicly available files using the ROSS account
@@ -20,3 +21,4 @@ admin_update:
   run_GEE: TRUE # the GEE acquisition will be run locally
   # collated version date will populate from the `run_date` listed in the config
   # file for the GEE run: `b_pull_Landsat_SRST_poi/config_files/config_poi.yml`
+  update_bookdown: TRUE # the bookdown will be re-rendered and/or knit

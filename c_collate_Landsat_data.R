@@ -202,7 +202,9 @@ if (config::get(config = "admin_update")$run_GEE) {
     
     tar_file_read(
       name = c_save_collated_drive_info,
-      command = "c_collate_Landsat_data/out/raw_collated_files_drive_ids.csv",
+      command = paste0("c_collate_Landsat_data/out/raw_collated_files_drive_ids_v",
+                       lakeSR_config$collated_version,
+                       ".csv"),
       read = read_csv(!!.x)
     ),
     
