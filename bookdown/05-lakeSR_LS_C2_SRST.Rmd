@@ -342,4 +342,11 @@ check for tasks sent to GEE to determine if any have failed (target
 you can not tell whether or not they have completed or failed. This stores a
 text file at the filepath
 `b_pull_Landsat_SRST_poi/out/GEE_task_errors_vRUN_DATE.csv` containing the names
-of the tasks that have failed.
+of the tasks that have failed. If no tasks have failed, no file will be present.
+Generally speaking failed tasks would indicate an error within the GEE
+acquisition script, usually due to changes in the
+`b_pull_Landsat_SRST_poi/py/run_GEE_per_pathrow.py` script. We recommend
+checking the task status of the GEE run at
+<https://code.earthengine.google.com/tasks> after any changes to that file,
+which will indicate if tasks are failing without waiting for the total
+completion of the GEE target.

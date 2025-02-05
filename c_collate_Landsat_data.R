@@ -116,8 +116,7 @@ if (config::get(config = "admin_update")$run_GEE) {
                                         dswe = NULL,
                                         separate_missions = FALSE,
                                         depends = c_download_files),
-      packages = c("tidyverse", "arrow"),
-      deployment = "main"
+      packages = c("data.table", "tidyverse", "arrow")
     ),
     
     tar_target(
@@ -128,7 +127,8 @@ if (config::get(config = "admin_update")$run_GEE) {
                                         separate_missions = TRUE,
                                         depends = c_download_files),
       packages = c("data.table", "tidyverse", "arrow"),
-      pattern = cross(c_mission_groups, c_dswe_types)
+      pattern = cross(c_mission_groups, c_dswe_types),
+      deployment = "main" # do not run this mulitcore, your computer will tank.
     ),
     
     # Save collated files to Drive, create csv with ids -----------------------
@@ -142,8 +142,7 @@ if (config::get(config = "admin_update")$run_GEE) {
         list.files(file.path("c_collate_Landsat_data/mid/", 
                              b_yml_poi$run_date),
                    full.names = TRUE)
-      },
-      deployment = "main"
+      }
     ),
     
     tar_target(
@@ -184,7 +183,9 @@ if (config::get(config = "admin_update")$run_GEE) {
         drive_ids <- c_send_collated_files_to_drive %>% 
           select(name, id)
         write_csv(drive_ids,
-                  "c_collate_Landsat_data/out/raw_collated_files_drive_ids.csv")
+                  paste0("c_collate_Landsat_data/out/raw_collated_files_drive_ids_v",
+                         b_yml_poi$run_date,
+                         ".csv"))
         drive_ids
       },
       packages = c("tidyverse", "googledrive"),
