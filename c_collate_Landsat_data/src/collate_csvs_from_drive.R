@@ -115,24 +115,30 @@ collate_csvs_from_drive <- function(file_type = NULL,
             }
             
             missions %>% 
-              walk(\(m) m_collated <- subset_mg %>% 
-                     map(\(mg) tryCatch({
-                       fread(mg) %>% 
-                         filter(grepl(m, `system:index`))
-                     },
-                     error = function(e) {
-                       NULL
-                     })) %>% 
-                     bind_rows() %>% 
-                     write_feather(., 
-                                   file.path(to_directory,
-                                             paste0(yml$proj, 
-                                                    "_collated_metadata_",
-                                                    m,
-                                                    "_",
-                                                    yml$run_date, 
-                                                    ".feather")),
-                                   compression = "lz4")
+              walk(\(m) {
+                m_collated <- subset_mg %>% 
+                  map(\(mg) tryCatch({
+                    fread(mg) %>% 
+                      filter(grepl(m, `system:index`))
+                  },
+                  error = function(e) {
+                    NULL
+                  })) %>% 
+                  bind_rows() %>% 
+                  write_feather(., 
+                                file.path(to_directory,
+                                          paste0(yml$proj, 
+                                                 "_collated_metadata_",
+                                                 m,
+                                                 "_",
+                                                 yml$run_date, 
+                                                 ".feather")),
+                                compression = "lz4")
+                
+                # try to free up space here
+                rm(m_collated)
+                gc()
+              }
               )
             
           } else { 
@@ -194,8 +200,7 @@ collate_csvs_from_drive <- function(file_type = NULL,
               } else {
                 missions = c("LC08", "LC09")
               }
-              
-              
+
               missions %>% 
                 walk(\(m) {
                   m_collated <- subset_mg %>% 
@@ -242,11 +247,14 @@ collate_csvs_from_drive <- function(file_type = NULL,
                                                yml$run_date, 
                                                ".feather")),
                               compression = "lz4")
-              }
-              # end if/else dswe subset
-            }
-            # end separate missions
-            
+              } # end if/else dswe subset
+              
+              # try to free up space here
+              rm(m_collated)
+              gc()
+              
+            } # end separate missions
+
           } else {
             
             # otherwise, read all the data and save the file
@@ -296,6 +304,10 @@ collate_csvs_from_drive <- function(file_type = NULL,
                             compression = "lz4")
               
             } # end dswe subset
+            
+            # try to free up space here
+            rm(data_mg)
+            gc()
             
           } # end NULL file_type subset
           
@@ -367,6 +379,10 @@ collate_csvs_from_drive <- function(file_type = NULL,
                               compression = "lz4")
               } # end dswe conditional
               
+              # try to free up space here
+              rm(m_collated)
+              gc()
+              
             }) # end separate by mission  
           
         } else { # if not separating by mission
@@ -419,6 +435,10 @@ collate_csvs_from_drive <- function(file_type = NULL,
             
           } # end dswe subset
           
+          # try to free up space here
+          rm(data_mg)
+          gc()
+          
         } # end conditional for separate mission
         
       } # end separate by file_type
@@ -427,7 +447,7 @@ collate_csvs_from_drive <- function(file_type = NULL,
     
   } # end site collation
   
-  # # no return in function
-  # return ( NULL )
+  # no return in function
+  return ( NULL )
   
 }

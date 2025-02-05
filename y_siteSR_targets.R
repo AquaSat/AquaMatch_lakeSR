@@ -2,7 +2,7 @@ tar_source("src/")
 
 # check to see if bookdown should be updated, 
 # otherwise these targets are not needed
-if (config::get("admin_update")$update_bookdown) {
+if (config::get(config = "admin_update")$update_bookdown) {
   
   y_siteSR_list <- list(
     

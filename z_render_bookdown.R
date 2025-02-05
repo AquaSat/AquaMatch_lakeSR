@@ -1,6 +1,6 @@
 # check to see if bookdown should be updated
 
-if (config::get("admin_update")$update_bookdown) {
+if (config::get(config = "admin_update")$update_bookdown) {
   
   z_render_bookdown <- list(
     # track files for changes
