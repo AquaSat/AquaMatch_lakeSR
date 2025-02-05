@@ -10,6 +10,8 @@
 #' @param file_type text string; unique string for filtering files to be 
 #' downloaded from Drive.  - current options: "LS457", "LS89", "metadata", 
 #' "pekel", NULL. Defaults to NULL. Use this arguemnt if using mulitcore.
+#' @param WRS_prefix text string; WRS path-row prefix to reduce memory use, only
+#' can be used with file_type, dswe, and separate_missions options. 
 #' @param yml dataframe; name of the target object from the -b- group that
 #' stores the GEE run configuration settings as a data frame.
 #' @param dswe text string; dswe value to filter input files by. Defaults to NULL.
@@ -25,6 +27,7 @@
 #' 
 #' 
 collate_csvs_from_drive <- function(file_type = NULL, 
+                                    WRS_prefix = NULL,
                                     yml, 
                                     dswe = NULL, 
                                     separate_missions = FALSE,
@@ -34,6 +37,20 @@ collate_csvs_from_drive <- function(file_type = NULL,
     if (!file_type %in% c("LS457", "LS89", "metadata", "pekel")) {
       warning("The file type argument provided is not recognized.\n
               This may result in unintended downloads.")
+    }
+  }
+  
+  # if WRS_prefix provided
+  if (!is.null(WRS_prefix)) {
+    # check to make sure that all other arguments are satisfied
+    if (is.null(file_type) | is.null(dswe) | separate_missions == FALSE) {
+      stop("To use the WRS_prefix argument, `file_type`, `dswe`, and `separate_missions`\n
+           arguments must all be used.",
+           call. = TRUE)
+    }
+    if (file_type == "metadata") {
+      warning("WRS_prefix argument is not supported for metadata file types. The \n
+              output data will not be subset by the WRS_prefix.")
     }
   }
   
@@ -76,8 +93,7 @@ collate_csvs_from_drive <- function(file_type = NULL,
   # check to see if files need to subset for dswe
   if (!is.null(dswe) & file_type != "metadata") {
     # subset for dswe - but need to add "_" before and after
-    dswe <- paste0("_", dswe, "_")
-    dswe_subset <- files[grepl(dswe, files)]
+    dswe_subset <- files[grepl(paste0("_", dswe, "_"), files)]
     # make sure there are files present in this filter
     if (length(dswe_subset) == 0) {
       stop("You have used a `dswe` argument that is unrecognized or you are\n
@@ -89,6 +105,9 @@ collate_csvs_from_drive <- function(file_type = NULL,
     files <- dswe_subset
   }
   
+  if (!is.null(WRS_prefix)) {
+    files <- files[grepl(paste0("_", WRS_prefix), files)]
+  }
   
   # PROCESS METADATA --------------------------------------------------------
   
@@ -124,16 +143,20 @@ collate_csvs_from_drive <- function(file_type = NULL,
                   error = function(e) {
                     NULL
                   })) %>% 
-                  bind_rows() %>% 
-                  write_feather(., 
-                                file.path(to_directory,
-                                          paste0(yml$proj, 
-                                                 "_collated_metadata_",
-                                                 m,
-                                                 "_",
-                                                 yml$run_date, 
-                                                 ".feather")),
-                                compression = "lz4")
+                  bind_rows()
+                
+                # create file path
+                fp <- file.path(to_directory,
+                                paste0(yml$proj, 
+                                       "_collated_metadata_",
+                                       m,
+                                       "_",
+                                       yml$run_date, 
+                                       ".feather"))
+                
+                write_feather(m_collated, 
+                              fp,
+                              compression = "lz4")
                 
                 # try to free up space here
                 rm(m_collated)
@@ -164,13 +187,13 @@ collate_csvs_from_drive <- function(file_type = NULL,
                           compression = "lz4")
             
             
-          } # end conditional for separate missions
+          } # end conditional for separate mission groups
           
         } # end sanity check of mission group in file list
         
       }) # end walk function 
     
-  } # end metatdata collation
+  } # end metadata collation
   
   
   # PROCESS SITES -----------------------------------------------------------
@@ -200,7 +223,7 @@ collate_csvs_from_drive <- function(file_type = NULL,
               } else {
                 missions = c("LC08", "LC09")
               }
-
+              
               missions %>% 
                 walk(\(m) {
                   m_collated <- subset_mg %>% 
@@ -225,36 +248,36 @@ collate_csvs_from_drive <- function(file_type = NULL,
                 }) %>% 
                 bind_rows()
               
-              # check for dswe subset
-              if (!is.null(dswe)) {
-                write_feather(m_collated, 
-                              file.path(to_directory,
-                                        paste0(yml$proj, 
-                                               "_collated_sites",
-                                               dswe,
-                                               m,
-                                               "_",
-                                               yml$run_date, 
-                                               ".feather")),
-                              compression = "lz4")
-              } else {
-                write_feather(m_collated, 
-                              file.path(to_directory,
-                                        paste0(yml$proj, 
-                                               "_collated_sites_",
-                                               m,
-                                               "_",
-                                               yml$run_date, 
-                                               ".feather")),
-                              compression = "lz4")
-              } # end if/else dswe subset
+              # check for dswe subset, name accordingly
+              fp <- if_else(!is.null(dswe),
+                            file.path(to_directory,
+                                      paste0(yml$proj, 
+                                             "_collated_sites_",
+                                             dswe,
+                                             "_",
+                                             m,
+                                             "_",
+                                             yml$run_date, 
+                                             ".feather")),
+                            file.path(to_directory,
+                                      paste0(yml$proj, 
+                                             "_collated_sites_",
+                                             m,
+                                             "_",
+                                             yml$run_date, 
+                                             ".feather")))
+              
+              write_feather(m_collated,
+                            fp,
+                            compression = "lz4")              
+              
               
               # try to free up space here
               rm(m_collated)
               gc()
               
             } # end separate missions
-
+            
           } else {
             
             # otherwise, read all the data and save the file
@@ -280,30 +303,27 @@ collate_csvs_from_drive <- function(file_type = NULL,
               )) %>% 
               bind_rows()
             
-            # check for dswe subset
-            if (!is.null(dswe)) {
-              write_feather(data_mg, 
-                            file.path(to_directory,
-                                      paste0(yml$proj, 
-                                             "_collated_sites",
-                                             dswe,
-                                             mg, 
-                                             "_",
-                                             yml$run_date, 
-                                             ".feather")),
-                            compression = "lz4")
-            } else {
-              write_feather(data_mg, 
-                            file.path(to_directory,
-                                      paste0(yml$proj, 
-                                             "_collated_sites_",
-                                             mg, 
-                                             "_",
-                                             yml$run_date, 
-                                             ".feather")),
-                            compression = "lz4")
-              
-            } # end dswe subset
+            # check for dswe subset, name accordingly
+            fp <- if_else(!is.null(dswe),
+                          file.path(to_directory,
+                                    paste0(yml$proj, 
+                                           "_collated_sites_",
+                                           dswe,
+                                           "_",
+                                           mg, 
+                                           "_",
+                                           yml$run_date, 
+                                           ".feather")),
+                          file.path(to_directory,
+                                    paste0(yml$proj, 
+                                           "_collated_sites_",
+                                           mg, 
+                                           "_",
+                                           yml$run_date, 
+                                           ".feather")))
+            write_feather(data_mg,
+                          fp,
+                          compression = "lz4")
             
             # try to free up space here
             rm(data_mg)
@@ -355,29 +375,32 @@ collate_csvs_from_drive <- function(file_type = NULL,
                   })}) %>% 
                 bind_rows()
               
-              # check for dswe subset
-              if (!is.null(dswe)) {
-                write_feather(m_collated, 
-                              file.path(to_directory,
-                                        paste0(yml$proj, 
-                                               "_collated_sites",
-                                               dswe,
-                                               m,
-                                               "_",
-                                               yml$run_date, 
-                                               ".feather")),
-                              compression = "lz4")
-              } else {
-                write_feather(m_collated, 
-                              file.path(to_directory,
-                                        paste0(yml$proj, 
-                                               "_collated_sites_",
-                                               m,
-                                               "_",
-                                               yml$run_date, 
-                                               ".feather")),
-                              compression = "lz4")
-              } # end dswe conditional
+              ## file path prefix (incorporate WRS_prefix)
+              fp_prefix <- if_else(!is.null(WRS_prefix),
+                                   file.path(to_directory,
+                                             paste0(yml$proj, 
+                                                    "_collated_sites_",
+                                                    m,
+                                                    "_",
+                                                    WRS_prefix)),
+                                   file.path(to_directory,
+                                             paste0(yml$proj, 
+                                                    "_collated_sites_",
+                                                    m)))
+              ## file path suffix (incorporate dswe)
+              fp_suffix <- if_else(!is.null(dswe), 
+                                   paste0("_",
+                                          dswe,
+                                          "_",
+                                          yml$run_date, 
+                                          ".feather"),
+                                   paste0("_",
+                                          yml$run_date, 
+                                          ".feather"))
+              
+              write_feather(m_collated, 
+                            paste0(fp_prefix, fp_suffix),
+                            compression = "lz4")
               
               # try to free up space here
               rm(m_collated)
@@ -410,30 +433,28 @@ collate_csvs_from_drive <- function(file_type = NULL,
             }) %>% 
             bind_rows()
           
-          # check for dswe subset
-          if (!is.null(dswe)) {
-            write_feather(data_mg, 
-                          file.path(to_directory,
-                                    paste0(yml$proj, 
-                                           "_collated_sites",
-                                           dswe,
-                                           file_type, 
-                                           "_",
-                                           yml$run_date, 
-                                           ".feather")),
-                          compression = "lz4")
-          } else {
-            write_feather(data_mg, 
-                          file.path(to_directory,
-                                    paste0(yml$proj, 
-                                           "_collated_sites_",
-                                           file_type, 
-                                           "_",
-                                           yml$run_date, 
-                                           ".feather")),
-                          compression = "lz4")
-            
-          } # end dswe subset
+          # create filepath using dswe setting
+          fp <- if_else(!is.null(dswe),
+                        file.path(to_directory,
+                                  paste0(yml$proj, 
+                                         "_collated_sites_",
+                                         dswe,
+                                         "_",
+                                         file_type, 
+                                         "_",
+                                         yml$run_date, 
+                                         ".feather")),
+                        file.path(to_directory,
+                                  paste0(yml$proj, 
+                                         "_collated_sites_",
+                                         file_type, 
+                                         "_",
+                                         yml$run_date, 
+                                         ".feather")))
+          
+          write_feather(data_mg, 
+                        fp,
+                        compression = "lz4")
           
           # try to free up space here
           rm(data_mg)

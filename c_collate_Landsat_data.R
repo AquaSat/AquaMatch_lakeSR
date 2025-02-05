@@ -119,15 +119,24 @@ if (config::get(config = "admin_update")$run_GEE) {
       packages = c("data.table", "tidyverse", "arrow")
     ),
     
+    # make target of first two digits of PR - basically, the files are too large
+    # for processing without even further subset (espcially LS5 and LS7)
+    
+    tar_target(
+      name = c_WRS_prefix,
+      command = unique(str_sub(b_WRS_pathrow_poi, 1, 2))
+    ),
+    
     tar_target(
       name = c_make_collated_point_files,
       command = collate_csvs_from_drive(file_type = c_mission_groups,
+                                        WRS_prefix = c_WRS_prefix,
                                         yml = b_yml_poi,
                                         dswe = c_dswe_types,
                                         separate_missions = TRUE,
                                         depends = c_download_files),
       packages = c("data.table", "tidyverse", "arrow"),
-      pattern = cross(c_mission_groups, c_dswe_types),
+      pattern = cross(c_mission_groups, c_WRS_prefix, c_dswe_types),
       deployment = "main" # do not run this mulitcore, your computer will tank.
     ),
     
