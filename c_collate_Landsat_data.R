@@ -220,7 +220,8 @@ if (config::get(config = general_config)$run_GEE) {
     tar_target(
       name = c_download_drive_files,
       command = retrieve_data(id_df = c_save_collated_drive_info, 
-                              local_folder = "c_collate_Landsat_data/mid/", 
+                              local_folder = file.path("c_collate_Landsat_data/mid",
+                                                       lakeSR_config$collated_version), 
                               google_email = lakeSR_config$google_email, 
                               file_type = ".feather", 
                               version_date = lakeSR_config$collated_version),

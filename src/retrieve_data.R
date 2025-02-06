@@ -33,6 +33,11 @@ retrieve_data <- function(id_df,
   # Authorize using the google email provided
   drive_auth(google_email)
   
+  # make sure local folder path exists
+  if (!dir.exists(local_folder)) {
+    dir.create(local_folder, recursive = TRUE)
+  }
+  
   # Filter the contents of the id_df to the desired version date
   drive_file_ids <- id_df %>%
     filter(grepl(pattern = version_date, x = name))
