@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-01-24" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -230,10 +230,11 @@ div.csl-indent {
 <li class="chapter" data-level="7" data-path="handoff.html"><a href="handoff.html"><i class="fa fa-check"></i><b>7</b> Calculating Intermission Handoffs</a>
 <ul>
 <li class="chapter" data-level="7.1" data-path="handoff.html"><a href="handoff.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR stacks</a></li>
-<li class="chapter" data-level="7.2" data-path="handoff.html"><a href="handoff.html#define-handoff"><i class="fa fa-check"></i><b>7.2</b> Calculating handoffs</a>
+<li class="chapter" data-level="7.2" data-path="handoff.html"><a href="handoff.html#post-hoc-filters"><i class="fa fa-check"></i><b>7.2</b> Post-hoc filters</a></li>
+<li class="chapter" data-level="7.3" data-path="handoff.html"><a href="handoff.html#define-handoff"><i class="fa fa-check"></i><b>7.3</b> Calculating handoffs</a>
 <ul>
-<li class="chapter" data-level="7.2.1" data-path="handoff.html"><a href="handoff.html#corr7-handoff-coefficients"><i class="fa fa-check"></i><b>7.2.1</b> <code>corr7</code> handoff coefficients</a></li>
-<li class="chapter" data-level="7.2.2" data-path="handoff.html"><a href="handoff.html#corr8-handoff-coefficients"><i class="fa fa-check"></i><b>7.2.2</b> <code>corr8</code> handoff coefficients</a></li>
+<li class="chapter" data-level="7.3.1" data-path="handoff.html"><a href="handoff.html#corr7-handoff-coefficients"><i class="fa fa-check"></i><b>7.3.1</b> <code>corr7</code> handoff coefficients</a></li>
+<li class="chapter" data-level="7.3.2" data-path="handoff.html"><a href="handoff.html#corr8-handoff-coefficients"><i class="fa fa-check"></i><b>7.3.2</b> <code>corr8</code> handoff coefficients</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>8</b> References</a></li>
@@ -264,7 +265,7 @@ sensor spectral response and atmospheric correction procedures. For the purposes
 of AquaSat v2, we call this standardization process “intermission handoffs”.
 Intermission handoffs are defined by the data obtained in the overlapping period
 of time between two adjacent-in-time missions (details provided in Section
-<a href="handoff.html#define-handoff">7.2</a>. In AquaSat v2, we standardize values relative to Landsat
+<a href="handoff.html#define-handoff">7.3</a>. In AquaSat v2, we standardize values relative to Landsat
 7 (<code>corr7</code>) and Landsat 8 (<code>corr8</code>). The Landsat 7 intermission handoffs can be
 applied the entire Landsat 4-9 because it overlapped with early Landsat (4/5)
 and modern Landsat (8/9). For the <code>corr7</code> standardization, we treat Landsat 4
@@ -288,8 +289,28 @@ order of many GBs) and are very difficult to handle outside of a programming or
 database environment. We provide these files for advanced users who wish to make
 changes to the QAQC or intermission handoff procedures.</p>
 </div>
-<div id="define-handoff" class="section level2 hasAnchor" number="7.2">
-<h2><span class="header-section-number">7.2</span> Calculating handoffs<a href="handoff.html#define-handoff" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="post-hoc-filters" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Post-hoc filters<a href="handoff.html#post-hoc-filters" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We acknowledge that our workflow may still result in erroneous or misleading SR
+values, to address that we have a few post-hoc filters that we apply to the
+stack to reduce uncertainty in the remote sensing data as much as possible.</p>
+<p>pCount_dswe1 &gt;= 8 - change from ASv1, with 10. Due to the more rigorous masks,
+we think this is acceptable.</p>
+<p>all med_band data must be &lt; 0.2, which aligns with the expected optical
+properties of water and helps reduce errors associated with sun glint.</p>
+<p>either NIR or SWIR1 and SWIR2 must be &lt; 0.1, this is to remove any extracted
+samples where sun glint has likely affected the data. In aquatic environments,
+NIR, SWIR1, and SWIR2 surface reflectance values should be very low and these
+bands can be used for detecting sun glint affected areas <span class="citation">Vanhellemont (<a href="#ref-vanhellemont2019">2019</a>)</span>. Since NIR bands can be elevated in high-sediment waters
+<span class="citation">(e.g., <a href="#ref-doxaran2002">Doxaran, Froidefond, and Castaing 2002</a>)</span> and SWIR can be elevated in high chlorophyll environments
+<span class="citation">(e.g, <a href="#ref-hu2009">Hu 2009</a>)</span>, and we did not wish to bias our dataset and remove data of this
+nature, we embraced this conditional approach. Very few instances occur where
+both NIR and at least one of th SWIR bands were greater than 0.1 after filtering
+for all bands &lt;0.2.</p>
+<p>if n_masked &lt;-0.01 &gt; pCount_dswe1/5, drop</p>
+</div>
+<div id="define-handoff" class="section level2 hasAnchor" number="7.3">
+<h2><span class="header-section-number">7.3</span> Calculating handoffs<a href="handoff.html#define-handoff" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We follow the practice described in <span class="citation">Gardner et al. (<a href="#ref-gardner2021">2021</a>)</span> to calculate intermission
 handoffs, where all band values during the period of overlap between two
 missions (e.g. 1999-04-15 through 2011-11-18 for Landsat 5 and 7 - see Section
@@ -300,13 +321,13 @@ Because we use a second-order polynomial, all values outside of the 1st and 99th
 percentile values used to define the intermission handoff are flagged and should
 be used with extreme caution. All <code>corr7</code> and <code>corr8</code> relationships and their
 derived coefficients are provided in the sections below.</p>
-<div id="corr7-handoff-coefficients" class="section level3 hasAnchor" number="7.2.1">
-<h3><span class="header-section-number">7.2.1</span> <code>corr7</code> handoff coefficients<a href="handoff.html#corr7-handoff-coefficients" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="corr7-handoff-coefficients" class="section level3 hasAnchor" number="7.3.1">
+<h3><span class="header-section-number">7.3.1</span> <code>corr7</code> handoff coefficients<a href="handoff.html#corr7-handoff-coefficients" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>[[pull figs from functions here]]</p>
 <p>[[insert table of calcs, # of points, etc]]</p>
 </div>
-<div id="corr8-handoff-coefficients" class="section level3 hasAnchor" number="7.2.2">
-<h3><span class="header-section-number">7.2.2</span> <code>corr8</code> handoff coefficients<a href="handoff.html#corr8-handoff-coefficients" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="corr8-handoff-coefficients" class="section level3 hasAnchor" number="7.3.2">
+<h3><span class="header-section-number">7.3.2</span> <code>corr8</code> handoff coefficients<a href="handoff.html#corr8-handoff-coefficients" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>[[pull figs from functions here]]</p>
 <p>[[insert table of calcs, # of points, etc]]</p>
 
@@ -315,11 +336,20 @@ derived coefficients are provided in the sections below.</p>
 </div>
 <h3> References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-doxaran2002" class="csl-entry">
+Doxaran, D., J.-M. Froidefond, and P. Castaing. 2002. <span>“A Reflectance Band Ratio Used to Estimate Suspended Matter Concentrations in Sediment-Dominated Coastal Waters.”</span> <em>International Journal of Remote Sensing</em> 23 (23): 5079–85. <a href="https://doi.org/10.1080/0143116021000009912">https://doi.org/10.1080/0143116021000009912</a>.
+</div>
 <div id="ref-gardner2021" class="csl-entry">
 Gardner, John R., Xiao Yang, Simon N. Topp, Matthew R. V. Ross, Elizabeth H. Altenau, and Tamlin M. Pavelsky. 2021. <span>“The Color of Rivers.”</span> <em>Geophysical Research Letters</em> 48 (1): e2020GL088946. <a href="https://doi.org/10.1029/2020GL088946">https://doi.org/10.1029/2020GL088946</a>.
 </div>
+<div id="ref-hu2009" class="csl-entry">
+Hu, Chuanmin. 2009. <span>“A Novel Ocean Color Index to Detect Floating Algae in the Global Oceans.”</span> <em>Remote Sensing of Environment</em> 113 (10): 2118–29. <a href="https://doi.org/10.1016/j.rse.2009.05.012">https://doi.org/10.1016/j.rse.2009.05.012</a>.
+</div>
 <div id="ref-maciel2023" class="csl-entry">
 Maciel, Daniel Andrade, Nima Pahlevan, Claudio Clemente Faria Barbosa, Evlyn Márcia Leão de Moraes de Novo, Rejane Souza Paulino, Vitor Souza Martins, Eric Vermote, and Christopher J. Crawford. 2023. <span>“Validity of the Landsat Surface Reflectance Archive for Aquatic Science: Implications for Cloud-Based Analysis.”</span> <em>Limnology and Oceanography Letters</em> n/a (n/a). <a href="https://doi.org/10.1002/lol2.10344">https://doi.org/10.1002/lol2.10344</a>.
+</div>
+<div id="ref-vanhellemont2019" class="csl-entry">
+Vanhellemont, Quinten. 2019. <span>“Adaptation of the Dark Spectrum Fitting Atmospheric Correction for Aquatic Applications of the Landsat and Sentinel-2 Archives.”</span> <em>Remote Sensing of Environment</em> 225 (May): 175–92. <a href="https://doi.org/10.1016/j.rse.2019.03.010">https://doi.org/10.1016/j.rse.2019.03.010</a>.
 </div>
 </div>
             </section>

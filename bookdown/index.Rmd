@@ -11,6 +11,7 @@ link-citations: yes
 description: "Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories."
 params:
   cfg: NA
+  yml: NA
   poi: NA
   locs_run_date: NA
   sites: NA

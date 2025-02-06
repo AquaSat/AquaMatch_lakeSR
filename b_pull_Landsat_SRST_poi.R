@@ -7,7 +7,7 @@ tar_source("b_pull_Landsat_SRST_poi/src/")
 # in the {targets} group "a_Calculate_Centers".
 
 # check for configuration setting to run gee, if present, run GEE acquisition
-if (config::get(config = "admin_update")$run_GEE) {
+if (config::get(config = general_config)$run_GEE) {
   
   # Set up python virtual environment ---------------------------------------
   

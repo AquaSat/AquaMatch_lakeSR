@@ -10,7 +10,7 @@ params:
   visible_sites: NA
 ---
 
-```{r chunk-opts, echo=FALSE}
+```{r chunk-opts-2, echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE, 
                       message = FALSE, 
                       warning = FALSE, 

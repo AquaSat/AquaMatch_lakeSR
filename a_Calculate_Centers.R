@@ -16,7 +16,7 @@ tar_source("a_Calculate_Centers/src/")
 # from the NHD from the National Map url.
 
 # check for configuration setting to calculate centers, if TRUE, calculate centers
-if (config::get(config = "admin_update")$calculate_centers) {
+if (config::get(config = general_config)$calculate_centers) {
   
   # create list of targets to perform this task
   a_Calculate_Centers_list <- list(
@@ -185,6 +185,17 @@ if (config::get(config = "admin_update")$calculate_centers) {
   # file for this repo
   
   a_Calculate_Centers_list <- list(
+    
+    tar_target(
+      name = a_check_dir_structure,
+      command = {
+        # make `mid` directory
+          if(!dir.exists("a_Calculate_Centers/mid/")){
+            dir.create("a_Calculate_Centers/mid/")
+          }
+      },
+      cue = tar_cue("always")
+    ),
     
     tar_target(
       name = a_combined_poi,

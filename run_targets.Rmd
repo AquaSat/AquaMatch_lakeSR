@@ -82,13 +82,8 @@ consuming portions of the workflow (namely, calculation of waterbody centers and
 the run/collation of GEE files). Comments within the `config.yml` file are present
 for guidance. Users can create custom configurations as well, we provide the 
 'default' configuration as a starting place for users. Before running this workflow
-it is important to confirm that the desired general configuration is noted in the 
-following scripts:
-
-1. _targets.R line 64
-2. a_Calculate_Centers.R line 19
-3. b_pull_Landsat_SRST_poi.R line 10
-4. c_collate_Landsat_data line 10
+it is important to confirm that the desired `general_configuration` is set in the 
+_targets.R script on line 36.
 
 ### Google Earth Engine Configuration
 

@@ -31,6 +31,9 @@ tar_option_set(
 
 poi_config <- "b_pull_Landsat_SRST_poi/config_files/config_poi.yml"
 
+# Set general configuration setting: -----------------------------
+
+general_config <- "default"
 
 # Create configuration targets:  ------------------------------------------
 
@@ -61,7 +64,7 @@ config_list = list(
   # store general configuration file
   tar_target(
     name = lakeSR_config,
-    command = config::get(config = "admin_update"),
+    command = config::get(config = general_config),
     cue = tar_cue("always")
   )
 

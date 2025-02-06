@@ -8,7 +8,7 @@ params:
   LS_files: NA
 ---
 
-```{r chunk-opts, echo=FALSE}
+```{r chunk-opts-6, echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE, 
                       message = FALSE, 
                       warning = FALSE, 
@@ -83,7 +83,7 @@ for all bands \<0.2.
 
 if n_masked \<-0.01 \> pCount_dswe1/5, drop
 
-```{r}
+```{r step_function}
 make_LS_QA_step_graphic <- function(mission, 
                                     drive_info, landsat, dswe, version_date) {
   # get specific file
@@ -167,7 +167,7 @@ make_LS_QA_step_graphic <- function(mission,
 
 ```
 
-```{r}
+```{r LS4_step, eval = F}
 make_LS_QA_step_graphic(mission = "Landsat 4 - DSWE1 - lakeSR", 
                         drive_info = LS_files, 
                         landsat = "LT04", 
@@ -180,7 +180,7 @@ make_LS_QA_step_graphic(mission = "Landsat 4 - DSWE1a - lakeSR",
                         version_date = "2024-12-16")
 ```
 
-```{r}
+```{r LS5_step, eval = F}
 make_LS_QA_step_graphic(mission = "Landsat 5 - DSWE1 - lakeSR", 
                         drive_info = LS_files, 
                         landsat = "LT05", 
@@ -193,7 +193,7 @@ make_LS_QA_step_graphic(mission = "Landsat 5 - DSWE1a - lakeSR",
                         version_date = "2024-12-16")
 ```
 
-```{r}
+```{r LS7_step, eval = F}
 make_LS_QA_step_graphic(mission = "Landsat 7 - DSWE1 - lakeSR", 
                         drive_info = LS_files, 
                         landsat = "LE07", 
@@ -206,7 +206,7 @@ make_LS_QA_step_graphic(mission = "Landsat 7 - DSWE1a - lakeSR",
                         version_date = "2024-12-16")
 ```
 
-```{r}
+```{r LS8_step, eval = F}
 make_LS_QA_step_graphic(mission = "Landsat 8 - DSWE1 - lakeSR", 
                         drive_info = LS_files, 
                         landsat = "LC08", 
@@ -219,7 +219,7 @@ make_LS_QA_step_graphic(mission = "Landsat 8 - DSWE1a - lakeSR",
                         version_date = "2024-12-16")
 ```
 
-```{r}
+```{r LS9_step, eval = F}
 make_LS_QA_step_graphic(mission = "Landsat 9 - DSWE1 - lakeSR", 
                         drive_info = LS_files, 
                         landsat = "LC09", 

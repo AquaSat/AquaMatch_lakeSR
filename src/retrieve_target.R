@@ -26,7 +26,8 @@
 #' The dataset after being downloaded and read into the pipeline from Google Drive.
 #' 
 retrieve_target <- function(target, id_df, local_folder, 
-                          google_email, file_type = ".rds", version_date = NULL){
+                          google_email, file_type = ".rds", 
+                          version_date = NULL){
   
   # Authorize using the google email provided
   drive_auth(google_email)
@@ -58,11 +59,11 @@ retrieve_target <- function(target, id_df, local_folder,
   # Read dataset into pipeline
   if(file_type == ".rds"){
     
-    read_rds(local_path)
+    return(read_rds(local_path))
     
   } else if(file_type == ".feather"){
     
-    read_feather(local_path)   
+    return(read_feather(local_path))   
     
   } else {
     

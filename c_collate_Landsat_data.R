@@ -7,7 +7,7 @@ tar_source("c_collate_Landsat_data/src/")
 # orchestrated in the {targets} group "b_pull_Landsat_SRST_poi" and creates 
 # "stable" files for downstream use.
 
-if (config::get(config = "admin_update")$run_GEE) {
+if (config::get(config = general_config)$run_GEE) {
   
   c_collate_Landsat_data <- list(
     
@@ -224,7 +224,8 @@ if (config::get(config = "admin_update")$run_GEE) {
                               google_email = lakeSR_config$google_email, 
                               file_type = ".feather", 
                               version_date = lakeSR_config$collated_version),
-      packages = c("tidyverse", "arrow", "googledrive")
+      packages = c("tidyverse", "arrow", "googledrive"),
+      pattern = map(c_save_collated_drive_info)
     ),
     
     tar_target(

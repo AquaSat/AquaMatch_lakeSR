@@ -2,7 +2,7 @@ tar_source("src/")
 
 # check to see if bookdown should be updated, 
 # otherwise these targets are not needed
-if (config::get(config = "admin_update")$update_bookdown) {
+if (config::get(config = general_config)$update_bookdown) {
   
   y_siteSR_list <- list(
     
@@ -16,22 +16,20 @@ if (config::get(config = "admin_update")$update_bookdown) {
     
     tar_target(
       name = p4_WQP_site_NHD_info,
-      command = retrieve_data(target = "p4_WQP_site_NHD_info",
-                              id_df = y_siteSR_targets,
-                              local_folder = tempdir(),
-                              stable = FALSE,
-                              google_email = b_yml_poi$google_email),
+      command = retrieve_target(target = "p4_WQP_site_NHD_info",
+                                id_df = y_siteSR_targets,
+                                local_folder = tempdir(),
+                                google_email = b_yml_poi$google_email),
       packages = c("tidyverse", "googledrive"),
       cue = tar_cue("always")
     ),
     
     tar_target(
       name = p5_visible_sites,
-      command = retrieve_data(target = "p5_visible_sites",
-                              id_df = y_siteSR_targets,
-                              local_folder = tempdir(),
-                              stable = FALSE,
-                              google_email = b_yml_poi$google_email),
+      command = retrieve_target(target = "p5_visible_sites",
+                                id_df = y_siteSR_targets,
+                                local_folder = tempdir(),
+                                google_email = b_yml_poi$google_email),
       packages = c("tidyverse", "googledrive"),
       cue = tar_cue("always")
     )
