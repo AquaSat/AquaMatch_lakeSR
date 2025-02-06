@@ -1,5 +1,5 @@
 # check to see if rendering bookdown
-if (config::get(config = general_config)$update_bookdownw) {
+if (config::get(config = general_config)$update_bookdown) {
   
   z_render_bookdown <- list(
     # track files for changes
