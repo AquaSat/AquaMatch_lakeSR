@@ -1,7 +1,7 @@
 default:
   # The default setting for the configuration file is set to use pre-existing 
   # centers and collated datasets. 
-  google_email: "" # enter google email
+  google_email: "steeleb@rams.colostate.edu" # enter google email
   calculate_centers: FALSE # the center calculation will not run, and previously-
   # collated centers will be used
   centers_version: "2025-01-28" # yyyy-mm-dd of version, must be a date listed in the 

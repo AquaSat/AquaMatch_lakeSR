@@ -209,6 +209,25 @@ if (config::get(config = general_config)$run_GEE) {
   # files and then store the list of files as a target
   c_collate_Landsat_data <- list(
     
+    # set dswe types
+    tar_target(
+      name = c_dswe_types,
+      command = {
+        dswe = NULL
+        if (grepl("1", b_yml_poi$DSWE_setting)) {
+          dswe = c(dswe, "DSWE1")
+        } 
+        if (grepl("1a", b_yml_poi$DSWE_setting)) {
+          dswe = c(dswe, "DSWE1a")
+        } 
+        if (grepl("3", b_yml_poi$DSWE_setting)) {
+          dswe = c(dswe, "DSWE3")
+        } 
+        dswe
+      },
+      deployment = "main"
+    ), 
+    
     tar_file_read(
       name = c_save_collated_drive_info,
       command = paste0("c_collate_Landsat_data/out/raw_collated_files_drive_ids_v",
