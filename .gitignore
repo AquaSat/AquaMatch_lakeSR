@@ -14,9 +14,12 @@ a_Calculate_Centers/nhd/*
 
 b_pull_Landsat_SRST_poi/mid/*
 b_pull_Landsat_SRST_poi/out/*
+#track drive ids in b group
+!b_pull_Landsat_SRST_poi/out/yml_drive_ids.csv
 
 c_collate_Landsat_data/down/*
 c_collate_Landsat_data/mid/*
+
 
 # stupid .DS_Store files
 **.DS_Store
