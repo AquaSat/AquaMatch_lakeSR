@@ -197,11 +197,18 @@ if (config::get(config = general_config)$calculate_centers) {
       cue = tar_cue("always")
     ),
     
+    tar_file_read(
+      name = a_combined_poi_drive_ids,
+      command = "a_Calculate_Centers/out/combined_poi_drive_ids.csv",
+      read = read_csv(!!.x),
+      cue = tar_cue("always")
+    ),
+    
     tar_target(
       name = a_combined_poi,
       command = retrieve_target(
         target = "a_combined_poi", 
-        id_df = read_csv("a_Calculate_Centers/out/combined_poi_drive_ids.csv"), 
+        id_df = a_combined_poi_drive_ids, 
         local_folder = "a_Calculate_Centers/mid/", 
         google_email = lakeSR_config$google_email, 
         version_date = lakeSR_config$centers_version

@@ -221,11 +221,18 @@ if (config::get(config = general_config)$run_GEE) {
   
   b_pull_Landsat_SRST_poi_list <- list(
     
+    tar_file_read(
+      name = b_save_yml_Drive_info,
+      command = "b_pull_Landsat_SRST_poi/out/yml_drive_ids.csv",
+      read = read_csv(!!.x),
+      cue = tar_cue("always")
+    ),
+    
     tar_target(
       name = b_yml_poi,
       command = retrieve_target(
         target = "b_yml_poi", 
-        id_df = read_csv("b_pull_Landsat_SRST_poi/out/yml_drive_ids.csv"), 
+        id_df = b_save_yml_Drive_info, 
         local_folder = "b_pull_Landsat_SRST_poi/out/", 
         google_email = lakeSR_config$google_email, 
         version_date = lakeSR_config$collated_version
