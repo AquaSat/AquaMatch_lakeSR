@@ -15,7 +15,8 @@ d_qa_filter_calc_handoff <- list(
     name = d_check_dir_structure,
     command = {
       # make directories if needed
-      directories = c("d_qa_filter_calc_handoff/out/")
+      directories = c("d_qa_filter_calc_handoff/mid/",
+                      "d_qa_filter_calc_handoff/out/")
       walk(directories, function(dir) {
         if(!dir.exists(dir)){
           dir.create(dir)
@@ -35,12 +36,17 @@ d_qa_filter_calc_handoff <- list(
   # large memory hounds, even when using all data.table functions to reduce 
   # memory intense processes. 
   
+  tar_target(
+    name = d_mission_identifiers,
+    command = tibble(mission_id = c("LT04", "LT05", "LE07", "LC08", "LC09"),
+                     mission_names = c("Landsat 4", "Landsat 5", "Landsat 7", "Landsat 8", "Landsat 9"))
+  ),
+  
   # Landsat 4
   tar_target(
-    name = d_Landsat4_qa,
-    command = qa_and_document_LS(mission = "LT05", 
-                                 landsat_name = "Landsat 5", 
-                                 dswe = c_dswe_types[1], 
+    name = d_qa_Landsat_files,
+    command = qa_and_document_LS(mission_info = d_mission_identifiers, 
+                                 dswe = c_dswe_types, 
                                  collated_files = c_collated_files,
                                  min_no_pix = 8, 
                                  thermal_threshold = 273.15,
@@ -49,11 +55,12 @@ d_qa_filter_calc_handoff <- list(
                                  max_unreal_threshold = 0.2,
                                  document_drops = TRUE),
     packages = c("arrow", "data.table", "tidyverse"),
-    pattern = map(c_dswe_types),
+    pattern = cross(d_mission_identifiers, c_dswe_types),
     iteration = "list",
     deployment = "main"
-  )
+  ),
   
+
   
   
   

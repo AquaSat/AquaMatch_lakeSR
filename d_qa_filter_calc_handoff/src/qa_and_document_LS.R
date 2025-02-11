@@ -1,7 +1,6 @@
 
 
-qa_and_document_LS <- function(mission, 
-                               landsat_name, 
+qa_and_document_LS <- function(mission_info,
                                dswe, 
                                collated_files,
                                min_no_pix = 8, 
@@ -9,13 +8,19 @@ qa_and_document_LS <- function(mission,
                                ir_threshold = 0.1,
                                max_glint_threshold = 0.2,
                                max_unreal_threshold = 0.2,
-                               document_drops = TRUE
+                               document_drops = TRUE,
+                               out_path = "d_qa_filter_calc_handoff/mid/"
                                
 ) {
   
+  # make sure specified out_path exists (if anything but default)
+  if (!dir.exists(out_path)) {
+    dir.create(out_path, recursive = TRUE)
+  }
+  
   # filter collated files list to those with specified mission/dswe files 
   mission_files <- collated_files %>% 
-    .[grepl(mission, .)] %>% 
+    .[grepl(mission_info$mission_id, .)] %>% 
     .[grepl(paste0("_", toupper(dswe), "_"), .)]
   
   # store pcount column name via dswe designation
@@ -51,19 +56,22 @@ qa_and_document_LS <- function(mission,
                   ir_glint_thresh <- temp_thresh %>% 
                     filter(med_Nir < ir_threshold | (med_Swir1 < ir_threshold & med_Swir2 < ir_threshold))
                   
-                  row_summary <- tibble(all_data = nrow(data),
+                  out_fn <- last(unlist(str_split(mission_files, '/')))
+                  out_fn <- str_replace(out_fn, ".feather", "_filtered.feather")
+                  
+                  write_feather(ir_glint_thresh, 
+                                file.path(out_path, out_fn),
+                                compression = "lz4")
+                  
+                  # return row summary of filtered data
+                  tibble(all_data = nrow(data),
                                         valid_thresh = nrow(valid_thresh),
                                         real_thresh = nrow(real_thresh),
                                         # glint_thresh = nrow(glint_thresh),
                                         temp_thresh = nrow(temp_thresh),
                                         ir_glint_thresh = nrow(ir_glint_thresh)) %>% 
-                    pivot_longer(cols = all_data:ir_glint_thresh) %>% 
-                    mutate(source = last(unlist(str_split(fp, "/"))))
+                    pivot_longer(cols = all_data:ir_glint_thresh) 
                   
-                  output <- list(row_summary, ir_glint_thresh)
-                  names(output) <- c("row_summary", "qa_data")
-                  
-                  return(output)
                 })
   
   
@@ -107,7 +115,7 @@ qa_and_document_LS <- function(mission,
                       ylim =  c(-Inf, Inf),
                       nudge_y = max(drops$value)*0.01,
                       hjust = "left") +
-      labs(title = paste0("Summary of ", paste(landsat_name, toupper(dswe), sep = " "), " data QA records"), 
+      labs(title = paste0("Summary of ", paste(mission_info$mission_names, toupper(dswe), sep = " "), " data QA records"), 
            x = NULL, y = NULL) +
       scale_fill_manual(values = viridis(n = nrow(drops),
                                          direction = -1)) +
@@ -119,20 +127,11 @@ qa_and_document_LS <- function(mission,
             plot.title = element_text(size = 12, face = "bold", hjust = 0.5), 
             legend.position = "none")
     
-    plot_fn <- paste0(mission, "_", dswe, "_drop_summary.png")
+    plot_fn <- paste0(mission_info$mission_id, "_", dswe, "_drop_summary.png")
     
     ggsave(plot = drops_plot, 
            filename = file.path("d_qa_filter_calc_handoff/out", plot_fn), 
            dpi = 300, width = 6, height = 3, units = "in")
   }
-  
-  
-  # return collated qa data -------------------------------------------------
-  
-  # collate qa_data from list and return from function
-  map(row_df,
-      \(out) {
-        out$qa_data
-      }) 
   
 }
