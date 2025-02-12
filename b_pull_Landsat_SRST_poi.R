@@ -156,7 +156,7 @@ if (config::get(config = general_config)$run_GEE) {
       },
       pattern = map(b_WRS_pathrow_poi),
       packages = "reticulate",
-      # note, this can not/should not be used in mulitcore processing mode - the
+      # note, this cannot/should not be used in mulitcore processing mode - the
       # bottleneck here is at GEE, not local processing, and the way the {targets}
       # and python workflow work together requires only a single `run_GEE_per_tile`
       # at a time.
