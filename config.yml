@@ -17,7 +17,7 @@ admin_update:
   # this setting creates publicly available files using the ROSS account
   google_email: "therossyndicate@gmail.com" # enter google email
   calculate_centers: TRUE # the center calculation will run locally
-  centers_version: "2025-01-28"
+  centers_version: "2025-02-12"
   run_GEE: TRUE # the GEE acquisition will be run locally
   # collated version date will populate from the `run_date` listed in the config
   # file for the GEE run: `b_pull_Landsat_SRST_poi/config_files/config_poi.yml`
