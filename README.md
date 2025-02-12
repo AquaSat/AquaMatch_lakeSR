@@ -11,6 +11,12 @@ all downstream uses of this work be available to the public when possible.
 
 Repository contact: B Steele (b dot steele at colostate dot edu)
 
+## Running the Pipeline
+
+We encourage all users to walk through the `run_targets.Rmd` script to run this
+pipeline. This script walks through important configuration and authentication 
+steps necessary to successfully run the pipeline. 
+
 ## Targets Architecture
 
 The {targets} workflow defined in this repository acquires, collates, and performs 
