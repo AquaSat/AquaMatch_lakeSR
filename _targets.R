@@ -37,7 +37,7 @@ general_config <- "admin_update"
 
 # Create configuration targets:  ------------------------------------------
 
-config_list = list(
+config_list <- list(
   
   # Grab location of the local {targets} siteSR pipeline OR error if
   # the location doesn't exist yet

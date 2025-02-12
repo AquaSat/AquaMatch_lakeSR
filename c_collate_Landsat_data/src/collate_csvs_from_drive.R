@@ -8,8 +8,8 @@
 #' all files are compressed using the "lz4" method.
 #'
 #' @param file_type text string; unique string for filtering files to be 
-#' downloaded from Drive.  - current options: "LS457", "LS89", "metadata", 
-#' "pekel", NULL. Defaults to NULL. Use this arguemnt if using mulitcore.
+#' downloaded from Drive. Current options: "LS457", "LS89", "metadata", 
+#' "pekel", NULL. Defaults to NULL. Use this argument if using mulitcore.
 #' @param WRS_prefix text string; WRS path-row prefix to reduce memory use, only
 #' can be used with file_type, dswe, and separate_missions options. 
 #' @param yml dataframe; name of the target object from the -b- group that
@@ -238,8 +238,8 @@ collate_csvs_from_drive <- function(file_type = NULL,
                       # source/file name
                       df %>% 
                         mutate(across(all_of(df_names),
-                                      ~ as.numeric(.))) %>% 
-                        mutate(source = filename)
+                                      ~ as.numeric(.)),
+                               source = filename)
                     },
                     error = function(e) { 
                       NULL 
@@ -294,8 +294,8 @@ collate_csvs_from_drive <- function(file_type = NULL,
                 # source/file name
                 df %>% 
                   mutate(across(all_of(df_names),
-                                ~ as.numeric(.))) %>% 
-                  mutate(source = filename)
+                                ~ as.numeric(.)),
+                         source = filename)
               },
               error = function(e) {
                 NULL
@@ -366,8 +366,8 @@ collate_csvs_from_drive <- function(file_type = NULL,
                     df <- df %>% 
                       mutate(across(all_of(df_names),
                                     ~ as.numeric(.)),
-                             `system:index` = as.character(`system:index`)) %>% 
-                      mutate(source = filename)
+                             `system:index` = as.character(`system:index`),
+                             source = filename)
                     return(df)
                   },
                   error = function(e) {
@@ -424,8 +424,8 @@ collate_csvs_from_drive <- function(file_type = NULL,
                 # source/file name
                 df %>% 
                   mutate(across(all_of(df_names),
-                                ~ as.numeric(.))) %>% 
-                  mutate(source = filename)
+                                ~ as.numeric(.)),
+                         source = filename)
               },
               error = function(e) {
                 NULL

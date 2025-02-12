@@ -1,5 +1,4 @@
-# check to see if bookdown should be updated
-
+# check to see if rendering bookdown
 if (config::get(config = general_config)$update_bookdown) {
   
   z_render_bookdown <- list(
