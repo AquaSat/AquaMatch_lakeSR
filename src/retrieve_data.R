@@ -16,7 +16,7 @@
 #' @param file_type A string giving the file extension to be used. (".rds" or 
 #' ".feather")
 #' 
-#' @param version_date A string containing an date in the format YYYY-MM-DD that 
+#' @param version_date A string containing a date in the format YYYY-MM-DD that 
 #' should be used to identify the correct file version on Google Drive.
 #' 
 #' @returns 
