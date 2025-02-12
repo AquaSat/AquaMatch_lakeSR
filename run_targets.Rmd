@@ -14,6 +14,10 @@ This R Markdown document is not meant to be "knit", rather to walk the user thro
 the process of setting up and running this workflow. Additional overview about
 the {targets} workflow is available in the README file.
 
+Anytime this workflow is run, you should start in a new R session, otherwise 
+some of the {reticulate} settings may not function correctly, leading to error
+messages.
+
 
 ## Prerequsites
 
@@ -33,12 +37,15 @@ package_installer <- function(x) {
   }
 ```
 
-List packages that need to be checked for install which are used in this workflow, 
-and walk the function along them all.
+Check for packages required to run this workflow, install them if not already
+present. 
 
 ```{r walk_package_installer}
-packages <- c("bookdown",
+packages <- c("arrow",
+              "bookdown",
               "crew",
+              "data.table",
+              "googledrive",
               "nhdplusTools",
               "parallel",
               "polylabelr",
@@ -50,6 +57,7 @@ packages <- c("bookdown",
               "tidyverse",
               "tigris",
               "yaml")
+
 # note we use base-r lapply and not map since tidy is not loaded (and possibly
 # not installed) yet
 lapply(packages, package_installer)
@@ -59,31 +67,65 @@ update.packages("nhdplusTools", repos = "http://cran.us.r-project.org")
 ```
 
 
-## Completing the config.yml file
+## Completing the config.yml files
 
-Configuration of the config.yml file is necessary for this workflow to function.
-You will need to modify the yaml file in order for this workflow to work if you
-are running this and do not have access to the ROSSyndicate Google Account. 
-See the comments within the config.yml file for guidance on parameter definitions 
-and how to format each parameter. The workflow is set up to use the config file
-in the folder path `b_pull_Landsat_SRST_poi/config_files/config_poi.yml`, but we
+There are two configuration files for the lakeSR workflow. One is a general configuration
+that controls the {targets} workflow (`config.yml`), the other is a configuration 
+for the GEE pull (`b_pull_Landsat_SRST_poi/config_files/config_poi.yml`)
+
+### General Workflow Configuration
+
+Configuration of the `config.yml` file is necessary for this workflow to function.
+For users outside of the ROSSyndicate, we recommend the 'default' configuration, 
+which uses cached data files in the ROSSyndicate Google Drive to run the most time
+consuming portions of the workflow (namely, calculation of waterbody centers and
+the run/collation of GEE files). Comments within the `config.yml` file are present
+for guidance. Users can create custom configurations as well, we provide the 
+'default' configuration as a starting place for users. Before running this workflow
+it is important to confirm that the desired `general_configuration` is set in the 
+_targets.R script on line 36.
+
+### Google Earth Engine Configuration
+
+The configuration file for GEE is only necessary if the general configuration
+file argument `run_GEE: TRUE`. If this setting is set to `FALSE`, you 
+do not need to augment the GEE configuration file located at
+`b_pull_Landsat_SRST_poi/config_files/config_poi.yml`.
+
+If `run_GEE: TRUE`, you will need to modify the GEE configuration 
+file in order for this workflow to run successfully. The GEE configuration file
+is located at `b_pull_Landsat_SRST_poi/config_files/config_poi.yml` and we
 also provide a blank config file with default settings at the path 
-`b_pull_Landsat_SRST_poi/config_files/config.yml` - in order for {targets} to use
-an updated config file, you will need to change the file path on line 18 of the 
-`_targets.R` script. The only parameters that need to be filled in are those in 
-the section `google_settings`.
+`b_pull_Landsat_SRST_poi/config_files/config.yml`. Comments are provided in these
+files as guidance. In order for {targets} to use an updated config file, you may 
+need to change the file path on line 32 of the `_targets.R` script.
+
+
+## Confirm Google Drive authorization
+
+This workflow requires authentication of your Google account in order to access
+Google Drive, irrelevant of whether you are running the Google Earth Engine 
+section or not. Use the code chunk below to confirm authentication of the 
+`google_email` listed in the general configuration file (as well as the GEE 
+configuration file, if `run_GEE: TRUE` in the general configuration). 
+
+```{r}
+library(googledrive)
+
+drive_auth()
+```
 
 
 ## Confirm GEE access via API
 
-In order to use this workflow, you must have a [Google Earth Engine account](https://earthengine.google.com/signup/) 
-and have configured a [Google Cloud Project](https://developers.google.com/earth-engine/cloud/projects) 
-and you will need to [download, install, and initialize gcloud](https://cloud.google.com/sdk/docs/install). 
+In order to use the configuration `run_GEE: TRUE`, you must have a 
+[Google Earth Engine account](https://earthengine.google.com/signup/) 
+and a configured [Google Cloud Project](https://developers.google.com/earth-engine/cloud/projects). 
+You will also need to [download, install, and initialize gcloud](https://cloud.google.com/sdk/docs/install). 
+If you are running with the configuration `run_GEE: FALSE`, you can skip this section.
 
 After the above steps have been taken, create a virtual environment for this use 
-of Python. In order for this chunk of code to run properly, you will need to 
-make sure that you are in a fresh R session, otherwise your settings may override
-activating a new environment.
+of Python, so that we can test that your Earth Engine connection is working properly.
 
 ```{r}
 source("python/pySetup.R")
@@ -93,8 +135,9 @@ The final output of the previous cell will be "conda environment activated" in y
 console if the setup was successful. 
 
 Now, we'll make sure that the Earth Engine API is set up correctly. Running this
-code chunk will open a web browser. Make sure that the credentials you use are
-the same that appear in your config file. When your browser will indicate that you 
+code chunk will open a web browser if you have not used your account with GEE 
+before. Make sure that the credentials you use are the same that appear in your 
+GEE config file. When your browser will indicate that you 
 have successfully authenticated, return here to finish this step.
 
 ```{python}
@@ -117,58 +160,36 @@ ee.Initialize(project=ee_proj)
 
 ```
 
-Executing ee.Initialize() should result in no error or warning messagaes, but may
-pass messages from EE. As long as they do not begin with WARNING or ERROR, all is
-well.
+Executing ee.Initialize() should result in either no message or a message from 
+Google that does not contain WARNING or ERROR. If you receive a message with WARNING
+or ERROR, go back and check your configuration file and be sure that the email
+address and `ee_proj` exists and you have write permissions. 
 
 
 ## Run the targets pipeline and output a network graph.
 
-Just as a heads up, running the complete workflow will take multiple days, mostly because
-of the bottleneck at GEE - only 10 tasks are cued at any given time, and GEE determines
+Warning: Running the complete workflow with the configuration setting
+`run_GEE: TRUE` will take multiple days, mostly because
+of the bottleneck at GEE: Only ~10 tasks are cued at any given time, and GEE determines
 how many tasks are running at any given time (usually just 1-3 at any given time). 
-We use multiple cores for processing using {crew} workers integration with {targets} wherever 
-possible to increase efficiency of this process. This workflow currently uses 
-n-1 cores as detected by the {parallel} package. The GEE steps can not be run 
-using multi-core processes since the processing bottleneck is not local. 
+For local processes we use multiple cores, using {crew} worker integration with {targets} wherever 
+possible to increase efficiency. This workflow currently uses 
+n-1 cores as detected by the {parallel} package. However, GEE steps can not be run 
+using multi-core processes since the processing (and bottleneck) is not local. 
 
+This code chunk will inform you of how many cores are available on your computer:
 ```{r}
 parallel::detectCores()
 ```
 
-We have also created an alternative to running the entire pipeline if users do
-not wish to change any GEE masking or summarization settings. To make this more 
-accessible and allow for users to make independent QA/QC decisions
-after the Landsat pull ({targets} group "b_pull_Landsat_SRST"), you can run 
-only the last few groups of targets independently of the full GEE workflow. 
-
-If you want to run the entire pipeline (including the GEE pull), run the 
-following code chunk:
+And this code chunk will run the pipeline:
 
 ```{r run_targets}
 library(targets)
 
-# run the portion pipeline that includes the GEE pull through collation steps, 
-# with the final output of a .csv file with the drive file ids for easy downstream
-# access
-tar_make(c_save_collated_drive_info)
-
-# run the portion of the pipeline that relies on the publicly-available collated
-# data files from the a, b, and c groups ... BLAH BLAH 
-#tar_make(ADD THIS LATER)
+tar_make()
 ```
 
-If you want to run the pipeline without updating the Landsat pull, run the
-following chunk:
-
-```{r}
-library(targets)
-
-# run only the portion of the pipeline that relies on the publicly-available 
-# collated data files from the a, b, and c groups ... BLAH BLAH 
-#tar_make(ADD THIS LATER)
-
-```
 
 
 ### Create a network diagram of the workflow.

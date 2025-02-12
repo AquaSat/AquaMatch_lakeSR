@@ -9,15 +9,22 @@ tryCatch({
   use_condaenv(file.path(getwd(), "env/"))
   print("conda environment activated")
 },
-warning = function(w){
+warning = function(w) {
   # when running this function, it will always produce a warning, if
   # your RStudio is set up in some configurations
   print("conda environment activated")
 },
 error = function(e) {
+  # if there is an error, restart R (this won't drop any loaded packages, but
+  # will reset any reticulate settings)
+  .rs.restartR()
+  use_condaenv(file.path(getwd(), "env/"))
+  print("conda environment activated")
+},
+finally = function(f) {
   # install miniconda if necessary
   try(install_miniconda())
-  #create a conda environment named "mod_env" with the packages you need
+  # create a conda environment named "mod_env" with the packages you need
   conda_create(envname = file.path(getwd(), "env/"), 
                python_version = "3.10.13")
   conda_install(envname = file.path(getwd(), "env/"),

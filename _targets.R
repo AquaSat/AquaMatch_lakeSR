@@ -4,10 +4,6 @@ library(tarchetypes)
 library(reticulate)
 library(crew)
 
-# Set up python virtual environment ---------------------------------------
-
-tar_source("python/pySetup.R")
-
 # Source general functions ------------------------------------------------
 
 tar_source("src/")
@@ -30,10 +26,14 @@ tar_option_set(
   memory = "transient"
 )
 
+
 # Point to config files: ---------------------------------------
 
 poi_config <- "b_pull_Landsat_SRST_poi/config_files/config_poi.yml"
 
+# Set general configuration setting: -----------------------------
+
+general_config <- "default"
 
 # Create configuration targets:  ------------------------------------------
 
@@ -58,6 +58,13 @@ config_list = list(
       stop("The siteSR pipeline is not located at `../AquaMatch_siteSR_WQP/` and 
            the pipeline can not continue.")
     },
+    cue = tar_cue("always")
+  ),
+  
+  # store general configuration file
+  tar_target(
+    name = lakeSR_config,
+    command = config::get(config = general_config),
     cue = tar_cue("always")
   )
 

@@ -4,11 +4,14 @@
 #' Function to grab all downloaded .csv files from the c_collate_Landsat_Data/down/ 
 #' folder, and collate them into .feather files subsetted per arguments in the
 #' function. If left to default, this will create 3 files per DSWE setting: a 
-#' metadata file, a LS457 file, and a LS89 file.
+#' metadata file, a LS457 file, and a LS89 file. For the purposes of this workflow
+#' all files are compressed using the "lz4" method.
 #'
 #' @param file_type text string; unique string for filtering files to be 
-#' downloaded from Drive.  - current options: "LS457", "LS89", "metadata", 
-#' "pekel", NULL. Defaults to NULL. Use this arguemnt if using mulitcore.
+#' downloaded from Drive. Current options: "LS457", "LS89", "metadata", 
+#' "pekel", NULL. Defaults to NULL. Use this argument if using mulitcore.
+#' @param WRS_prefix text string; WRS path-row prefix to reduce memory use, only
+#' can be used with file_type, dswe, and separate_missions options. 
 #' @param yml dataframe; name of the target object from the -b- group that
 #' stores the GEE run configuration settings as a data frame.
 #' @param dswe text string; dswe value to filter input files by. Defaults to NULL.
@@ -24,6 +27,7 @@
 #' 
 #' 
 collate_csvs_from_drive <- function(file_type = NULL, 
+                                    WRS_prefix = NULL,
                                     yml, 
                                     dswe = NULL, 
                                     separate_missions = FALSE,
@@ -33,6 +37,20 @@ collate_csvs_from_drive <- function(file_type = NULL,
     if (!file_type %in% c("LS457", "LS89", "metadata", "pekel")) {
       warning("The file type argument provided is not recognized.\n
               This may result in unintended downloads.")
+    }
+  }
+  
+  # if WRS_prefix provided
+  if (!is.null(WRS_prefix)) {
+    # check to make sure that all other arguments are satisfied
+    if (is.null(file_type) | is.null(dswe) | separate_missions == FALSE) {
+      stop("To use the WRS_prefix argument, `file_type`, `dswe`, and `separate_missions`\n
+           arguments must all be used.",
+           call. = TRUE)
+    }
+    if (file_type == "metadata") {
+      warning("WRS_prefix argument is not supported for metadata file types. The \n
+              output data will not be subset by the WRS_prefix.")
     }
   }
   
@@ -75,8 +93,7 @@ collate_csvs_from_drive <- function(file_type = NULL,
   # check to see if files need to subset for dswe
   if (!is.null(dswe) & file_type != "metadata") {
     # subset for dswe - but need to add "_" before and after
-    dswe <- paste0("_", dswe, "_")
-    dswe_subset <- files[grepl(dswe, files)]
+    dswe_subset <- files[grepl(paste0("_", dswe, "_"), files)]
     # make sure there are files present in this filter
     if (length(dswe_subset) == 0) {
       stop("You have used a `dswe` argument that is unrecognized or you are\n
@@ -88,64 +105,98 @@ collate_csvs_from_drive <- function(file_type = NULL,
     files <- dswe_subset
   }
   
+  if (!is.null(WRS_prefix)) {
+    files <- files[grepl(paste0("_", WRS_prefix), files)]
+  }
+  
+  # PROCESS METADATA --------------------------------------------------------
+  
   # process metadata separately from site data
-  metadata <- files[grepl("metadata", files)]
+  metadata <- files[grepl("metadata", last(str_split(files, "/")[[1]]))]
   
   if (length(metadata) > 0) {
     
     # process LS457 and LS89 mission groups separately
     mission_groups <- c("LS457", "LS89")
-    walk(mission_groups,
-         .f = \(mg) {
-           if (any(grepl(mg, metadata))) {
-             
-             subset_mg <- metadata[grepl(mg, metadata)]
-             
-             # if separating missions, iterate over mission to save independent files
-             if (separate_missions) {
-               if (mg == "LS457") {
-                 missions = c("LT04", "LT05", "LE07")
-               } else {
-                 missions = c("LC08", "LC09")
-               }
-               walk(missions,
-                    .f = \(m) {
-                      m_collated <- map(subset_mg, 
-                                         .f = \(s) {
-                                           read_csv(s) %>% 
-                                             filter(grepl(m, `system:index`))
-                                         }) %>% 
-                        bind_rows()
-                      write_feather(m_collated, file.path(to_directory,
-                                                          paste0(yml$proj, 
-                                                                 "_collated_metadata_",
-                                                                 m,
-                                                                 "_",
-                                                                 yml$run_date, 
-                                                                 ".feather")))
-                    })
-               
-             } else { 
-               
-               # otherwise, read all the data and save the file
-               data_mg <- map(subset_mg, read_csv) %>% 
-                 bind_rows()
-               
-               write_feather(data_mg, file.path(to_directory,
-                                                paste0(yml$proj, 
-                                                       "_collated_metadata_",
-                                                       mg, 
-                                                       "_",
-                                                       yml$run_date, 
-                                                       ".feather")))
-               
-             }
-             
-           }
-         })
     
-  }
+    mission_groups %>% 
+      walk(\(mg) {
+        if (any(grepl(mg, metadata))) {
+          
+          subset_mg <- metadata[grepl(mg, metadata)]
+          
+          # if separating missions, iterate over mission to save independent files
+          if (separate_missions) {
+            if (mg == "LS457") {
+              missions = c("LT04", "LT05", "LE07")
+            } else {
+              missions = c("LC08", "LC09")
+            }
+            
+            missions %>% 
+              walk(\(m) {
+                m_collated <- subset_mg %>% 
+                  map(\(mg) tryCatch({
+                    fread(mg) %>% 
+                      filter(grepl(m, `system:index`))
+                  },
+                  error = function(e) {
+                    NULL
+                  })) %>% 
+                  bind_rows()
+                
+                # create file path
+                fp <- file.path(to_directory,
+                                paste0(yml$proj, 
+                                       "_collated_metadata_",
+                                       m,
+                                       "_",
+                                       yml$run_date, 
+                                       ".feather"))
+                
+                write_feather(m_collated, 
+                              fp,
+                              compression = "lz4")
+                
+                # try to free up space here
+                rm(m_collated)
+                gc()
+              }
+              )
+            
+          } else { 
+            
+            # otherwise, read all the data and save the file
+            data_mg <- subset_mg %>% 
+              map(\(s) tryCatch({
+                fread(s)
+              },
+              error = function(e) {
+                return(NULL)
+              })) %>% 
+              bind_rows()
+            
+            write_feather(data_mg, 
+                          file.path(to_directory,
+                                    paste0(yml$proj, 
+                                           "_collated_metadata_",
+                                           mg, 
+                                           "_",
+                                           yml$run_date, 
+                                           ".feather")),
+                          compression = "lz4")
+            
+            
+          } # end conditional for separate mission groups
+          
+        } # end sanity check of mission group in file list
+        
+      }) # end walk function 
+    
+  } # end metadata collation
   
+  
+  # PROCESS SITES -----------------------------------------------------------
   
   # process sites separately from metadata
   sites <- files[!grepl("metadata", files)]
@@ -157,102 +208,131 @@ collate_csvs_from_drive <- function(file_type = NULL,
       
       mission_groups <- c("LS457", "LS89")
       
-      walk(mission_groups,
-           .f = \(mg) {
-             if (any(grepl(mg, sites))) {
-               subset_mg <- sites[grepl(mg, sites)]
-               
-               # if separating missions, iterate over mission to save independent files
-               if (separate_missions) {
-                 if (mg == "LS457") {
-                   missions = c("LT04", "LT05", "LE07")
-                 } else {
-                   missions = c("LC08", "LC09")
-                 }
-                 walk(missions,
-                      .f = \(m) {
-                        m_collated <- map(subset_mg, 
-                                           .f = \(s) {
-                                             df <- read_csv(s) %>% 
-                                               filter(grepl(m, `system:index`))
-                                             filename = last(str_split(s, pattern = "/")[[1]])
-                                             # get column names that need to be 
-                                             # coerced to numeric (all but index)
-                                             df_names <- names(df)[2:length(names(df))]
-                                             # coerce columns to numeric and add
-                                             # source/file name
-                                             df %>% 
-                                               mutate(across(all_of(df_names),
-                                                             ~ as.numeric(.))) %>% 
-                                               mutate(source = filename)
-                                           }) %>% 
-                          bind_rows()
-                        
-                        # check for dswe subset
-                        if (!is.null(dswe)) {
-                          write_feather(m_collated, file.path(to_directory,
-                                                              paste0(yml$proj, 
-                                                                     "_collated_sites",
-                                                                     dswe,
-                                                                     m,
-                                                                     "_",
-                                                                     yml$run_date, 
-                                                                     ".feather")))
-                        } else {
-                          write_feather(m_collated, file.path(to_directory,
-                                                              paste0(yml$proj, 
-                                                                     "_collated_sites_",
-                                                                     m,
-                                                                     "_",
-                                                                     yml$run_date, 
-                                                                     ".feather")))
-                        }
-                      })
-                 
-               } else {
-                 
-                 # otherwise, read all the data and save the file
-                 data_mg <- map(subset_mg, 
-                                .f = \(s) {
-                                  df <- read_csv(s) 
-                                  filename = last(str_split(s, pattern = "/")[[1]])
-                                  # get column names that need to be 
-                                  # coerced to numeric (all but index)
-                                  df_names <- names(df)[2:length(names(df))]
-                                  # coerce columns to numeric and add
-                                  # source/file name
-                                  df %>% 
-                                    mutate(across(all_of(df_names),
-                                                  ~ as.numeric(.))) %>% 
-                                    mutate(source = filename)
-                                }) %>% 
-                   bind_rows()
-                 
-                 # check for dswe subset
-                 if (!is.null(dswe)) {
-                   write_feather(data_mg, file.path(to_directory,
-                                                    paste0(yml$proj, 
-                                                           "_collated_sites",
-                                                           dswe,
-                                                           mg, 
-                                                           "_",
-                                                           yml$run_date, 
-                                                           ".feather")))
-                 } else {
-                   write_feather(data_mg, file.path(to_directory,
-                                                    paste0(yml$proj, 
-                                                           "_collated_sites_",
-                                                           mg, 
-                                                           "_",
-                                                           yml$run_date, 
-                                                           ".feather")))
-                   
-                 }
-                 
-               }
-               
-             }
-           })
+      mission_groups %>% 
+        walk(\(mg) {
+          
+          # if sites file list contains the mission group
+          if (any(grepl(mg, sites))) {
+            
+            subset_mg <- sites[grepl(mg, sites)]
+            
+            # if separating missions, iterate over mission to save independent files
+            if (separate_missions) {
+              if (mg == "LS457") {
+                missions = c("LT04", "LT05", "LE07")
+              } else {
+                missions = c("LC08", "LC09")
+              }
+              
+              missions %>% 
+                walk(\(m) {
+                  m_collated <- subset_mg %>% 
+                    map(\(s) tryCatch({
+                      df <- fread(s) %>% 
+                        filter(grepl(m, `system:index`))
+                      filename = last(str_split(s, pattern = "/")[[1]])
+                      # get column names that need to be 
+                      # coerced to numeric (all but index)
+                      df_names <- names(df)[2:length(names(df))]
+                      # coerce columns to numeric and add
+                      # source/file name
+                      df %>% 
+                        mutate(across(all_of(df_names),
+                                      ~ as.numeric(.)),
+                               source = filename)
+                    },
+                    error = function(e) { 
+                      NULL 
+                    } 
+                    ))
+                }) %>% 
+                bind_rows()
+              
+              # check for dswe subset, name accordingly
+              fp <- if_else(!is.null(dswe),
+                            file.path(to_directory,
+                                      paste0(yml$proj, 
+                                             "_collated_sites_",
+                                             dswe,
+                                             "_",
+                                             m,
+                                             "_",
+                                             yml$run_date, 
+                                             ".feather")),
+                            file.path(to_directory,
+                                      paste0(yml$proj, 
+                                             "_collated_sites_",
+                                             m,
+                                             "_",
+                                             yml$run_date, 
+                                             ".feather")))
+              
+              write_feather(m_collated,
+                            fp,
+                            compression = "lz4")              
+              
+              
+              # try to free up space here
+              rm(m_collated)
+              gc()
+              
+            } # end separate missions
+            
+          } else {
+            
+            # otherwise, read all the data and save the file
+            
+            data_mg <- sites %>% 
+              map(\(s) tryCatch({
+                df <- fread(s) %>% 
+                  filter(grepl(m, `system:index`))
+                filename = last(str_split(s, pattern = "/")[[1]])
+                # get column names that need to be 
+                # coerced to numeric (all but index)
+                df_names <- names(df)[2:length(names(df))]
+                # coerce columns to numeric and add
+                # source/file name
+                df %>% 
+                  mutate(across(all_of(df_names),
+                                ~ as.numeric(.)),
+                         source = filename)
+              },
+              error = function(e) {
+                NULL
+              }
+              )) %>% 
+              bind_rows()
+            
+            # check for dswe subset, name accordingly
+            fp <- if_else(!is.null(dswe),
+                          file.path(to_directory,
+                                    paste0(yml$proj, 
+                                           "_collated_sites_",
+                                           dswe,
+                                           "_",
+                                           mg, 
+                                           "_",
+                                           yml$run_date, 
+                                           ".feather")),
+                          file.path(to_directory,
+                                    paste0(yml$proj, 
+                                           "_collated_sites_",
+                                           mg, 
+                                           "_",
+                                           yml$run_date, 
+                                           ".feather")))
+            write_feather(data_mg,
+                          fp,
+                          compression = "lz4")
+            
+            # try to free up space here
+            rm(data_mg)
+            gc()
+            
+          } # end NULL file_type subset
+          
+        }) # end walk of mission groups
+      
       
     } else {
       
@@ -270,92 +350,125 @@ collate_csvs_from_drive <- function(file_type = NULL,
             missions = c("LC08", "LC09")
           }
           
-          walk(missions,
-               .f = \(m) {
-                 m_collated <- map(subset_mg, 
-                                   .f = \(s) {
-                                     df <- read_csv(s) %>% 
-                                       filter(grepl(m, `system:index`))
-                                     filename = last(str_split(s, pattern = "/")[[1]])
-                                     # get column names that need to be 
-                                     # coerced to numeric (all but index)
-                                     df_names <- names(df)[2:length(names(df))]
-                                     # coerce columns to numeric and add
-                                     # source/file name
-                                     df %>% 
-                                       mutate(across(all_of(df_names),
-                                                     ~ as.numeric(.))) %>% 
-                                       mutate(source = filename)
-                                   }) %>% 
-                   bind_rows()
-
-                 # check for dswe subset
-                 if (!is.null(dswe)) {
-                   write_feather(m_collated, file.path(to_directory,
-                                                       paste0(yml$proj, 
-                                                              "_collated_sites",
-                                                              dswe,
-                                                              m,
-                                                              "_",
-                                                              yml$run_date, 
-                                                              ".feather")))
-                 } else {
-                   write_feather(m_collated, file.path(to_directory,
-                                                       paste0(yml$proj, 
-                                                              "_collated_sites_",
-                                                              m,
-                                                              "_",
-                                                              yml$run_date, 
-                                                              ".feather")))
-                 }
-               })
-          
-        } else {
-          
-          # otherwise, read all the data and save the file
-          data_mg <- map(subset_mg, 
-                         .f = \(s) {
-                           df <- read_csv(s) 
-                           filename = last(str_split(s, pattern = "/")[[1]])
-                           # get column names that need to be 
-                           # coerced to numeric (all but index)
-                           df_names <- names(df)[2:length(names(df))]
-                           # coerce columns to numeric and add
-                           # source/file name
-                           df %>% 
-                             mutate(across(all_of(df_names),
-                                           ~ as.numeric(.))) %>% 
-                             mutate(source = filename)
-                         }) %>% 
-            bind_rows()
-          
-          # check for dswe subset
-          if (!is.null(dswe)) {
-            write_feather(data_mg, file.path(to_directory,
-                                             paste0(yml$proj, 
-                                                    "_collated_sites",
-                                                    dswe,
-                                                    file_type, 
-                                                    "_",
-                                                    yml$run_date, 
-                                                    ".feather")))
-          } else {
-            write_feather(data_mg, file.path(to_directory,
+          missions %>% 
+            walk(\(m) {
+              m_collated <- subset_mg %>% 
+                map(\(s) {
+                  tryCatch({
+                    df <- fread(s) %>% 
+                      filter(grepl(m, `system:index`))
+                    filename = last(str_split(s, pattern = "/")[[1]])
+                    # get column names that need to be 
+                    # coerced to numeric (all but index)
+                    df_names <- names(df)[2:length(names(df))]
+                    # coerce columns to numeric and add
+                    # source/file name
+                    df <- df %>% 
+                      mutate(across(all_of(df_names),
+                                    ~ as.numeric(.)),
+                             `system:index` = as.character(`system:index`),
+                             source = filename)
+                    return(df)
+                  },
+                  error = function(e) {
+                    return(NULL)
+                  })}) %>% 
+                bind_rows()
+              
+              ## file path prefix (incorporate WRS_prefix)
+              fp_prefix <- if_else(!is.null(WRS_prefix),
+                                   file.path(to_directory,
                                              paste0(yml$proj, 
                                                     "_collated_sites_",
-                                                    file_type, 
+                                                    m,
                                                     "_",
-                                                    yml$run_date, 
-                                                    ".feather")))
-            
-          }
+                                                    WRS_prefix)),
+                                   file.path(to_directory,
+                                             paste0(yml$proj, 
+                                                    "_collated_sites_",
+                                                    m)))
+              ## file path suffix (incorporate dswe)
+              fp_suffix <- if_else(!is.null(dswe), 
+                                   paste0("_",
+                                          dswe,
+                                          "_",
+                                          yml$run_date, 
+                                          ".feather"),
+                                   paste0("_",
+                                          yml$run_date, 
+                                          ".feather"))
+              
+              write_feather(m_collated, 
+                            paste0(fp_prefix, fp_suffix),
+                            compression = "lz4")
+              
+              # try to free up space here
+              rm(m_collated)
+              gc()
+              
+            }) # end separate by mission  
           
-        }
-      }
+        } else { # if not separating by mission
+          
+          # read all the data and save the file
+          data_mg <- subset_mg %>% 
+            map(\(s) {
+              tryCatch({
+                df <- fread(s) %>% 
+                  filter(grepl(m, `system:index`))
+                filename = last(str_split(s, pattern = "/")[[1]])
+                # get column names that need to be 
+                # coerced to numeric (all but index)
+                df_names <- names(df)[2:length(names(df))]
+                # coerce columns to numeric and add
+                # source/file name
+                df %>% 
+                  mutate(across(all_of(df_names),
+                                ~ as.numeric(.)),
+                         source = filename)
+              },
+              error = function(e) {
+                NULL
+              })
+            }) %>% 
+            bind_rows()
+          
+          # create filepath using dswe setting
+          fp <- if_else(!is.null(dswe),
+                        file.path(to_directory,
+                                  paste0(yml$proj, 
+                                         "_collated_sites_",
+                                         dswe,
+                                         "_",
+                                         file_type, 
+                                         "_",
+                                         yml$run_date, 
+                                         ".feather")),
+                        file.path(to_directory,
+                                  paste0(yml$proj, 
+                                         "_collated_sites_",
+                                         file_type, 
+                                         "_",
+                                         yml$run_date, 
+                                         ".feather")))
+          
+          write_feather(data_mg, 
+                        fp,
+                        compression = "lz4")
+          
+          # try to free up space here
+          rm(data_mg)
+          gc()
+          
+        } # end conditional for separate mission
+        
+      } # end separate by file_type
       
-    }
-  }    
+    } # end conditional for file_type
+    
+  } # end site collation
   
+  # no return in function
   return ( NULL )
   
 }

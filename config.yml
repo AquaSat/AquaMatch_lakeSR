@@ -1,0 +1,24 @@
+default:
+  # The default setting for the configuration file is set to use pre-existing 
+  # centers and collated datasets. 
+  google_email: "" # enter google email
+  calculate_centers: FALSE # the center calculation will not run, and previously-
+  # collated centers will be used
+  centers_version: "2025-01-28" # yyyy-mm-dd of version, must be a date listed in the 
+  # suffix of the files documented wihtin the 
+  # a_Calculate_Centers/out/combined_poi_drive_ids.csv file
+  run_GEE: FALSE # the GEE acquisition will not be run, and previously-collated
+  # data will be used
+  collated_version: "2025-01-23" # yyyy-mm-dd of version, must be a date listed in the 
+  # suffix of the .csv files stored in c_collate_Landsat_data/out/
+  update_bookdown: FALSE # the bookdown will not be re-rendered
+
+admin_update:
+  # this setting creates publicly available files using the ROSS account
+  google_email: "therossyndicate@gmail.com" # enter google email
+  calculate_centers: TRUE # the center calculation will run locally
+  centers_version: "2025-01-28"
+  run_GEE: TRUE # the GEE acquisition will be run locally
+  # collated version date will populate from the `run_date` listed in the config
+  # file for the GEE run: `b_pull_Landsat_SRST_poi/config_files/config_poi.yml`
+  update_bookdown: TRUE # the bookdown will be re-rendered and/or knit
