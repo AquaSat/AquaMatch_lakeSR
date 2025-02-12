@@ -152,7 +152,7 @@ well.
 
 ## Run the targets pipeline and output a network graph.
 
-Just as a heads up, running the complete workflow with the configuration setting
+Warning: Running the complete workflow with the configuration setting
 `run_GEE: TRUE` will take multiple days, mostly because
 of the bottleneck at GEE - only ~10 tasks are cued at any given time, and GEE determines
 how many tasks are running at any given time (usually just 1-3 at any given time). 
