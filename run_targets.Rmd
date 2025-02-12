@@ -154,12 +154,12 @@ well.
 
 Warning: Running the complete workflow with the configuration setting
 `run_GEE: TRUE` will take multiple days, mostly because
-of the bottleneck at GEE - only ~10 tasks are cued at any given time, and GEE determines
+of the bottleneck at GEE: Only ~10 tasks are cued at any given time, and GEE determines
 how many tasks are running at any given time (usually just 1-3 at any given time). 
-We use multiple cores for processing using {crew} workers integration with {targets} wherever 
-possible to increase efficiency of this process. This workflow currently uses 
-n-1 cores as detected by the {parallel} package. The GEE steps can not be run 
-using multi-core processes since the processing bottleneck is not local. 
+For local processes we use multiple cores, using {crew} worker integration with {targets} wherever 
+possible to increase efficiency. This workflow currently uses 
+n-1 cores as detected by the {parallel} package. However, GEE steps can not be run 
+using multi-core processes since the processing (and bottleneck) is not local. 
 
 This code chunk will inform you of how many cores are available on your computer:
 ```{r}
