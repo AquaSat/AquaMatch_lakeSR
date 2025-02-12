@@ -8,7 +8,7 @@
 #' all files are compressed using the "lz4" method.
 #'
 #' @param file_type text string; unique string for filtering files to be 
-#' downloaded from Drive.  - current options: "LS457", "LS89", "metadata", 
+#' downloaded from Drive. Current options: "LS457", "LS89", "metadata", 
 #' "pekel", NULL. Defaults to NULL. Use this argument if using mulitcore.
 #' @param WRS_prefix text string; WRS path-row prefix to reduce memory use, only
 #' can be used with file_type, dswe, and separate_missions options. 
