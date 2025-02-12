@@ -238,8 +238,8 @@ collate_csvs_from_drive <- function(file_type = NULL,
                       # source/file name
                       df %>% 
                         mutate(across(all_of(df_names),
-                                      ~ as.numeric(.))) %>% 
-                        mutate(source = filename)
+                                      ~ as.numeric(.)),
+                               source = filename)
                     },
                     error = function(e) { 
                       NULL 
@@ -294,8 +294,8 @@ collate_csvs_from_drive <- function(file_type = NULL,
                 # source/file name
                 df %>% 
                   mutate(across(all_of(df_names),
-                                ~ as.numeric(.))) %>% 
-                  mutate(source = filename)
+                                ~ as.numeric(.)),
+                         source = filename)
               },
               error = function(e) {
                 NULL
@@ -366,8 +366,8 @@ collate_csvs_from_drive <- function(file_type = NULL,
                     df <- df %>% 
                       mutate(across(all_of(df_names),
                                     ~ as.numeric(.)),
-                             `system:index` = as.character(`system:index`)) %>% 
-                      mutate(source = filename)
+                             `system:index` = as.character(`system:index`),
+                             source = filename)
                     return(df)
                   },
                   error = function(e) {
@@ -424,8 +424,8 @@ collate_csvs_from_drive <- function(file_type = NULL,
                 # source/file name
                 df %>% 
                   mutate(across(all_of(df_names),
-                                ~ as.numeric(.))) %>% 
-                  mutate(source = filename)
+                                ~ as.numeric(.)),
+                         source = filename)
               },
               error = function(e) {
                 NULL
