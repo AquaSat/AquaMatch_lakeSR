@@ -21,6 +21,7 @@ b_pull_Landsat_SRST_poi/out/*
 c_collate_Landsat_data/down/*
 c_collate_Landsat_data/mid/*
 
+d_qa_filter_calc_handoff/mid/*
 d_qa_filter_calc_handoff/out/*
 
 # stupid .DS_Store files

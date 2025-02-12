@@ -45,22 +45,26 @@ d_qa_filter_calc_handoff <- list(
   # Landsat 4
   tar_target(
     name = d_qa_Landsat_files,
-    command = qa_and_document_LS(mission_info = d_mission_identifiers, 
-                                 dswe = c_dswe_types, 
-                                 collated_files = c_collated_files,
-                                 min_no_pix = 8, 
-                                 thermal_threshold = 273.15,
-                                 ir_threshold = 0.1,
-                                 max_glint_threshold = 0.2,
-                                 max_unreal_threshold = 0.2,
-                                 document_drops = TRUE),
-    packages = c("arrow", "data.table", "tidyverse"),
+    command = {
+      d_check_dir_structure
+      qa_and_document_LS(mission_info = d_mission_identifiers, 
+                         dswe = c_dswe_types, 
+                         collated_files = c_collated_files,
+                         min_no_pix = 8, 
+                         thermal_threshold = 273.15,
+                         ir_threshold = 0.1,
+                         max_glint_threshold = 0.2,
+                         max_unreal_threshold = 0.2,
+                         document_drops = TRUE)
+    },
+    packages = c("arrow", "data.table", "tidyverse", "ggrepel", "viridis"),
     pattern = cross(d_mission_identifiers, c_dswe_types),
-    iteration = "list",
     deployment = "main"
-  ),
+  )
   
-
+  
+  
+  
   
   
   
