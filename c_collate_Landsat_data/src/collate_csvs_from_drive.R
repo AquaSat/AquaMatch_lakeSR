@@ -9,7 +9,7 @@
 #'
 #' @param file_type text string; unique string for filtering files to be 
 #' downloaded from Drive.  - current options: "LS457", "LS89", "metadata", 
-#' "pekel", NULL. Defaults to NULL. Use this arguemnt if using mulitcore.
+#' "pekel", NULL. Defaults to NULL. Use this argument if using mulitcore.
 #' @param WRS_prefix text string; WRS path-row prefix to reduce memory use, only
 #' can be used with file_type, dswe, and separate_missions options. 
 #' @param yml dataframe; name of the target object from the -b- group that
