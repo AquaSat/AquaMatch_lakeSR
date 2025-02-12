@@ -1,5 +1,35 @@
-
-
+#' @title Apply Quality Assurance of Landsat data and document data loss
+#' 
+#' @description
+#' The qa_and_document_LS function performs quality assurance (QA) filtering on 
+#' Landsat data files based on specified thresholds. It processes a set of input 
+#' files, applies multiple filtering criteria, saves the filtered data, and 
+#' optionally generates a summary of dropped records with a visualization.
+#'
+#' @param mission_info data.frame/tibble/data.table containing the columns 'mission_id'
+#' (e.g. 'LT05') and 'mission_names' (e.g. 'Landsat 5'). 
+#' @param dswe character string indicating the DSWE setting to filter the files
+#' by. 
+#' @param collated_files vector of file paths to the collated Landsat data files 
+#' to be processed. Assumed to be arrow::feather() files. 
+#' @param min_no_pixels Minimum number of pixels contributing to the summary 
+#' statistics in the pCount_*dswe* column required for a record to be retained. 
+#' @param thermal_threshold Minimum acceptable value for the median surface 
+#' temperature (in Kelvin). Default: 273.15.
+#' @param ir_threshold Maximum acceptable value for NIR/SWIR bands for glint 
+#' filtering. Default: 0.1
+#' @param max_glint_threshold Maximum proportion of sun glint pixels masked out
+#' to pixels included in summary statistics (pCount_*dswe*). Default: 0.2
+#' @param max_unreal_thresholdMaximum proportion of unrealistic values masked out
+#' to pixels included in summary statistics (pCount_*dswe*). Default: 0.2
+#' @param document_drops Boolean, whether to generate a summary of dropped 
+#' records and save it as a plot. Default: TRUE
+#' @param out_path Directory where filtered files should be saved. Will be 
+#' created if it doesn't exist. Default: `d_qa_filter_calc_handoff/mid/`
+#' 
+#' @returns None. Silently saves figures displaying dropped observations if 
+#' `document_drops = TRUE`. Silently saves filtered (QA) files to `out_path`.
+#' 
 qa_and_document_LS <- function(mission_info,
                                dswe, 
                                collated_files,
@@ -13,7 +43,14 @@ qa_and_document_LS <- function(mission_info,
                                
 ) {
   
-  # make sure specified out_path exists (if anything but default)
+  # check DSWE arguments:
+  if (!dswe %in% c("DSWE1", "DSWE1a", "DSWE3")) {
+    stop("The provided dswe argument is not recognized. Check that it is one of\n
+         the following and retry: `DSWE1`, `DSWE1a`, `DSWE3`",
+      call. = TRUE)
+  }
+  
+  # make sure specified out_path exists
   if (!dir.exists(out_path)) {
     dir.create(out_path, recursive = TRUE)
   }
@@ -21,8 +58,9 @@ qa_and_document_LS <- function(mission_info,
   # filter collated files list to those with specified mission/dswe files 
   mission_files <- collated_files %>% 
     .[grepl(mission_info$mission_id, .)] %>% 
-    .[grepl(paste0("_", dswe, "_"), ., ignore.case = T)]
+    .[grepl(paste0("_", dswe, "_"), .)]
   
+  # make sure there are files that exist with those filters
   if (length(mission_files > 0)) {
     # store pcount column name via dswe designation
     pCount_column <- sym(paste0("pCount_", tolower(dswe)))
@@ -141,7 +179,12 @@ qa_and_document_LS <- function(mission_info,
     }
     
   } else {
-    return(NULL)
+    
+    warning(sprintf("No files resulted when filtered by %s and %s. You should confirm this is an intended result.", 
+                    mission_info$mission_id, 
+                    dswe), 
+            call. = TRUE)
+    
   }
   
 }

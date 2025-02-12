@@ -30,11 +30,9 @@ d_qa_filter_calc_handoff <- list(
   
   # collate each mission ---------------------------------------------------
   
-  # because of some limitations of Drive, the c_collated_files have to be chunked
-  # within the scope of this workflow. Large files will often get corrupted when 
-  # saving/downloading to/from Drive. Additionally, LS 5 and 7 are particularly 
-  # large memory hounds, even when using all data.table functions to reduce 
-  # memory intense processes. 
+  # Because the LS5 and 7 missions are absolutely huge data tables, and use 
+  # nearly all of a 32GB memory limit within R, we continue to process the Landsat
+  # data in chunks per mission. 
   
   tar_target(
     name = d_mission_identifiers,
@@ -42,20 +40,14 @@ d_qa_filter_calc_handoff <- list(
                      mission_names = c("Landsat 4", "Landsat 5", "Landsat 7", "Landsat 8", "Landsat 9"))
   ),
   
-  # Landsat 4
+  # walk through QA of missions and DSWE types
   tar_target(
     name = d_qa_Landsat_files,
     command = {
       d_check_dir_structure
       qa_and_document_LS(mission_info = d_mission_identifiers, 
                          dswe = c_dswe_types, 
-                         collated_files = c_collated_files,
-                         min_no_pix = 8, 
-                         thermal_threshold = 273.15,
-                         ir_threshold = 0.1,
-                         max_glint_threshold = 0.2,
-                         max_unreal_threshold = 0.2,
-                         document_drops = TRUE)
+                         collated_files = c_collated_files)
     },
     packages = c("arrow", "data.table", "tidyverse", "ggrepel", "viridis"),
     pattern = cross(d_mission_identifiers, c_dswe_types),
