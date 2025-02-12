@@ -4,7 +4,7 @@
 #' A function to export a single target (as a file) to Google Drive and return
 #' the shareable Drive link as a file path.
 #' 
-#' @param target Thetarget to be exported (as an object not a string).
+#' @param target The target to be exported (as an object not a string).
 #' 
 #' @param target_name The name of the target to be exported (as a string, not an object).
 #' 
