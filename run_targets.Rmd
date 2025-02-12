@@ -37,8 +37,8 @@ package_installer <- function(x) {
   }
 ```
 
-List packages that need to be checked for install which are used in this workflow, 
-and walk the function along them all.
+Check for packages required to run this workflow, install them if not already
+present. 
 
 ```{r walk_package_installer}
 packages <- c("arrow",
@@ -57,6 +57,7 @@ packages <- c("arrow",
               "tidyverse",
               "tigris",
               "yaml")
+
 # note we use base-r lapply and not map since tidy is not loaded (and possibly
 # not installed) yet
 lapply(packages, package_installer)
@@ -100,6 +101,21 @@ files as guidance. In order for {targets} to use an updated config file, you may
 need to change the file path on line 32 of the `_targets.R` script.
 
 
+## Confirm Google Drive authorization
+
+This workflow requires authentication of your Google account in order to access
+Google Drive, irrelevant of whether you are running the Google Earth Engine 
+section or not. Use the code chunk below to confirm authentication of the 
+`google_email` listed in the general configuration file (as well as the GEE 
+configuration file, if `run_GEE: TRUE` in the general configuration). 
+
+```{r}
+library(googledrive)
+
+drive_auth()
+```
+
+
 ## Confirm GEE access via API
 
 In order to use the configuration `run_GEE: TRUE`, you must have a 
@@ -109,9 +125,7 @@ You will also need to [download, install, and initialize gcloud](https://cloud.g
 If you are running with the configuration `run_GEE: FALSE`, you can skip this section.
 
 After the above steps have been taken, create a virtual environment for this use 
-of Python. In order for this chunk of code to run properly, you will need to 
-make sure that you are in a fresh R session, otherwise your settings may override
-activating a new environment.
+of Python, so that we can test that your Earth Engine connection is working properly.
 
 ```{r}
 source("python/pySetup.R")
@@ -121,8 +135,9 @@ The final output of the previous cell will be "conda environment activated" in y
 console if the setup was successful. 
 
 Now, we'll make sure that the Earth Engine API is set up correctly. Running this
-code chunk will open a web browser. Make sure that the credentials you use are
-the same that appear in your config file. When your browser will indicate that you 
+code chunk will open a web browser if you have not used your account with GEE 
+before. Make sure that the credentials you use are the same that appear in your 
+GEE config file. When your browser will indicate that you 
 have successfully authenticated, return here to finish this step.
 
 ```{python}
@@ -145,9 +160,10 @@ ee.Initialize(project=ee_proj)
 
 ```
 
-Executing ee.Initialize() should result in no error or warning messagaes, but may
-pass messages from EE. As long as they do not begin with WARNING or ERROR, all is
-well.
+Executing ee.Initialize() should result in either no message or a message from 
+Google that does not contain WARNING or ERROR. If you receive a message with WARNING
+or ERROR, go back and check your configuration file and be sure that the email
+address and `ee_proj` exists and you have write permissions. 
 
 
 ## Run the targets pipeline and output a network graph.
