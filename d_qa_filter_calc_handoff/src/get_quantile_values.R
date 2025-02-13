@@ -55,7 +55,7 @@ get_quantile_values <- function(qa_files, mission_id, version_id,
       reduce(., full_join) %>% 
       mutate(n_scenes = scenes$n_scenes,
              mission = mission_id, 
-             to_mission = to_mission_id,
+             for_corr = for_corr,
              dswe = dswe,
              version = version_id)
     

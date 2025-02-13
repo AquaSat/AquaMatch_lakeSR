@@ -34,3 +34,5 @@ _targets/
 bookdown/images/*
 bookdown/AquaMatch_lakeSR_files/*
 
+# scratch files
+scratch/
