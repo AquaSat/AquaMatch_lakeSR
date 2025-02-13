@@ -24,7 +24,7 @@ error = function(e) {
 finally = function(f) {
   # install miniconda if necessary
   try(install_miniconda())
-  #create a conda environment named "mod_env" with the packages you need
+  # create a conda environment named "mod_env" with the packages you need
   conda_create(envname = file.path(getwd(), "env/"), 
                python_version = "3.10.13")
   conda_install(envname = file.path(getwd(), "env/"),
