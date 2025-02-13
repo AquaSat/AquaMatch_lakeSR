@@ -16,6 +16,7 @@ d_qa_filter_calc_handoff <- list(
     command = {
       # make directories if needed
       directories = c("d_qa_filter_calc_handoff/mid/",
+                      "d_qa_filter_calc_handoff/handoff/",
                       "d_qa_filter_calc_handoff/out/")
       walk(directories, function(dir) {
         if(!dir.exists(dir)){
@@ -52,15 +53,65 @@ d_qa_filter_calc_handoff <- list(
     packages = c("arrow", "data.table", "tidyverse", "ggrepel", "viridis"),
     pattern = cross(d_mission_identifiers, c_dswe_types),
     deployment = "main"
+  ),
+  
+  # get a list of the qa'd files
+  tar_target(
+    name = d_qa_Landsat_file_paths,
+    command = list.files("d_qa_filter_calc_handoff/mid/", full.names = TRUE)
+  ),
+  
+  # get the appropriate version date to filter files, just in case there is more
+  # than one version
+  tar_target(
+    name = d_version_identifier,
+    command = {
+      if (lakeSR_config$run_GEE) {
+        b_yml_poi$run_date 
+      } else { 
+        lakeSR_config$collated_version 
+      }
+    }
+  ),
+  
+  
+  # subset LS 5/7/8 for handoff date range ----------------------------------
+  # the Landsat records are still to large to collate in targets (even using
+  # data.table), so here, we're using the date-range subset that we need to 
+  # calculate handoff coefficients. 
+  
+  tar_target(
+    name = d_LS5_forLS57corr_quantiles,
+    command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
+                                  version_id = d_version_identifier,
+                                  mission_id = "LT05",
+                                  dswe = c_dswe_types,
+                                  start_date = ymd("1999-04-15"), 
+                                  end_date = ymd("2013-06-05"),
+                                  for_corr = "LS5toLS7",
+                                  record_length_prop = 0.75,
+                                  # a little fancy footwork here to get at 75% of record
+                                  bands = c("med_Red", "med_Green", "med_Blue", 
+                                            "med_Nir", "med_Swir1", "med_Swir2",
+                                            "med_SurfaceTemp")),
+    pattern = map(c_dswe_types), 
+    packages = c("data.table", "tidyverse", "arrow"), 
+    deployment = "main", # these are still too large for multicore!
+    iteration = "list"
+  ),
+  
+  tar_target(
+    name = d_LS7_forLS5corr_subset,
+    command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
+                                   version = d_version_identifier,
+                                   mission_id = "LE07",
+                                   dswe = c_dswe_types,
+                                   start_date = ymd("1999-04-15"), 
+                                   end_date = ymd("2013-06-05")),
+    pattern = map(c_dswe_types), 
+    packages = c("data.table", "tidyverse", "arrow"), 
+    deployment = "main", # these are still too large for multicore!
+    iteration = "list"
   )
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
 )
