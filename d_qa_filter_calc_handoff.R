@@ -78,7 +78,8 @@ d_qa_filter_calc_handoff <- list(
   ),
   
   
-  # subset LS 5/7/8/9 for handoff date range ----------------------------------
+  # subset LS 4/5/7/8/9 for Roy adapted handoff date range -----------------------
+  
   # the Landsat records are still to large to collate in targets (even using
   # data.table), so here, we're subsetting by date range and returning the 
   # 1-99 quantiles to keep things efficient with targets. This is the adapted
@@ -216,7 +217,7 @@ d_qa_filter_calc_handoff <- list(
     packages = c("data.table", "tidyverse", "arrow"), 
     deployment = "main" # these are still too large for multicore!
   ),
-
+  
   tar_target(
     name = d_LS9_forLS89corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
@@ -234,6 +235,97 @@ d_qa_filter_calc_handoff <- list(
     pattern = map(c_dswe_types), 
     packages = c("data.table", "tidyverse", "arrow"), 
     deployment = "main" # these are still too large for multicore!
+  ),
+  
+  
+  # Roy quantiles -----------------------------------------------------------
+  
+  # This section calculates the Roy quantiles paired data from mission flyovers
+  
+  # make a matrix of possible path prefix overlaps (aka 00 overlaps with 00 and 01, 
+  # 03 overlaps with 02, 03, 04, etc)
+  tar_target(
+    name = path_prefix_table,
+    commabd = tibble(early_prefix = c("00", "00", 
+                                      "01", "01", "01", 
+                                      "02", "02", "02",
+                                      "03", "03", "03",
+                                      "04", "04", "04",
+                                      "05", "05", "05",
+                                      "06", "06", "06",
+                                      "07", "07","07",
+                                      "08", "08",
+                                      "10"),
+                     late_prefix = c("00", "01", 
+                                     "00", "01", "02",
+                                     "01", "02", "03",
+                                     "02", "03", "04",
+                                     "03", "04", "05",
+                                     "04", "05", "06",
+                                     "05", "06", "07",
+                                     "06", "07", "08",
+                                     "07", "08",
+                                     "10"))
+  ),
+  
+  tar_target(
+    name = d_LS45_matches,
+    command = {
+      d_qa_Landsat_files
+      get_matches(dir = "d_qa_filter_calc_handoff/mid/", 
+                  dswe = "DSWE1", version = d_version_identifier,
+                  early_LS_mission = "LT04", late_LS_mission = "LT05",
+                  early_path_prefix = d_path_prefix_table$early_prefix, 
+                  late_path_prefix =  d_path_prefix_table$late_prefix)
+    },
+    pattern = map(d_path_prefix_table),
+    packages = c("data.table", "tidyverse", "arrow"),
+    deployment = "main"
+  ),
+
+  tar_target(
+    name = d_LS57_matches,
+    command = {
+      d_qa_Landsat_files
+      get_matches(dir = "d_qa_filter_calc_handoff/mid/", 
+                  dswe = "DSWE1", version = d_version_identifier,
+                  early_LS_mission = "LT05", late_LS_mission = "LE07",
+                  early_path_prefix = d_path_prefix_table$early_prefix, 
+                  late_path_prefix =  d_path_prefix_table$late_prefix)
+    },
+    pattern = map(d_path_prefix_table),
+    packages = c("data.table", "tidyverse", "arrow"),
+    deployment = "main"
+  ),
+  
+  tar_target(
+    name = d_LS78_matches,
+    command = {
+      d_qa_Landsat_files
+      get_matches(dir = "d_qa_filter_calc_handoff/mid/", 
+                  dswe = "DSWE1", version = d_version_identifier,
+                  early_LS_mission = "LE07", late_LS_mission = "LC08",
+                  early_path_prefix = d_path_prefix_table$early_prefix, 
+                  late_path_prefix =  d_path_prefix_table$late_prefix)
+    },
+    pattern = map(d_path_prefix_table),
+    packages = c("data.table", "tidyverse", "arrow"),
+    deployment = "main"
+  ),
+  
+  tar_target(
+    name = d_LS89_matches,
+    command = {
+      d_qa_Landsat_files
+      get_matches(dir = "d_qa_filter_calc_handoff/mid/", 
+                  dswe = "DSWE1", version = d_version_identifier,
+                  early_LS_mission = "LC08", late_LS_mission = "LC09",
+                  early_path_prefix = d_path_prefix_table$early_prefix, 
+                  late_path_prefix =  d_path_prefix_table$late_prefix)
+    },
+    pattern = map(d_path_prefix_table),
+    packages = c("data.table", "tidyverse", "arrow"),
+    deployment = "main"
   )
   
   

@@ -47,7 +47,7 @@ qa_and_document_LS <- function(mission_info,
   if (!dswe %in% c("DSWE1", "DSWE1a", "DSWE3")) {
     stop("The provided dswe argument is not recognized. Check that it is one of\n
          the following and retry: `DSWE1`, `DSWE1a`, `DSWE3`",
-      call. = TRUE)
+         call. = TRUE)
   }
   
   # make sure specified out_path exists
@@ -81,8 +81,8 @@ qa_and_document_LS <- function(mission_info,
                     data <- data %>% 
                       filter({{pCount_column}} >= min_no_pix)
                     valid_thresh <- nrow(data)
-                   
-                     # filter for realistic proportional threshold
+                    
+                    # filter for realistic proportional threshold
                     data <- data %>% 
                       filter(pCount_unreal_val/{{pCount_column}} < max_unreal_threshold)
                     real_thresh <- nrow(data)
@@ -91,6 +91,15 @@ qa_and_document_LS <- function(mission_info,
                     # data <- data %>% 
                     #   filter(pCount_sun_glint/{{pCount_column}} < max_glint_threshold)
                     # glint_thresh <- nrow(data)
+                    
+                    # filter out glint pixels using 0.2 thresh
+                    data <- data %>% 
+                      mutate(across(c(med_Blue, med_Green, med_Red),
+                                    ~ if_else(all(c(med_Blue, med_Green, med_Red) < 0.2),
+                                              .,
+                                              NA_real_))) %>% 
+                      filter(!is.na(med_Blue))
+                    
                     
                     # filter thermal for > 273.15 (above freezing)
                     data <- data %>% #glint_thresh %>% 
