@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>AquaSat v2: lakeSR and siteSR</title>
   <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
-  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
 
   <meta property="og:title" content="AquaSat v2: lakeSR and siteSR" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-02-06" />
+<meta name="date" content="2025-02-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -227,14 +227,23 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.4</b> Payload handling</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="handoff.html"><a href="handoff.html"><i class="fa fa-check"></i><b>7</b> Calculating Intermission Handoffs</a>
+<li class="chapter" data-level="7" data-path="handoff.html"><a href="handoff.html"><i class="fa fa-check"></i><b>7</b> Basic Quality Assurance and Calculating Intermission Handoffs</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="handoff.html"><a href="handoff.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR stacks</a></li>
-<li class="chapter" data-level="7.2" data-path="handoff.html"><a href="handoff.html#post-hoc-filters"><i class="fa fa-check"></i><b>7.2</b> Post-hoc filters</a></li>
+<li class="chapter" data-level="7.1" data-path="handoff.html"><a href="handoff.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR stack collation</a></li>
+<li class="chapter" data-level="7.2" data-path="handoff.html"><a href="handoff.html#post-hoc-filters"><i class="fa fa-check"></i><b>7.2</b> Post-hoc filters</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="handoff.html"><a href="handoff.html#landsat-4-qa-summary"><i class="fa fa-check"></i><b>7.2.1</b> Landsat 4 QA Summary</a></li>
+<li class="chapter" data-level="7.2.2" data-path="handoff.html"><a href="handoff.html#landsat-5-qa-summary"><i class="fa fa-check"></i><b>7.2.2</b> Landsat 5 QA Summary</a></li>
+<li class="chapter" data-level="7.2.3" data-path="handoff.html"><a href="handoff.html#landsat-7-qa-summary"><i class="fa fa-check"></i><b>7.2.3</b> Landsat 7 QA Summary</a></li>
+<li class="chapter" data-level="7.2.4" data-path="handoff.html"><a href="handoff.html#landsat-8-qa-summary"><i class="fa fa-check"></i><b>7.2.4</b> Landsat 8 QA Summary</a></li>
+<li class="chapter" data-level="7.2.5" data-path="handoff.html"><a href="handoff.html#landsat-9-qa-summary"><i class="fa fa-check"></i><b>7.2.5</b> Landsat 9 QA Summary</a></li>
+</ul></li>
 <li class="chapter" data-level="7.3" data-path="handoff.html"><a href="handoff.html#define-handoff"><i class="fa fa-check"></i><b>7.3</b> Calculating handoffs</a>
 <ul>
-<li class="chapter" data-level="7.3.1" data-path="handoff.html"><a href="handoff.html#corr7-handoff-coefficients"><i class="fa fa-check"></i><b>7.3.1</b> <code>corr7</code> handoff coefficients</a></li>
-<li class="chapter" data-level="7.3.2" data-path="handoff.html"><a href="handoff.html#corr8-handoff-coefficients"><i class="fa fa-check"></i><b>7.3.2</b> <code>corr8</code> handoff coefficients</a></li>
+<li class="chapter" data-level="7.3.1" data-path="handoff.html"><a href="handoff.html#roy-method"><i class="fa fa-check"></i><b>7.3.1</b> Roy method</a></li>
+<li class="chapter" data-level="7.3.2" data-path="handoff.html"><a href="handoff.html#garnder-method"><i class="fa fa-check"></i><b>7.3.2</b> Garnder method</a></li>
+<li class="chapter" data-level="7.3.3" data-path="handoff.html"><a href="handoff.html#corr7-handoff-coefficients"><i class="fa fa-check"></i><b>7.3.3</b> <code>corr7</code> handoff coefficients</a></li>
+<li class="chapter" data-level="7.3.4" data-path="handoff.html"><a href="handoff.html#corr8-handoff-coefficients"><i class="fa fa-check"></i><b>7.3.4</b> <code>corr8</code> handoff coefficients</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>8</b> References</a></li>
@@ -259,7 +268,7 @@ div.csl-indent {
 <h1 class="title">AquaSat v2: lakeSR and siteSR</h1>
 <h2 class="subtitle"><em>Compiled Satellite Surface Reflectance and Surface Temperature for Waterbodies in the United States and US Territories</em></h2>
 <p class="author"><em>ROSSyndicate</em></p>
-<p class="date"><em>2025-02-06</em></p>
+<p class="date"><em>2025-02-17</em></p>
 </div>
 <div id="introduction" class="section level1 hasAnchor" number="1">
 <h1><span class="header-section-number">1</span> Introduction<a href="index.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>

@@ -1,0 +1,6 @@
+additional diagnostics
+
+the ratio of the number of pixels affected by sun glint (RGB > 0.2, pCount_glint) to the total count of pixels (pCount_...) must be less than 0.2. A high ratio could indicate undetected contamination by sun glint. 
+
+the ratio of the number of pixels masked by the realistic mask (any optical band < -0.01, pCount) to total count of pixels (pCount_...) must be less than 0.2. Again, a high ratio could indicate systemic overcorrection in the upstream atmospheric correction processes applied to the images.
+

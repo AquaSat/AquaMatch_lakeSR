@@ -22,6 +22,9 @@ if (config::get(config = general_config)$update_bookdown) {
     # render bookdown, add req's of the above files in command prompt 
     tar_target(name = render_bookdown,
                command = {
+                 # needed for row drop figs
+                 d_qa_Landsat_files
+                 # list chapters
                  index
                  background
                  locations

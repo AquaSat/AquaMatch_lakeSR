@@ -46,7 +46,14 @@ payload-handling
 handoff
 raw-lakesr
 post-hoc-filters
+landsat-4-qa-summary
+landsat-5-qa-summary
+landsat-7-qa-summary
+landsat-8-qa-summary
+landsat-9-qa-summary
 define-handoff
+roy-method
+garnder-method
 corr7-handoff-coefficients
 corr8-handoff-coefficients
 references

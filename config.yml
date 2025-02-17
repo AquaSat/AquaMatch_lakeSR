@@ -1,7 +1,7 @@
 default:
   # The default setting for the configuration file is set to use pre-existing 
   # centers and collated datasets. 
-  google_email: "" # enter google email
+  google_email: "steeleb@rams.colostate.edu" # enter google email
   calculate_centers: FALSE # the center calculation will not run, and previously-
   # collated centers will be used
   centers_version: "2025-01-28" # yyyy-mm-dd of version, must be a date listed in the 
@@ -11,7 +11,7 @@ default:
   # data will be used
   collated_version: "2025-01-23" # yyyy-mm-dd of version, must be a date listed in the 
   # suffix of the .csv files stored in c_collate_Landsat_data/out/
-  update_bookdown: FALSE # the bookdown will not be re-rendered
+  update_bookdown: TRUE # the bookdown will not be re-rendered
 
 admin_update:
   # this setting creates publicly available files using the ROSS account
