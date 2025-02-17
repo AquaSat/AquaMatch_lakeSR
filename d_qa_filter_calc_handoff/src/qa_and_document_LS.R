@@ -92,10 +92,10 @@ qa_and_document_LS <- function(mission_info,
                     #   filter(pCount_sun_glint/{{pCount_column}} < max_glint_threshold)
                     # glint_thresh <- nrow(data)
                     
-                    # filter out glint pixels using 0.2 thresh
+                    # filter out glint pixels using 0.2 thresh for old version of masking
                     data <- data %>% 
                       mutate(across(c(med_Blue, med_Green, med_Red),
-                                    ~ if_else(all(c(med_Blue, med_Green, med_Red) < 0.2),
+                                    ~ if_else(med_Blue < 0.2 & med_Green < 0.2 & med_Red < 0.2,
                                               .,
                                               NA_real_))) %>% 
                       filter(!is.na(med_Blue))

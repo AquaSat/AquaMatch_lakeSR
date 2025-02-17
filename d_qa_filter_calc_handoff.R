@@ -245,8 +245,8 @@ d_qa_filter_calc_handoff <- list(
   # make a matrix of possible path prefix overlaps (aka 00 overlaps with 00 and 01, 
   # 03 overlaps with 02, 03, 04, etc)
   tar_target(
-    name = path_prefix_table,
-    commabd = tibble(early_prefix = c("00", "00", 
+    name = d_path_prefix_table,
+    command = tibble(early_prefix = c("00", "00", 
                                       "01", "01", "01", 
                                       "02", "02", "02",
                                       "03", "03", "03",
