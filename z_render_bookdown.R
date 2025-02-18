@@ -41,7 +41,15 @@ if (config::get(config = general_config)$update_bookdown) {
                                sites = p4_WQP_site_NHD_info,
                                visible_sites = p5_visible_sites,
                                yml = b_yml_poi,
-                               LS_files = c_collated_files
+                               LS5_for57 = d_LS5_forLS57corr_quantiles,
+                               LS7_for57 = d_LS7_forLS57corr_quantiles,
+                               LS7_for78 = d_LS7_forLS78corr_quantiles,
+                               LS8_for78 = d_LS8_forLS78corr_quantiles,
+                               LS8_for89 = d_LS8_forLS89corr_quantiles,
+                               LS9_for89 = d_LS9_forLS89corr_quantiles,
+                               LS57_match = d_LS57_matches,
+                               LS78_match = d_LS78_matches,
+                               LS89_match = d_LS89_matches
                              ))
                },
                packages = c("tidyverse", "bookdown", "sf", "tigris", "nhdplusTools", 

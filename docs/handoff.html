@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-02-17" />
+<meta name="date" content="2025-02-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -238,7 +238,7 @@ div.csl-indent {
 <li class="chapter" data-level="7.2.4" data-path="handoff.html"><a href="handoff.html#landsat-8-qa-summary"><i class="fa fa-check"></i><b>7.2.4</b> Landsat 8 QA Summary</a></li>
 <li class="chapter" data-level="7.2.5" data-path="handoff.html"><a href="handoff.html#landsat-9-qa-summary"><i class="fa fa-check"></i><b>7.2.5</b> Landsat 9 QA Summary</a></li>
 </ul></li>
-<li class="chapter" data-level="7.3" data-path="handoff.html"><a href="handoff.html#define-handoff"><i class="fa fa-check"></i><b>7.3</b> Calculating handoffs</a>
+<li class="chapter" data-level="7.3" data-path="handoff.html"><a href="handoff.html#define-handoff"><i class="fa fa-check"></i><b>7.3</b> Calculating intermission handoffs</a>
 <ul>
 <li class="chapter" data-level="7.3.1" data-path="handoff.html"><a href="handoff.html#roy-method"><i class="fa fa-check"></i><b>7.3.1</b> Roy method</a></li>
 <li class="chapter" data-level="7.3.2" data-path="handoff.html"><a href="handoff.html#garnder-method"><i class="fa fa-check"></i><b>7.3.2</b> Garnder method</a></li>
@@ -398,46 +398,91 @@ algal mask) RS summaries.</div>
 </div>
 </div>
 <div id="define-handoff" class="section level2 hasAnchor" number="7.3">
-<h2><span class="header-section-number">7.3</span> Calculating handoffs<a href="handoff.html#define-handoff" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">7.3</span> Calculating intermission handoffs<a href="handoff.html#define-handoff" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In AquaSat v2, we standardize values relative to Landsat 7 (<code>corr7</code>) and Landsat
+8 (<code>corr8</code>). The Landsat 7 intermission handoffs can be applied the entire
+Landsat 4-9 because it overlapped with early Landsat (4/5) and modern Landsat
+(8/9). For the <code>corr7</code> standardization, we treat Landsat 4 and 5 as
+interchangable, given that the satellites contained the same payload and
+radiometric resolution. We also treat Landsat 8 and 9 as interchangable despite
+the slight differences in radiometric resolution. Landsat 8 handoffs (<code>corr8</code>)
+can only be applied to Landsat 7 and 9 due to mission overlap, so the
+standardized data timeseries is shorter; however, it may be more robust for
+analyses focused in the recent past that rely on Landsat 9 data given the
+previously-mentioned caveats for application of <code>corr7</code> to that mission.</p>
 <div id="roy-method" class="section level3 hasAnchor" number="7.3.1">
 <h3><span class="header-section-number">7.3.1</span> Roy method<a href="handoff.html#roy-method" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>The Roy method uses paired images at specific sites, where the reflectance data
-are obtained are from two adjacent missions (e.g. Landsat 7 and Landsat 8)
-separated by one day at a specific location within the overlapping paths in the
-WRS2 path-row framework (see figure <span class="citation">(<a href="#ref-ref"><strong>ref?</strong></a>)</span>(path-overlap-roy)).</p>
+<p>The Roy method for calculating intermission handoffs uses paired images at
+specific sites, where the reflectance data are obtained are from two missions
+(e.g. Landsat 7 and Landsat 8) separated by one day at a specific location
+within the overlapping paths in the WRS2 path-row framework (see figure
+<span class="citation">(<a href="#ref-ref"><strong>ref?</strong></a>)</span>(path-overlap-roy)).</p>
 <div class="float">
 <img src="images/path_overlap_roy.png" alt="An example of two overlapping WRS2 paths (grey area) separated by one day. Any location with data for both images would be considered a paired data point to define the Roy method intermission handoffs." />
 <div class="figcaption">An example of two overlapping WRS2 paths (grey area) separated by one day. Any
 location with data for both images would be considered a paired data point to
 define the Roy method intermission handoffs.</div>
 </div>
+<p>While <span class="citation">Roy et al. (<a href="#ref-roy2016">2016</a>)</span> implement this method on a pixel-by-pixel basis, we implement
+using the median band value per site. This is used in place of the explicit
+filters of saturated pixels, cloudy/snowy pixels, and pixels with value changes
+greater than the changes in atmospheric correction as described in the text, as
+we have implemented masks and QA filters to reduce these sources of error.
+Handoff coefficients are defined by the ordinary least squares regression line
+of the Landsat 5 against the Landsat 7 data and Landsat 7 against the Landsat 8
+data.</p>
 </div>
 <div id="garnder-method" class="section level3 hasAnchor" number="7.3.2">
 <h3><span class="header-section-number">7.3.2</span> Garnder method<a href="handoff.html#garnder-method" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>We follow the practice described in <span class="citation">Gardner et al. (<a href="#ref-gardner2021">2021</a>)</span> to calculate intermission
-handoffs, where all band values during the period of overlap between two
-missions (e.g. 1999-04-15 through 2011-11-18 for Landsat 5 and 7 - see Section
-<a href="LS-C2-SRST.html#valid-dates">5.2</a>) are considered. These data are summarized to each mission’s
-1st-99th percentile value per band, and the handoff coefficients between
-missions are defined by the second-order polynomial relationship between them.
-Because we use a second-order polynomial, all values outside of the 1st and 99th
-percentile values used to define the intermission handoff are flagged and should
-be used with extreme caution. All <code>corr7</code> and <code>corr8</code> relationships and their
-derived coefficients are provided in the sections below.</p>
 <p>Gardner method intermission handoffs are defined by the data obtained in the
 overlapping period of time between two adjacent-in-time missions (details
-provided in Section <a href="handoff.html#define-handoff">7.3</a>. In AquaSat v2, we standardize values
-relative to Landsat 7 (<code>corr7</code>) and Landsat 8 (<code>corr8</code>). The Landsat 7
-intermission handoffs can be applied the entire Landsat 4-9 because it
-overlapped with early Landsat (4/5) and modern Landsat (8/9). For the <code>corr7</code>
-standardization, we treat Landsat 4 and 5 as interchangable, given that the
-satellites contained the same payload and radiometric resolution. We also treat
-Landsat 8 and 9 as interchangable despite the slight differences in radiometric
-resolution. Landsat 8 handoffs (<code>corr8</code>) can only be applied to Landsat 7 and 9
-due to mission overlap, so the standardized data timeseries is shorter; however,
-it may be more robust for analyses focused in the recent past that rely on
-Landsat 9 data given the previously-mentioned caveats for application of <code>corr7</code>
-to that mission.</p>
+provided in Table <a href="handoff.html#tab:gardner-table">7.1</a>). These data are summarized to each
+mission’s 1st-99th percentile value per band, and the handoff coefficients
+between missions are defined by the second-order polynomial relationship between
+them. Because we use a second-order polynomial, all values outside of the 1st
+and 99th percentile values used to define the intermission handoff are flagged
+and should be used with extreme caution. All <code>corr7</code> and <code>corr8</code> relationships
+and their derived coefficients are provided in the sections below.</p>
+<table>
+<caption><span id="tab:gardner-table">Table 7.1: </span>Summary of missions for handoffs calculated by the Gardner mission.</caption>
+<colgroup>
+<col width="13%" />
+<col width="12%" />
+<col width="13%" />
+<col width="11%" />
+<col width="25%" />
+<col width="24%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Early mission</th>
+<th align="left">Late mission</th>
+<th align="left">Overlap Start</th>
+<th align="left">Overlap End</th>
+<th align="left">n Scenes of Early Mission</th>
+<th align="left">n Scenes of Late Mission</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Landsat 5</td>
+<td align="left">Landsat 7</td>
+<td align="left">1999-04-15</td>
+<td align="left">2013-02-11</td>
+<td align="left">75,900</td>
+<td align="left">105,443</td>
+</tr>
+<tr class="even">
+<td align="left">Landsat 7</td>
+<td align="left">Landsat 8</td>
+<td align="left">2013-02-11</td>
+<td align="left">2022-04-16</td>
+<td align="left">53,530</td>
+<td align="left">68,985</td>
+</tr>
+</tbody>
+</table>
+<p>The caveat</p>
 </div>
 <div id="corr7-handoff-coefficients" class="section level3 hasAnchor" number="7.3.3">
 <h3><span class="header-section-number">7.3.3</span> <code>corr7</code> handoff coefficients<a href="handoff.html#corr7-handoff-coefficients" class="anchor-section" aria-label="Anchor link to header"></a></h3>

@@ -5,7 +5,16 @@ editor_options:
 bibliography: references.bib
 params:
   cfg: NA
-  LS_files: NA
+  LS5_for57: NA
+  LS7_for57: NA
+  LS7_for78: NA
+  LS8_for78: NA
+  LS8_for89: NA
+  LS9_for89: NA
+  LS57_match: NA
+  LS78_match: NA
+  LS89_match: NA
+tables: TRUE
 ---
 
 ```{r chunk-opts-6, echo=FALSE}
@@ -102,36 +111,41 @@ remote sensing data as much as possible.
 
 While there are numerous other diagnostic tests we could apply to filter the RS
 data, these are the QA filters that we deem to be the most foundational and
-unifying for reliable RS data across the US and Territories.
+unifying for reliable RS data across the US and Territories. Figures
+\@ref(fig:ls4-dswe1-drop) through \@ref(fig:ls9-dswe1a-drop) show how many rows
+of data were dropped through this QA process.
 
 ### Landsat 4 QA Summary
 
 ![Summary of dropped rows for Landsat 4's DSWE1 (confident water) RS
-summaries.](images/LT04_dswe1_drop_summary.png)
+summaries.](images/LT04_dswe1_drop_summary.png){#ls4-dswe1-drop}
 
 ![Summary of dropped rows for Landsat 4's DSWE1a (confident water with positive
-algal mask) RS summaries.](images/LT04_DSWE1a_drop_summary.png)
+algal mask) RS
+summaries.](images/LT04_DSWE1a_drop_summary.png){#ls4-dswe1a-drop}
 
 ### Landsat 5 QA Summary
 
 ![Summary of dropped rows for Landsat 5's DSWE1 (confident water) RS
-summaries.](images/LT05_DSWE1_drop_summary.png)
+summaries.](images/LT05_DSWE1_drop_summary.png){#ls5-dswe1-drop}
 
 ![Summary of dropped rows for Landsat 5's DSWE1a (confident water and positive
-algal mask) RS summaries.](images/LT05_DSWE1a_drop_summary.png)
+algal mask) RS
+summaries.](images/LT05_DSWE1a_drop_summary.png){#ls5-dswe1a-drop}
 
 ### Landsat 7 QA Summary
 
 ![Summary of dropped rows for Landsat 7's DSWE1 (confident water) RS
-summaries.](images/LE07_DSWE1_drop_summary.png)
+summaries.](images/LE07_DSWE1_drop_summary.png){#ls7-dswe1-drop}
 
 ![Summary of dropped rows for Landsat 7's DSWE1a (confident water and positive
-algal mask) RS summaries.](images/LE07_DSWE1a_drop_summary.png)
+algal mask) RS
+summaries.](images/LE07_DSWE1a_drop_summary.png){#ls7-dswe1a-drop}
 
 ### Landsat 8 QA Summary
 
 ![Summary of dropped rows for Landsat 8's DSWE1 (confident water) RS
-summaries.](images/LC08_DSWE1_drop_summary.png)
+summaries.](images/LC08_DSWE1_drop_summary.png){#ls8-dswe1-drop}
 
 ![Summary of dropped rows for Landsat 8's DSWE1a (confident water and positive
 algal mask) RS summaries.](images/LC08_DSWE1a_drop_summary.png)
@@ -139,24 +153,21 @@ algal mask) RS summaries.](images/LC08_DSWE1a_drop_summary.png)
 ### Landsat 9 QA Summary
 
 ![Summary of dropped rows for Landsat 9's DSWE1 (confident water) RS
-summaries.](images/LC09_DSWE1_drop_summary.png)
+summaries.](images/LC09_DSWE1_drop_summary.png){#ls9-dswe1-drop}
 
 ![Summary of dropped rows for Landsat 9's DSWE1a (confident water and positive
-algal mask) RS summaries.](images/LC09_DSWE1a_drop_summary.png)
+algal mask) RS
+summaries.](images/LC09_DSWE1a_drop_summary.png){#ls9-dswe1a-drop}
 
 ## Calculating intermission handoffs {#define-handoff}
 
 In AquaSat v2, we standardize values relative to Landsat 7 (`corr7`) and Landsat
-8 (`corr8`). The Landsat 7 intermission handoffs can be applied the entire
-Landsat 4-9 because it overlapped with early Landsat (4/5) and modern Landsat
-(8/9). For the `corr7` standardization, we treat Landsat 4 and 5 as
-interchangable, given that the satellites contained the same payload and
-radiometric resolution. We also treat Landsat 8 and 9 as interchangable despite
-the slight differences in radiometric resolution. Landsat 8 handoffs (`corr8`)
-can only be applied to Landsat 7 and 9 due to mission overlap, so the
-standardized data timeseries is shorter; however, it may be more robust for
-analyses focused in the recent past that rely on Landsat 9 data given the
-previously-mentioned caveats for application of `corr7` to that mission.
+8 (`corr8`). The Landsat 7 intermission handoffs create a continuous record of
+remote sensing relative to Landsat 7 since Landsat 4 and 5 and Landsat 8 and 9
+can be treated as interchangable due to the similarity in payload and
+radiometric resolution. Landsat 8 handoffs (`corr8`) can only be applied to
+Landsat 7 and 9 due to mission overlap, so the standardized data timeseries is
+shorter.
 
 ### Roy method
 
@@ -170,39 +181,226 @@ within the overlapping paths in the WRS2 path-row framework (see figure
 location with data for both images would be considered a paired data point to
 define the Roy method intermission handoffs.](images/path_overlap_roy.png)
 
-While @roy2016 implement this method on a pixel-by-pixel basis, we implement
+While @roy2016 implemented this method on a pixel-by-pixel basis, we implement
 using the median band value per site. This is used in place of the explicit
-filters of saturated pixels, cloudy/snowy pixels, and pixels with value changes
-greater than the changes in atmospheric correction as described in the text, as
-we have implemented masks and QA filters to eliminate these sources of error.
+filters described in the Roy method (saturated pixels, cloudy/snowy pixels, and
+pixels with value changes greater than the changes in atmospheric correction),
+as we have implemented masks and QA filters to reduce these sources of error.
 Handoff coefficients are defined by the ordinary least squares regression line
-of the Landsat 7 against the Landsat 8 data.
+of the Landsat 5 against the Landsat 7 data and Landsat 7 against the Landsat 8
+data (see Table \@ref(tab:roy-table)). For the purposes of this documentation,
+we only include figures for DSWE1 due to the size of the match datasets, but
+provide the OLS regression coefficients for both in Table \@ref(tab:roy-coeff).
 
-### Garnder method
+```{r roy-table}
+roy_handoff_table <- tibble("Early mission" = c("Landsat 5", "Landsat 7"),
+                                "Late mission" = c("Landsat 7", "Landsat 8"),
+                                "n matches" = c(c(format(nrow(d_LS57_matches), big.mark = ","), format(nrow(d_LS89_matches), big.mark = ","))))
+knitr::kable(roy_handoff_table, caption = "Summary of mission data used to create the Roy method intermission handoff.")
+```
+
+```{r}
+create_roy_comp <- function(data, x_col, y_col, title, x_label, y_label, binwidth) {
+  ggplot(data, aes(x = .data[[x_col]], y = .data[[y_col]])) +
+    geom_bin2d(aes(fill = after_stat(count)), binwidth = binwidth) + 
+    scale_fill_viridis_c(name = "Density", alpha = 0.5) + 
+    geom_abline(intercept = 0, slope = 1, color = "grey", lty = 2) + 
+    geom_smooth(method = "lm", se = FALSE, color = "red") +
+coord_fixed(ratio = 1,
+      xlim = c(min(data[[x_col]], data[[y_col]]), max(data[[x_col]], data[[y_col]])),
+      ylim = c(min(data[[x_col]], data[[y_col]]), max(data[[x_col]], data[[y_col]]))) +
+        labs(title = title, 
+         x = x_label, y = y_label) +
+    theme_bw()
+}
+```
+
+**Landsat 5 to 7 correction (`roy_corr7`)**
+
+```{r roy-ls57-fig, fig.dim=c(3,3), fig.ncol=2, fig.cap = "Roy method intermission handoffs of Landsat 5 relative to Landsat 7."}
+plots <- pmap(.l = list(list(d_LS57_matches),
+               list("i.med_Red", "i.med_Green", "i.med_Blue", "i.med_Nir", 
+                    "i.med_Swir1", "i.med_Swir2", "i.med_SurfaceTemp"),
+               list("med_Red", "med_Green", "med_Blue", "med_Nir", 
+                    "med_Swir1", "med_Swir2", "med_SurfaceTemp"), 
+               list("Red", "Green", "Blue", "NIR", "SWIR 1", "SWIR 2", "Surface Temperature"),
+               list("Landsat 5"),
+               list("Landsat 7"),
+               list(c(0.001, 0.001), c(0.001, 0.001),
+                    c(0.001, 0.001), c(0.001, 0.001),
+                    c(0.001, 0.001), c(0.001, 0.001),
+                    c(0.1, 0.1))),
+     .f = create_roy_comp
+     )
+plots 
+```
+
+**Landsat 8 to 7 correction (`roy_corr7`)**
+
+```{r roy-ls87-fig, fig.dim=c(3,3), fig.ncol=2, fig.cap = "Roy method intermission handoffs of Landsat 8 relative to Landsat 7."}
+plots <- pmap(.l = list(list(d_LS78_matches),
+               list("med_Red", "med_Green", "med_Blue", "med_Nir", 
+                    "med_Swir1", "med_Swir2", "med_SurfaceTemp"), 
+               list("i.med_Red", "i.med_Green", "i.med_Blue", "i.med_Nir", 
+                    "i.med_Swir1", "i.med_Swir2", "i.med_SurfaceTemp"),
+               list("Red", "Green", "Blue", "NIR", "SWIR 1", "SWIR 2", "Surface Temperature"),
+               list("Landsat 7"),
+               list("Landsat 8"),
+               list(c(0.001, 0.001), c(0.001, 0.001),
+                    c(0.001, 0.001), c(0.001, 0.001),
+                    c(0.001, 0.001), c(0.001, 0.001),
+                    c(0.1, 0.1))),
+     .f = create_roy_comp
+     )
+plots 
+```
+
+**Landsat 7 to 8 correction (`roy_corr8`)**
+
+**Landsat 9 to 8 correction (`roy_corr8`)**
+
+### Gardner method
 
 Gardner method intermission handoffs are defined by the data obtained in the
 overlapping period of time between two adjacent-in-time missions (details
-provided in Figure \@ref()). These data are summarized to each mission's
-1st-99th percentile value per band, and the handoff coefficients between
-missions are defined by the second-order polynomial relationship between them.
-Because we use a second-order polynomial, all values outside of the 1st and 99th
-percentile values used to define the intermission handoff are flagged and should
-be used with extreme caution. All `corr7` and `corr8` relationships and their
-derived coefficients are provided in the sections below.
+provided in Table \@ref(tab:gardner-table)). These data are filtered to sites
+that have at least one data point per year for at least 75% of the years of
+overlap. The filtered data are then summarized to each mission's 1st-99th
+percentile value per band, and the handoff coefficients between missions are
+defined by the second-order polynomial relationship between them. When n is
+high, quantiles are equivalent to describing the central tendency of the
+distribution of the x:y relationship due to the Central Limit Theorem. Because
+we use a second-order polynomial, all values outside of the 1st and 99th
+percentile values used to define the intermission handoff are flagged
+`corr7_flag`, `corr8_flag` and should be used with extreme caution. All `corr7`
+and `corr8` relationships and their derived coefficients are provided in the
+sections below.
 
-| Early mission | Late mission |   |   | Proportion of years required | N scenes of early mission | N scenes of later mission |
-|----------|----------|--------|---------|----------------|----------------|----------------|
-| LS5 | LS7 |  |  | 0.75 | `r format(d_LS5_forLS57corr_quantiles$n_scenes[1], big.mark = ",")` | `r format(d_LS7_forLS57corr_quantiles$n_scenes[1], big.mark = ",")` |
-| LS7 | LS8 |  |  | 0.75 | `r format(d_LS7_forLS78corr_quantiles$n_scenes[1], big.mark = ",")` | `r format(d_LS8_forLS78corr_quantiles$n_scenes[1], big.mark = ",")` |
+```{r gardner-table}
+gardner_handoff_table <- tibble("Early mission" = c("Landsat 5", "Landsat 7", "Landsat 8"),
+                                "Late mission" = c("Landsat 7", "Landsat 8", "Landsat 9"),
+                                "Correction type" = c("corr7", "corr7, corr8", "corr8"),
+                                "Overlap Start" = c("1999-04-15", "2013-02-11", "2021-09-27"),
+                                "Overlap End" = c("2013-02-11", "2022-04-16", "2024-12-31"),
+                                "n Scenes of Early Mission" = c(format(d_LS5_forLS57corr_quantiles$n_scenes[1], big.mark = ","), 
+                                                                format(d_LS7_forLS78corr_quantiles$n_scenes[1], big.mark = ","),
+                                                                format(d_LS8_forLS89corr_quantiles$n_scenes[1], big.mark = ",")),
+                                "n Scenes of Late Mission" = c(format(d_LS7_forLS57corr_quantiles$n_scenes[1], big.mark = ","), 
+                                                               format(d_LS8_forLS78corr_quantiles$n_scenes[1], big.mark = ","), 
+                                                               format(d_LS9_forLS89corr_quantiles$n_scenes[1], big.mark = ",")))
+knitr::kable(gardner_handoff_table, caption = "Summary of missions for handoffs calculated by the Gardner method. Note that *n* is summarized by scene, not by number of individual site observations contributing to the quantiles.")
+```
 
-### `corr7` handoff coefficients
+One additional consideration when using the Gardner method is, even when n
+scenes is high, if there is a difference between total scene numbers, there may
+be systematic differences ingrained into the coefficients since x and y are not
+truly 'random samples', impacting the validity of the Central Limit Theorem. An
+example of possible systematic differences could be fewer observations from
+non-CONUS locations in Landsat 5 due to data transmission errors. We did not
+investigate the differences in n listed in Table \@ref(tab:gardner-table) to
+determine what, if any, systematic differences are present between the two
+missions. We provide the Gardner method handoffs for continuity with the riverSR
+product for users who would like that interoperability.
 
-[[pull figs from functions here]]
+```{r}
+plot_gard_quants <- function(data, x_col, y_col, title, x_label, y_label) {
+  ggplot(data, aes(x = .data[[x_col]], y = .data[[y_col]], color = dswe)) +
+    geom_point() +
+    facet_grid(. ~ dswe) +
+    geom_abline(intercept = 0, slope = 1, color = "grey", lty = 2) + 
+    geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, alpha = 0.5) +
+    coord_fixed(ratio = 1,
+      xlim = c(min(data[[x_col]], data[[y_col]]), max(data[[x_col]], data[[y_col]])),
+      ylim = c(min(data[[x_col]], data[[y_col]]), max(data[[x_col]], data[[y_col]]))) +
+    labs(title = title, 
+         x = x_label, y = y_label) +
+    theme_bw() +
+    scale_color_viridis_d()
+}
+```
 
-[[insert table of calcs, \# of points, etc]]
+**Landsat 5 to 7 correction (`gard_corr7`)**
 
-### `corr8` handoff coefficients
+```{r gard-ls57-fig, fig.width=6}
+d_LS5_forLS57corr_quantiles <- d_LS5_forLS57corr_quantiles %>% 
+  select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
+  rename_with(~ paste0('LS5_', .), .cols = med_Red:med_SurfaceTemp)
+d_LS7_forLS57corr_quantiles <- d_LS7_forLS57corr_quantiles %>% 
+  select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
+  rename_with(~ paste0('LS7_', .), .cols = med_Red:med_SurfaceTemp)
+LS57 <- full_join(d_LS5_forLS57corr_quantiles, d_LS7_forLS57corr_quantiles)
+plots <- pmap(.l = list(list(LS57),
+               list("LS5_med_Red", "LS5_med_Green", "LS5_med_Blue", "LS5_med_Nir", 
+                    "LS5_med_Swir1", "LS5_med_Swir2", "LS5_med_SurfaceTemp"),
+               list("LS7_med_Red", "LS7_med_Green", "LS7_med_Blue", "LS7_med_Nir", 
+                    "LS7_med_Swir1", "LS7_med_Swir2", "LS7_med_SurfaceTemp"), 
+               list("Red", "Green", "Blue", "NIR", "SWIR 1", "SWIR 2", "Surface Temperature"),
+               list("Landsat 5"),
+               list("Landsat 7")),
+     .f = plot_gard_quants
+     )
+plots
+```
 
-[[pull figs from functions here]]
+**Landsat 8 to 7 correction (`gard_corr7`)**
 
-[[insert table of calcs, \# of points, etc]]
+```{r gard-ls87-fig, fig.width=6}
+d_LS7_forLS78corr_quantiles <- d_LS7_forLS78corr_quantiles %>% 
+  select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
+  rename_with(~ paste0('LS7_', .), .cols = med_Red:med_SurfaceTemp)
+d_LS8_forLS78corr_quantiles <- d_LS8_forLS78corr_quantiles %>% 
+  select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
+  rename_with(~ paste0('LS8_', .), .cols = med_Red:med_SurfaceTemp)
+LS78 <- full_join(d_LS7_forLS78corr_quantiles, d_LS8_forLS78corr_quantiles)
+plots <- pmap(.l = list(list(LS78),
+               list("LS8_med_Red", "LS8_med_Green", "LS8_med_Blue", "LS8_med_Nir", 
+                    "LS8_med_Swir1", "LS8_med_Swir2", "LS8_med_SurfaceTemp"),
+               list("LS7_med_Red", "LS7_med_Green", "LS7_med_Blue", "LS7_med_Nir", 
+                    "LS7_med_Swir1", "LS7_med_Swir2", "LS7_med_SurfaceTemp"), 
+               list("Red", "Green", "Blue", "NIR", "SWIR 1", "SWIR 2", "Surface Temperature"),
+               list("Landsat 8"),
+               list("Landsat 7")),
+     .f = plot_gard_quants
+     )
+plots
+```
+
+**Landsat 7 to 8 correction** **(`gard_corr8`)**
+
+```{r gard-ls78-fig, fig.width=6}
+plots <- pmap(.l = list(list(LS78),
+               list("LS7_med_Red", "LS7_med_Green", "LS7_med_Blue", "LS7_med_Nir", 
+                    "LS7_med_Swir1", "LS7_med_Swir2", "LS7_med_SurfaceTemp"), 
+               list("LS8_med_Red", "LS8_med_Green", "LS8_med_Blue", "LS8_med_Nir", 
+                    "LS8_med_Swir1", "LS8_med_Swir2", "LS8_med_SurfaceTemp"),
+               list("Red", "Green", "Blue", "NIR", "SWIR 1", "SWIR 2", "Surface Temperature"),
+               list("Landsat 7"),
+               list("Landsat 8")),
+     .f = plot_gard_quants
+     )
+plots
+```
+
+**Landsat 9 to 8 correction (`gard_corr8`)**
+
+```{r gard-ls98-fig, fig.width=6}
+d_LS8_forLS89corr_quantiles <- d_LS8_forLS89corr_quantiles %>% 
+  select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
+  rename_with(~ paste0('LS8_', .), .cols = med_Red:med_SurfaceTemp)
+d_LS9_forLS89corr_quantiles <- d_LS9_forLS89corr_quantiles %>% 
+  select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
+  rename_with(~ paste0('LS9_', .), .cols = med_Red:med_SurfaceTemp)
+LS89 <- full_join(d_LS8_forLS89corr_quantiles, d_LS9_forLS89corr_quantiles)
+
+plots <- pmap(.l = list(list(LS89),
+               list("LS9_med_Red", "LS9_med_Green", "LS9_med_Blue", "LS9_med_Nir", 
+                    "LS9_med_Swir1", "LS9_med_Swir2", "LS9_med_SurfaceTemp"), 
+               list("LS8_med_Red", "LS8_med_Green", "LS8_med_Blue", "LS8_med_Nir", 
+                    "LS8_med_Swir1", "LS8_med_Swir2", "LS8_med_SurfaceTemp"),
+               list("Red", "Green", "Blue", "NIR", "SWIR 1", "SWIR 2", "Surface Temperature"),
+               list("Landsat 9"),
+               list("Landsat 8")),
+     .f = plot_gard_quants
+     )
+plots
+```

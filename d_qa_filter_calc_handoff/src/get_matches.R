@@ -51,6 +51,7 @@ get_matches <- function(dir, dswe, version,
   
   # make paired dataset ------------------------------------------------------
   
+  # set keys by date range for matching
   early[, start := early_date - days(1)]
   early[, end := early_date + days(1)]
   setkeyv(early, c("lakeSR_id", "start", "end"))
@@ -64,8 +65,13 @@ get_matches <- function(dir, dswe, version,
                       by.y=key(late), 
                       type="any", nomatch=NULL, mult="all")
   
+  # do some cache-clearing
   rm(early, late)
   gc()
   
+  # add dswe info
+  matched[, dswe := dswe]
+
   matched
+  
 }
