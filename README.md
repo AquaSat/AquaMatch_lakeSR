@@ -63,7 +63,7 @@ collation, and upload process is quite time consuming, even with mulitcore
 processing.
 
 
-**d_calculate_handoffs**:
+**d_qa_filter_calc_handoff**:
 
 This {targets} list applies some rudimentary QA to the Landsat stacks, and then
 calculates 'intermission handoffs' that standardize the SR values relative to LS7
