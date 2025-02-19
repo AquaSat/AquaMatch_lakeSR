@@ -257,7 +257,43 @@ plots
 
 **Landsat 7 to 8 correction (`roy_corr8`)**
 
+```{r roy-ls78-fig, fig.dim=c(3,3), fig.ncol=2, fig.cap = "Roy method intermission handoffs of Landsat 7 relative to Landsat 8."}
+plots <- pmap(.l = list(list(d_LS78_matches),
+               list("i.med_Red", "i.med_Green", "i.med_Blue", "i.med_Nir", 
+                    "i.med_Swir1", "i.med_Swir2", "i.med_SurfaceTemp"),
+               list("med_Red", "med_Green", "med_Blue", "med_Nir", 
+                    "med_Swir1", "med_Swir2", "med_SurfaceTemp"), 
+               list("Red", "Green", "Blue", "NIR", "SWIR 1", "SWIR 2", "Surface Temperature"),
+               list("Landsat 8"),
+               list("Landsat 7"),
+               list(c(0.001, 0.001), c(0.001, 0.001),
+                    c(0.001, 0.001), c(0.001, 0.001),
+                    c(0.001, 0.001), c(0.001, 0.001),
+                    c(0.1, 0.1))),
+     .f = create_roy_comp
+     )
+plots 
+```
+
 **Landsat 9 to 8 correction (`roy_corr8`)**
+
+```{r roy-ls98-fig, fig.dim=c(3,3), fig.ncol=2, fig.cap = "Roy method intermission handoffs of Landsat 9 relative to Landsat 8."}
+plots <- pmap(.l = list(list(d_LS89_matches),
+               list("med_Red", "med_Green", "med_Blue", "med_Nir", 
+                    "med_Swir1", "med_Swir2", "med_SurfaceTemp"), 
+               list("i.med_Red", "i.med_Green", "i.med_Blue", "i.med_Nir", 
+                    "i.med_Swir1", "i.med_Swir2", "i.med_SurfaceTemp"),
+               list("Red", "Green", "Blue", "NIR", "SWIR 1", "SWIR 2", "Surface Temperature"),
+               list("Landsat 9"),
+               list("Landsat 8"),
+               list(c(0.001, 0.001), c(0.001, 0.001),
+                    c(0.001, 0.001), c(0.001, 0.001),
+                    c(0.001, 0.001), c(0.001, 0.001),
+                    c(0.1, 0.1))),
+     .f = create_roy_comp
+     )
+plots 
+```
 
 ### Gardner method
 
@@ -288,6 +324,7 @@ gardner_handoff_table <- tibble("Early mission" = c("Landsat 5", "Landsat 7", "L
                                 "n Scenes of Late Mission" = c(format(d_LS7_forLS57corr_quantiles$n_scenes[1], big.mark = ","), 
                                                                format(d_LS8_forLS78corr_quantiles$n_scenes[1], big.mark = ","), 
                                                                format(d_LS9_forLS89corr_quantiles$n_scenes[1], big.mark = ",")))
+
 knitr::kable(gardner_handoff_table, caption = "Summary of missions for handoffs calculated by the Gardner method. Note that *n* is summarized by scene, not by number of individual site observations contributing to the quantiles.")
 ```
 
@@ -378,7 +415,7 @@ plots <- pmap(.l = list(list(LS78),
                list("Landsat 8")),
      .f = plot_gard_quants
      )
-plots
+plots 
 ```
 
 **Landsat 9 to 8 correction (`gard_corr8`)**
