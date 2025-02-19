@@ -1,3 +1,21 @@
+#' @title Calculate Quantiles for Paired Data
+#'
+#' @description
+#' This function calculates quantiles for various RS measurements (Surface 
+#' Temperature, Blue, Green, Red, and NIR) from paired data for early and late
+#' missions of Landsat.
+#'
+#' @param paired_data A data frame or data table containing paired measurements 
+#' for early and late LS missions. Expected columns include med_SurfaceTemp, 
+#' i.med_SurfaceTemp, med_Blue, i.med_Blue, med_Green, i.med_Green, med_Red, 
+#' i.med_Red, med_Nir, and i.med_Nir.
+#' @param quant_seq A numeric vector specifying the quantiles to be computed 
+#' (e.g., c(0.25, 0.5, 0.75) for quartiles).
+#'
+#' @returns A list containing five data tables, each representing quantiles for a 
+#' specific measurement. Each data table has two columns: 'early' and 'late', 
+#' representing the quantiles for the respective periods.
+#'
 calc_quantiles <- function(paired_data,
                            quant_seq) {
   

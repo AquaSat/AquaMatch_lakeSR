@@ -1,3 +1,21 @@
+#' @title Get Matched Landsat Data for Paired Missions
+#'
+#' @description
+#' This function loads, processes, and matches Landsat data from paired missions 
+#' ('early' and 'late') based on specified criteria. This function uses data.table
+#' syntax for efficiency and memory use minimization.
+#'
+#' @param dir Character string specifying the directory path where the input files are located.
+#' @param dswe Character string specifying the Dynamic Surface Water Extent (DSWE) criteria.
+#' @param version Character string specifying the version of the data.
+#' @param early_LS_mission Character string specifying the early Landsat mission (e.g., "LT05", "LE07").
+#' @param late_LS_mission Character string specifying the late Landsat mission (e.g., "LC08", "LC09").
+#' @param early_path_prefix Character string specifying the path prefix for early period data (e.g., "00", "01").
+#' @param late_path_prefix Character string specifying the path prefix for late period data (e.g., "00", "01").
+#'
+#' @returns A data.table containing matched Landsat data from early and late periods.
+#'
+#'
 get_matches <- function(dir, dswe, version,
                         early_LS_mission, late_LS_mission, 
                         early_path_prefix, late_path_prefix){
