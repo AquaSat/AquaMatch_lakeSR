@@ -79,9 +79,9 @@ get_matches <- function(dir, dswe, version,
   setkeyv(late, c("lakeSR_id", "start", "end"))
   
   matched <- foverlaps(x = early, y = late, 
-                      by.x=key(early),
-                      by.y=key(late), 
-                      type="any", nomatch=NULL, mult="all")
+                      by.x = key(early),
+                      by.y = key(late), 
+                      type = "any", nomatch = NULL, mult = "all")
   
   # do some cache-clearing
   rm(early, late)
