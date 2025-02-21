@@ -60,10 +60,74 @@ procedures. For the purposes of AquaSat v2, we call this standardization process
 method described in @roy2016 ("Roy method") and an adapted version of that
 described in @gardner2021 ("Gardner method") (described in section
 \@ref(define-handoff)).
+params:
+  cfg: NA
+  LS5_for57: NA
+  LS7_for57: NA
+  LS7_for78: NA
+  LS8_for78: NA
+  LS8_for89: NA
+  LS9_for89: NA
+  LS57_match: NA
+  LS78_match: NA
+  LS89_match: NA
+tables: TRUE
+---
 
+```{r chunk-opts-6, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      message = FALSE, 
+                      warning = FALSE, 
+                      error = FALSE)
+
+library(tidyverse)
+library(googledrive)
+library(arrow)
+
+# for whatever reason, knitr::include_graphics is being kind of weird
+# so here, we'll copy the files from d_qa_filter_calc_handoff/out and put them in images here
+# Define source and destination directories
+source_dir <- "../d_qa_filter_calc_handoff/out/"
+dest_dir <- "images/"
+
+# Get list of files to copy
+files_to_copy <- list.files(source_dir, full.names = TRUE)
+
+# Copy files
+file.copy(from = files_to_copy, to = dest_dir, overwrite = TRUE)
+
+```
+
+# Basic Quality Assurance and Calculating Intermission Handoffs {#handoff}
+
+Up until this point in the workflow, no data filtering has occurred other than
+the masking procedures that eliminate obviously contaminated pixel-level data
+due to sensor malfunction, clouds, haze, and glint as described in Section
+\@ref(masking-functions). We also implement further QA filters for the remote
+sensing stacks to assure high-quality data. These post-hoc filters are described
+in \@ref(post-hoc-filters).
+
+Additionally, it is necessary to standardize band values between Landsat
+missions in order to create a robust timeseries. @maciel2023 notes the issues in
+using the Landsat Surface Reflectance product as a timeseries without careful
+handling of data between missions. This standardization process attempts to
+address changes in sensor spectral response and atmospheric correction
+procedures. For the purposes of AquaSat v2, we call this standardization process
+"intermission handoffs". We implement two versions of intermission handoffs: the
+method described in @roy2016 ("Roy method") and an adapted version of that
+described in @gardner2021 ("Gardner method") (described in section
+\@ref(define-handoff)).
+
+## Raw lakeSR stack collation {#raw-lakesr}
 ## Raw lakeSR stack collation {#raw-lakesr}
 
 The data exported from the GEE tasks described in Section \@ref(LS-SRST-pull)
+were collated into large compressed .feather files per DSWE type (DSWE1 and
+DSWE1a), per Landsat mission, and per path prefix. The path prefix subset is
+designed to reduce data corruption due to file size in the upload/download
+process to Google Drive, where the collated files are stored for posterity and
+to add functionality to this workflow. The Google Drive ids can be found at the
+folder path `c_collate_Landsat_data/out/` and can be accessed without special
 were collated into large compressed .feather files per DSWE type (DSWE1 and
 DSWE1a), per Landsat mission, and per path prefix. The path prefix subset is
 designed to reduce data corruption due to file size in the upload/download
