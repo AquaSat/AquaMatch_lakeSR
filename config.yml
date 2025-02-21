@@ -1,6 +1,8 @@
 default:
   # The default setting for the configuration file is set to use pre-existing 
   # centers and collated datasets. 
+  siteSR_repo_directory: "../AquaMatch_siteSR_WQP/" # relative directory path where
+  # the siteSR directory is located
   google_email: "steeleb@rams.colostate.edu" # enter google email
   calculate_centers: FALSE # the center calculation will not run, and previously-
   # collated centers will be used
@@ -15,6 +17,8 @@ default:
 
 admin_update:
   # this setting creates publicly available files using the ROSS account
+  siteSR_repo_directory: "../AquaMatch_siteSR_WQP/" # relative directory path where
+  # the siteSR directory is located
   google_email: "therossyndicate@gmail.com" # enter google email
   calculate_centers: TRUE # the center calculation will run locally
   centers_version: "2025-02-12"

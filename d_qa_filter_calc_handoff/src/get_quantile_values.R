@@ -60,7 +60,7 @@ get_quantile_values <- function(qa_files, mission_id, version_id,
     data <- data[ids, on = .(lakeSR_id)]
     # determine number of scenes in summary
     scenes <- data[, .(n_scenes = uniqueN(sat_id))]
-    
+
     # calculate quantile values for each band
     quantile_seq <- seq(0.01, 0.99, 0.01)
     map(bands,
@@ -73,6 +73,7 @@ get_quantile_values <- function(qa_files, mission_id, version_id,
         }) %>% 
       reduce(., full_join) %>% 
       mutate(n_scenes = scenes$n_scenes,
+             n_rows = nrow(data),
              mission = mission_id, 
              for_corr = for_corr,
              dswe = dswe,

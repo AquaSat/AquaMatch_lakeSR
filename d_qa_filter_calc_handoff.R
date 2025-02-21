@@ -95,7 +95,6 @@ d_qa_filter_calc_handoff <- list(
                                   end_date = ymd("1993-08-01"),
                                   for_corr = "LS5",
                                   record_length_prop = 0.4, #no data here until between 0.5-0.6
-                                  # a little fancy footwork here to get at 75% of record
                                   bands = c("med_Red", "med_Green", "med_Blue", 
                                             "med_Nir", "med_Swir1", "med_Swir2",
                                             "med_SurfaceTemp")),
@@ -114,7 +113,6 @@ d_qa_filter_calc_handoff <- list(
                                   end_date = ymd("1993-08-01"),
                                   for_corr = "LS4",
                                   record_length_prop = 0.4,
-                                  # a little fancy footwork here to get at 75% of record
                                   bands = c("med_Red", "med_Green", "med_Blue", 
                                             "med_Nir", "med_Swir1", "med_Swir2",
                                             "med_SurfaceTemp")),

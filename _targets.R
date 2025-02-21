@@ -39,35 +39,28 @@ general_config <- "admin_update"
 
 config_list <- list(
   
-  # Grab location of the local {targets} siteSR pipeline OR error if
-  # the location doesn't exist yet
-  tar_target(
-    name = config_siteSR_directory,
-    # command = if(dir.exists(p0_siteSR_config$harmonize_repo_directory)) {
-    #   p0_siteSR_config$harmonize_repo_directory
-    # } else {
-    #   # Throw an error if the pipeline does not exist
-    #   stop("The WQP download pipeline is not at the location specified in the 
-    #        config.yml file. Check the location specified as `harmonize_repo_directory`
-    #        in the config.yml file and rerun the pipeline.")
-    # },
-    command = if(dir.exists("../AquaMatch_siteSR_WQP/")) {
-      "../AquaMatch_siteSR_WQP/"
-    } else {
-      # Throw an error if the pipeline does not exist
-      stop("The siteSR pipeline is not located at `../AquaMatch_siteSR_WQP/` and 
-           the pipeline can not continue.")
-    },
-    cue = tar_cue("always")
-  ),
-  
   # store general configuration file
   tar_target(
     name = lakeSR_config,
     command = config::get(config = general_config),
     cue = tar_cue("always")
+  ), 
+  
+  # Grab location of the local {targets} siteSR pipeline OR error if
+  # the location doesn't exist yet
+  tar_target(
+    name = config_siteSR_directory,
+    command = if(dir.exists(lakeSR_config$siteSR_repo_directory)) {
+      lakeSR_config$siteSR_repo_directory
+    } else {
+      #Throw an error if the pipeline does not exist
+      stop("The siteSR pipeline is not at the location specified in the
+             config.yml file. Check the location specified as `siteSR_repo_directory`
+             in the config.yml file and rerun the pipeline.")
+    },
+    cue = tar_cue("always")
   )
-
+  
 )
 
 # Source targets groups: ---------------------------------------
@@ -79,7 +72,7 @@ tar_source(files = c(
   "d_qa_filter_calc_handoff.R",
   "y_siteSR_targets.R",
   "z_render_bookdown.R"
-  )
+)
 )
 
 # Collate targets groups: ---------------------------------------

@@ -32,8 +32,6 @@ qa_and_document_LS <- function(mission_info,
                                min_no_pix = 8, 
                                thermal_threshold = 273.15,
                                ir_threshold = 0.1,
-                               max_glint_threshold = NULL,
-                               max_unreal_threshold = NULL,
                                document_drops = TRUE,
                                out_path = "d_qa_filter_calc_handoff/mid/"
                                
