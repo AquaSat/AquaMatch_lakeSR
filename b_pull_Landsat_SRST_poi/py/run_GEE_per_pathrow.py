@@ -7,7 +7,8 @@ from pandas import read_csv
 import math
 
 # LOAD ALL THE CUSTOM FUNCTIONS -----------------------------------------------
-# pull code begins ~ line 1500
+# DSWE code begins ~ line 530
+# GEE pull code begins ~ line 1720
 
 def csv_to_eeFeat(df, proj, chunk, chunk_size):
   """Function to create an eeFeature from the location data
@@ -210,6 +211,56 @@ def add_realistic_mask_89(image):
     .And(b7_mask.eq(1))
     .selfMask()).rename('real')
   return image.addBands(realistic)
+
+
+# This should be applied AFTER scaling factors
+# Mask values greater than 0.2
+def add_sun_glint_mask(image):
+  """ mask out pixels likely affected by sun glint (those greater than 0.2) 
+  
+  Args:
+      image: ee.Image of an ee.ImageCollection
+
+  Returns:
+      an ee.Image with a 1 (unlikely glint) / 0 (likely glint) mask for pixels in
+      all bands but Aerosol
+  """
+  b1_mask = image.select('Blue').lt(0.2)
+  b2_mask = image.select('Green').lt(0.2)
+  b3_mask = image.select('Red').lt(0.2)
+  b4_mask = image.select('Nir').lt(0.2)
+  b5_mask = image.select('Swir1').lt(0.2)
+  b7_mask = image.select('Swir2').lt(0.2)
+  no_glint = (b1_mask.eq(1)
+    .And(b2_mask.eq(1))
+    .And(b3_mask.eq(1))
+    .And(b4_mask.eq(1))
+    .And(b5_mask.eq(1))
+    .And(b7_mask.eq(1))
+    .selfMask()).rename('no_glint')
+  return image.addBands(no_glint)
+
+# This should be applied AFTER scaling factors
+# Flag IR values greater than 0.1
+def add_ir_glint_flag(image):
+  """ flags infrared bands (nir, swir) where pixels likely affected by sun glint 
+      (those greater than or equal to 0.1) 
+  
+  Args:
+      image: ee.Image of an ee.ImageCollection
+
+  Returns:
+      an ee.Image with a 1 (flagged for ir glint) / 0 (no flag for ir glint) 
+      for pixels in all ir bands (nir, swir)
+  """
+  b4_flag = image.select('Nir').gte(0.1)
+  b5_flag = image.select('Swir1').gte(0.1)
+  b7_flag = image.select('Swir2').gte(0.1)
+  ir_glint = (b4_flag.eq(1)
+    .And(b5_flag.eq(1))
+    .And(b7_flag.eq(1))
+    .selfMask()).rename('ir_glint')
+  return image.addBands(ir_glint)
 
 
 # mask high opacity (>0.3 after scaling) pixels
@@ -494,9 +545,11 @@ def ref_pull_457_DSWE1(image, feat):
   # where the mask is > 1 (clouds and cloud shadow)
   # call that 1 (otherwise 0) and rename as clouds.
   clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
-  # add mask FOR opacity and realistic values
+  # add mask FOR low opacity, realistic values, sun glint, ir glint
   opac = add_opac_mask(image).select('opac').eq(1).rename('low_opac')
   real = add_realistic_mask_457(image).select('real').eq(1).rename('is_real')
+  no_glint = add_sun_glint_mask(image).select('no_glint').eq(1)
+  ir_glint = add_ir_glint_flag(image).select('ir_glint').eq(1)
   # calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
   # calculate hillshadow
@@ -512,8 +565,10 @@ def ref_pull_457_DSWE1(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(opac.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
+    
   # create additive masks for dswe==1 (confident open water)
   # hs = 1, fully illuminated pixels
   dswe1 = (d.eq(1).rename('dswe1')
@@ -522,8 +577,10 @@ def ref_pull_457_DSWE1(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(opac.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
+    
   # create additive masks for dswe==3 (confident vegetated water)
   # hs = 1, fully illuminated pixels
   dswe3 = (d.eq(3).rename('dswe3')
@@ -532,8 +589,10 @@ def ref_pull_457_DSWE1(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(opac.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
+    
   # define dswe 1a where d is not 0 and red/green threshold met
   grn_alg_thrsh = image.select('Green').gt(0.05)
   red_alg_thrsh = image.select('Red').lt(0.04)
@@ -544,7 +603,9 @@ def ref_pull_457_DSWE1(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(opac.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     )
+    
   # create additive mask for dswe1a: dswe = 1 or algal threshold met
   # hs = 1, fully illuminated pixels
   dswe1a = (d.eq(1)
@@ -555,22 +616,36 @@ def ref_pull_457_DSWE1(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(opac.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
     
   # create masks for each band for <0 and <-0.01
-  blue_zero = image.select('Blue').lt(0).rename('blue_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  blue_thresh = image.select('Blue').lt(-0.01).rename('blue_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  green_zero = image.select('Green').lt(0).rename('green_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  green_thresh = image.select('Green').lt(-0.01).rename('green_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  red_zero = image.select('Red').lt(0).rename('red_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  red_thresh = image.select('Red').lt(-0.01).rename('red_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  nir_zero = image.select('Nir').lt(0).rename('nir_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  nir_thresh = image.select('Nir').lt(-0.01).rename('nir_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  swir1_zero = image.select('Swir1').lt(0).rename('swir1_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  swir1_thresh = image.select('Swir1').lt(-0.01).rename('swir1_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
+  blue_zero = image.select('Blue').lt(0).rename('blue_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  blue_thresh = image.select('Blue').lt(-0.01).rename('blue_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  green_zero = image.select('Green').lt(0).rename('green_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  green_thresh = image.select('Green').lt(-0.01).rename('green_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  red_zero = image.select('Red').lt(0).rename('red_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  red_thresh = image.select('Red').lt(-0.01).rename('red_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  nir_zero = image.select('Nir').lt(0).rename('nir_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  nir_thresh = image.select('Nir').lt(-0.01).rename('nir_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  swir1_zero = image.select('Swir1').lt(0).rename('swir1_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  swir1_thresh = image.select('Swir1').lt(-0.01).rename('swir1_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+
+  # create masks for each band for = >0.2
+  blue_glint = image.select('Blue').gte(0.2).rename('blue_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  green_glint = image.select('Green').gte(0.2).rename('green_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  red_glint = image.select('Red').gte(0.2).rename('red_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  nir_glint = image.select('Nir').gte(0.2).rename('nir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  swir1_glint = image.select('Swir1').gte(0.2).rename('swir1_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  swir2_glint = image.select('Swir2').gte(0.2).rename('swir2_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+
+  # create masks for ir bands >=0.1
+  nir_ir_glint = image.select('Nir').gte(0.1).rename('nir_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  swir1_ir_glint = image.select('Swir1').gte(0.1).rename('swir1_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
+  swir2_ir_glint = image.select('Swir2').gte(0.1).rename('swir2_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
   
   pixOut = (image.select(['Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2', 
                         'SurfaceTemp'],
@@ -597,6 +672,8 @@ def ref_pull_457_DSWE1(image, feat):
             .addBands(dswe1a)
             .addBands(opac.eq(0).selfMask().rename('high_opac'))
             .addBands(real.eq(0).selfMask().rename('unreal_val'))
+            .addBands(no_glint.eq(0).selfMask().rename('sun_glint'))
+            .addBands(ir_glint.eq(1).selfMask())
             .addBands(blue_zero)
             .addBands(blue_thresh)
             .addBands(green_zero)
@@ -609,6 +686,15 @@ def ref_pull_457_DSWE1(image, feat):
             .addBands(swir1_thresh)
             .addBands(swir2_zero)
             .addBands(swir2_thresh)
+            .addBands(blue_glint)
+            .addBands(green_glint)
+            .addBands(red_glint)
+            .addBands(nir_glint)
+            .addBands(swir1_glint)
+            .addBands(swir2_glint)
+            .addBands(nir_ir_glint)
+            .addBands(swir1_ir_glint)
+            .addBands(swir2_ir_glint)
             .addBands(clouds) 
             .addBands(hs)
             .addBands(h)
@@ -625,9 +711,13 @@ def ref_pull_457_DSWE1(image, feat):
       .forEachBand(pixOut.select(['mean_Blue', 'mean_Green', 'mean_Red', 
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
-      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'high_opac', 'unreal_val',
+      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 
+              'high_opac', 'unreal_val',
+              'sun_glint', 'ir_glint',
               'blue_zero', 'blue_thresh', 'green_zero', 'green_thresh', 'red_zero', 'red_thresh',
-              'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh'])), 
+              'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh',
+              'blue_glint', 'green_glint', 'red_glint', 'nir_glint', 'swir1_glint', 'swir2_glint',
+              'nir_ir_glint', 'swir1_ir_glint', 'swir2_ir_glint'])), 
       outputPrefix = 'pCount_', sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted()
       .forEachBand(pixOut.select(['clouds', 'hillShadow'])), 
@@ -641,6 +731,7 @@ def ref_pull_457_DSWE1(image, feat):
   lsout = (pixOut.reduceRegions(feat, combinedReducer, 30))
   out = lsout.map(remove_geo)
   return out
+
 
 ## Set up the reflectance pull
 def ref_pull_457_DSWE1a(image, feat):
@@ -660,9 +751,11 @@ def ref_pull_457_DSWE1a(image, feat):
   # where the mask is > 1 (clouds and cloud shadow)
   # call that 1 (otherwise 0) and rename as clouds.
   clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
-  # add mask FOR opacity and realistic values
+  # add mask FOR low opacity, realistic values, sun glint, ir glint
   opac = add_opac_mask(image).select('opac').eq(1).rename('low_opac')
   real = add_realistic_mask_457(image).select('real').eq(1).rename('is_real')
+  no_glint = add_sun_glint_mask(image).select('no_glint').eq(1)
+  ir_glint = add_ir_glint_flag(image).select('ir_glint').eq(1)
   # calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
   # calculate hillshadow
@@ -670,7 +763,8 @@ def ref_pull_457_DSWE1a(image, feat):
   
   # apply dswe function
   d = DSWE(image).select('dswe')
-    # create additive masks for dswe>0 (water of any type)
+  
+  # create additive masks for dswe>0 (water of any type)
   # hs = 1, fully illuminated pixels
   gt0 = (d.gt(0).rename('dswe_gt0')
     .updateMask(hs.eq(1))
@@ -678,8 +772,10 @@ def ref_pull_457_DSWE1a(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(opac.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
+    
   # create additive masks for dswe==1 (confident open water)
   # hs = 1, fully illuminated pixels
   dswe1 = (d.eq(1).rename('dswe1')
@@ -688,8 +784,10 @@ def ref_pull_457_DSWE1a(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(opac.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
+    
   # create additive masks for dswe==3 (confident vegetated water)
   # hs = 1, fully illuminated pixels
   dswe3 = (d.eq(3).rename('dswe3')
@@ -698,8 +796,10 @@ def ref_pull_457_DSWE1a(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(opac.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
+    
   # define dswe 1a where d is not 0 and red/green threshold met
   grn_alg_thrsh = image.select('Green').gt(0.05)
   red_alg_thrsh = image.select('Red').lt(0.04)
@@ -710,7 +810,9 @@ def ref_pull_457_DSWE1a(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(opac.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     )
+    
   # create additive mask for dswe1a: dswe = 1 or algal threshold met
   # hs = 1, fully illuminated pixels
   dswe1a = (d.eq(1)
@@ -721,22 +823,36 @@ def ref_pull_457_DSWE1a(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(opac.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
     
   # create masks for each band for <0 and <-0.01
-  blue_zero = image.select('Blue').lt(0).rename('blue_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  blue_thresh = image.select('Blue').lt(-0.01).rename('blue_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  green_zero = image.select('Green').lt(0).rename('green_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  green_thresh = image.select('Green').lt(-0.01).rename('green_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  red_zero = image.select('Red').lt(0).rename('red_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  red_thresh = image.select('Red').lt(-0.01).rename('red_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  nir_zero = image.select('Nir').lt(0).rename('nir_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  nir_thresh = image.select('Nir').lt(-0.01).rename('nir_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  swir1_zero = image.select('Swir1').lt(0).rename('swir1_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  swir1_thresh = image.select('Swir1').lt(-0.01).rename('swir1_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
+  blue_zero = image.select('Blue').lt(0).rename('blue_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  blue_thresh = image.select('Blue').lt(-0.01).rename('blue_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  green_zero = image.select('Green').lt(0).rename('green_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  green_thresh = image.select('Green').lt(-0.01).rename('green_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  red_zero = image.select('Red').lt(0).rename('red_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  red_thresh = image.select('Red').lt(-0.01).rename('red_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  nir_zero = image.select('Nir').lt(0).rename('nir_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  nir_thresh = image.select('Nir').lt(-0.01).rename('nir_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  swir1_zero = image.select('Swir1').lt(0).rename('swir1_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  swir1_thresh = image.select('Swir1').lt(-0.01).rename('swir1_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  
+  # create masks for each band for = >0.2
+  blue_glint = image.select('Blue').gte(0.2).rename('blue_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  green_glint = image.select('Green').gte(0.2).rename('green_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  red_glint = image.select('Red').gte(0.2).rename('red_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  nir_glint = image.select('Nir').gte(0.2).rename('nir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  swir1_glint = image.select('Swir1').gte(0.2).rename('swir1_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  swir2_glint = image.select('Swir2').gte(0.2).rename('swir2_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+
+  # create masks for ir bands >=0.1
+  nir_ir_glint = image.select('Nir').gte(0.1).rename('nir_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  swir1_ir_glint = image.select('Swir1').gte(0.1).rename('swir1_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  swir2_ir_glint = image.select('Swir2').gte(0.1).rename('swir2_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
 
   pixOut = (image.select(['Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2',
                         'SurfaceTemp'],
@@ -756,13 +872,15 @@ def ref_pull_457_DSWE1a(image, feat):
                                   'mean_SurfaceTemp']))
             # mask the image
             .updateMask(dswe1a) # dswe1 with algal mask
-            # add bands back in for QA (prior to masking of dswe/hs/f/r)
+            # add bands for summaries
             .addBands(gt0) 
             .addBands(dswe1)
             .addBands(dswe3)
             .addBands(dswe1a)
             .addBands(opac.eq(0).selfMask().rename('high_opac'))
             .addBands(real.eq(0).selfMask().rename('unreal_val'))
+            .addBands(no_glint.eq(0).selfMask().rename('sun_glint'))
+            .addBands(ir_glint.eq(1).selfMask())
             .addBands(blue_zero)
             .addBands(blue_thresh)
             .addBands(green_zero)
@@ -775,6 +893,15 @@ def ref_pull_457_DSWE1a(image, feat):
             .addBands(swir1_thresh)
             .addBands(swir2_zero)
             .addBands(swir2_thresh)
+            .addBands(blue_glint)
+            .addBands(green_glint)
+            .addBands(red_glint)
+            .addBands(nir_glint)
+            .addBands(swir1_glint)
+            .addBands(swir2_glint)
+            .addBands(nir_ir_glint)
+            .addBands(swir1_ir_glint)
+            .addBands(swir2_ir_glint)
             .addBands(clouds) 
             .addBands(hs)
             .addBands(h)
@@ -791,9 +918,13 @@ def ref_pull_457_DSWE1a(image, feat):
       .forEachBand(pixOut.select(['mean_Blue', 'mean_Green', 'mean_Red', 
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
-      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'high_opac', 'unreal_val',
+      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 
+              'high_opac', 'unreal_val',
+              'sun_glint', 'ir_glint',
               'blue_zero', 'blue_thresh', 'green_zero', 'green_thresh', 'red_zero', 'red_thresh',
-              'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh'])), 
+              'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh',
+              'blue_glint', 'green_glint', 'red_glint', 'nir_glint', 'swir1_glint', 'swir2_glint',
+              'nir_ir_glint', 'swir1_ir_glint', 'swir2_ir_glint'])), 
       outputPrefix = 'pCount_', sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted()
       .forEachBand(pixOut.select(['clouds', 'hillShadow'])), 
@@ -824,15 +955,18 @@ def ref_pull_457_DSWE3(image, feat):
   # where the mask is > 1 (clouds and cloud shadow)
   # call that 1 (otherwise 0) and rename as clouds.
   clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
-  # add mask FOR opacity and realistic values
+  # add mask FOR low opacity, realistic values, sun glint, ir glint
   opac = add_opac_mask(image).select('opac').eq(1).rename('low_opac')
   real = add_realistic_mask_457(image).select('real').eq(1).rename('is_real')
+  no_glint = add_sun_glint_mask(image).select('no_glint').eq(1)
+  ir_glint = add_ir_glint_flag(image).select('ir_glint').eq(1)
   #calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
   #calculate hillshadow
   hs = calc_hill_shadows(image, wrs.geometry()).select('hillShadow')
   #apply dswe function
   d = DSWE(image).select('dswe')
+  
     # create additive masks for dswe>0 (water of any type)
   # hs = 1, fully illuminated pixels
   gt0 = (d.gt(0).rename('dswe_gt0')
@@ -841,8 +975,10 @@ def ref_pull_457_DSWE3(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(opac.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
+    
   # create additive masks for dswe==1 (confident open water)
   # hs = 1, fully illuminated pixels
   dswe1 = (d.eq(1).rename('dswe1')
@@ -851,8 +987,10 @@ def ref_pull_457_DSWE3(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(opac.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
+    
   # create additive masks for dswe==3 (confident vegetated water)
   # hs = 1, fully illuminated pixels
   dswe3 = (d.eq(3).rename('dswe3')
@@ -861,8 +999,10 @@ def ref_pull_457_DSWE3(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(opac.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
+    
   # define dswe 1a where d is not 0 and red/green threshold met
   grn_alg_thrsh = image.select('Green').gt(0.05)
   red_alg_thrsh = image.select('Red').lt(0.04)
@@ -873,7 +1013,9 @@ def ref_pull_457_DSWE3(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(opac.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     )
+    
   # create additive mask for dswe1a: dswe = 1 or algal threshold met
   # hs = 1, fully illuminated pixels
   dswe1a = (d.eq(1)
@@ -884,23 +1026,37 @@ def ref_pull_457_DSWE3(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(opac.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
-
-  # create masks for each band for <0 and <-0.01
-  blue_zero = image.select('Blue').lt(0).rename('blue_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  blue_thresh = image.select('Blue').lt(-0.01).rename('blue_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  green_zero = image.select('Green').lt(0).rename('green_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  green_thresh = image.select('Green').lt(-0.01).rename('green_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  red_zero = image.select('Red').lt(0).rename('red_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  red_thresh = image.select('Red').lt(-0.01).rename('red_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  nir_zero = image.select('Nir').lt(0).rename('nir_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  nir_thresh = image.select('Nir').lt(-0.01).rename('nir_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  swir1_zero = image.select('Swir1').lt(0).rename('swir1_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  swir1_thresh = image.select('Swir1').lt(-0.01).rename('swir1_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
-  swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(clouds.eq(0)).updateMask(opac.eq(1)).selfMask()
   
+  # create masks for each band for <0 and <-0.01
+  blue_zero = image.select('Blue').lt(0).rename('blue_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  blue_thresh = image.select('Blue').lt(-0.01).rename('blue_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  green_zero = image.select('Green').lt(0).rename('green_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  green_thresh = image.select('Green').lt(-0.01).rename('green_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  red_zero = image.select('Red').lt(0).rename('red_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  red_thresh = image.select('Red').lt(-0.01).rename('red_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  nir_zero = image.select('Nir').lt(0).rename('nir_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  nir_thresh = image.select('Nir').lt(-0.01).rename('nir_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  swir1_zero = image.select('Swir1').lt(0).rename('swir1_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  swir1_thresh = image.select('Swir1').lt(-0.01).rename('swir1_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+
+  # create masks for each band for = >0.2
+  blue_glint = image.select('Blue').gte(0.2).rename('blue_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  green_glint = image.select('Green').gte(0.2).rename('green_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  red_glint = image.select('Red').gte(0.2).rename('red_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  nir_glint = image.select('Nir').gte(0.2).rename('nir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  swir1_glint = image.select('Swir1').gte(0.2).rename('swir1_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  swir2_glint = image.select('Swir2').gte(0.2).rename('swir2_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+
+  # create masks for ir bands >=0.1
+  nir_ir_glint = image.select('Nir').gte(0.1).rename('nir_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  swir1_ir_glint = image.select('Swir1').gte(0.1).rename('swir1_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+  swir2_ir_glint = image.select('Swir2').gte(0.1).rename('swir2_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
+    
   pixOut = (image.select(['Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2',
                       'SurfaceTemp'],
                       ['med_Blue', 'med_Green', 'med_Red', 'med_Nir', 'med_Swir1', 'med_Swir2',
@@ -919,29 +1075,40 @@ def ref_pull_457_DSWE3(image, feat):
                                 'mean_SurfaceTemp']))
           # mask the image
           .updateMask(dswe3) # vegetated water mask
-            # add bands back in for QA (prior to masking of dswe/hs/f/r)
-            .addBands(gt0) 
-            .addBands(dswe1)
-            .addBands(dswe3)
-            .addBands(dswe1a)
-            .addBands(opac.eq(0).selfMask().rename('high_opac'))
-            .addBands(real.eq(0).selfMask().rename('unreal_val'))
-            .addBands(blue_zero)
-            .addBands(blue_thresh)
-            .addBands(green_zero)
-            .addBands(green_thresh)
-            .addBands(red_zero)
-            .addBands(red_thresh)
-            .addBands(nir_zero)
-            .addBands(nir_thresh)
-            .addBands(swir1_zero)
-            .addBands(swir1_thresh)
-            .addBands(swir2_zero)
-            .addBands(swir2_thresh)
-            .addBands(clouds) 
-            .addBands(hs)
-            .addBands(h)
-            ) 
+          # add bands for summaries
+          .addBands(gt0) 
+          .addBands(dswe1)
+          .addBands(dswe3)
+          .addBands(dswe1a)
+          .addBands(opac.eq(0).selfMask().rename('high_opac'))
+          .addBands(real.eq(0).selfMask().rename('unreal_val'))
+          .addBands(no_glint.eq(0).selfMask().rename('sun_glint'))
+          .addBands(ir_glint.eq(1).selfMask())
+          .addBands(blue_zero)
+          .addBands(blue_thresh)
+          .addBands(green_zero)
+          .addBands(green_thresh)
+          .addBands(red_zero)
+          .addBands(red_thresh)
+          .addBands(nir_zero)
+          .addBands(nir_thresh)
+          .addBands(swir1_zero)
+          .addBands(swir1_thresh)
+          .addBands(swir2_zero)
+          .addBands(swir2_thresh)
+          .addBands(blue_glint)
+          .addBands(green_glint)
+          .addBands(red_glint)
+          .addBands(nir_glint)
+          .addBands(swir1_glint)
+          .addBands(swir2_glint)
+          .addBands(nir_ir_glint)
+          .addBands(swir1_ir_glint)
+          .addBands(swir2_ir_glint)
+          .addBands(clouds) 
+          .addBands(hs)
+          .addBands(h)
+          ) 
   combinedReducer = (ee.Reducer.median().unweighted()
       .forEachBand(pixOut.select(['med_Blue', 'med_Green', 'med_Red', 
             'med_Nir', 'med_Swir1', 'med_Swir2', 'med_SurfaceTemp']))
@@ -954,9 +1121,13 @@ def ref_pull_457_DSWE3(image, feat):
       .forEachBand(pixOut.select(['mean_Blue', 'mean_Green', 'mean_Red', 
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
-      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'high_opac', 'unreal_val',
+      .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 
+              'high_opac', 'unreal_val',
+              'sun_glint', 'ir_glint',
               'blue_zero', 'blue_thresh', 'green_zero', 'green_thresh', 'red_zero', 'red_thresh',
-              'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh'])), 
+              'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh',
+              'blue_glint', 'green_glint', 'red_glint', 'nir_glint', 'swir1_glint', 'swir2_glint',
+              'nir_ir_glint', 'swir1_ir_glint', 'swir2_ir_glint'])), 
       outputPrefix = 'pCount_', sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted()
       .forEachBand(pixOut.select(['clouds', 'hillShadow'])), 
@@ -985,9 +1156,11 @@ def ref_pull_89_DSWE1(image, feat):
   """
   # where the f mask is > 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
   clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
-  # add mask FOR low aerosol and realistic values
-  aero = add_sr_aero_mask(image).select('aero').eq(1).rename('low_aero')
-  real = add_realistic_mask_89(image).select('real').eq(1).rename('is_real')
+  # add mask FOR low aerosol, realistic values, sun glint, ir glint
+  aero = add_sr_aero_mask(image).select('aero').eq(0).rename('low_aero')
+  real = add_realistic_mask_457(image).select('real').eq(1).rename('is_real')
+  no_glint = add_sun_glint_mask(image).select('no_glint').eq(1)
+  ir_glint = add_ir_glint_flag(image).select('ir_glint').eq(1)
   # calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
   # calculate hillshadow
@@ -1003,8 +1176,10 @@ def ref_pull_89_DSWE1(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(aero.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
+    
   # create additive masks for dswe==1 (confident open water)
   # hs = 1, fully illuminated pixels
   dswe1 = (d.eq(1).rename('dswe1')
@@ -1013,8 +1188,10 @@ def ref_pull_89_DSWE1(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(aero.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
+    
   # create additive masks for dswe==3 (confident vegetated water)
   # hs = 1, fully illuminated pixels
   dswe3 = (d.eq(3).rename('dswe3')
@@ -1023,8 +1200,10 @@ def ref_pull_89_DSWE1(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(aero.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
+    
   # define dswe 1a where d is not 0 and red/green threshold met
   grn_alg_thrsh = image.select('Green').gt(0.05)
   red_alg_thrsh = image.select('Red').lt(0.04)
@@ -1035,7 +1214,9 @@ def ref_pull_89_DSWE1(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(aero.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     )
+    
   # create additive mask for dswe1a: dswe = 1 or algal threshold met
   # hs = 1, fully illuminated pixels
   dswe1a = (d.eq(1)
@@ -1046,24 +1227,38 @@ def ref_pull_89_DSWE1(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(aero.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
-  
+    
   # create masks for each band for <0 and <-0.01
-  aero_zero = image.select('Aerosol').lt(0).rename('aero_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  aero_thresh = image.select('Aerosol').lt(-0.01).rename('aero_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  blue_zero = image.select('Blue').lt(0).rename('blue_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  blue_thresh = image.select('Blue').lt(-0.01).rename('blue_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  green_zero = image.select('Green').lt(0).rename('green_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  green_thresh = image.select('Green').lt(-0.01).rename('green_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  red_zero = image.select('Red').lt(0).rename('red_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  red_thresh = image.select('Red').lt(-0.01).rename('red_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  nir_zero = image.select('Nir').lt(0).rename('nir_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  nir_thresh = image.select('Nir').lt(-0.01).rename('nir_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  swir1_zero = image.select('Swir1').lt(0).rename('swir1_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  swir1_thresh = image.select('Swir1').lt(-0.01).rename('swir1_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
+  aero_zero = image.select('Aerosol').lt(0).rename('aero_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  aero_thresh = image.select('Aerosol').lt(-0.01).rename('aero_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  blue_zero = image.select('Blue').lt(0).rename('blue_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  blue_thresh = image.select('Blue').lt(-0.01).rename('blue_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  green_zero = image.select('Green').lt(0).rename('green_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  green_thresh = image.select('Green').lt(-0.01).rename('green_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  red_zero = image.select('Red').lt(0).rename('red_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  red_thresh = image.select('Red').lt(-0.01).rename('red_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  nir_zero = image.select('Nir').lt(0).rename('nir_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  nir_thresh = image.select('Nir').lt(-0.01).rename('nir_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  swir1_zero = image.select('Swir1').lt(0).rename('swir1_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  swir1_thresh = image.select('Swir1').lt(-0.01).rename('swir1_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+
+  # create masks for each band for = >0.2
+  blue_glint = image.select('Blue').gte(0.2).rename('blue_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  green_glint = image.select('Green').gte(0.2).rename('green_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  red_glint = image.select('Red').gte(0.2).rename('red_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  nir_glint = image.select('Nir').gte(0.2).rename('nir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  swir1_glint = image.select('Swir1').gte(0.2).rename('swir1_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  swir2_glint = image.select('Swir2').gte(0.2).rename('swir2_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+
+  # create masks for ir bands >=0.1
+  nir_ir_glint = image.select('Nir').gte(0.1).rename('nir_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  swir1_ir_glint = image.select('Swir1').gte(0.1).rename('swir1_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
+  swir2_ir_glint = image.select('Swir2').gte(0.1).rename('swir2_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
 
   pixOut = (image.select(['Aerosol', 'Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2', 
                       'SurfaceTemp'],
@@ -1090,6 +1285,8 @@ def ref_pull_89_DSWE1(image, feat):
           .addBands(dswe1a)
           .addBands(aero.eq(0).selfMask().rename('high_aero'))
           .addBands(real.eq(0).selfMask().rename('unreal_val'))
+          .addBands(no_glint.eq(0).selfMask().rename('sun_glint'))
+          .addBands(ir_glint.eq(1).selfMask())
           .addBands(aero_zero)
           .addBands(aero_thresh)
           .addBands(blue_zero)
@@ -1104,6 +1301,15 @@ def ref_pull_89_DSWE1(image, feat):
           .addBands(swir1_thresh)
           .addBands(swir2_zero)
           .addBands(swir2_thresh)
+          .addBands(blue_glint)
+          .addBands(green_glint)
+          .addBands(red_glint)
+          .addBands(nir_glint)
+          .addBands(swir1_glint)
+          .addBands(swir2_glint)
+          .addBands(nir_ir_glint)
+          .addBands(swir1_ir_glint)
+          .addBands(swir2_ir_glint)
           .addBands(clouds) 
           .addBands(hs)
           .addBands(h)
@@ -1122,9 +1328,11 @@ def ref_pull_89_DSWE1(image, feat):
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
       .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'high_aero', 'unreal_val',
-              'aero_zero', 'aero_thresh',
+              'sun_glint', 'ir_glint', 'aero_zero', 'aero_thresh',
               'blue_zero', 'blue_thresh', 'green_zero', 'green_thresh', 'red_zero', 'red_thresh',
-              'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh'])), 
+              'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh',
+              'blue_glint', 'green_glint', 'red_glint', 'nir_glint', 'swir1_glint', 'swir2_glint',
+              'nir_ir_glint', 'swir1_ir_glint', 'swir2_ir_glint'])), 
       outputPrefix = 'pCount_', sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted()
       .forEachBand(pixOut.select(['clouds', 'hillShadow'])), 
@@ -1154,9 +1362,11 @@ def ref_pull_89_DSWE1a(image, feat):
   """
   # where the f mask is > 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
   clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
-  # add mask FOR low aerosol and realistic values
-  aero = add_sr_aero_mask(image).select('aero').eq(1).rename('low_aero')
-  real = add_realistic_mask_89(image).select('real').eq(1).rename('is_real')
+  # add mask FOR low aerosol, realistic values, sun glint, ir glint
+  aero = add_sr_aero_mask(image).select('aero').eq(0).rename('low_aero')
+  real = add_realistic_mask_457(image).select('real').eq(1).rename('is_real')
+  no_glint = add_sun_glint_mask(image).select('no_glint').eq(1)
+  ir_glint = add_ir_glint_flag(image).select('ir_glint').eq(1)
   #calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
   #calculate hillshadow
@@ -1172,8 +1382,10 @@ def ref_pull_89_DSWE1a(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(aero.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
+    
   # create additive masks for dswe==1 (confident open water)
   # hs = 1, fully illuminated pixels
   dswe1 = (d.eq(1).rename('dswe1')
@@ -1182,8 +1394,10 @@ def ref_pull_89_DSWE1a(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(aero.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
+    
   # create additive masks for dswe==3 (confident vegetated water)
   # hs = 1, fully illuminated pixels
   dswe3 = (d.eq(3).rename('dswe3')
@@ -1192,8 +1406,10 @@ def ref_pull_89_DSWE1a(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(aero.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
+  
   # define dswe 1a where d is not 0 and red/green threshold met
   grn_alg_thrsh = image.select('Green').gt(0.05)
   red_alg_thrsh = image.select('Red').lt(0.04)
@@ -1204,7 +1420,9 @@ def ref_pull_89_DSWE1a(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(aero.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     )
+    
   # create additive mask for dswe1a: dswe = 1 or algal threshold met
   # hs = 1, fully illuminated pixels
   dswe1a = (d.eq(1)
@@ -1215,24 +1433,38 @@ def ref_pull_89_DSWE1a(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(aero.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
   
   # create masks for each band for <0 and <-0.01
-  aero_zero = image.select('Aerosol').lt(0).rename('aero_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  aero_thresh = image.select('Aerosol').lt(-0.01).rename('aero_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  blue_zero = image.select('Blue').lt(0).rename('blue_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  blue_thresh = image.select('Blue').lt(-0.01).rename('blue_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  green_zero = image.select('Green').lt(0).rename('green_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  green_thresh = image.select('Green').lt(-0.01).rename('green_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  red_zero = image.select('Red').lt(0).rename('red_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  red_thresh = image.select('Red').lt(-0.01).rename('red_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  nir_zero = image.select('Nir').lt(0).rename('nir_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  nir_thresh = image.select('Nir').lt(-0.01).rename('nir_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  swir1_zero = image.select('Swir1').lt(0).rename('swir1_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  swir1_thresh = image.select('Swir1').lt(-0.01).rename('swir1_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
+  aero_zero = image.select('Aerosol').lt(0).rename('aero_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  aero_thresh = image.select('Aerosol').lt(-0.01).rename('aero_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  blue_zero = image.select('Blue').lt(0).rename('blue_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  blue_thresh = image.select('Blue').lt(-0.01).rename('blue_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  green_zero = image.select('Green').lt(0).rename('green_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  green_thresh = image.select('Green').lt(-0.01).rename('green_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  red_zero = image.select('Red').lt(0).rename('red_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  red_thresh = image.select('Red').lt(-0.01).rename('red_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  nir_zero = image.select('Nir').lt(0).rename('nir_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  nir_thresh = image.select('Nir').lt(-0.01).rename('nir_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  swir1_zero = image.select('Swir1').lt(0).rename('swir1_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  swir1_thresh = image.select('Swir1').lt(-0.01).rename('swir1_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  
+  # create masks for each band for = >0.2
+  blue_glint = image.select('Blue').gte(0.2).rename('blue_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  green_glint = image.select('Green').gte(0.2).rename('green_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  red_glint = image.select('Red').gte(0.2).rename('red_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  nir_glint = image.select('Nir').gte(0.2).rename('nir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  swir1_glint = image.select('Swir1').gte(0.2).rename('swir1_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  swir2_glint = image.select('Swir2').gte(0.2).rename('swir2_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+
+  # create masks for ir bands >=0.1
+  nir_ir_glint = image.select('Nir').gte(0.1).rename('nir_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  swir1_ir_glint = image.select('Swir1').gte(0.1).rename('swir1_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
+  swir2_ir_glint = image.select('Swir2').gte(0.1).rename('swir2_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
   
   pixOut = (image.select(['Aerosol', 'Blue', 'Green', 'Red', 'Nir', 'Swir1', 'Swir2',
                       'SurfaceTemp'],
@@ -1259,6 +1491,8 @@ def ref_pull_89_DSWE1a(image, feat):
           .addBands(dswe1a)
           .addBands(aero.eq(0).selfMask().rename('high_aero'))
           .addBands(real.eq(0).selfMask().rename('unreal_val'))
+          .addBands(no_glint.eq(0).selfMask().rename('sun_glint'))
+          .addBands(ir_glint.eq(1).selfMask())
           .addBands(aero_zero)
           .addBands(aero_thresh)
           .addBands(blue_zero)
@@ -1273,6 +1507,15 @@ def ref_pull_89_DSWE1a(image, feat):
           .addBands(swir1_thresh)
           .addBands(swir2_zero)
           .addBands(swir2_thresh)
+          .addBands(blue_glint)
+          .addBands(green_glint)
+          .addBands(red_glint)
+          .addBands(nir_glint)
+          .addBands(swir1_glint)
+          .addBands(swir2_glint)
+          .addBands(nir_ir_glint)
+          .addBands(swir1_ir_glint)
+          .addBands(swir2_ir_glint)
           .addBands(clouds) 
           .addBands(hs)
           .addBands(h)
@@ -1291,9 +1534,11 @@ def ref_pull_89_DSWE1a(image, feat):
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
       .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'high_aero', 'unreal_val',
-              'aero_zero', 'aero_thresh',
+              'sun_glint', 'ir_glint', 'aero_zero', 'aero_thresh',
               'blue_zero', 'blue_thresh', 'green_zero', 'green_thresh', 'red_zero', 'red_thresh',
-              'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh'])), 
+              'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh',
+              'blue_glint', 'green_glint', 'red_glint', 'nir_glint', 'swir1_glint', 'swir2_glint',
+              'nir_ir_glint', 'swir1_ir_glint', 'swir2_ir_glint'])), 
       outputPrefix = 'pCount_', sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted()
       .forEachBand(pixOut.select(['clouds', 'hillShadow'])), 
@@ -1302,7 +1547,6 @@ def ref_pull_89_DSWE1a(image, feat):
       .forEachBand(pixOut.select(['hillShade'])), 
       outputPrefix = 'mean_', sharedInputs = False)
     )
-
   lsout = (pixOut.reduceRegions(feat, combinedReducer, 30))
   out = lsout.map(remove_geo)
   return out
@@ -1322,9 +1566,11 @@ def ref_pull_89_DSWE3(image, feat):
   """
   # where the f mask is > 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
   clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
-  # add mask FOR low aerosol and realistic values
-  aero = add_sr_aero_mask(image).select('aero').eq(1).rename('low_aero')
-  real = add_realistic_mask_89(image).select('real').eq(1).rename('is_real')
+  # add mask FOR low aerosol, realistic values, sun glint, ir glint
+  aero = add_sr_aero_mask(image).select('aero').eq(0).rename('low_aero')
+  real = add_realistic_mask_457(image).select('real').eq(1).rename('is_real')
+  no_glint = add_sun_glint_mask(image).select('no_glint').eq(1)
+  ir_glint = add_ir_glint_flag(image).select('ir_glint').eq(1)
   #calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
   #calculate hillshadow
@@ -1340,6 +1586,7 @@ def ref_pull_89_DSWE3(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(aero.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
   # create additive masks for dswe==1 (confident open water)
@@ -1350,6 +1597,7 @@ def ref_pull_89_DSWE3(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(aero.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
   # create additive masks for dswe==3 (confident vegetated water)
@@ -1360,6 +1608,7 @@ def ref_pull_89_DSWE3(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(aero.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
   # define dswe 1a where d is not 0 and red/green threshold met
@@ -1372,6 +1621,7 @@ def ref_pull_89_DSWE3(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(aero.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     )
   # create additive mask for dswe1a: dswe = 1 or algal threshold met
   # hs = 1, fully illuminated pixels
@@ -1383,24 +1633,38 @@ def ref_pull_89_DSWE3(image, feat):
     .updateMask(clouds.eq(0))
     .updateMask(aero.eq(1))
     .updateMask(real.eq(1))
+    .updateMask(no_glint.eq(1))
     .selfMask()
     )
   
   # create masks for each band for <0 and <-0.01
-  aero_zero = image.select('Aerosol').lt(0).rename('aero_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  aero_thresh = image.select('Aerosol').lt(-0.01).rename('aero_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  blue_zero = image.select('Blue').lt(0).rename('blue_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  blue_thresh = image.select('Blue').lt(-0.01).rename('blue_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  green_zero = image.select('Green').lt(0).rename('green_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  green_thresh = image.select('Green').lt(-0.01).rename('green_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  red_zero = image.select('Red').lt(0).rename('red_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  red_thresh = image.select('Red').lt(-0.01).rename('red_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  nir_zero = image.select('Nir').lt(0).rename('nir_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  nir_thresh = image.select('Nir').lt(-0.01).rename('nir_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  swir1_zero = image.select('Swir1').lt(0).rename('swir1_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  swir1_thresh = image.select('Swir1').lt(-0.01).rename('swir1_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
-  swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(clouds.eq(0)).updateMask(aero.eq(1)).selfMask()
+  aero_zero = image.select('Aerosol').lt(0).rename('aero_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  aero_thresh = image.select('Aerosol').lt(-0.01).rename('aero_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  blue_zero = image.select('Blue').lt(0).rename('blue_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  blue_thresh = image.select('Blue').lt(-0.01).rename('blue_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  green_zero = image.select('Green').lt(0).rename('green_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  green_thresh = image.select('Green').lt(-0.01).rename('green_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  red_zero = image.select('Red').lt(0).rename('red_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  red_thresh = image.select('Red').lt(-0.01).rename('red_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  nir_zero = image.select('Nir').lt(0).rename('nir_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  nir_thresh = image.select('Nir').lt(-0.01).rename('nir_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  swir1_zero = image.select('Swir1').lt(0).rename('swir1_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  swir1_thresh = image.select('Swir1').lt(-0.01).rename('swir1_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  
+  # create masks for each band for = >0.2
+  blue_glint = image.select('Blue').gte(0.2).rename('blue_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  green_glint = image.select('Green').gte(0.2).rename('green_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  red_glint = image.select('Red').gte(0.2).rename('red_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  nir_glint = image.select('Nir').gte(0.2).rename('nir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  swir1_glint = image.select('Swir1').gte(0.2).rename('swir1_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  swir2_glint = image.select('Swir2').gte(0.2).rename('swir2_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  
+  # create masks for ir bands >=0.1
+  nir_ir_glint = image.select('Nir').gte(0.1).rename('nir_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  swir1_ir_glint = image.select('Swir1').gte(0.1).rename('swir1_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
+  swir2_ir_glint = image.select('Swir2').gte(0.1).rename('swir2_ir_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()  
   
   #calculate hillshade
   h = calc_hill_shades(image, wrs.geometry()).select('hillShade')
@@ -1431,6 +1695,8 @@ def ref_pull_89_DSWE3(image, feat):
           .addBands(dswe1a)
           .addBands(aero.eq(0).selfMask().rename('high_aero'))
           .addBands(real.eq(0).selfMask().rename('unreal_val'))
+          .addBands(no_glint.eq(0).selfMask().rename('sun_glint'))
+          .addBands(ir_glint.eq(1).selfMask())
           .addBands(aero_zero)
           .addBands(aero_thresh)
           .addBands(blue_zero)
@@ -1445,6 +1711,15 @@ def ref_pull_89_DSWE3(image, feat):
           .addBands(swir1_thresh)
           .addBands(swir2_zero)
           .addBands(swir2_thresh)
+          .addBands(blue_glint)
+          .addBands(green_glint)
+          .addBands(red_glint)
+          .addBands(nir_glint)
+          .addBands(swir1_glint)
+          .addBands(swir2_glint)
+          .addBands(nir_ir_glint)
+          .addBands(swir1_ir_glint)
+          .addBands(swir2_ir_glint)
           .addBands(clouds) 
           .addBands(hs)
           .addBands(h)
@@ -1463,9 +1738,11 @@ def ref_pull_89_DSWE3(image, feat):
               'mean_Nir', 'mean_Swir1', 'mean_Swir2', 'mean_SurfaceTemp'])), sharedInputs = False)
     .combine(ee.Reducer.count().unweighted()
       .forEachBand(pixOut.select(['dswe_gt0', 'dswe1', 'dswe3', 'dswe1a', 'high_aero', 'unreal_val',
-              'aero_zero', 'aero_thresh',
+              'sun_glint', 'ir_glint', 'aero_zero', 'aero_thresh',
               'blue_zero', 'blue_thresh', 'green_zero', 'green_thresh', 'red_zero', 'red_thresh',
-              'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh'])), 
+              'nir_zero', 'nir_thresh', 'swir1_zero', 'swir1_thresh', 'swir2_zero', 'swir2_thresh',
+              'blue_glint', 'green_glint', 'red_glint', 'nir_glint', 'swir1_glint', 'swir2_glint',
+              'nir_ir_glint', 'swir1_ir_glint', 'swir2_ir_glint'])), 
       outputPrefix = 'pCount_', sharedInputs = False)
     .combine(ee.Reducer.mean().unweighted()
       .forEachBand(pixOut.select(['clouds', 'hillShadow'])), 
@@ -1474,7 +1751,6 @@ def ref_pull_89_DSWE3(image, feat):
       .forEachBand(pixOut.select(['hillShade'])), 
       outputPrefix = 'mean_', sharedInputs = False)
     )
-  
   lsout = (pixOut.reduceRegions(feat, combinedReducer, 30))
   out = lsout.map(remove_geo)
   return out
@@ -1692,10 +1968,13 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 'mean_Swir1', 'mean_Swir2', 
                                               'mean_SurfaceTemp',
                                               'pCount_dswe_gt0', 'pCount_dswe1', 'pCount_dswe3', 'pCount_dswe1a',
-                                              'pCount_high_opac', 'pCount_unreal_val',
+                                              'pCount_high_opac', 'pCount_unreal_val', 'pCount_sun_glint', 'pCount_ir_glint',
                                               'pCount_blue_zero', 'pCount_blue_thresh', 'pCount_green_zero', 'pCount_green_thresh', 
                                               'pCount_red_zero', 'pCount_red_thresh', 'pCount_nir_zero', 'pCount_nir_thresh', 
                                               'pCount_swir1_zero', 'pCount_swir1_thresh', 'pCount_swir2_zero', 'pCount_swir2_thresh', 
+                                              'pCount_blue_glint', 'pCount_green_glint', 'pCount_red_glint', 'pCount_nir_glint', 
+                                              'pCount_swir1_glint', 'pCount_swir2_glint', 
+                                              'pCount_nir_ir_glint', 'pCount_swir1_ir_glint', 'pCount_swir2_ir_glint',
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_457_D1.start()
@@ -1714,10 +1993,13 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 'mean_Swir1', 'mean_Swir2', 
                                               'mean_SurfaceTemp',
                                               'pCount_dswe_gt0', 'pCount_dswe1', 'pCount_dswe3', 'pCount_dswe1a',
-                                              'pCount_high_opac', 'pCount_unreal_val',
+                                              'pCount_high_opac', 'pCount_unreal_val', 'pCount_sun_glint', 'pCount_ir_glint',
                                               'pCount_blue_zero', 'pCount_blue_thresh', 'pCount_green_zero', 'pCount_green_thresh', 
                                               'pCount_red_zero', 'pCount_red_thresh', 'pCount_nir_zero', 'pCount_nir_thresh', 
                                               'pCount_swir1_zero', 'pCount_swir1_thresh', 'pCount_swir2_zero', 'pCount_swir2_thresh', 
+                                              'pCount_blue_glint', 'pCount_green_glint', 'pCount_red_glint', 'pCount_nir_glint', 
+                                              'pCount_swir1_glint', 'pCount_swir2_glint', 
+                                              'pCount_nir_ir_glint', 'pCount_swir1_ir_glint', 'pCount_swir2_ir_glint',
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_457_D1a.start()
@@ -1739,10 +2021,13 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 'mean_Swir1', 'mean_Swir2', 
                                               'mean_SurfaceTemp',
                                               'pCount_dswe_gt0', 'pCount_dswe1', 'pCount_dswe3', 'pCount_dswe1a',
-                                              'pCount_high_opac', 'pCount_unreal_val',
+                                              'pCount_high_opac', 'pCount_unreal_val', 'pCount_sun_glint', 'pCount_ir_glint',
                                               'pCount_blue_zero', 'pCount_blue_thresh', 'pCount_green_zero', 'pCount_green_thresh', 
                                               'pCount_red_zero', 'pCount_red_thresh', 'pCount_nir_zero', 'pCount_nir_thresh', 
                                               'pCount_swir1_zero', 'pCount_swir1_thresh', 'pCount_swir2_zero', 'pCount_swir2_thresh', 
+                                              'pCount_blue_glint', 'pCount_green_glint', 'pCount_red_glint', 'pCount_nir_glint', 
+                                              'pCount_swir1_glint', 'pCount_swir2_glint', 
+                                              'pCount_nir_ir_glint', 'pCount_swir1_ir_glint', 'pCount_swir2_ir_glint',
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_457_D1.start()
@@ -1767,10 +2052,13 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 'mean_Swir1', 'mean_Swir2', 
                                               'mean_SurfaceTemp',
                                               'pCount_dswe_gt0', 'pCount_dswe1', 'pCount_dswe3', 'pCount_dswe1a',
-                                              'pCount_high_opac', 'pCount_unreal_val',
+                                              'pCount_high_opac', 'pCount_unreal_val', 'pCount_sun_glint', 'pCount_ir_glint',
                                               'pCount_blue_zero', 'pCount_blue_thresh', 'pCount_green_zero', 'pCount_green_thresh', 
                                               'pCount_red_zero', 'pCount_red_thresh', 'pCount_nir_zero', 'pCount_nir_thresh', 
                                               'pCount_swir1_zero', 'pCount_swir1_thresh', 'pCount_swir2_zero', 'pCount_swir2_thresh', 
+                                              'pCount_blue_glint', 'pCount_green_glint', 'pCount_red_glint', 'pCount_nir_glint', 
+                                              'pCount_swir1_glint', 'pCount_swir2_glint', 
+                                              'pCount_nir_ir_glint', 'pCount_swir1_ir_glint', 'pCount_swir2_ir_glint',
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
     #Send next task.                                        
     locs_dataOut_457_D3.start()
@@ -1813,10 +2101,13 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 'mean_Swir1', 'mean_Swir2', 
                                               'mean_SurfaceTemp',
                                               'pCount_dswe_gt0', 'pCount_dswe1', 'pCount_dswe3', 'pCount_dswe1a',
-                                              'pCount_high_aero', 'pCount_unreal_val',
+                                              'pCount_high_aero', 'pCount_unreal_val', 'pCount_sun_glint', 'pCount_ir_glint',
+                                              'pCount_aero_zero', 'pCount_aero_thresh',
                                               'pCount_blue_zero', 'pCount_blue_thresh', 'pCount_green_zero', 'pCount_green_thresh', 
                                               'pCount_red_zero', 'pCount_red_thresh', 'pCount_nir_zero', 'pCount_nir_thresh', 
                                               'pCount_swir1_zero', 'pCount_swir1_thresh', 'pCount_swir2_zero', 'pCount_swir2_thresh', 
+                                              'pCount_blue_glint', 'pCount_green_glint', 'pCount_red_glint', 'pCount_nir_glint', 'pCount_swir1_glint',
+                                              'pCount_swir2_glint', 'pCount_nir_ir_glint', 'pCount_swir1_ir_glint', 'pCount_swir2_ir_glint',
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_89_D1.start()
@@ -1836,10 +2127,13 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 'mean_Swir1', 'mean_Swir2', 
                                               'mean_SurfaceTemp',
                                               'pCount_dswe_gt0', 'pCount_dswe1', 'pCount_dswe3', 'pCount_dswe1a',
-                                              'pCount_high_aero', 'pCount_unreal_val',
+                                              'pCount_high_aero', 'pCount_unreal_val', 'pCount_sun_glint', 'pCount_ir_glint',
+                                              'pCount_aero_zero', 'pCount_aero_thresh',
                                               'pCount_blue_zero', 'pCount_blue_thresh', 'pCount_green_zero', 'pCount_green_thresh', 
                                               'pCount_red_zero', 'pCount_red_thresh', 'pCount_nir_zero', 'pCount_nir_thresh', 
                                               'pCount_swir1_zero', 'pCount_swir1_thresh', 'pCount_swir2_zero', 'pCount_swir2_thresh', 
+                                              'pCount_blue_glint', 'pCount_green_glint', 'pCount_red_glint', 'pCount_nir_glint', 'pCount_swir1_glint',
+                                              'pCount_swir2_glint', 'pCount_nir_ir_glint', 'pCount_swir1_ir_glint', 'pCount_swir2_ir_glint',
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_89_D1a.start()
@@ -1860,10 +2154,13 @@ def process_subset(df_subset, chunk, chunk_size):
                                               'mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 'mean_Swir1', 'mean_Swir2', 
                                               'mean_SurfaceTemp',
                                               'pCount_dswe_gt0', 'pCount_dswe1', 'pCount_dswe3', 'pCount_dswe1a',
-                                              'pCount_high_aero', 'pCount_unreal_val',
+                                              'pCount_high_aero', 'pCount_unreal_val', 'pCount_sun_glint', 'pCount_ir_glint',
+                                              'pCount_aero_zero', 'pCount_aero_thresh',
                                               'pCount_blue_zero', 'pCount_blue_thresh', 'pCount_green_zero', 'pCount_green_thresh', 
                                               'pCount_red_zero', 'pCount_red_thresh', 'pCount_nir_zero', 'pCount_nir_thresh', 
                                               'pCount_swir1_zero', 'pCount_swir1_thresh', 'pCount_swir2_zero', 'pCount_swir2_thresh', 
+                                              'pCount_blue_glint', 'pCount_green_glint', 'pCount_red_glint', 'pCount_nir_glint', 'pCount_swir1_glint',
+                                              'pCount_swir2_glint', 'pCount_nir_ir_glint', 'pCount_swir1_ir_glint', 'pCount_swir2_ir_glint',
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
       #Send next task.                                        
       locs_dataOut_89_D1.start()
@@ -1879,17 +2176,20 @@ def process_subset(df_subset, chunk, chunk_size):
                                             description = locs_srname_89_D3,
                                             folder = folder_version,
                                             fileFormat = 'csv',
-                                              selectors = ['system:index',
+                                            selectors = ['system:index',
                                               'med_Aerosol', 'med_Blue', 'med_Green', 'med_Red', 'med_Nir', 'med_Swir1', 'med_Swir2', 
                                               'med_SurfaceTemp', 'min_SurfaceTemp',
                                               'sd_Aerosol', 'sd_Blue', 'sd_Green', 'sd_Red', 'sd_Nir', 'sd_Swir1', 'sd_Swir2', 'sd_SurfaceTemp',
                                               'mean_Aerosol', 'mean_Blue', 'mean_Green', 'mean_Red', 'mean_Nir', 'mean_Swir1', 'mean_Swir2', 
                                               'mean_SurfaceTemp',
                                               'pCount_dswe_gt0', 'pCount_dswe1', 'pCount_dswe3', 'pCount_dswe1a',
-                                              'pCount_high_aero', 'pCount_unreal_val',
+                                              'pCount_high_aero', 'pCount_unreal_val', 'pCount_sun_glint', 'pCount_ir_glint',
+                                              'pCount_aero_zero', 'pCount_aero_thresh',
                                               'pCount_blue_zero', 'pCount_blue_thresh', 'pCount_green_zero', 'pCount_green_thresh', 
                                               'pCount_red_zero', 'pCount_red_thresh', 'pCount_nir_zero', 'pCount_nir_thresh', 
                                               'pCount_swir1_zero', 'pCount_swir1_thresh', 'pCount_swir2_zero', 'pCount_swir2_thresh', 
+                                              'pCount_blue_glint', 'pCount_green_glint', 'pCount_red_glint', 'pCount_nir_glint', 'pCount_swir1_glint',
+                                              'pCount_swir2_glint', 'pCount_nir_ir_glint', 'pCount_swir1_ir_glint', 'pCount_swir2_ir_glint',
                                               'prop_clouds','prop_hillShadow','mean_hillShade']))
     #Send next task.                                        
     locs_dataOut_89_D3.start()

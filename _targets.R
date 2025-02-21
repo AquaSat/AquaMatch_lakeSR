@@ -33,11 +33,11 @@ poi_config <- "b_pull_Landsat_SRST_poi/config_files/config_poi.yml"
 
 # Set general configuration setting: -----------------------------
 
-general_config <- "default"
+general_config <- "admin_update"
 
 # Create configuration targets:  ------------------------------------------
 
-config_list = list(
+config_list <- list(
   
   # Grab location of the local {targets} siteSR pipeline OR error if
   # the location doesn't exist yet
@@ -76,6 +76,7 @@ tar_source(files = c(
   "a_Calculate_Centers.R",
   "b_pull_Landsat_SRST_poi.R",
   "c_collate_Landsat_data.R",
+  "d_qa_filter_calc_handoff.R",
   "y_siteSR_targets.R",
   "z_render_bookdown.R"
   )
@@ -88,6 +89,7 @@ list(
   a_Calculate_Centers_list,
   b_pull_Landsat_SRST_poi_list,
   c_collate_Landsat_data,
+  d_qa_filter_calc_handoff,
   y_siteSR_list,
   z_render_bookdown
 )
