@@ -148,7 +148,7 @@ qa_and_document_LS <- function(mission_info,
                         point.size = NA,
                         xlim = c(-Inf, Inf),
                         ylim =  c(-Inf, Inf),
-                        nudge_y = max(drops$value)*0.01,
+                        nudge_y = max(drops$value) * 0.01,
                         hjust = "left") +
         labs(title = paste0("Summary of ", paste(mission_info$mission_names, toupper(dswe), sep = " "), " data QA records"), 
              x = NULL, y = NULL) +

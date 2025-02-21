@@ -203,7 +203,7 @@ d_qa_filter_calc_handoff <- list(
                                   version_id = d_version_identifier,
                                   mission_id = "LC08",
                                   dswe = c_dswe_types,
-                                  start_date =ymd("2021-09-27"), 
+                                  start_date = ymd("2021-09-27"), 
                                   end_date = ymd("2024-12-31"),
                                   for_corr = "LS9",
                                   record_length_prop = 0.75,
