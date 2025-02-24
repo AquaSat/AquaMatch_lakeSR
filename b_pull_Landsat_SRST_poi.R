@@ -152,6 +152,7 @@ if (config::get(config = general_config)$run_GEE) {
       name = b_eeRun_poi,
       command = {
         b_eeRun_script
+        b_yml_poi
         run_GEE_per_pathrow(WRS_pathrow = b_WRS_pathrow_poi)
       },
       pattern = map(b_WRS_pathrow_poi),

@@ -10,8 +10,10 @@ tryCatch({
   print("conda environment activated")
 },
 warning = function(w) {
-  # when running this function, it will always produce a warning, if
-  # your RStudio is set up in some configurations
+  # if there is a warning, restart R (this won't drop any loaded packages, but
+  # will reset any reticulate settings)
+  .rs.restartR()
+  use_condaenv(file.path(getwd(), "env/"))
   print("conda environment activated")
 },
 error = function(e) {
