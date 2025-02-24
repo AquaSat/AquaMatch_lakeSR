@@ -76,16 +76,6 @@ qa_and_document_LS <- function(mission_info,
                       filter({{pCount_column}} >= min_no_pix)
                     valid_thresh <- nrow(data)
                     
-                    # filter out glint pixels using 0.2 thresh for old version of masking,
-                    # this will be removed in next round
-                    data <- data %>% 
-                      mutate(across(c(med_Blue, med_Green, med_Red),
-                                    ~ if_else(med_Blue < 0.2 & med_Green < 0.2 & med_Red < 0.2,
-                                              .,
-                                              NA_real_))) %>% 
-                      filter(!is.na(med_Blue))
-                    sun_glint <- nrow(data)
-                    
                     # filter thermal for > 273.15 (above freezing)
                     data <- data %>% #glint_thresh %>% 
                       filter(med_SurfaceTemp > thermal_threshold)
@@ -107,7 +97,6 @@ qa_and_document_LS <- function(mission_info,
                     # return row summary of filtered data
                     tibble(all_data = all_data,
                            valid_thresh = valid_thresh,
-                           sun_glint = sun_glint,
                            temp_thresh = temp_thresh,
                            ir_glint_thresh = ir_glint_thresh) %>% 
                       pivot_longer(cols = all_data:ir_glint_thresh) 
@@ -126,7 +115,6 @@ qa_and_document_LS <- function(mission_info,
       
       drop_reason <- tibble(all_data = "unfiltered Landsat data",
                             valid_thresh = sprintf("minimum number of pixels threshold (%s) met", min_no_pix),
-                            sun_glint = "median value of all RGB bands < 0.2",
                             temp_thresh = sprintf("thermal band threshold (%s) met", thermal_threshold),
                             ir_glint_thresh = sprintf("NIR/SWIR threshold (%s) met", ir_threshold)) %>% 
         pivot_longer(cols = all_data:ir_glint_thresh,
@@ -135,7 +123,6 @@ qa_and_document_LS <- function(mission_info,
       drops <- full_join(row_summary, drop_reason) %>% 
         mutate(name = factor(name, levels = c("ir_glint_thresh",
                                               "temp_thresh",
-                                              "sun_glint",
                                               "valid_thresh",
                                               "all_data")),
                lab = paste0(reason, ": ", format(value, big.mark = ","), " records"))

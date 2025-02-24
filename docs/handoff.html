@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-02-18" />
+<meta name="date" content="2025-02-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -241,9 +241,7 @@ div.csl-indent {
 <li class="chapter" data-level="7.3" data-path="handoff.html"><a href="handoff.html#define-handoff"><i class="fa fa-check"></i><b>7.3</b> Calculating intermission handoffs</a>
 <ul>
 <li class="chapter" data-level="7.3.1" data-path="handoff.html"><a href="handoff.html#roy-method"><i class="fa fa-check"></i><b>7.3.1</b> Roy method</a></li>
-<li class="chapter" data-level="7.3.2" data-path="handoff.html"><a href="handoff.html#garnder-method"><i class="fa fa-check"></i><b>7.3.2</b> Garnder method</a></li>
-<li class="chapter" data-level="7.3.3" data-path="handoff.html"><a href="handoff.html#corr7-handoff-coefficients"><i class="fa fa-check"></i><b>7.3.3</b> <code>corr7</code> handoff coefficients</a></li>
-<li class="chapter" data-level="7.3.4" data-path="handoff.html"><a href="handoff.html#corr8-handoff-coefficients"><i class="fa fa-check"></i><b>7.3.4</b> <code>corr8</code> handoff coefficients</a></li>
+<li class="chapter" data-level="7.3.2" data-path="handoff.html"><a href="handoff.html#gardner-method"><i class="fa fa-check"></i><b>7.3.2</b> Gardner method</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>8</b> References</a></li>
@@ -291,6 +289,12 @@ designed to reduce data corruption due to file size in the upload/download
 process to Google Drive, where the collated files are stored for posterity and
 to add functionality to this workflow. The Google Drive ids can be found at the
 folder path <code>c_collate_Landsat_data/out/</code> and can be accessed without special
+were collated into large compressed .feather files per DSWE type (DSWE1 and
+DSWE1a), per Landsat mission, and per path prefix. The path prefix subset is
+designed to reduce data corruption due to file size in the upload/download
+process to Google Drive, where the collated files are stored for posterity and
+to add functionality to this workflow. The Google Drive ids can be found at the
+folder path <code>c_collate_Landsat_data/out/</code> and can be accessed without special
 permissions by downstream users. Many of these files are quite large (on the
 order of many GBs) and are very difficult to handle outside of a programming or
 database environment. We provide these files for advanced users who wish to make
@@ -330,49 +334,54 @@ approach.</p></li>
 </ul>
 <p>While there are numerous other diagnostic tests we could apply to filter the RS
 data, these are the QA filters that we deem to be the most foundational and
-unifying for reliable RS data across the US and Territories.</p>
+unifying for reliable RS data across the US and Territories. Figures
+<a href="#fig:ls4-dswe1-drop"><strong>??</strong></a> through <a href="#fig:ls9-dswe1a-drop"><strong>??</strong></a> show how many rows
+of data were dropped through this QA process.</p>
 <div id="landsat-4-qa-summary" class="section level3 hasAnchor" number="7.2.1">
 <h3><span class="header-section-number">7.2.1</span> Landsat 4 QA Summary<a href="handoff.html#landsat-4-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="float">
+<div class="float" id="ls4-dswe1-drop">
 <img src="images/LT04_dswe1_drop_summary.png" alt="Summary of dropped rows for Landsat 4’s DSWE1 (confident water) RS summaries." />
 <div class="figcaption">Summary of dropped rows for Landsat 4’s DSWE1 (confident water) RS
 summaries.</div>
 </div>
-<div class="float">
+<div class="float" id="ls4-dswe1a-drop">
 <img src="images/LT04_DSWE1a_drop_summary.png" alt="Summary of dropped rows for Landsat 4’s DSWE1a (confident water with positive algal mask) RS summaries." />
 <div class="figcaption">Summary of dropped rows for Landsat 4’s DSWE1a (confident water with positive
-algal mask) RS summaries.</div>
+algal mask) RS
+summaries.</div>
 </div>
 </div>
 <div id="landsat-5-qa-summary" class="section level3 hasAnchor" number="7.2.2">
 <h3><span class="header-section-number">7.2.2</span> Landsat 5 QA Summary<a href="handoff.html#landsat-5-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="float">
+<div class="float" id="ls5-dswe1-drop">
 <img src="images/LT05_DSWE1_drop_summary.png" alt="Summary of dropped rows for Landsat 5’s DSWE1 (confident water) RS summaries." />
 <div class="figcaption">Summary of dropped rows for Landsat 5’s DSWE1 (confident water) RS
 summaries.</div>
 </div>
-<div class="float">
+<div class="float" id="ls5-dswe1a-drop">
 <img src="images/LT05_DSWE1a_drop_summary.png" alt="Summary of dropped rows for Landsat 5’s DSWE1a (confident water and positive algal mask) RS summaries." />
 <div class="figcaption">Summary of dropped rows for Landsat 5’s DSWE1a (confident water and positive
-algal mask) RS summaries.</div>
+algal mask) RS
+summaries.</div>
 </div>
 </div>
 <div id="landsat-7-qa-summary" class="section level3 hasAnchor" number="7.2.3">
 <h3><span class="header-section-number">7.2.3</span> Landsat 7 QA Summary<a href="handoff.html#landsat-7-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="float">
+<div class="float" id="ls7-dswe1-drop">
 <img src="images/LE07_DSWE1_drop_summary.png" alt="Summary of dropped rows for Landsat 7’s DSWE1 (confident water) RS summaries." />
 <div class="figcaption">Summary of dropped rows for Landsat 7’s DSWE1 (confident water) RS
 summaries.</div>
 </div>
-<div class="float">
+<div class="float" id="ls7-dswe1a-drop">
 <img src="images/LE07_DSWE1a_drop_summary.png" alt="Summary of dropped rows for Landsat 7’s DSWE1a (confident water and positive algal mask) RS summaries." />
 <div class="figcaption">Summary of dropped rows for Landsat 7’s DSWE1a (confident water and positive
-algal mask) RS summaries.</div>
+algal mask) RS
+summaries.</div>
 </div>
 </div>
 <div id="landsat-8-qa-summary" class="section level3 hasAnchor" number="7.2.4">
 <h3><span class="header-section-number">7.2.4</span> Landsat 8 QA Summary<a href="handoff.html#landsat-8-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="float">
+<div class="float" id="ls8-dswe1-drop">
 <img src="images/LC08_DSWE1_drop_summary.png" alt="Summary of dropped rows for Landsat 8’s DSWE1 (confident water) RS summaries." />
 <div class="figcaption">Summary of dropped rows for Landsat 8’s DSWE1 (confident water) RS
 summaries.</div>
@@ -385,31 +394,28 @@ algal mask) RS summaries.</div>
 </div>
 <div id="landsat-9-qa-summary" class="section level3 hasAnchor" number="7.2.5">
 <h3><span class="header-section-number">7.2.5</span> Landsat 9 QA Summary<a href="handoff.html#landsat-9-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="float">
+<div class="float" id="ls9-dswe1-drop">
 <img src="images/LC09_DSWE1_drop_summary.png" alt="Summary of dropped rows for Landsat 9’s DSWE1 (confident water) RS summaries." />
 <div class="figcaption">Summary of dropped rows for Landsat 9’s DSWE1 (confident water) RS
 summaries.</div>
 </div>
-<div class="float">
+<div class="float" id="ls9-dswe1a-drop">
 <img src="images/LC09_DSWE1a_drop_summary.png" alt="Summary of dropped rows for Landsat 9’s DSWE1a (confident water and positive algal mask) RS summaries." />
 <div class="figcaption">Summary of dropped rows for Landsat 9’s DSWE1a (confident water and positive
-algal mask) RS summaries.</div>
+algal mask) RS
+summaries.</div>
 </div>
 </div>
 </div>
 <div id="define-handoff" class="section level2 hasAnchor" number="7.3">
 <h2><span class="header-section-number">7.3</span> Calculating intermission handoffs<a href="handoff.html#define-handoff" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In AquaSat v2, we standardize values relative to Landsat 7 (<code>corr7</code>) and Landsat
-8 (<code>corr8</code>). The Landsat 7 intermission handoffs can be applied the entire
-Landsat 4-9 because it overlapped with early Landsat (4/5) and modern Landsat
-(8/9). For the <code>corr7</code> standardization, we treat Landsat 4 and 5 as
-interchangable, given that the satellites contained the same payload and
-radiometric resolution. We also treat Landsat 8 and 9 as interchangable despite
-the slight differences in radiometric resolution. Landsat 8 handoffs (<code>corr8</code>)
-can only be applied to Landsat 7 and 9 due to mission overlap, so the
-standardized data timeseries is shorter; however, it may be more robust for
-analyses focused in the recent past that rely on Landsat 9 data given the
-previously-mentioned caveats for application of <code>corr7</code> to that mission.</p>
+8 (<code>corr8</code>). The Landsat 7 intermission handoffs create a continuous record of
+remote sensing relative to Landsat 7 since Landsat 4 and 5 and Landsat 8 and 9
+can be treated as interchangable due to the similarity in payload and
+radiometric resolution. Landsat 8 handoffs (<code>corr8</code>) can only be applied to
+Landsat 7 and 9 due to mission overlap, so the standardized data timeseries is
+shorter.</p>
 <div id="roy-method" class="section level3 hasAnchor" number="7.3.1">
 <h3><span class="header-section-number">7.3.1</span> Roy method<a href="handoff.html#roy-method" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The Roy method for calculating intermission handoffs uses paired images at
@@ -423,40 +429,295 @@ within the overlapping paths in the WRS2 path-row framework (see figure
 location with data for both images would be considered a paired data point to
 define the Roy method intermission handoffs.</div>
 </div>
-<p>While <span class="citation">Roy et al. (<a href="#ref-roy2016">2016</a>)</span> implement this method on a pixel-by-pixel basis, we implement
+<p>While <span class="citation">Roy et al. (<a href="#ref-roy2016">2016</a>)</span> implemented this method on a pixel-by-pixel basis, we implement
 using the median band value per site. This is used in place of the explicit
-filters of saturated pixels, cloudy/snowy pixels, and pixels with value changes
-greater than the changes in atmospheric correction as described in the text, as
-we have implemented masks and QA filters to reduce these sources of error.
+filters described in the Roy method (saturated pixels, cloudy/snowy pixels, and
+pixels with value changes greater than the changes in atmospheric correction),
+as we have implemented masks and QA filters to reduce these sources of error.
 Handoff coefficients are defined by the ordinary least squares regression line
 of the Landsat 5 against the Landsat 7 data and Landsat 7 against the Landsat 8
-data.</p>
+data (see Table <a href="handoff.html#tab:roy-table">7.1</a>). For the purposes of this documentation,
+we only include figures for DSWE1 due to the size of the match datasets, but
+provide the OLS regression coefficients for both in Table <a href="#tab:roy-coeff"><strong>??</strong></a>.</p>
+<table>
+<caption><span id="tab:roy-table">Table 7.1: </span>Summary of mission data used to create the Roy method intermission handoff.</caption>
+<thead>
+<tr class="header">
+<th align="left">Early mission</th>
+<th align="left">Late mission</th>
+<th align="left">n matches</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Landsat 5</td>
+<td align="left">Landsat 7</td>
+<td align="left">4,894,698</td>
+</tr>
+<tr class="even">
+<td align="left">Landsat 7</td>
+<td align="left">Landsat 8</td>
+<td align="left">1,146,438</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Landsat 5 to 7 correction (<code>roy_corr7</code>)</strong></p>
+<pre><code>## [[1]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls57-fig-1"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls57-fig-1.png" alt="Roy method intermission handoffs of Landsat 5 relative to Landsat 7." width="288" />
+<p class="caption">
+Figure 7.1: Roy method intermission handoffs of Landsat 5 relative to Landsat 7.
+</p>
 </div>
-<div id="garnder-method" class="section level3 hasAnchor" number="7.3.2">
-<h3><span class="header-section-number">7.3.2</span> Garnder method<a href="handoff.html#garnder-method" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<pre><code>## 
+## [[2]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls57-fig-2"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls57-fig-2.png" alt="Roy method intermission handoffs of Landsat 5 relative to Landsat 7." width="288" />
+<p class="caption">
+Figure 7.2: Roy method intermission handoffs of Landsat 5 relative to Landsat 7.
+</p>
+</div>
+<pre><code>## 
+## [[3]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls57-fig-3"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls57-fig-3.png" alt="Roy method intermission handoffs of Landsat 5 relative to Landsat 7." width="288" />
+<p class="caption">
+Figure 7.3: Roy method intermission handoffs of Landsat 5 relative to Landsat 7.
+</p>
+</div>
+<pre><code>## 
+## [[4]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls57-fig-4"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls57-fig-4.png" alt="Roy method intermission handoffs of Landsat 5 relative to Landsat 7." width="288" />
+<p class="caption">
+Figure 7.4: Roy method intermission handoffs of Landsat 5 relative to Landsat 7.
+</p>
+</div>
+<pre><code>## 
+## [[5]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls57-fig-5"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls57-fig-5.png" alt="Roy method intermission handoffs of Landsat 5 relative to Landsat 7." width="288" />
+<p class="caption">
+Figure 7.5: Roy method intermission handoffs of Landsat 5 relative to Landsat 7.
+</p>
+</div>
+<pre><code>## 
+## [[6]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls57-fig-6"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls57-fig-6.png" alt="Roy method intermission handoffs of Landsat 5 relative to Landsat 7." width="288" />
+<p class="caption">
+Figure 7.6: Roy method intermission handoffs of Landsat 5 relative to Landsat 7.
+</p>
+</div>
+<pre><code>## 
+## [[7]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls57-fig-7"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls57-fig-7.png" alt="Roy method intermission handoffs of Landsat 5 relative to Landsat 7." width="288" />
+<p class="caption">
+Figure 7.7: Roy method intermission handoffs of Landsat 5 relative to Landsat 7.
+</p>
+</div>
+<p><strong>Landsat 8 to 7 correction (<code>roy_corr7</code>)</strong></p>
+<pre><code>## [[1]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls87-fig-1"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls87-fig-1.png" alt="Roy method intermission handoffs of Landsat 8 relative to Landsat 7." width="288" />
+<p class="caption">
+Figure 7.8: Roy method intermission handoffs of Landsat 8 relative to Landsat 7.
+</p>
+</div>
+<pre><code>## 
+## [[2]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls87-fig-2"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls87-fig-2.png" alt="Roy method intermission handoffs of Landsat 8 relative to Landsat 7." width="288" />
+<p class="caption">
+Figure 7.9: Roy method intermission handoffs of Landsat 8 relative to Landsat 7.
+</p>
+</div>
+<pre><code>## 
+## [[3]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls87-fig-3"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls87-fig-3.png" alt="Roy method intermission handoffs of Landsat 8 relative to Landsat 7." width="288" />
+<p class="caption">
+Figure 7.10: Roy method intermission handoffs of Landsat 8 relative to Landsat 7.
+</p>
+</div>
+<pre><code>## 
+## [[4]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls87-fig-4"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls87-fig-4.png" alt="Roy method intermission handoffs of Landsat 8 relative to Landsat 7." width="288" />
+<p class="caption">
+Figure 7.11: Roy method intermission handoffs of Landsat 8 relative to Landsat 7.
+</p>
+</div>
+<pre><code>## 
+## [[5]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls87-fig-5"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls87-fig-5.png" alt="Roy method intermission handoffs of Landsat 8 relative to Landsat 7." width="288" />
+<p class="caption">
+Figure 7.12: Roy method intermission handoffs of Landsat 8 relative to Landsat 7.
+</p>
+</div>
+<pre><code>## 
+## [[6]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls87-fig-6"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls87-fig-6.png" alt="Roy method intermission handoffs of Landsat 8 relative to Landsat 7." width="288" />
+<p class="caption">
+Figure 7.13: Roy method intermission handoffs of Landsat 8 relative to Landsat 7.
+</p>
+</div>
+<pre><code>## 
+## [[7]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls87-fig-7"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls87-fig-7.png" alt="Roy method intermission handoffs of Landsat 8 relative to Landsat 7." width="288" />
+<p class="caption">
+Figure 7.14: Roy method intermission handoffs of Landsat 8 relative to Landsat 7.
+</p>
+</div>
+<p><strong>Landsat 7 to 8 correction (<code>roy_corr8</code>)</strong></p>
+<pre><code>## [[1]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls78-fig-1"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls78-fig-1.png" alt="Roy method intermission handoffs of Landsat 7 relative to Landsat 8." width="288" />
+<p class="caption">
+Figure 7.15: Roy method intermission handoffs of Landsat 7 relative to Landsat 8.
+</p>
+</div>
+<pre><code>## 
+## [[2]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls78-fig-2"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls78-fig-2.png" alt="Roy method intermission handoffs of Landsat 7 relative to Landsat 8." width="288" />
+<p class="caption">
+Figure 7.16: Roy method intermission handoffs of Landsat 7 relative to Landsat 8.
+</p>
+</div>
+<pre><code>## 
+## [[3]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls78-fig-3"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls78-fig-3.png" alt="Roy method intermission handoffs of Landsat 7 relative to Landsat 8." width="288" />
+<p class="caption">
+Figure 7.17: Roy method intermission handoffs of Landsat 7 relative to Landsat 8.
+</p>
+</div>
+<pre><code>## 
+## [[4]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls78-fig-4"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls78-fig-4.png" alt="Roy method intermission handoffs of Landsat 7 relative to Landsat 8." width="288" />
+<p class="caption">
+Figure 7.18: Roy method intermission handoffs of Landsat 7 relative to Landsat 8.
+</p>
+</div>
+<pre><code>## 
+## [[5]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls78-fig-5"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls78-fig-5.png" alt="Roy method intermission handoffs of Landsat 7 relative to Landsat 8." width="288" />
+<p class="caption">
+Figure 7.19: Roy method intermission handoffs of Landsat 7 relative to Landsat 8.
+</p>
+</div>
+<pre><code>## 
+## [[6]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls78-fig-6"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls78-fig-6.png" alt="Roy method intermission handoffs of Landsat 7 relative to Landsat 8." width="288" />
+<p class="caption">
+Figure 7.20: Roy method intermission handoffs of Landsat 7 relative to Landsat 8.
+</p>
+</div>
+<pre><code>## 
+## [[7]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls78-fig-7"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls78-fig-7.png" alt="Roy method intermission handoffs of Landsat 7 relative to Landsat 8." width="288" />
+<p class="caption">
+Figure 7.21: Roy method intermission handoffs of Landsat 7 relative to Landsat 8.
+</p>
+</div>
+<p><strong>Landsat 9 to 8 correction (<code>roy_corr8</code>)</strong></p>
+<pre><code>## [[1]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls98-fig-1"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls98-fig-1.png" alt="Roy method intermission handoffs of Landsat 9 relative to Landsat 8." width="288" />
+<p class="caption">
+Figure 7.22: Roy method intermission handoffs of Landsat 9 relative to Landsat 8.
+</p>
+</div>
+<pre><code>## 
+## [[2]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls98-fig-2"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls98-fig-2.png" alt="Roy method intermission handoffs of Landsat 9 relative to Landsat 8." width="288" />
+<p class="caption">
+Figure 7.23: Roy method intermission handoffs of Landsat 9 relative to Landsat 8.
+</p>
+</div>
+<pre><code>## 
+## [[3]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls98-fig-3"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls98-fig-3.png" alt="Roy method intermission handoffs of Landsat 9 relative to Landsat 8." width="288" />
+<p class="caption">
+Figure 7.24: Roy method intermission handoffs of Landsat 9 relative to Landsat 8.
+</p>
+</div>
+<pre><code>## 
+## [[4]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls98-fig-4"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls98-fig-4.png" alt="Roy method intermission handoffs of Landsat 9 relative to Landsat 8." width="288" />
+<p class="caption">
+Figure 7.25: Roy method intermission handoffs of Landsat 9 relative to Landsat 8.
+</p>
+</div>
+<pre><code>## 
+## [[5]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls98-fig-5"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls98-fig-5.png" alt="Roy method intermission handoffs of Landsat 9 relative to Landsat 8." width="288" />
+<p class="caption">
+Figure 7.26: Roy method intermission handoffs of Landsat 9 relative to Landsat 8.
+</p>
+</div>
+<pre><code>## 
+## [[6]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls98-fig-6"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls98-fig-6.png" alt="Roy method intermission handoffs of Landsat 9 relative to Landsat 8." width="288" />
+<p class="caption">
+Figure 7.27: Roy method intermission handoffs of Landsat 9 relative to Landsat 8.
+</p>
+</div>
+<pre><code>## 
+## [[7]]</code></pre>
+<div class="figure"><span style="display:block;" id="fig:roy-ls98-fig-7"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/roy-ls98-fig-7.png" alt="Roy method intermission handoffs of Landsat 9 relative to Landsat 8." width="288" />
+<p class="caption">
+Figure 7.28: Roy method intermission handoffs of Landsat 9 relative to Landsat 8.
+</p>
+</div>
+</div>
+<div id="gardner-method" class="section level3 hasAnchor" number="7.3.2">
+<h3><span class="header-section-number">7.3.2</span> Gardner method<a href="handoff.html#gardner-method" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Gardner method intermission handoffs are defined by the data obtained in the
 overlapping period of time between two adjacent-in-time missions (details
-provided in Table <a href="handoff.html#tab:gardner-table">7.1</a>). These data are summarized to each
-mission’s 1st-99th percentile value per band, and the handoff coefficients
-between missions are defined by the second-order polynomial relationship between
-them. Because we use a second-order polynomial, all values outside of the 1st
-and 99th percentile values used to define the intermission handoff are flagged
-and should be used with extreme caution. All <code>corr7</code> and <code>corr8</code> relationships
-and their derived coefficients are provided in the sections below.</p>
+provided in Table <a href="handoff.html#tab:gardner-table">7.2</a>). These data are filtered to sites
+that have at least one data point per year for at least 75% of the years of
+overlap. The filtered data are then summarized to each mission’s 1st-99th
+percentile value per band, and the handoff coefficients between missions are
+defined by the second-order polynomial relationship between them. When n is
+high, quantiles are equivalent to describing the central tendency of the
+distribution of the x:y relationship due to the Central Limit Theorem. Because
+we use a second-order polynomial, all values outside of the 1st and 99th
+percentile values used to define the intermission handoff are flagged
+<code>corr7_flag</code>, <code>corr8_flag</code> and should be used with extreme caution. All <code>corr7</code>
+and <code>corr8</code> relationships and their derived coefficients are provided in the
+sections below.</p>
 <table>
-<caption><span id="tab:gardner-table">Table 7.1: </span>Summary of missions for handoffs calculated by the Gardner mission.</caption>
+<caption><span id="tab:gardner-table">Table 7.2: </span>Summary of missions for handoffs calculated by the Gardner method. Note that <em>n</em> is summarized by scene, not by number of individual site observations contributing to the quantiles.</caption>
 <colgroup>
-<col width="13%" />
-<col width="12%" />
+<col width="11%" />
+<col width="10%" />
 <col width="13%" />
 <col width="11%" />
-<col width="25%" />
-<col width="24%" />
+<col width="10%" />
+<col width="21%" />
+<col width="20%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th align="left">Early mission</th>
 <th align="left">Late mission</th>
+<th align="left">Correction type</th>
 <th align="left">Overlap Start</th>
 <th align="left">Overlap End</th>
 <th align="left">n Scenes of Early Mission</th>
@@ -467,32 +728,126 @@ and their derived coefficients are provided in the sections below.</p>
 <tr class="odd">
 <td align="left">Landsat 5</td>
 <td align="left">Landsat 7</td>
+<td align="left">corr7</td>
 <td align="left">1999-04-15</td>
 <td align="left">2013-02-11</td>
-<td align="left">75,900</td>
+<td align="left">75,729</td>
 <td align="left">105,443</td>
 </tr>
 <tr class="even">
 <td align="left">Landsat 7</td>
 <td align="left">Landsat 8</td>
+<td align="left">corr7, corr8</td>
 <td align="left">2013-02-11</td>
 <td align="left">2022-04-16</td>
 <td align="left">53,530</td>
 <td align="left">68,985</td>
 </tr>
+<tr class="odd">
+<td align="left">Landsat 8</td>
+<td align="left">Landsat 9</td>
+<td align="left">corr8</td>
+<td align="left">2021-09-27</td>
+<td align="left">2024-12-31</td>
+<td align="left">25,175</td>
+<td align="left">23,853</td>
+</tr>
 </tbody>
 </table>
-<p>The caveat</p>
-</div>
-<div id="corr7-handoff-coefficients" class="section level3 hasAnchor" number="7.3.3">
-<h3><span class="header-section-number">7.3.3</span> <code>corr7</code> handoff coefficients<a href="handoff.html#corr7-handoff-coefficients" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>[[pull figs from functions here]]</p>
-<p>[[insert table of calcs, # of points, etc]]</p>
-</div>
-<div id="corr8-handoff-coefficients" class="section level3 hasAnchor" number="7.3.4">
-<h3><span class="header-section-number">7.3.4</span> <code>corr8</code> handoff coefficients<a href="handoff.html#corr8-handoff-coefficients" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>[[pull figs from functions here]]</p>
-<p>[[insert table of calcs, # of points, etc]]</p>
+<p>One additional consideration when using the Gardner method is, even when n
+scenes is high, if there is a difference between total scene numbers, there may
+be systematic differences ingrained into the coefficients since x and y are not
+truly ‘random samples’, impacting the validity of the Central Limit Theorem. An
+example of possible systematic differences could be fewer observations from
+non-CONUS locations in Landsat 5 due to data transmission errors. We did not
+investigate the differences in n listed in Table <a href="handoff.html#tab:gardner-table">7.2</a> to
+determine what, if any, systematic differences are present between the two
+missions. We provide the Gardner method handoffs for continuity with the riverSR
+product for users who would like that interoperability.</p>
+<p><strong>Landsat 5 to 7 correction (<code>gard_corr7</code>)</strong></p>
+<pre><code>## [[1]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls57-fig-1.png" width="576" /></p>
+<pre><code>## 
+## [[2]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls57-fig-2.png" width="576" /></p>
+<pre><code>## 
+## [[3]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls57-fig-3.png" width="576" /></p>
+<pre><code>## 
+## [[4]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls57-fig-4.png" width="576" /></p>
+<pre><code>## 
+## [[5]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls57-fig-5.png" width="576" /></p>
+<pre><code>## 
+## [[6]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls57-fig-6.png" width="576" /></p>
+<pre><code>## 
+## [[7]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls57-fig-7.png" width="576" /></p>
+<p><strong>Landsat 8 to 7 correction (<code>gard_corr7</code>)</strong></p>
+<pre><code>## [[1]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls87-fig-1.png" width="576" /></p>
+<pre><code>## 
+## [[2]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls87-fig-2.png" width="576" /></p>
+<pre><code>## 
+## [[3]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls87-fig-3.png" width="576" /></p>
+<pre><code>## 
+## [[4]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls87-fig-4.png" width="576" /></p>
+<pre><code>## 
+## [[5]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls87-fig-5.png" width="576" /></p>
+<pre><code>## 
+## [[6]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls87-fig-6.png" width="576" /></p>
+<pre><code>## 
+## [[7]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls87-fig-7.png" width="576" /></p>
+<p><strong>Landsat 7 to 8 correction</strong> <strong>(<code>gard_corr8</code>)</strong></p>
+<pre><code>## [[1]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls78-fig-1.png" width="576" /></p>
+<pre><code>## 
+## [[2]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls78-fig-2.png" width="576" /></p>
+<pre><code>## 
+## [[3]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls78-fig-3.png" width="576" /></p>
+<pre><code>## 
+## [[4]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls78-fig-4.png" width="576" /></p>
+<pre><code>## 
+## [[5]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls78-fig-5.png" width="576" /></p>
+<pre><code>## 
+## [[6]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls78-fig-6.png" width="576" /></p>
+<pre><code>## 
+## [[7]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls78-fig-7.png" width="576" /></p>
+<p><strong>Landsat 9 to 8 correction (<code>gard_corr8</code>)</strong></p>
+<pre><code>## [[1]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls98-fig-1.png" width="576" /></p>
+<pre><code>## 
+## [[2]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls98-fig-2.png" width="576" /></p>
+<pre><code>## 
+## [[3]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls98-fig-3.png" width="576" /></p>
+<pre><code>## 
+## [[4]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls98-fig-4.png" width="576" /></p>
+<pre><code>## 
+## [[5]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls98-fig-5.png" width="576" /></p>
+<pre><code>## 
+## [[6]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls98-fig-6.png" width="576" /></p>
+<pre><code>## 
+## [[7]]</code></pre>
+<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls98-fig-7.png" width="576" /></p>
 
 </div>
 </div>

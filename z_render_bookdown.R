@@ -47,9 +47,9 @@ if (config::get(config = general_config)$update_bookdown) {
                                LS8_for78 = d_LS8_forLS78corr_quantiles,
                                LS8_for89 = d_LS8_forLS89corr_quantiles,
                                LS9_for89 = d_LS9_forLS89corr_quantiles,
-                               LS57_match = d_LS57_matches,
-                               LS78_match = d_LS78_matches,
-                               LS89_match = d_LS89_matches
+                               LS57_match = d_LS57_DSWE1_matches,
+                               LS78_match = d_LS78_DSWE1_matches,
+                               LS89_match = d_LS89_DSWE1_matches
                              ))
                },
                packages = c("tidyverse", "bookdown", "sf", "tigris", "nhdplusTools", 

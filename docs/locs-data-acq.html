@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-02-18" />
+<meta name="date" content="2025-02-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -241,9 +241,7 @@ div.csl-indent {
 <li class="chapter" data-level="7.3" data-path="handoff.html"><a href="handoff.html#define-handoff"><i class="fa fa-check"></i><b>7.3</b> Calculating intermission handoffs</a>
 <ul>
 <li class="chapter" data-level="7.3.1" data-path="handoff.html"><a href="handoff.html#roy-method"><i class="fa fa-check"></i><b>7.3.1</b> Roy method</a></li>
-<li class="chapter" data-level="7.3.2" data-path="handoff.html"><a href="handoff.html#garnder-method"><i class="fa fa-check"></i><b>7.3.2</b> Garnder method</a></li>
-<li class="chapter" data-level="7.3.3" data-path="handoff.html"><a href="handoff.html#corr7-handoff-coefficients"><i class="fa fa-check"></i><b>7.3.3</b> <code>corr7</code> handoff coefficients</a></li>
-<li class="chapter" data-level="7.3.4" data-path="handoff.html"><a href="handoff.html#corr8-handoff-coefficients"><i class="fa fa-check"></i><b>7.3.4</b> <code>corr8</code> handoff coefficients</a></li>
+<li class="chapter" data-level="7.3.2" data-path="handoff.html"><a href="handoff.html#gardner-method"><i class="fa fa-check"></i><b>7.3.2</b> Gardner method</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>8</b> References</a></li>
@@ -409,7 +407,7 @@ Figure 3.3: Point of inaccessibility for Wisconsin lakes included in AquaSat v2 
 are present after the harmonization procedure for each parameter. siteSR
 collates these sites, then reduces that collation to only distinct sites. Across
 chlorophyll-<em>a</em>, Secchi disc depth, and DOC, there are currently
-245,871 distinct sites in the United
+314,041 distinct sites in the United
 States and Territories for which we create stacks.</p>
 <p>Every site in the WQP has a <code>MonitoringLocationTypeName</code> associated with it. For
 the purposes of siteSR, we do not subset the sites by these types, but they are
@@ -449,7 +447,7 @@ Figure 3.5: Water Quality Portal data location types present in siteSR after fil
 <h3><span class="header-section-number">3.2.2</span> Assignment of NHD flowline and waterbodies<a href="locs-data-acq.html#fl-wb-assignment" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For each WQP montioring location, we attempt to assign HUC8’s wherever they are
 missing from the <code>HUCEightDigitCode</code> column output from the WQP (n =
-2635). To do this we use the
+2757). To do this we use the
 <code>get_huc()</code> function from {nhdplusTools} <span class="citation">(<a href="#ref-blodgett2023">Blodgett and Johnson 2023</a>)</span> package in R. After
 HUC8 assignment is finished only
 27 sites remained without a

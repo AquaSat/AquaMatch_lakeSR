@@ -60,65 +60,7 @@ procedures. For the purposes of AquaSat v2, we call this standardization process
 method described in @roy2016 ("Roy method") and an adapted version of that
 described in @gardner2021 ("Gardner method") (described in section
 \@ref(define-handoff)).
-params:
-  cfg: NA
-  LS5_for57: NA
-  LS7_for57: NA
-  LS7_for78: NA
-  LS8_for78: NA
-  LS8_for89: NA
-  LS9_for89: NA
-  LS57_match: NA
-  LS78_match: NA
-  LS89_match: NA
-tables: TRUE
----
 
-```{r chunk-opts-6, echo=FALSE}
-knitr::opts_chunk$set(echo = FALSE, 
-                      message = FALSE, 
-                      warning = FALSE, 
-                      error = FALSE)
-
-library(tidyverse)
-library(googledrive)
-library(arrow)
-
-# for whatever reason, knitr::include_graphics is being kind of weird
-# so here, we'll copy the files from d_qa_filter_calc_handoff/out and put them in images here
-# Define source and destination directories
-source_dir <- "../d_qa_filter_calc_handoff/out/"
-dest_dir <- "images/"
-
-# Get list of files to copy
-files_to_copy <- list.files(source_dir, full.names = TRUE)
-
-# Copy files
-file.copy(from = files_to_copy, to = dest_dir, overwrite = TRUE)
-
-```
-
-# Basic Quality Assurance and Calculating Intermission Handoffs {#handoff}
-
-Up until this point in the workflow, no data filtering has occurred other than
-the masking procedures that eliminate obviously contaminated pixel-level data
-due to sensor malfunction, clouds, haze, and glint as described in Section
-\@ref(masking-functions). We also implement further QA filters for the remote
-sensing stacks to assure high-quality data. These post-hoc filters are described
-in \@ref(post-hoc-filters).
-
-Additionally, it is necessary to standardize band values between Landsat
-missions in order to create a robust timeseries. @maciel2023 notes the issues in
-using the Landsat Surface Reflectance product as a timeseries without careful
-handling of data between missions. This standardization process attempts to
-address changes in sensor spectral response and atmospheric correction
-procedures. For the purposes of AquaSat v2, we call this standardization process
-"intermission handoffs". We implement two versions of intermission handoffs: the
-method described in @roy2016 ("Roy method") and an adapted version of that
-described in @gardner2021 ("Gardner method") (described in section
-\@ref(define-handoff)).
-
-## Raw lakeSR stack collation {#raw-lakesr}
 ## Raw lakeSR stack collation {#raw-lakesr}
 
 The data exported from the GEE tasks described in Section \@ref(LS-SRST-pull)
@@ -259,7 +201,7 @@ provide the OLS regression coefficients for both in Table \@ref(tab:roy-coeff).
 ```{r roy-table}
 roy_handoff_table <- tibble("Early mission" = c("Landsat 5", "Landsat 7"),
                                 "Late mission" = c("Landsat 7", "Landsat 8"),
-                                "n matches" = c(c(format(nrow(d_LS57_matches), big.mark = ","), format(nrow(d_LS89_matches), big.mark = ","))))
+                                "n matches" = c(c(format(nrow(d_LS57_DSWE1_matches), big.mark = ","), format(nrow(d_LS89_DSWE1_matches), big.mark = ","))))
 knitr::kable(roy_handoff_table, caption = "Summary of mission data used to create the Roy method intermission handoff.")
 ```
 
@@ -282,7 +224,7 @@ coord_fixed(ratio = 1,
 **Landsat 5 to 7 correction (`roy_corr7`)**
 
 ```{r roy-ls57-fig, fig.dim=c(3,3), fig.ncol=2, fig.cap = "Roy method intermission handoffs of Landsat 5 relative to Landsat 7."}
-plots <- pmap(.l = list(list(d_LS57_matches),
+plots <- pmap(.l = list(list(d_LS57_DSWE1_matches),
                list("i.med_Red", "i.med_Green", "i.med_Blue", "i.med_Nir", 
                     "i.med_Swir1", "i.med_Swir2", "i.med_SurfaceTemp"),
                list("med_Red", "med_Green", "med_Blue", "med_Nir", 
@@ -302,7 +244,7 @@ plots
 **Landsat 8 to 7 correction (`roy_corr7`)**
 
 ```{r roy-ls87-fig, fig.dim=c(3,3), fig.ncol=2, fig.cap = "Roy method intermission handoffs of Landsat 8 relative to Landsat 7."}
-plots <- pmap(.l = list(list(d_LS78_matches),
+plots <- pmap(.l = list(list(d_LS78_DSWE1_matches),
                list("med_Red", "med_Green", "med_Blue", "med_Nir", 
                     "med_Swir1", "med_Swir2", "med_SurfaceTemp"), 
                list("i.med_Red", "i.med_Green", "i.med_Blue", "i.med_Nir", 
@@ -322,7 +264,7 @@ plots
 **Landsat 7 to 8 correction (`roy_corr8`)**
 
 ```{r roy-ls78-fig, fig.dim=c(3,3), fig.ncol=2, fig.cap = "Roy method intermission handoffs of Landsat 7 relative to Landsat 8."}
-plots <- pmap(.l = list(list(d_LS78_matches),
+plots <- pmap(.l = list(list(d_LS78_DSWE1_matches),
                list("i.med_Red", "i.med_Green", "i.med_Blue", "i.med_Nir", 
                     "i.med_Swir1", "i.med_Swir2", "i.med_SurfaceTemp"),
                list("med_Red", "med_Green", "med_Blue", "med_Nir", 
@@ -342,7 +284,7 @@ plots
 **Landsat 9 to 8 correction (`roy_corr8`)**
 
 ```{r roy-ls98-fig, fig.dim=c(3,3), fig.ncol=2, fig.cap = "Roy method intermission handoffs of Landsat 9 relative to Landsat 8."}
-plots <- pmap(.l = list(list(d_LS89_matches),
+plots <- pmap(.l = list(list(d_LS89_DSWE1_matches),
                list("med_Red", "med_Green", "med_Blue", "med_Nir", 
                     "med_Swir1", "med_Swir2", "med_SurfaceTemp"), 
                list("i.med_Red", "i.med_Green", "i.med_Blue", "i.med_Nir", 
