@@ -33,7 +33,7 @@ poi_config <- "b_pull_Landsat_SRST_poi/config_files/config_poi.yml"
 
 # Set general configuration setting: -----------------------------
 
-general_config <- "admin_update"
+general_config <- "default"
 
 # Create configuration targets:  ------------------------------------------
 

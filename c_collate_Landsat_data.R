@@ -116,7 +116,8 @@ if (config::get(config = general_config)$run_GEE) {
                                         dswe = NULL,
                                         separate_missions = FALSE,
                                         depends = c_download_files),
-      packages = c("data.table", "tidyverse", "arrow")
+      packages = c("data.table", "tidyverse", "arrow"),
+      deployment = "main"
     ),
     
     # make target of first two digits of PR - basically, the files are too large

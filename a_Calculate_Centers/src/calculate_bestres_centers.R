@@ -75,6 +75,10 @@ calculate_bestres_centers <- function(HUC4) {
     rowid_to_column("lakeSR_id") %>% 
     ungroup()
   
+  wbd_info <- wbd_valid %>% 
+    st_drop_geometry() %>% 
+    select(permanent_identifier, gnis_id, gnis_name, areasqkm, reachcode, ftype, fcode)
+  
   # for each polygon, calculate a center. Because sf doesn't map easily, using a 
   # loop. Each loop adds a row the the poi_df dataframe.
   poi_df <- tibble(

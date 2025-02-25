@@ -131,7 +131,6 @@ d_qa_filter_calc_handoff <- list(
                                   end_date = ymd("2013-06-05"),
                                   for_corr = "LS7",
                                   record_length_prop = 0.75,
-                                  # a little fancy footwork here to get at 75% of record
                                   bands = c("med_Red", "med_Green", "med_Blue", 
                                             "med_Nir", "med_Swir1", "med_Swir2",
                                             "med_SurfaceTemp")),
@@ -150,7 +149,6 @@ d_qa_filter_calc_handoff <- list(
                                   end_date = ymd("2013-06-05"),
                                   for_corr = "LS5",
                                   record_length_prop = 0.75,
-                                  # a little fancy footwork here to get at 75% of record
                                   bands = c("med_Red", "med_Green", "med_Blue", 
                                             "med_Nir", "med_Swir1", "med_Swir2",
                                             "med_SurfaceTemp")),
@@ -169,7 +167,6 @@ d_qa_filter_calc_handoff <- list(
                                   end_date = ymd("2022-04-16"),
                                   for_corr = "LS8",
                                   record_length_prop = 0.75,
-                                  # a little fancy footwork here to get at 75% of record
                                   bands = c("med_Red", "med_Green", "med_Blue", 
                                             "med_Nir", "med_Swir1", "med_Swir2",
                                             "med_SurfaceTemp")),
@@ -188,7 +185,6 @@ d_qa_filter_calc_handoff <- list(
                                   end_date = ymd("2022-04-16"),
                                   for_corr = "LS7",
                                   record_length_prop = 0.75,
-                                  # a little fancy footwork here to get at 75% of record
                                   bands = c("med_Red", "med_Green", "med_Blue", 
                                             "med_Nir", "med_Swir1", "med_Swir2",
                                             "med_SurfaceTemp")),
@@ -207,7 +203,6 @@ d_qa_filter_calc_handoff <- list(
                                   end_date = ymd("2024-12-31"),
                                   for_corr = "LS9",
                                   record_length_prop = 0.75,
-                                  # a little fancy footwork here to get at 75% of record
                                   bands = c("med_Aerosol", "med_Red", "med_Green", "med_Blue", 
                                             "med_Nir", "med_Swir1", "med_Swir2",
                                             "med_SurfaceTemp")),
@@ -226,7 +221,6 @@ d_qa_filter_calc_handoff <- list(
                                   end_date = ymd("2024-12-31"),
                                   for_corr = "LS8",
                                   record_length_prop = 0.75,
-                                  # a little fancy footwork here to get at 75% of record
                                   bands = c("med_Aerosol", "med_Red", "med_Green", "med_Blue", 
                                             "med_Nir", "med_Swir1", "med_Swir2",
                                             "med_SurfaceTemp")),
@@ -389,7 +383,21 @@ d_qa_filter_calc_handoff <- list(
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   )
-  
+  # ,
+  # 
+  # 
+  # # calculate handoffs, store calculations ----------------------------------
+  # 
+  # tar_target(
+  #   name = d_Gardner_LS57_DSWE1_handoff,
+  #   command = calculate_gardner_handoff()
+  # ),
+  # 
+  # tar_target(
+  #   name = d_Roy_LS57_DSWE1_handoff,
+  #   command = calculate_roy_handoff()
+  # )
+  # 
   
   
 )
