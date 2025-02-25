@@ -122,12 +122,12 @@ if (config::get(config = general_config)$calculate_centers) {
     
     # check for drive folder if set to export
     tar_target(
-      name = a_check_Drive_poi_folder,
+      name = a_check_Drive_targets_folder,
       command = {
         b_check_Drive_parent_folder
         tryCatch({
           drive_auth(lakeSR_config$google_email)
-          folder_name = "lakeSR_combined_poi"
+          folder_name = "lakeSR_targets"
           if (b_yml_poi$parent_folder != "") {
             path <- file.path("~",
                               b_yml_poi$parent_folder, 
@@ -157,7 +157,7 @@ if (config::get(config = general_config)$calculate_centers) {
       command = export_single_target(
         target = a_combined_poi, 
         target_name = "a_combined_poi",
-        drive_path = a_check_Drive_poi_folder,
+        drive_path = a_check_Drive_targets_folder,
         google_email = lakeSR_config$google_email,
         date_stamp = lakeSR_config$centers_version),
       packages = c("tidyverse", "googledrive")

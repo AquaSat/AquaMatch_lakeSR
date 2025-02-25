@@ -11,9 +11,9 @@ default:
   # a_Calculate_Centers/out/combined_poi_drive_ids.csv file
   run_GEE: FALSE # the GEE acquisition will not be run, and previously-collated
   # data will be used
-  collated_version: "2025-01-23" # yyyy-mm-dd of version, must be a date listed in the 
+  collated_version: "2025-02-12" # yyyy-mm-dd of version, must be a date listed in the 
   # suffix of the .csv files stored in c_collate_Landsat_data/out/
-  update_bookdown: FALSE # the bookdown will not be re-rendered
+  update_bookdown: TRUE # the bookdown will not be re-rendered
 
 admin_update:
   # this setting creates publicly available files using the ROSS account

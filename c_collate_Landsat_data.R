@@ -155,23 +155,29 @@ if (config::get(config = general_config)$run_GEE) {
     ),
     
     tar_target(
-      name = c_check_Drive_collated,
+      name = c_check_Drive_collated_folder,
       command =  {
         b_check_Drive_parent_folder
         tryCatch({
           drive_auth(b_yml_poi$google_email)
           if (b_yml_poi$parent_folder != "") {
-            path <- file.path(b_yml_poi$parent_folder, 
-                              "collated_raw")
+            parent_folder <- file.path("~",
+                                     paste0(b_yml_poi$parent_folder, "/"))
+            version_path <- file.path("~",
+                                      b_yml_poi$parent_folder, 
+                                      paste0("collated_raw_v", b_yml_poi$run_date, "/"))
           } else {
-            path <- paste0(b_yml_poi$proj_folder, 
-                           "collated_raw")
+            parent_folder <- b_yml_poi$proj_folder
+            version_path <- file.path(b_yml_poi$proj_folder, 
+                                      paste0("collated_raw_v", b_yml_poi$run_date, "/"))
           }
-          drive_ls(path)
+          drive_ls(version_path)
         }, error = function(e) {
-          drive_mkdir(path)
+          # if there is an error, check both the 'collated_raw' folder and the 'version'
+          # folder
+          drive_mkdir(path = parent_folder, name = paste0("collated_raw_v", b_yml_poi$run_date))
         })
-        return(path)
+        return(version_path)
       },
       packages = "googledrive",
       cue = tar_cue("always")    
@@ -180,7 +186,7 @@ if (config::get(config = general_config)$run_GEE) {
     tar_target(
       name = c_send_collated_files_to_drive,
       command = export_single_file(file_path = c_collated_files,
-                                   drive_path = c_check_Drive_collated,
+                                   drive_path = c_check_Drive_collated_folder,
                                    google_email = b_yml_poi$google_email),
       packages = c("tidyverse", "googledrive"),
       pattern = c_collated_files
