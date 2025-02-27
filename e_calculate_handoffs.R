@@ -1,5 +1,5 @@
 # Source functions for this {targets} list
-tar_source("d_qa_filter_calc_handoff/src/")
+tar_source("e_calculate_handoffs/src/")
 
 # High-level QA filter and handoff calculations -----------------------------
 
@@ -7,17 +7,14 @@ tar_source("d_qa_filter_calc_handoff/src/")
 # calculates 'intermission handoffs' that standardize the SR values relative to LS7
 # and to LS8.
 
-d_qa_filter_calc_handoff <- list(
-  
-  # Check for folder architecture -------------------------------------------
+e_calculate_handoffs <- list(
   
   tar_target(
     name = d_check_dir_structure,
     command = {
       # make directories if needed
-      directories = c("d_qa_filter_calc_handoff/mid/",
-                      "d_qa_filter_calc_handoff/handoff/",
-                      "d_qa_filter_calc_handoff/out/")
+      directories = c("e_calculate_handoffs/handoff/",
+                      "e_calculate_handoffs/out/")
       walk(directories, function(dir) {
         if(!dir.exists(dir)){
           dir.create(dir)
@@ -27,58 +24,6 @@ d_qa_filter_calc_handoff <- list(
     cue = tar_cue("always"),
     deployment = "main",
   ),
-  
-  
-  # collate each mission ---------------------------------------------------
-  
-  # Because the LS5 and 7 missions are absolutely huge data tables, and use 
-  # nearly all of a 32GB memory limit within R, we continue to process the Landsat
-  # data in chunks per mission. 
-  
-  tar_target(
-    name = d_mission_identifiers,
-    command = tibble(mission_id = c("LT04", "LT05", "LE07", "LC08", "LC09"),
-                     mission_names = c("Landsat 4", "Landsat 5", "Landsat 7", "Landsat 8", "Landsat 9"))
-  ),
-  
-  # walk through QA of missions and DSWE types
-  tar_target(
-    name = d_qa_Landsat_files,
-    command = {
-      d_check_dir_structure
-      qa_and_document_LS(mission_info = d_mission_identifiers, 
-                         dswe = c_dswe_types, 
-                         collated_files = c_collated_files)
-    },
-    packages = c("arrow", "data.table", "tidyverse", "ggrepel", "viridis"),
-    pattern = cross(d_mission_identifiers, c_dswe_types),
-    deployment = "main"
-  ),
-  
-  # get a list of the qa'd files
-  tar_target(
-    name = d_qa_Landsat_file_paths,
-    command = {
-      d_qa_Landsat_files
-      list.files(file.path("d_qa_filter_calc_handoff/mid/"), 
-                 full.names = TRUE) %>% 
-        .[grepl(d_version_identifier, .)]
-    }
-  ),
-  
-  # get the appropriate version date to filter files, just in case there is more
-  # than one version
-  tar_target(
-    name = d_version_identifier,
-    command = {
-      if (lakeSR_config$run_GEE) {
-        b_yml_poi$run_date 
-      } else { 
-        lakeSR_config$collated_version 
-      }
-    }
-  ),
-  
   
   # subset LS 4/5/7/8/9 for Roy adapted handoff date range -----------------------
   
@@ -269,7 +214,7 @@ d_qa_filter_calc_handoff <- list(
     name = d_LS45_DSWE1_matches,
     command = {
       d_qa_Landsat_files
-      get_matches(dir = "d_qa_filter_calc_handoff/mid/", 
+      get_matches(dir = "e_calculate_handoffs/mid/", 
                   dswe = "DSWE1", version = d_version_identifier,
                   early_LS_mission = "LT04", late_LS_mission = "LT05",
                   early_path_prefix = d_path_prefix_table$early_prefix, 
@@ -279,12 +224,12 @@ d_qa_filter_calc_handoff <- list(
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   ),
-
+  
   tar_target(
     name = d_LS57_DSWE1_matches,
     command = {
       d_qa_Landsat_files
-      get_matches(dir = "d_qa_filter_calc_handoff/mid/", 
+      get_matches(dir = "e_calculate_handoffs/mid/", 
                   dswe = "DSWE1", version = d_version_identifier,
                   early_LS_mission = "LT05", late_LS_mission = "LE07",
                   early_path_prefix = d_path_prefix_table$early_prefix, 
@@ -299,7 +244,7 @@ d_qa_filter_calc_handoff <- list(
     name = d_LS78_DSWE1_matches,
     command = {
       d_qa_Landsat_files
-      get_matches(dir = "d_qa_filter_calc_handoff/mid/", 
+      get_matches(dir = "e_calculate_handoffs/mid/", 
                   dswe = "DSWE1", version = d_version_identifier,
                   early_LS_mission = "LE07", late_LS_mission = "LC08",
                   early_path_prefix = d_path_prefix_table$early_prefix, 
@@ -314,7 +259,7 @@ d_qa_filter_calc_handoff <- list(
     name = d_LS89_DSWE1_matches,
     command = {
       d_qa_Landsat_files
-      get_matches(dir = "d_qa_filter_calc_handoff/mid/", 
+      get_matches(dir = "e_calculate_handoffs/mid/", 
                   dswe = "DSWE1", version = d_version_identifier,
                   early_LS_mission = "LC08", late_LS_mission = "LC09",
                   early_path_prefix = d_path_prefix_table$early_prefix, 
@@ -330,7 +275,7 @@ d_qa_filter_calc_handoff <- list(
     name = d_LS45_DSWE1a_matches,
     command = {
       d_qa_Landsat_files
-      get_matches(dir = "d_qa_filter_calc_handoff/mid/", 
+      get_matches(dir = "e_calculate_handoffs/mid/", 
                   dswe = "DSWE1a", version = d_version_identifier,
                   early_LS_mission = "LT04", late_LS_mission = "LT05",
                   early_path_prefix = d_path_prefix_table$early_prefix, 
@@ -345,7 +290,7 @@ d_qa_filter_calc_handoff <- list(
     name = d_LS57_DSWE1a_matches,
     command = {
       d_qa_Landsat_files
-      get_matches(dir = "d_qa_filter_calc_handoff/mid/", 
+      get_matches(dir = "e_calculate_handoffs/mid/", 
                   dswe = "DSWE1a", version = d_version_identifier,
                   early_LS_mission = "LT05", late_LS_mission = "LE07",
                   early_path_prefix = d_path_prefix_table$early_prefix, 
@@ -360,7 +305,7 @@ d_qa_filter_calc_handoff <- list(
     name = d_LS78_DSWE1a_matches,
     command = {
       d_qa_Landsat_files
-      get_matches(dir = "d_qa_filter_calc_handoff/mid/", 
+      get_matches(dir = "e_calculate_handoffs/mid/", 
                   dswe = "DSWE1a", version = d_version_identifier,
                   early_LS_mission = "LE07", late_LS_mission = "LC08",
                   early_path_prefix = d_path_prefix_table$early_prefix, 
@@ -375,7 +320,7 @@ d_qa_filter_calc_handoff <- list(
     name = d_LS89_DSWE1a_matches,
     command = {
       d_qa_Landsat_files
-      get_matches(dir = "d_qa_filter_calc_handoff/mid/", 
+      get_matches(dir = "e_calculate_handoffs/mid/", 
                   dswe = "DSWE1a", version = d_version_identifier,
                   early_LS_mission = "LC08", late_LS_mission = "LC09",
                   early_path_prefix = d_path_prefix_table$early_prefix, 
@@ -399,6 +344,5 @@ d_qa_filter_calc_handoff <- list(
   #   name = d_Roy_LS57_DSWE1_handoff,
   #   command = calculate_roy_handoff()
   # )
-  # 
-
+  
 )
