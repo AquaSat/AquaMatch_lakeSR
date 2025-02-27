@@ -1,5 +1,5 @@
 # Source functions for this {targets} list
-tar_source("e_separate_by_huc2/src/")
+tar_source("f_separate_by_huc2/src/")
 
 # split files for long-term storage/data release -----------------------------
 
@@ -7,11 +7,12 @@ tar_source("e_separate_by_huc2/src/")
 # and for data pubs. Metadata left as-is for data pub.
 
 # if collating the sorted files in Drive admin update configuration
-if (config::get(config = general_config)$update_sorted_in_Drive) {
-    
+if (config::get(config = general_config)$update_and_share) {
+  
+  f_save_to_Drive <- list(
     # check for Drive folders and architecture per config setup
     tar_target(
-      name = e_check_Drive_parent_folder,
+      name = f_check_Drive_parent_folder,
       command = if (lakeSR_config$parent_Drive_folder != "") {
         tryCatch({
           drive_auth(lakeSR_config$google_email)
@@ -25,9 +26,9 @@ if (config::get(config = general_config)$update_sorted_in_Drive) {
     ),
     
     tar_target(
-      name = e_check_Drive_sorted_folder,
+      name = f_check_Drive_sorted_folder,
       command =  {
-        e_check_Drive_parent_folder
+        f_check_Drive_parent_folder
         tryCatch({
           drive_auth(lakeSR_config$google_email)
           if (lakeSR_config$parent_Drive_folder != "") {
@@ -53,28 +54,21 @@ if (config::get(config = general_config)$update_sorted_in_Drive) {
     ),
     
     tar_target(
-      name = e_all_sorted_Landsat_files,
-      command = as.vector(c(e_Landsat4_collated_data, e_Landsat5_collated_by_huc2,
-                            e_Landsat7_collated_by_huc2, e_Landsat8_collated_by_huc2,
-                            e_Landsat9_collated_data))
-    ),
-    
-    tar_target(
-      name = e_send_sorted_files_to_Drive,
-      command = export_single_file(file_path = e_all_sorted_Landsat_files,
-                                   drive_path = e_check_Drive_sorted_folder,
+      name = f_send_sorted_files_to_Drive,
+      command = export_single_file(file_path = f_all_sorted_Landsat_files,
+                                   drive_path = f_check_Drive_sorted_folder,
                                    google_email = lakeSR_config$google_email),
       packages = c("tidyverse", "googledrive"),
       pattern = map(e_all_sorted_Landsat_files)
     ), 
     
     tar_target(
-      name = e_save_sorted_drive_info,
+      name = f_save_sorted_drive_info,
       command = {
-        drive_ids <- e_send_sorted_files_to_Drive %>% 
+        drive_ids <- f_send_sorted_files_to_Drive %>% 
           select(name, id)
         write_csv(drive_ids,
-                  paste0("e_separate_by_huc2/out/Landsat_sorted_files_drive_ids_v",
+                  paste0("f_separate_by_huc2/out/Landsat_sorted_files_drive_ids_v",
                          d_version_identifier,
                          ".csv"))
         drive_ids
@@ -83,5 +77,12 @@ if (config::get(config = general_config)$update_sorted_in_Drive) {
       deployment = "main"
     )
     
-  ) 
+    ## save handoffs ##
+    
+  )
+  
+} else { # no -f- group targets
  
+  f_save_to_Drive <- NULL
+  
+}

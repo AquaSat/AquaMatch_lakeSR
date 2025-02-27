@@ -13,10 +13,10 @@ default:
   # data will be used
   collated_version: "2025-02-12" # yyyy-mm-dd of version, must be a date listed in the 
   # suffix of the .csv files stored in c_collate_Landsat_data/out/
-  update_sorted_in_Drive: TRUE # boolean, if data, sorted by HUC4 should be saved to 
-  # drive
   parent_Drive_folder: "~/lakeSR_Landsat_C2/" # character string, parent folder 
   # location to store the sorted files. Can also be "" if no parent folder desired.
+  update_and_share: TRUE # boolean, indication of whether the compiled qa'd files
+  # and handoffs should be shared to Drive
   update_bookdown: TRUE # boolean, if the bookdown will be re-rendered
 
 admin_update:
@@ -29,8 +29,8 @@ admin_update:
   run_GEE: TRUE # the GEE acquisition will be run locally
   # collated version date will populate from the `run_date` listed in the config
   # file for the GEE run: `b_pull_Landsat_SRST_poi/config_files/config_poi.yml`
-  update_sorted_in_Drive: TRUE # boolean, if data, sorted by HUC4 should be saved to 
-  # drive
   parent_Drive_folder: "~/lakeSR_Landsat_C2/" # character string, parent folder 
   # location to store the sorted files. Can also be "" if no parent folder desired.
+  update_and_share: TRUE # boolean, indication of whether the compiled qa'd files
+  # and handoffs should be shared to Drive
   update_bookdown: TRUE # boolean, if the bookdown will be re-rendered and/or knit

@@ -29,7 +29,7 @@ d_qa_filter_sort <- list(
   ),
   
   
-  # collate each mission ---------------------------------------------------
+  # collate and qa each mission ---------------------------------------------------
   
   # Because the LS5 and 7 missions are absolutely huge data tables, and use 
   # nearly all of a 32GB memory limit within R, we continue to process the Landsat
@@ -61,8 +61,9 @@ d_qa_filter_sort <- list(
     command = as.vector(d_qa_Landsat_files)
   ),
   
-
+  
   # collate qa'd data and sort as needed ------------------------------------
+  
   # here, we collate small datasets (Landsat 4/9) into a single .csv file, and 
   # collate larger datasets (Landsat 5-7-8) into multiple .csv's, sorted by HUC2.
   
@@ -147,7 +148,17 @@ d_qa_filter_sort <- list(
                                    dswe = c_dswe_types),
     pattern = map(c_dswe_types),
     packages = c("data.table", "tidyverse", "arrow")
+  ),
+  
+  # make a list of the collated and sorted files created
+  tar_target(
+    name = d_all_sorted_Landsat_files,
+    command = as.vector(c(d_Landsat4_collated_data, d_Landsat5_collated_by_huc2,
+                          d_Landsat7_collated_by_huc2, d_Landsat8_collated_by_huc2,
+                          d_Landsat9_collated_data))
   )
   
+)
+
 ) 
-  
+

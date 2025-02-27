@@ -333,7 +333,7 @@ e_calculate_handoffs <- list(
   # ,
   # 
   # 
-  # # calculate handoffs, store calculations ----------------------------------
+  # # calculate handoffs ----------------------------------
   # 
   # tar_target(
   #   name = d_Gardner_LS57_DSWE1_handoff,
