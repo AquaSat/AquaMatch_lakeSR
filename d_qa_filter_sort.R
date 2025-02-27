@@ -58,13 +58,13 @@ d_qa_filter_sort <- list(
   # get a list of the qa'd files
   tar_target(
     name = d_qa_Landsat_file_paths,
-    command = {
-      d_qa_Landsat_files
-      list.files(file.path("d_qa_filter_calc_handoff/qa/"), 
-                 full.names = TRUE) %>% 
-        .[grepl(d_version_identifier, .)]
-    }
+    command = as.vector(d_qa_Landsat_files)
   ),
+  
+
+  # collate qa'd data and sort as needed ------------------------------------
+  # here, we collate small datasets (Landsat 4/9) into a single .csv file, and 
+  # collate larger datasets (Landsat 5-7-8) into multiple .csv's, sorted by HUC2.
   
   # get the appropriate version date to filter files, just in case there is more
   # than one version
@@ -78,26 +78,14 @@ d_qa_filter_sort <- list(
       }
     }
   ),
-  tar_target(
-    name = d_check_dir_structure,
-    command = {
-      # make directories if needed
-      directories = c("d_separate_by_huc2/out/")
-      walk(directories, function(dir) {
-        if(!dir.exists(dir)){
-          dir.create(dir)
-        }
-      })
-    },
-    cue = tar_cue("always"),
-    deployment = "main",
-  ),
   
+  # create a list of HUC2's to map over
   tar_target(
     name = d_unique_huc2,
     command = unique(str_sub(a_combined_poi$lakeSR_id, 1, 2))
   ),
   
+  # Landsat 4 is small enough for a single file
   tar_target(
     name = d_Landsat4_collated_data,
     command = sort_qa_Landsat_data(qa_files = d_qa_Landsat_file_paths, 
@@ -109,6 +97,7 @@ d_qa_filter_sort <- list(
     packages = c("data.table", "tidyverse", "arrow")
   ),
   
+  # Landsat 5, 7, 8 need to be separated by HUC2
   tar_target(
     name = d_collated_Landsat5_by_huc2,
     command = sort_qa_Landsat_data(qa_files = d_qa_Landsat_file_paths,
@@ -148,6 +137,7 @@ d_qa_filter_sort <- list(
     deployment = "main" # too big for multicore
   ),
   
+  # Landsat 9 is small enough to be a single file.
   tar_target(
     name = d_Landsat9_collated_data,
     command = sort_qa_Landsat_data(qa_files = d_qa_Landsat_file_paths, 
@@ -161,5 +151,3 @@ d_qa_filter_sort <- list(
   
 ) 
   
-
-)

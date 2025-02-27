@@ -21,10 +21,11 @@
 #' @param document_drops Boolean, whether to generate a summary of dropped 
 #' records and save it as a plot. Default: TRUE
 #' @param out_path Directory where filtered files should be saved. Will be 
-#' created if it doesn't exist. Default: `d_qa_filter_calc_handoff/mid/`
+#' created if it doesn't exist. Default: `d_qa_filter_sort/qa/`
 #' 
 #' @returns None. Silently saves figures displaying dropped observations if 
-#' `document_drops = TRUE`. Silently saves filtered (QA) files to `out_path`.
+#' `document_drops = TRUE` in `d_qa_filter_sort/out`. Silently saves filtered 
+#' (QA) files to `out_path`.
 #' 
 qa_and_document_LS <- function(mission_info,
                                dswe, 
@@ -33,7 +34,7 @@ qa_and_document_LS <- function(mission_info,
                                thermal_threshold = 273.15,
                                ir_threshold = 0.1,
                                document_drops = TRUE,
-                               out_path = "d_qa_filter_calc_handoff/mid/"
+                               out_path = "d_qa_filter_sort/qa/"
                                
 ) {
   
@@ -152,9 +153,12 @@ qa_and_document_LS <- function(mission_info,
       plot_fn <- paste0(mission_info$mission_id, "_", dswe, "_drop_summary.png")
       
       ggsave(plot = drops_plot, 
-             filename = file.path("d_qa_filter_calc_handoff/out", plot_fn), 
+             filename = file.path("d_qa_filter_sort/out", plot_fn), 
              dpi = 300, width = 6, height = 3, units = "in")
     }
+    
+    # return file path name of qa'd dataset
+    return(file.path(out_path, out_fn))
     
   } else {
     
