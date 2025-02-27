@@ -24,6 +24,8 @@ c_collate_Landsat_data/mid/*
 d_qa_filter_calc_handoff/mid/*
 d_qa_filter_calc_handoff/out/*
 
+e_separate_by_huc2/out/*
+
 # stupid .DS_Store files
 **.DS_Store
 

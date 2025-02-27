@@ -60,7 +60,9 @@ d_qa_filter_calc_handoff <- list(
     name = d_qa_Landsat_file_paths,
     command = {
       d_qa_Landsat_files
-      list.files("d_qa_filter_calc_handoff/mid/", full.names = TRUE)
+      list.files(file.path("d_qa_filter_calc_handoff/mid/"), 
+                 full.names = TRUE) %>% 
+        .[grepl(d_version_identifier, .)]
     }
   ),
   
@@ -94,7 +96,7 @@ d_qa_filter_calc_handoff <- list(
                                   start_date = ymd("1984-05-01"), 
                                   end_date = ymd("1993-08-01"),
                                   for_corr = "LS5",
-                                  record_length_prop = 0.4, #no data here until between 0.5-0.6
+                                  record_length_prop = 0.4, # no data here until between 0.5-0.6
                                   bands = c("med_Red", "med_Green", "med_Blue", 
                                             "med_Nir", "med_Swir1", "med_Swir2",
                                             "med_SurfaceTemp")),
@@ -398,6 +400,5 @@ d_qa_filter_calc_handoff <- list(
   #   command = calculate_roy_handoff()
   # )
   # 
-  
-  
+
 )

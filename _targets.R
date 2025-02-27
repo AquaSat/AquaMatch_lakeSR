@@ -70,6 +70,7 @@ tar_source(files = c(
   "b_pull_Landsat_SRST_poi.R",
   "c_collate_Landsat_data.R",
   "d_qa_filter_calc_handoff.R",
+  "e_separate_by_huc2.R",
   "y_siteSR_targets.R",
   "z_render_bookdown.R"
 )
@@ -83,6 +84,7 @@ list(
   b_pull_Landsat_SRST_poi_list,
   c_collate_Landsat_data,
   d_qa_filter_calc_handoff,
+  e_separate_by_huc2,
   y_siteSR_list,
   z_render_bookdown
 )

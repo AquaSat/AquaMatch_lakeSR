@@ -238,7 +238,8 @@ if (config::get(config = general_config)$run_GEE) {
         google_email = lakeSR_config$google_email, 
         version_date = lakeSR_config$collated_version
       ),
-      packages = c("tidyverse", "googledrive")
+      packages = c("tidyverse", "googledrive"),
+      cue = tar_cue("always")
     )
     
   )
