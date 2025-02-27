@@ -82,7 +82,7 @@ d_qa_filter_calc_handoff <- list(
   
   # subset LS 4/5/7/8/9 for Roy adapted handoff date range -----------------------
   
-  # the Landsat records are still to large to collate in targets (even using
+  # the Landsat records are still too large to collate in targets (even using
   # data.table), so here, we're subsetting by date range and returning the 
   # 1-99 quantiles to keep things efficient with targets. This is the adapted
   # Roy et al 2016 method used in Gardner et al (Color of Rivers)
