@@ -32,6 +32,7 @@ qa_and_document_LS <- function(mission_info,
                                collated_files,
                                min_no_pix = 8, 
                                thermal_threshold = 273.15,
+                               thermal_maximum = 313.15,
                                ir_threshold = 0.1,
                                document_drops = TRUE,
                                out_path = "d_qa_filter_sort/qa/"
@@ -82,6 +83,11 @@ qa_and_document_LS <- function(mission_info,
                       filter(med_SurfaceTemp > thermal_threshold)
                     temp_thresh <- nrow(data)
                     
+                    # filter thermal for < 213.15 (below 40 deg C)
+                    data <- data %>% #glint_thresh %>% 
+                      filter(med_SurfaceTemp < thermal_maximum)
+                    temp_max <- nrow(data)
+                    
                     # filter for nir/swir thresholds
                     data <- data %>% 
                       filter(med_Nir < ir_threshold | (med_Swir1 < ir_threshold & med_Swir2 < ir_threshold))
@@ -99,6 +105,7 @@ qa_and_document_LS <- function(mission_info,
                     tibble(all_data = all_data,
                            valid_thresh = valid_thresh,
                            temp_thresh = temp_thresh,
+                           temp_max = temp_max,
                            ir_glint_thresh = ir_glint_thresh) %>% 
                       pivot_longer(cols = all_data:ir_glint_thresh) 
                     
@@ -116,7 +123,8 @@ qa_and_document_LS <- function(mission_info,
       
       drop_reason <- tibble(all_data = "unfiltered Landsat data",
                             valid_thresh = sprintf("minimum number of pixels threshold (%s) met", min_no_pix),
-                            temp_thresh = sprintf("thermal band threshold (%s) met", thermal_threshold),
+                            temp_thresh = sprintf("thermal band threshold (%s °K) met", thermal_threshold),
+                            temp_max = sprintf("below thermal band maximum (%s °K)", thermal_threshold),
                             ir_glint_thresh = sprintf("NIR/SWIR threshold (%s) met", ir_threshold)) %>% 
         pivot_longer(cols = all_data:ir_glint_thresh,
                      values_to = "reason") 
@@ -124,6 +132,7 @@ qa_and_document_LS <- function(mission_info,
       drops <- full_join(row_summary, drop_reason) %>% 
         mutate(name = factor(name, levels = c("ir_glint_thresh",
                                               "temp_thresh",
+                                              "temp_max",
                                               "valid_thresh",
                                               "all_data")),
                lab = paste0(reason, ": ", format(value, big.mark = ","), " records"))
@@ -157,8 +166,7 @@ qa_and_document_LS <- function(mission_info,
              dpi = 300, width = 6, height = 3, units = "in")
     }
     
-    # return file path name of qa'd dataset
-    return(file.path(out_path, out_fn))
+    return(NULL)
     
   } else {
     

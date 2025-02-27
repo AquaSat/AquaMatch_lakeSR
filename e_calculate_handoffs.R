@@ -10,10 +10,11 @@ tar_source("e_calculate_handoffs/src/")
 e_calculate_handoffs <- list(
   
   tar_target(
-    name = d_check_dir_structure,
+    name = e_check_dir_structure,
     command = {
       # make directories if needed
-      directories = c("e_calculate_handoffs/handoff/",
+      directories = c("e_calculate_handoffs/roy/",
+                      "e_calculate_handoffs/gardner/",
                       "e_calculate_handoffs/out/")
       walk(directories, function(dir) {
         if(!dir.exists(dir)){
@@ -177,9 +178,10 @@ e_calculate_handoffs <- list(
   ),
   
   
-  # Roy quantiles -----------------------------------------------------------
+  # Roy matches -----------------------------------------------------------
   
-  # This section calculates the Roy quantiles paired data from mission flyovers
+  # This section creates paired data from mission flyovers using the Roy et al.
+  # 2016 method
   
   # make a matrix of possible path prefix overlaps (aka 00 overlaps with 00 and 01, 
   # 03 overlaps with 02, 03, 04, etc)
@@ -214,7 +216,7 @@ e_calculate_handoffs <- list(
     name = d_LS45_DSWE1_matches,
     command = {
       d_qa_Landsat_files
-      get_matches(dir = "e_calculate_handoffs/mid/", 
+      get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1", version = d_version_identifier,
                   early_LS_mission = "LT04", late_LS_mission = "LT05",
                   early_path_prefix = d_path_prefix_table$early_prefix, 
@@ -229,7 +231,7 @@ e_calculate_handoffs <- list(
     name = d_LS57_DSWE1_matches,
     command = {
       d_qa_Landsat_files
-      get_matches(dir = "e_calculate_handoffs/mid/", 
+      get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1", version = d_version_identifier,
                   early_LS_mission = "LT05", late_LS_mission = "LE07",
                   early_path_prefix = d_path_prefix_table$early_prefix, 
@@ -244,7 +246,7 @@ e_calculate_handoffs <- list(
     name = d_LS78_DSWE1_matches,
     command = {
       d_qa_Landsat_files
-      get_matches(dir = "e_calculate_handoffs/mid/", 
+      get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1", version = d_version_identifier,
                   early_LS_mission = "LE07", late_LS_mission = "LC08",
                   early_path_prefix = d_path_prefix_table$early_prefix, 
@@ -259,7 +261,7 @@ e_calculate_handoffs <- list(
     name = d_LS89_DSWE1_matches,
     command = {
       d_qa_Landsat_files
-      get_matches(dir = "e_calculate_handoffs/mid/", 
+      get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1", version = d_version_identifier,
                   early_LS_mission = "LC08", late_LS_mission = "LC09",
                   early_path_prefix = d_path_prefix_table$early_prefix, 
@@ -275,7 +277,7 @@ e_calculate_handoffs <- list(
     name = d_LS45_DSWE1a_matches,
     command = {
       d_qa_Landsat_files
-      get_matches(dir = "e_calculate_handoffs/mid/", 
+      get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1a", version = d_version_identifier,
                   early_LS_mission = "LT04", late_LS_mission = "LT05",
                   early_path_prefix = d_path_prefix_table$early_prefix, 
@@ -290,7 +292,7 @@ e_calculate_handoffs <- list(
     name = d_LS57_DSWE1a_matches,
     command = {
       d_qa_Landsat_files
-      get_matches(dir = "e_calculate_handoffs/mid/", 
+      get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1a", version = d_version_identifier,
                   early_LS_mission = "LT05", late_LS_mission = "LE07",
                   early_path_prefix = d_path_prefix_table$early_prefix, 
@@ -305,7 +307,7 @@ e_calculate_handoffs <- list(
     name = d_LS78_DSWE1a_matches,
     command = {
       d_qa_Landsat_files
-      get_matches(dir = "e_calculate_handoffs/mid/", 
+      get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1a", version = d_version_identifier,
                   early_LS_mission = "LE07", late_LS_mission = "LC08",
                   early_path_prefix = d_path_prefix_table$early_prefix, 
@@ -320,7 +322,7 @@ e_calculate_handoffs <- list(
     name = d_LS89_DSWE1a_matches,
     command = {
       d_qa_Landsat_files
-      get_matches(dir = "e_calculate_handoffs/mid/", 
+      get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1a", version = d_version_identifier,
                   early_LS_mission = "LC08", late_LS_mission = "LC09",
                   early_path_prefix = d_path_prefix_table$early_prefix, 

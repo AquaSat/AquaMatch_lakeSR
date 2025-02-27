@@ -21,7 +21,8 @@ b_pull_Landsat_SRST_poi/out/*
 c_collate_Landsat_data/down/*
 c_collate_Landsat_data/mid/*
 
-d_qa_filter_sort/mid/*
+d_qa_filter_sort/qa/*
+d_qa_filter_sort/sort/*
 d_qa_filter_sort/out/*
 
 e_calculate_handoffs/out/*

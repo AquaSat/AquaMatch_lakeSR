@@ -15,8 +15,10 @@ if (config::get(config = general_config)$update_bookdown) {
              command = "bookdown/04-Landsat_C2_SRST.Rmd"),
     tar_file(name = srst_pull,
              command = "bookdown/05-lakeSR_LS_C2_SRST.Rmd"),
+    tar_file(name = post_hoc_qa,
+             command = "bookdown/06-post_hoc_qa.Rmd"),
     tar_file(name = handoffs,
-             command = "bookdown/06-calculating_intermission_handoffs.Rmd"),
+             command = "bookdown/07-intermission_handoffs.Rmd"),
     tar_file(name = refs,
              command = "bookdown/z-Refs.Rmd"),
     # render bookdown, add req's of the above files in command prompt 
@@ -31,6 +33,7 @@ if (config::get(config = general_config)$update_bookdown) {
                  settings
                  landsat_background
                  srst_pull
+                 post_hoc_qa
                  handoffs
                  refs
                  render_book(input = "bookdown/",

@@ -55,18 +55,6 @@ d_qa_filter_sort <- list(
     deployment = "main"
   ),
   
-  # get a list of the qa'd files
-  tar_target(
-    name = d_qa_Landsat_file_paths,
-    command = as.vector(d_qa_Landsat_files)
-  ),
-  
-  
-  # collate qa'd data and sort as needed ------------------------------------
-  
-  # here, we collate small datasets (Landsat 4/9) into a single .csv file, and 
-  # collate larger datasets (Landsat 5-7-8) into multiple .csv's, sorted by HUC2.
-  
   # get the appropriate version date to filter files, just in case there is more
   # than one version
   tar_target(
@@ -79,6 +67,22 @@ d_qa_filter_sort <- list(
       }
     }
   ),
+  
+  # get a list of the qa'd files
+  tar_target(
+    name = d_qa_Landsat_file_paths,
+    command = {
+      d_qa_Landsat_files
+      list.files("d_qa_filter_sort/qa/", full.names = TRUE) %>% 
+        .[grepl(d_version_identifier, .)]
+    }
+  ),
+  
+  
+  # collate qa'd data and sort as needed ------------------------------------
+  
+  # here, we collate small datasets (Landsat 4/9) into a single .csv file, and 
+  # collate larger datasets (Landsat 5-7-8) into multiple .csv's, sorted by HUC2.
   
   # create a list of HUC2's to map over
   tar_target(
@@ -153,12 +157,12 @@ d_qa_filter_sort <- list(
   # make a list of the collated and sorted files created
   tar_target(
     name = d_all_sorted_Landsat_files,
-    command = as.vector(c(d_Landsat4_collated_data, d_Landsat5_collated_by_huc2,
-                          d_Landsat7_collated_by_huc2, d_Landsat8_collated_by_huc2,
+    command = as.vector(c(d_Landsat4_collated_data, d_collated_Landsat5_by_huc2,
+                          d_collateD_Landsat7_by_huc2, d_collated_Landsat8_by_huc2,
                           d_Landsat9_collated_data))
   )
   
 )
 
-) 
+
 

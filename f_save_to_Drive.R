@@ -1,5 +1,4 @@
 # Source functions for this {targets} list
-tar_source("f_separate_by_huc2/src/")
 
 # split files for long-term storage/data release -----------------------------
 
@@ -10,6 +9,7 @@ tar_source("f_separate_by_huc2/src/")
 if (config::get(config = general_config)$update_and_share) {
   
   f_save_to_Drive <- list(
+    
     # check for Drive folders and architecture per config setup
     tar_target(
       name = f_check_Drive_parent_folder,

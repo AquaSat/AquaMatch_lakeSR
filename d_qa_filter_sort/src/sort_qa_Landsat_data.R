@@ -15,7 +15,7 @@
 #' @param HUC2 character string indicating the HUC2 the data belong to
 #' 
 #' @returns file path name where output file is stored. Silently saves a .csv file
-#' of the data in the folder path e_collate_sort_qa_data/mid/.
+#' of the data in the folder path `d_qa_filter_sort/sort`.
 #' 
 sort_qa_Landsat_data <- function(qa_files,
                          version_id,
@@ -54,7 +54,7 @@ sort_qa_Landsat_data <- function(qa_files,
         rbindlist() 
       
       #make a file path name
-      save_to_fpn <- file.path("e_collate_sort_qa_data/mid",
+      save_to_fpn <- file.path("d_qa_filter_sort/sort/",
                                paste0("HUC2_",
                                       HUC2,
                                       "_", 
@@ -90,7 +90,7 @@ sort_qa_Landsat_data <- function(qa_files,
         rbindlist() 
       
       #make a file path name
-      save_to_fpn <- file.path("e_collate_sort_qa_data/mid",
+      save_to_fpn <- file.path("d_qa_filter_sort/sort/",
                                paste0(str_replace(mission_info$mission_names, " ", ""),
                                       "_", 
                                       dswe,
