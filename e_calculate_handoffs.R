@@ -34,7 +34,7 @@ e_calculate_handoffs <- list(
   # Roy et al 2016 method used in Gardner et al (Color of Rivers)
   
   tar_target(
-    name = d_LS4_forLS45corr_quantiles,
+    name = e_LS4_forLS45corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
                                   version_id = d_version_identifier,
                                   mission_id = "LT04",
@@ -52,7 +52,7 @@ e_calculate_handoffs <- list(
   ),
   
   tar_target(
-    name = d_LS5_forLS45corr_quantiles,
+    name = e_LS5_forLS45corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
                                   version_id = d_version_identifier,
                                   mission_id = "LT05",
@@ -70,7 +70,7 @@ e_calculate_handoffs <- list(
   ),  
   
   tar_target(
-    name = d_LS5_forLS57corr_quantiles,
+    name = e_LS5_forLS57corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
                                   version_id = d_version_identifier,
                                   mission_id = "LT05",
@@ -88,7 +88,7 @@ e_calculate_handoffs <- list(
   ),
   
   tar_target(
-    name = d_LS7_forLS57corr_quantiles,
+    name = e_LS7_forLS57corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
                                   version_id = d_version_identifier,
                                   mission_id = "LE07",
@@ -106,7 +106,7 @@ e_calculate_handoffs <- list(
   ),
   
   tar_target(
-    name = d_LS7_forLS78corr_quantiles,
+    name = e_LS7_forLS78corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
                                   version_id = d_version_identifier,
                                   mission_id = "LE07",
@@ -124,7 +124,7 @@ e_calculate_handoffs <- list(
   ),
   
   tar_target(
-    name = d_LS8_forLS78corr_quantiles,
+    name = e_LS8_forLS78corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
                                   version_id = d_version_identifier,
                                   mission_id = "LC08",
@@ -142,7 +142,7 @@ e_calculate_handoffs <- list(
   ),
   
   tar_target(
-    name = d_LS8_forLS89corr_quantiles,
+    name = e_LS8_forLS89corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
                                   version_id = d_version_identifier,
                                   mission_id = "LC08",
@@ -160,7 +160,7 @@ e_calculate_handoffs <- list(
   ),
   
   tar_target(
-    name = d_LS9_forLS89corr_quantiles,
+    name = e_LS9_forLS89corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
                                   version_id = d_version_identifier,
                                   mission_id = "LC09",
@@ -186,7 +186,7 @@ e_calculate_handoffs <- list(
   # make a matrix of possible path prefix overlaps (aka 00 overlaps with 00 and 01, 
   # 03 overlaps with 02, 03, 04, etc)
   tar_target(
-    name = d_path_prefix_table,
+    name = e_path_prefix_table,
     command = tibble(early_prefix = c("00", "00", 
                                       "01", "01", "01", 
                                       "02", "02", "02",
@@ -213,122 +213,122 @@ e_calculate_handoffs <- list(
   # matches per dswe type:
   
   tar_target(
-    name = d_LS45_DSWE1_matches,
+    name = e_LS45_DSWE1_matches,
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1", version = d_version_identifier,
                   early_LS_mission = "LT04", late_LS_mission = "LT05",
-                  early_path_prefix = d_path_prefix_table$early_prefix, 
-                  late_path_prefix =  d_path_prefix_table$late_prefix)
+                  early_path_prefix = e_path_prefix_table$early_prefix, 
+                  late_path_prefix =  e_path_prefix_table$late_prefix)
     },
-    pattern = map(d_path_prefix_table),
+    pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   ),
   
   tar_target(
-    name = d_LS57_DSWE1_matches,
+    name = e_LS57_DSWE1_matches,
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1", version = d_version_identifier,
                   early_LS_mission = "LT05", late_LS_mission = "LE07",
-                  early_path_prefix = d_path_prefix_table$early_prefix, 
-                  late_path_prefix =  d_path_prefix_table$late_prefix)
+                  early_path_prefix = e_path_prefix_table$early_prefix, 
+                  late_path_prefix =  e_path_prefix_table$late_prefix)
     },
-    pattern = map(d_path_prefix_table),
+    pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   ),
   
   tar_target(
-    name = d_LS78_DSWE1_matches,
+    name = e_LS78_DSWE1_matches,
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1", version = d_version_identifier,
                   early_LS_mission = "LE07", late_LS_mission = "LC08",
-                  early_path_prefix = d_path_prefix_table$early_prefix, 
-                  late_path_prefix =  d_path_prefix_table$late_prefix)
+                  early_path_prefix = e_path_prefix_table$early_prefix, 
+                  late_path_prefix =  e_path_prefix_table$late_prefix)
     },
-    pattern = map(d_path_prefix_table),
+    pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   ),
   
   tar_target(
-    name = d_LS89_DSWE1_matches,
+    name = e_LS89_DSWE1_matches,
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1", version = d_version_identifier,
                   early_LS_mission = "LC08", late_LS_mission = "LC09",
-                  early_path_prefix = d_path_prefix_table$early_prefix, 
-                  late_path_prefix =  d_path_prefix_table$late_prefix)
+                  early_path_prefix = e_path_prefix_table$early_prefix, 
+                  late_path_prefix =  e_path_prefix_table$late_prefix)
     },
-    pattern = map(d_path_prefix_table),
+    pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   ),
   
   # and dswe1a
   tar_target(
-    name = d_LS45_DSWE1a_matches,
+    name = e_LS45_DSWE1a_matches,
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1a", version = d_version_identifier,
                   early_LS_mission = "LT04", late_LS_mission = "LT05",
-                  early_path_prefix = d_path_prefix_table$early_prefix, 
-                  late_path_prefix =  d_path_prefix_table$late_prefix)
+                  early_path_prefix = e_path_prefix_table$early_prefix, 
+                  late_path_prefix = e_path_prefix_table$late_prefix)
     },
-    pattern = map(d_path_prefix_table),
+    pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   ),
   
   tar_target(
-    name = d_LS57_DSWE1a_matches,
+    name = e_LS57_DSWE1a_matches,
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1a", version = d_version_identifier,
                   early_LS_mission = "LT05", late_LS_mission = "LE07",
-                  early_path_prefix = d_path_prefix_table$early_prefix, 
-                  late_path_prefix =  d_path_prefix_table$late_prefix)
+                  early_path_prefix = e_path_prefix_table$early_prefix, 
+                  late_path_prefix = e_path_prefix_table$late_prefix)
     },
-    pattern = map(d_path_prefix_table),
+    pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   ),
   
   tar_target(
-    name = d_LS78_DSWE1a_matches,
+    name = e_LS78_DSWE1a_matches,
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1a", version = d_version_identifier,
                   early_LS_mission = "LE07", late_LS_mission = "LC08",
-                  early_path_prefix = d_path_prefix_table$early_prefix, 
-                  late_path_prefix =  d_path_prefix_table$late_prefix)
+                  early_path_prefix = e_path_prefix_table$early_prefix, 
+                  late_path_prefix =  e_path_prefix_table$late_prefix)
     },
-    pattern = map(d_path_prefix_table),
+    pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   ),
   
   tar_target(
-    name = d_LS89_DSWE1a_matches,
+    name = e_LS89_DSWE1a_matches,
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1a", version = d_version_identifier,
                   early_LS_mission = "LC08", late_LS_mission = "LC09",
-                  early_path_prefix = d_path_prefix_table$early_prefix, 
-                  late_path_prefix =  d_path_prefix_table$late_prefix)
+                  early_path_prefix = e_path_prefix_table$early_prefix, 
+                  late_path_prefix =  e_path_prefix_table$late_prefix)
     },
-    pattern = map(d_path_prefix_table),
+    pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   )

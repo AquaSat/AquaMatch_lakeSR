@@ -97,7 +97,7 @@ interoperability.
 ```{r roy-table}
 roy_handoff_table <- tibble("Early mission" = c("Landsat 5", "Landsat 7"),
                                 "Late mission" = c("Landsat 7", "Landsat 8"),
-                                "n matches" = c(c(format(nrow(d_LS57_DSWE1_matches), big.mark = ","), format(nrow(d_LS89_DSWE1_matches), big.mark = ","))))
+                                "n matches" = c(c(format(nrow(e_LS57_DSWE1_matches), big.mark = ","), format(nrow(e_LS89_DSWE1_matches), big.mark = ","))))
 knitr::kable(roy_handoff_table, caption = "Summary of mission data used to create the Roy method intermission handoff.")
 ```
 
@@ -120,7 +120,7 @@ coord_fixed(ratio = 1,
 **Landsat 5 to 7 correction (`roy_corr7`)**
 
 ```{r roy-ls57-fig, fig.dim=c(3,3), fig.ncol=2, fig.cap = "Roy method intermission handoffs of Landsat 5 relative to Landsat 7."}
-plots <- pmap(.l = list(list(d_LS57_DSWE1_matches),
+plots <- pmap(.l = list(list(e_LS57_DSWE1_matches),
                list("i.med_Red", "i.med_Green", "i.med_Blue", "i.med_Nir", 
                     "i.med_Swir1", "i.med_Swir2", "i.med_SurfaceTemp"),
                list("med_Red", "med_Green", "med_Blue", "med_Nir", 
@@ -140,7 +140,7 @@ plots
 **Landsat 8 to 7 correction (`roy_corr7`)**
 
 ```{r roy-ls87-fig, fig.dim=c(3,3), fig.ncol=2, fig.cap = "Roy method intermission handoffs of Landsat 8 relative to Landsat 7."}
-plots <- pmap(.l = list(list(d_LS78_DSWE1_matches),
+plots <- pmap(.l = list(list(e_LS78_DSWE1_matches),
                list("med_Red", "med_Green", "med_Blue", "med_Nir", 
                     "med_Swir1", "med_Swir2", "med_SurfaceTemp"), 
                list("i.med_Red", "i.med_Green", "i.med_Blue", "i.med_Nir", 
@@ -160,7 +160,7 @@ plots
 **Landsat 7 to 8 correction (`roy_corr8`)**
 
 ```{r roy-ls78-fig, fig.dim=c(3,3), fig.ncol=2, fig.cap = "Roy method intermission handoffs of Landsat 7 relative to Landsat 8."}
-plots <- pmap(.l = list(list(d_LS78_DSWE1_matches),
+plots <- pmap(.l = list(list(e_LS78_DSWE1_matches),
                list("i.med_Red", "i.med_Green", "i.med_Blue", "i.med_Nir", 
                     "i.med_Swir1", "i.med_Swir2", "i.med_SurfaceTemp"),
                list("med_Red", "med_Green", "med_Blue", "med_Nir", 
@@ -180,7 +180,7 @@ plots
 **Landsat 9 to 8 correction (`roy_corr8`)**
 
 ```{r roy-ls98-fig, fig.dim=c(3,3), fig.ncol=2, fig.cap = "Roy method intermission handoffs of Landsat 9 relative to Landsat 8."}
-plots <- pmap(.l = list(list(d_LS89_DSWE1_matches),
+plots <- pmap(.l = list(list(e_LS89_DSWE1_matches),
                list("med_Red", "med_Green", "med_Blue", "med_Nir", 
                     "med_Swir1", "med_Swir2", "med_SurfaceTemp"), 
                list("i.med_Red", "i.med_Green", "i.med_Blue", "i.med_Nir", 
@@ -205,12 +205,12 @@ gardner_handoff_table <- tibble("Early mission" = c("Landsat 5", "Landsat 7", "L
                                 "Correction type" = c("corr7", "corr7, corr8", "corr8"),
                                 "Overlap Start" = c("1999-04-15", "2013-02-11", "2021-09-27"),
                                 "Overlap End" = c("2013-02-11", "2022-04-16", "2024-12-31"),
-                                "n Scenes of Early Mission" = c(format(d_LS5_forLS57corr_quantiles$n_scenes[1], big.mark = ","), 
-                                                                format(d_LS7_forLS78corr_quantiles$n_scenes[1], big.mark = ","),
-                                                                format(d_LS8_forLS89corr_quantiles$n_scenes[1], big.mark = ",")),
-                                "n Scenes of Late Mission" = c(format(d_LS7_forLS57corr_quantiles$n_scenes[1], big.mark = ","), 
-                                                               format(d_LS8_forLS78corr_quantiles$n_scenes[1], big.mark = ","), 
-                                                               format(d_LS9_forLS89corr_quantiles$n_scenes[1], big.mark = ",")))
+                                "n Scenes of Early Mission" = c(format(e_LS5_forLS57corr_quantiles$n_scenes[1], big.mark = ","), 
+                                                                format(e_LS7_forLS78corr_quantiles$n_scenes[1], big.mark = ","),
+                                                                format(e_LS8_forLS89corr_quantiles$n_scenes[1], big.mark = ",")),
+                                "n Scenes of Late Mission" = c(format(e_LS7_forLS57corr_quantiles$n_scenes[1], big.mark = ","), 
+                                                               format(e_LS8_forLS78corr_quantiles$n_scenes[1], big.mark = ","), 
+                                                               format(e_LS9_forLS89corr_quantiles$n_scenes[1], big.mark = ",")))
 
 knitr::kable(gardner_handoff_table, caption = "Summary of missions for handoffs calculated by the Gardner method. Note that *n* is summarized by scene, not by number of individual site observations contributing to the quantiles.")
 ```
@@ -235,13 +235,13 @@ plot_gard_quants <- function(data, x_col, y_col, title, x_label, y_label) {
 **Landsat 5 to 7 correction (`gard_corr7`)**
 
 ```{r gard-ls57-fig, fig.width=6}
-d_LS5_forLS57corr_quantiles <- d_LS5_forLS57corr_quantiles %>% 
+e_LS5_forLS57corr_quantiles <- e_LS5_forLS57corr_quantiles %>% 
   select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
   rename_with(~ paste0('LS5_', .), .cols = med_Red:med_SurfaceTemp)
-d_LS7_forLS57corr_quantiles <- d_LS7_forLS57corr_quantiles %>% 
+e_LS7_forLS57corr_quantiles <- e_LS7_forLS57corr_quantiles %>% 
   select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
   rename_with(~ paste0('LS7_', .), .cols = med_Red:med_SurfaceTemp)
-LS57 <- full_join(d_LS5_forLS57corr_quantiles, d_LS7_forLS57corr_quantiles)
+LS57 <- full_join(e_LS5_forLS57corr_quantiles, e_LS7_forLS57corr_quantiles)
 plots <- pmap(.l = list(list(LS57),
                list("LS5_med_Red", "LS5_med_Green", "LS5_med_Blue", "LS5_med_Nir", 
                     "LS5_med_Swir1", "LS5_med_Swir2", "LS5_med_SurfaceTemp"),
@@ -258,13 +258,13 @@ plots
 **Landsat 8 to 7 correction (`gard_corr7`)**
 
 ```{r gard-ls87-fig, fig.width=6}
-d_LS7_forLS78corr_quantiles <- d_LS7_forLS78corr_quantiles %>% 
+e_LS7_forLS78corr_quantiles <- e_LS7_forLS78corr_quantiles %>% 
   select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
   rename_with(~ paste0('LS7_', .), .cols = med_Red:med_SurfaceTemp)
-d_LS8_forLS78corr_quantiles <- d_LS8_forLS78corr_quantiles %>% 
+e_LS8_forLS78corr_quantiles <- e_LS8_forLS78corr_quantiles %>% 
   select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
   rename_with(~ paste0('LS8_', .), .cols = med_Red:med_SurfaceTemp)
-LS78 <- full_join(d_LS7_forLS78corr_quantiles, d_LS8_forLS78corr_quantiles)
+LS78 <- full_join(e_LS7_forLS78corr_quantiles, e_LS8_forLS78corr_quantiles)
 plots <- pmap(.l = list(list(LS78),
                list("LS8_med_Red", "LS8_med_Green", "LS8_med_Blue", "LS8_med_Nir", 
                     "LS8_med_Swir1", "LS8_med_Swir2", "LS8_med_SurfaceTemp"),
@@ -297,13 +297,13 @@ plots
 **Landsat 9 to 8 correction (`gard_corr8`)**
 
 ```{r gard-ls98-fig, fig.width=6}
-d_LS8_forLS89corr_quantiles <- d_LS8_forLS89corr_quantiles %>% 
+e_LS8_forLS89corr_quantiles <- e_LS8_forLS89corr_quantiles %>% 
   select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
   rename_with(~ paste0('LS8_', .), .cols = med_Red:med_SurfaceTemp)
-d_LS9_forLS89corr_quantiles <- d_LS9_forLS89corr_quantiles %>% 
+e_LS9_forLS89corr_quantiles <- e_LS9_forLS89corr_quantiles %>% 
   select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
   rename_with(~ paste0('LS9_', .), .cols = med_Red:med_SurfaceTemp)
-LS89 <- full_join(d_LS8_forLS89corr_quantiles, d_LS9_forLS89corr_quantiles)
+LS89 <- full_join(e_LS8_forLS89corr_quantiles, e_LS9_forLS89corr_quantiles)
 
 plots <- pmap(.l = list(list(LS89),
                list("LS9_med_Red", "LS9_med_Green", "LS9_med_Blue", "LS9_med_Nir", 
