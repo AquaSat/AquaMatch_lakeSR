@@ -158,7 +158,7 @@ d_qa_filter_sort <- list(
   tar_target(
     name = d_all_sorted_Landsat_files,
     command = as.vector(c(d_Landsat4_collated_data, d_collated_Landsat5_by_huc2,
-                          d_collateD_Landsat7_by_huc2, d_collated_Landsat8_by_huc2,
+                          d_collated_Landsat7_by_huc2, d_collated_Landsat8_by_huc2,
                           d_Landsat9_collated_data))
   )
   

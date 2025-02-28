@@ -5,6 +5,7 @@ rmd_files: ["index.Rmd",
 "03-Acquisition_Software_Settings.Rmd",
 "04-Landsat_C2_SRST.Rmd",
 "05-lakeSR_LS_C2_SRST.Rmd",
-"06-calculating_intermission_handoffs.Rmd",
+"06-post_hoc_qa.Rmd",
+"07-intermission_handoffs.Rmd",
 "z-Refs.Rmd"]
 output_dir: "../docs"

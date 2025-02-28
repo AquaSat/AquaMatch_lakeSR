@@ -84,4 +84,7 @@ landsat-9-qa-summary
 define-handoff
 roy-method
 gardner-method
+establish
+implementing-roy-handoffs
+implementing-gardner-handoffs
 references
