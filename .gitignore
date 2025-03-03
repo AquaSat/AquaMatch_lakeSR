@@ -26,6 +26,9 @@ d_qa_filter_sort/sort/*
 d_qa_filter_sort/out/*
 
 e_calculate_handoffs/out/*
+e_calculate_handoffs/figs/*
+
+y_siteSR_targets/out/*
 
 # stupid .DS_Store files
 **.DS_Store

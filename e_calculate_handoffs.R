@@ -15,6 +15,7 @@ e_calculate_handoffs <- list(
       # make directories if needed
       directories = c("e_calculate_handoffs/roy/",
                       "e_calculate_handoffs/gardner/",
+                      "e_calculate_handoffs/figs/",
                       "e_calculate_handoffs/out/")
       walk(directories, function(dir) {
         if(!dir.exists(dir)){
@@ -331,20 +332,153 @@ e_calculate_handoffs <- list(
     pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
+  ),
+  
+  
+  # calculate handoffs ----------------------------------
+  
+  tar_target(
+    name = e_bands_for_correction,
+    command = c("med_Blue", "med_Green", "med_Red", "med_Nir", "med_SurfaceTemp")
+  ), 
+  
+  # calculate Gardner method
+  
+  tar_target(
+    name = e_calculate_gardner_LS5_to_LS7,
+    command = calculate_gardner_handoff(quantile_from = e_LS5_forLS57corr_quantiles, 
+                                        quantile_to = e_LS7_forLS57corr_quantiles, 
+                                        mission_from = "LS5", 
+                                        mission_to = "LS7",
+                                        DSWE = c_dswe_types, 
+                                        band = e_bands_for_correction),
+    pattern = cross(c_dswe_types, e_bands_for_correction)
+  ),
+  
+  tar_target(
+    name = e_calculate_gardner_LS8_to_LS7,
+    command = calculate_gardner_handoff(quantile_from = e_LS8_forLS78corr_quantiles, 
+                                        quantile_to = e_LS7_forLS78corr_quantiles, 
+                                        mission_from = "LS8", 
+                                        mission_to = "LS7",
+                                        DSWE = c_dswe_types, 
+                                        band = e_bands_for_correction),
+    pattern = cross(c_dswe_types, e_bands_for_correction)
+  ),
+  
+  tar_target(
+    name = e_calculate_gardner_LS7_to_LS8,
+    command = calculate_gardner_handoff(quantile_from = e_LS7_forLS78corr_quantiles, 
+                                        quantile_to = e_LS8_forLS78corr_quantiles, 
+                                        mission_from = "LS7", 
+                                        mission_to = "LS8",
+                                        DSWE = c_dswe_types, 
+                                        band = e_bands_for_correction),
+    pattern = cross(c_dswe_types, e_bands_for_correction)
+  ),
+  
+  tar_target(
+    name = e_calculate_gardner_LS9_to_LS8,
+    command = calculate_gardner_handoff(quantile_from = e_LS9_forLS89corr_quantiles, 
+                                        quantile_to = e_LS8_forLS89corr_quantiles, 
+                                        mission_from = "LS9", 
+                                        mission_to = "LS8",
+                                        DSWE = c_dswe_types, 
+                                        band = e_bands_for_correction),
+    pattern = cross(c_dswe_types, e_bands_for_correction)
+  ), 
+  
+  # and calculate for Roy method
+  
+  tar_target(
+    name = e_Roy_LS5_to_LS7_DSWE1_handoff,
+    command = calculate_roy_handoff(matched_data = e_LS57_DSWE1_matches, 
+                                    mission_from = "LS5",
+                                    mission_to = "LS7",
+                                    invert_mission_match = FALSE,
+                                    bands = e_bands_for_correction,
+                                    DSWE = "DSWE1"),
+    deployment = "main"
+  ),
+  
+  tar_target(
+    name = e_Roy_LS8_to_LS7_DSWE1_handoff,
+    command = calculate_roy_handoff(matched_data = e_LS78_DSWE1_matches, 
+                                    mission_from = "LS8",
+                                    mission_to = "LS7",
+                                    invert_mission_match = TRUE,
+                                    bands = e_bands_for_correction,
+                                    DSWE = "DSWE1"),
+    deployment = "main"
+  ),
+  
+  tar_target(
+    name = e_Roy_LS7_to_LS8_DSWE1_handoff,
+    command = calculate_roy_handoff(matched_data = e_LS78_DSWE1_matches, 
+                                    mission_from = "LS7",
+                                    mission_to = "LS8",
+                                    invert_mission_match = FALSE,
+                                    bands = e_bands_for_correction,
+                                    DSWE = "DSWE1"),
+    deployment = "main"
+  ),
+  
+  tar_target(
+    name = e_Roy_LS9_to_LS8_DSWE1_handoff,
+    command = calculate_roy_handoff(matched_data = e_LS89_DSWE1_matches, 
+                                    mission_from = "LS9",
+                                    mission_to = "LS8",
+                                    invert_mission_match = FALSE,
+                                    bands = e_bands_for_correction,
+                                    DSWE = "DSWE1"),
+    deployment = "main"
+  ), 
+  
+  tar_target(
+    name = e_Roy_LS5_to_LS7_DSWE1a_handoff,
+    command = calculate_roy_handoff(matched_data = e_LS57_DSWE1a_matches, 
+                                    mission_from = "LS5",
+                                    mission_to = "LS7",
+                                    invert_mission_match = FALSE,
+                                    bands = e_bands_for_correction,
+                                    DSWE = "DSWE1a"),
+    deployment = "main"
+  ),
+  
+  tar_target(
+    name = e_Roy_LS8_to_LS7_DSWE1a_handoff,
+    command = calculate_roy_handoff(matched_data = e_LS78_DSWE1a_matches, 
+                                    mission_from = "LS8",
+                                    mission_to = "LS7",
+                                    invert_mission_match = TRUE,
+                                    bands = e_bands_for_correction,
+                                    DSWE = "DSWE1a"),
+    deployment = "main"
+  ),
+  
+  tar_target(
+    name = e_Roy_LS7_to_LS8_DSWE1a_handoff,
+    command = calculate_roy_handoff(matched_data = e_LS78_DSWE1a_matches, 
+                                    mission_from = "LS7",
+                                    mission_to = "LS8",
+                                    invert_mission_match = FALSE,
+                                    bands = e_bands_for_correction,
+                                    DSWE = "DSWE1a"),
+    deployment = "main"
+  ),
+  
+  tar_target(
+    name = e_Roy_LS9_to_LS8_DSWE1a_handoff,
+    command = calculate_roy_handoff(matched_data = e_LS89_DSWE1a_matches, 
+                                    mission_from = "LS9",
+                                    mission_to = "LS8",
+                                    invert_mission_match = FALSE,
+                                    bands = e_bands_for_correction,
+                                    DSWE = "DSWE1a"),
+    deployment = "main"
   )
-  # ,
-  # 
-  # 
-  # # calculate handoffs ----------------------------------
-  # 
-  # tar_target(
-  #   name = d_Gardner_LS57_DSWE1_handoff,
-  #   command = calculate_gardner_handoff()
-  # ),
-  # 
-  # tar_target(
-  #   name = d_Roy_LS57_DSWE1_handoff,
-  #   command = calculate_roy_handoff()
-  # )
+  
+  
+  
   
 )

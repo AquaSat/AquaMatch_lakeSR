@@ -15,8 +15,8 @@
 #' @param google_email A string containing the gmail address to use for
 #' Google Drive authentication.
 #' 
-#' @param file_type A string giving the file extension to be used. (".rds" or 
-#' ".feather")
+#' @param file_type A string giving the file extension to be used. (".rds", 
+#' ".feather", ".csv")
 #' 
 #' @param version_date A string containing an eight-digit date (i.e., in
 #' ISO 8601 "basic" format: YYYYMMDD) that should be used to identify the
@@ -26,8 +26,8 @@
 #' The dataset after being downloaded and read into the pipeline from Google Drive.
 #' 
 retrieve_target <- function(target, id_df, local_folder, 
-                          google_email, file_type = ".rds", 
-                          version_date = NULL){
+                            google_email, file_type = ".rds", 
+                            version_date = NULL){
   
   # Authorize using the google email provided
   drive_auth(google_email)
@@ -57,13 +57,17 @@ retrieve_target <- function(target, id_df, local_folder,
                  overwrite = TRUE)
   
   # Read dataset into pipeline
-  if(file_type == ".rds"){
+  if (file_type == ".rds") {
     
     return(read_rds(local_path))
     
-  } else if(file_type == ".feather"){
+  } else if (file_type == ".feather") {
     
     return(read_feather(local_path))   
+    
+  } else if (file_type == ".csv") {
+    
+    return(read_csv(local_path))   
     
   } else {
     

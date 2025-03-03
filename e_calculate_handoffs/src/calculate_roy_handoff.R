@@ -1,0 +1,89 @@
+calculate_roy_handoff <- function(matched_data, 
+                                  mission_from,
+                                  mission_to,
+                                  invert_mission_match = FALSE,
+                                  bands,
+                                  DSWE) {
+  
+  binwidth <- list(c(0.001, 0.001), c(0.001, 0.001),
+                   c(0.001, 0.001), c(0.001, 0.001),
+                   c(0.1, 0.1))
+  
+  df <- map2(bands,
+             binwidth,
+             \(band, bw) {
+               if (invert_mission_match) {
+                 # filter for dswe
+                 y <- matched_data %>% 
+                   pull(band)
+                 x <- matched_data %>% 
+                   pull(paste0("i.",band))
+               } else {
+                 x <- matched_data %>% 
+                   pull(band)
+                 y <- matched_data %>% 
+                   pull(paste0("i.",band))
+               }
+               
+               roy <- lm(y ~ x)
+               
+               # plot and save handoff fig
+               linear_plot <- ggplot() +
+                 geom_bin2d(aes(x = x, y = y, fill = after_stat(count)), binwidth = bw) + 
+                 scale_fill_viridis_c(name = "Density", alpha = 0.5) + 
+                 geom_abline(intercept = 0, slope = 1, color = "grey", lty = 2) + 
+                 geom_smooth(aes(x = x, y = y), method = "lm", se = FALSE, color = "red") +
+                 coord_fixed(ratio = 1,
+                             xlim = c(min(x, y), max(x, y)),
+                             ylim = c(min(x, y), max(x, y))) +
+                 labs(title = paste(band, mission_from, "to", 
+                                    mission_to, "handoff", DSWE), 
+                      x = paste0(mission_from, " Rrs"), 
+                      y = paste0(mission_to, " Rrs")) +
+                 theme_bw()
+
+               ggsave(plot = linear_plot, 
+                      filename = file.path("e_calculate_handoffs/figs/", 
+                                           paste(band,
+                                                 mission_from, 
+                                                 "to",
+                                                 mission_to,
+                                                 DSWE,
+                                                 "roy_handoff.jpg",
+                                                 sep = "_")), 
+                      width = 6, height = 5, units = 'in')
+               
+               residuals <- ggplot() +
+                 geom_bin2d(aes(x = x, y = roy$residuals, fill = after_stat(count)), binwidth = bw) +
+                 scale_fill_viridis_c(name = "Density", alpha = 0.5) + 
+                 geom_abline(intercept = 0, slope = 0, color = "grey", lty = 2) + 
+                 labs(title = paste(band, mission_from, "to", 
+                                    mission_to, "residuals", DSWE), 
+                      x = paste(band, "Rrs"), 
+                      y = "linear model residual") +
+                 theme_bw()
+               
+               ggsave(plot = residuals, 
+                      filename = file.path("e_calculate_handoffs/figs/", 
+                                           paste(band,
+                                                 mission_from, 
+                                                 "to",
+                                                 mission_to,
+                                                 DSWE,
+                                                 "roy_residuals.jpg",
+                                                 sep = "_")), 
+                      width = 6, height = 3, units = 'in')
+               
+               # return a summary table
+               tibble(band = band, 
+                      intercept = roy$coefficients[[1]], 
+                      slope = roy$coefficients[[2]], 
+                      min_in_val = min(x),
+                      max_in_val = max(x),
+                      sat_corr = mission_from,
+                      sat_to = mission_to,
+                      dswe = DSWE) 
+             }) %>% 
+    bind_rows()
+  
+}
