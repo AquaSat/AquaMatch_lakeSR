@@ -97,8 +97,6 @@ if (config::get(config = general_config)$update_and_share) {
       deployment = "main"
     )
     
-    ## save handoffs ##
-    
   )
   
 } else { # no -f- group targets
