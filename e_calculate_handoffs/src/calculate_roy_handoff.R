@@ -9,6 +9,11 @@ calculate_roy_handoff <- function(matched_data,
                    c(0.001, 0.001), c(0.001, 0.001),
                    c(0.1, 0.1))
   
+  log_likihood <- function(mu, sigma) {
+    R <-  dnorm(x, mu, sigma)
+    -sum(log(R))
+  }
+  
   df <- map2(bands,
              binwidth,
              \(band, bw) {
@@ -25,13 +30,20 @@ calculate_roy_handoff <- function(matched_data,
                    pull(paste0("i.",band))
                }
                
+               # calculate models
                roy <- lm(y ~ x)
                
-               # plot and save handoff fig
-               linear_plot <- ggplot() +
+               # need a sample here, deming is slowwww
+               random <- tibble(y = y, x = x) %>% 
+                 slice_sample(., n = 10000)
+               roy_dem <- deming(y ~ x, random)
+                 
+                 # plot and save handoff fig
+                 linear_plot <- ggplot() +
                  geom_bin2d(aes(x = x, y = y, fill = after_stat(count)), binwidth = bw) + 
                  scale_fill_viridis_c(name = "Density", alpha = 0.5) + 
                  geom_abline(intercept = 0, slope = 1, color = "grey", lty = 2) + 
+                 geom_abline(intercept = roy_dem$coefficients[1], slope = roy_dem$coefficients[2], color = "blue") +
                  geom_smooth(aes(x = x, y = y), method = "lm", se = FALSE, color = "red") +
                  coord_fixed(ratio = 1,
                              xlim = c(min(x, y), max(x, y)),
@@ -41,9 +53,9 @@ calculate_roy_handoff <- function(matched_data,
                       x = paste0(mission_from, " Rrs"), 
                       y = paste0(mission_to, " Rrs")) +
                  theme_bw()
-
+               
                ggsave(plot = linear_plot, 
-                      filename = file.path("e_calculate_handoffs/figs/", 
+                      filename = file.path("e_calculate_handoffs/roy/", 
                                            paste(band,
                                                  mission_from, 
                                                  "to",
@@ -64,7 +76,7 @@ calculate_roy_handoff <- function(matched_data,
                  theme_bw()
                
                ggsave(plot = residuals, 
-                      filename = file.path("e_calculate_handoffs/figs/", 
+                      filename = file.path("e_calculate_handoffs/roy/", 
                                            paste(band,
                                                  mission_from, 
                                                  "to",
@@ -74,15 +86,51 @@ calculate_roy_handoff <- function(matched_data,
                                                  sep = "_")), 
                       width = 6, height = 3, units = 'in')
                
+               
+               deming_residuals <- y - x*roy_dem$coefficients[[2]] + roy_dem$coefficients[[1]]
+               
+               deming_resid_plot <- ggplot() +
+                 geom_bin2d(aes(x = x, y = deming_residuals, fill = after_stat(count)), binwidth = bw) +
+                 scale_fill_viridis_c(name = "Density", alpha = 0.5) + 
+                 geom_abline(intercept = 0, slope = 0, color = "grey", lty = 2) + 
+                 labs(title = paste(band, mission_from, "to", 
+                                    mission_to, "residuals", DSWE), 
+                      x = paste(band, "Rrs"), 
+                      y = "deming model residual") +
+                 theme_bw()
+               
+               ggsave(plot = deming_resid_plot, 
+                      filename = file.path("e_calculate_handoffs/roy/", 
+                                           paste(band,
+                                                 mission_from, 
+                                                 "to",
+                                                 mission_to,
+                                                 DSWE,
+                                                 "roy_deming_residuals.jpg",
+                                                 sep = "_")), 
+                      width = 6, height = 3, units = 'in')
+               
                # return a summary table
-               tibble(band = band, 
+               ols <- tibble(band = band, 
                       intercept = roy$coefficients[[1]], 
                       slope = roy$coefficients[[2]], 
+                      method = "lm",
                       min_in_val = min(x),
                       max_in_val = max(x),
                       sat_corr = mission_from,
                       sat_to = mission_to,
                       dswe = DSWE) 
+               deming <- tibble(band = band, 
+                                intercept = roy_dem$coefficients[[1]], 
+                                slope = roy_dem$coefficients[[2]], 
+                                method = "deming",
+                                min_in_val = min(x),
+                                max_in_val = max(x),
+                                sat_corr = mission_from,
+                                sat_to = mission_to,
+                                dswe = DSWE) 
+               
+               bind_rows(ols, deming)
              }) %>% 
     bind_rows()
   

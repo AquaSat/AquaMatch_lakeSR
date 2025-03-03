@@ -31,7 +31,7 @@ calculate_gardner_handoff <- function(quantile_from, quantile_to,
     theme_bw()
   
   ggsave(plot = quant_plot,
-         filename = file.path("e_calculate_handoffs/figs/", 
+         filename = file.path("e_calculate_handoffs/gardner/", 
                               paste(band,
                                     mission_from, 
                                     "to",
@@ -51,7 +51,7 @@ calculate_gardner_handoff <- function(quantile_from, quantile_to,
     theme_bw()
   
   ggsave(plot = residuals, 
-         filename = file.path("e_calculate_handoffs/figs/", 
+         filename = file.path("e_calculate_handoffs/gardner/", 
                               paste(band,
                                     mission_from, 
                                     "to",

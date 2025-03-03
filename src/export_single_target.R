@@ -6,8 +6,6 @@
 #' 
 #' @param target The target to be exported (as an object not a string).
 #' 
-#' @param target_name The name of the target to be exported (as a string, not an object).
-#' 
 #' @param drive_path A path to the folder on Google Drive where the file
 #' should be saved.
 #' 
@@ -22,7 +20,7 @@
 #' @returns 
 #' The contents of the folder indicated in the `drive_path` argument.
 #' 
-export_single_target <- function(target, target_name, drive_path, stable, google_email,
+export_single_target <- function(target, drive_path, stable, google_email,
                                date_stamp = NULL, feather = FALSE){
   
   # Feather or RDS?
@@ -68,7 +66,7 @@ export_single_target <- function(target, target_name, drive_path, stable, google
   
   # return the contents of the drive path
   drive_ls(drive_path) %>% 
-    filter(grepl(target_name, name))
+    filter(grepl(target_string, name))
   
 }
 

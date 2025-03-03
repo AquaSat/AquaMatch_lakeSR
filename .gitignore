@@ -25,8 +25,8 @@ d_qa_filter_sort/qa/*
 d_qa_filter_sort/sort/*
 d_qa_filter_sort/out/*
 
-e_calculate_handoffs/out/*
-e_calculate_handoffs/figs/*
+e_calculate_handoffs/gardner/*
+e_calculate_handoffs/roy/*
 
 y_siteSR_targets/out/*
 

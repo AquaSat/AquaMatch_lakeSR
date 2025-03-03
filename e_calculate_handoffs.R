@@ -15,7 +15,6 @@ e_calculate_handoffs <- list(
       # make directories if needed
       directories = c("e_calculate_handoffs/roy/",
                       "e_calculate_handoffs/gardner/",
-                      "e_calculate_handoffs/figs/",
                       "e_calculate_handoffs/out/")
       walk(directories, function(dir) {
         if(!dir.exists(dir)){
@@ -398,6 +397,7 @@ e_calculate_handoffs <- list(
                                     invert_mission_match = FALSE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1"),
+    packages = c("tidyverse", "deming"),
     deployment = "main"
   ),
   
@@ -409,6 +409,7 @@ e_calculate_handoffs <- list(
                                     invert_mission_match = TRUE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1"),
+    packages = c("tidyverse", "deming"),
     deployment = "main"
   ),
   
@@ -420,6 +421,7 @@ e_calculate_handoffs <- list(
                                     invert_mission_match = FALSE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1"),
+    packages = c("tidyverse", "deming"),
     deployment = "main"
   ),
   
@@ -431,6 +433,7 @@ e_calculate_handoffs <- list(
                                     invert_mission_match = FALSE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1"),
+    packages = c("tidyverse", "deming"),
     deployment = "main"
   ), 
   
@@ -442,6 +445,7 @@ e_calculate_handoffs <- list(
                                     invert_mission_match = FALSE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1a"),
+    packages = c("tidyverse", "deming"),
     deployment = "main"
   ),
   
@@ -453,6 +457,7 @@ e_calculate_handoffs <- list(
                                     invert_mission_match = TRUE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1a"),
+    packages = c("tidyverse", "deming"),
     deployment = "main"
   ),
   
@@ -464,6 +469,7 @@ e_calculate_handoffs <- list(
                                     invert_mission_match = FALSE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1a"),
+    packages = c("tidyverse", "deming"),
     deployment = "main"
   ),
   
@@ -475,10 +481,45 @@ e_calculate_handoffs <- list(
                                     invert_mission_match = FALSE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1a"),
+    packages = c("tidyverse", "deming"),
     deployment = "main"
+  ),
+  
+  # collate all the Gardner and Roy coefficients for ease of use
+  tar_target(
+    name = e_Roy_handoffs,
+    command = list(e_Roy_LS5_to_LS7_DSWE1_handoff,
+                   e_Roy_LS8_to_LS7_DSWE1_handoff,
+                   e_Roy_LS7_to_LS8_DSWE1_handoff, 
+                   e_Roy_LS9_to_LS8_DSWE1_handoff,
+                   e_Roy_LS5_to_LS7_DSWE1a_handoff,
+                   e_Roy_LS8_to_LS7_DSWE1a_handoff,
+                   e_Roy_LS7_to_LS8_DSWE1a_handoff, 
+                   e_Roy_LS9_to_LS8_DSWE1a_handoff) %>% 
+      bind_rows() %>% 
+      mutate(correction = "Roy")
+  ),
+  
+  tar_target(
+    name = e_Gardner_handoffs,
+    command = list(e_calculate_gardner_LS5_to_LS7,
+                   e_calculate_gardner_LS8_to_LS7,
+                   e_calculate_gardner_LS7_to_LS8,
+                   e_calculate_gardner_LS9_to_LS8) %>% 
+      bind_rows() %>% 
+      mutate(method = "poly",
+             correction = "Gardner")
+  ),
+  
+  tar_target(
+    name = e_collated_handoffs,
+    command = {
+      handoffs <- bind_rows(e_Roy_handoffs, e_Gardner_handoffs) %>%
+        select(band, correction, dswe, sat_corr, sat_to, method, intercept, slope, B1, B2, min_in_val, max_in_val)
+      write_csv(handoffs, paste0("e_calculate_handoffs/out/collated_handoffs_v",
+                                 b_yml_poi$run_date,
+                                 ".csv"))
+    }
   )
-  
-  
-  
   
 )
