@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-02" />
+<meta name="date" content="2025-03-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,6 +52,8 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -243,9 +245,8 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="8.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-method"><i class="fa fa-check"></i><b>8.1</b> Roy method</a></li>
 <li class="chapter" data-level="8.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-method"><i class="fa fa-check"></i><b>8.2</b> Gardner method</a></li>
-<li class="chapter" data-level="8.3" data-path="define-handoff.html"><a href="define-handoff.html#establish"><i class="fa fa-check"></i><b>8.3</b> Establishing Landsat 4/5 and Landsat 8/9 similarity</a></li>
-<li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-roy-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Roy Handoffs</a></li>
-<li class="chapter" data-level="8.5" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.5</b> Implementing Gardner Handoffs</a></li>
+<li class="chapter" data-level="8.3" data-path="define-handoff.html"><a href="define-handoff.html#implementing-roy-handoffs"><i class="fa fa-check"></i><b>8.3</b> Implementing Roy Handoffs</a></li>
+<li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Gardner Handoffs</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>9</b> References</a></li>
 </ul>
@@ -332,74 +333,72 @@ approach.</p></li>
 <p>While there are numerous other diagnostic tests we could apply to filter the RS
 data, these are the QA filters that we deem to be the most foundational and
 unifying for reliable RS data across the US and Territories. Figures
-<a href="#fig:ls4-dswe1-drop"><strong>??</strong></a> through <a href="#fig:ls9-dswe1a-drop"><strong>??</strong></a> show how many rows
-of data were dropped through this QA process.</p>
+<a href="#fig:lake-ls4-dswe1-drop"><strong>??</strong></a> through <a href="#fig:site-ls9-dswe1-drop"><strong>??</strong></a> show how
+many rows of data were dropped through this QA process. For the purposes of this
+documentation, we show summaries for DSWE1 data only, but running the pipeline
+locally results in summaries for both DSWE1 and DSWE1a data.</p>
 <div id="landsat-4-qa-summary" class="section level3 hasAnchor" number="7.2.1">
 <h3><span class="header-section-number">7.2.1</span> Landsat 4 QA Summary<a href="handoff.html#landsat-4-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="float" id="ls4-dswe1-drop">
-<img src="images/LT04_dswe1_drop_summary.png" alt="Summary of dropped rows for Landsat 4’s DSWE1 (confident water) RS summaries." />
-<div class="figcaption">Summary of dropped rows for Landsat 4’s DSWE1 (confident water) RS
+<div class="float" id="lake-ls4-dswe1-drop">
+<img src="images/lakeSR/LT04_DSWE1_drop_summary.png" alt="Summary of dropped rows for lakeSR Landsat 4’s DSWE1 (confident water) RS summaries." />
+<div class="figcaption">Summary of dropped rows for lakeSR Landsat 4’s DSWE1 (confident water) RS
 summaries.</div>
 </div>
-<div class="float" id="ls4-dswe1a-drop">
-<img src="images/LT04_DSWE1a_drop_summary.png" alt="Summary of dropped rows for Landsat 4’s DSWE1a (confident water with positive algal mask) RS summaries." />
-<div class="figcaption">Summary of dropped rows for Landsat 4’s DSWE1a (confident water with positive
-algal mask) RS
+<div class="float" id="site-ls4-dswe1-drop">
+<img src="images/siteSR/LT04_DSWE1_drop_summary.png" alt="Summary of dropped rows for siteSR Landsat 4’s DSWE1 (confident water) RS summaries." />
+<div class="figcaption">Summary of dropped rows for siteSR Landsat 4’s DSWE1 (confident water) RS
 summaries.</div>
 </div>
 </div>
 <div id="landsat-5-qa-summary" class="section level3 hasAnchor" number="7.2.2">
 <h3><span class="header-section-number">7.2.2</span> Landsat 5 QA Summary<a href="handoff.html#landsat-5-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="float" id="ls5-dswe1-drop">
-<img src="images/LT05_DSWE1_drop_summary.png" alt="Summary of dropped rows for Landsat 5’s DSWE1 (confident water) RS summaries." />
-<div class="figcaption">Summary of dropped rows for Landsat 5’s DSWE1 (confident water) RS
+<div class="float" id="lake-ls5-dswe1-drop">
+<img src="images/lakeSR/LT05_DSWE1_drop_summary.png" alt="Summary of dropped rows for lakeSR Landsat 5’s DSWE1 (confident water) RS summaries." />
+<div class="figcaption">Summary of dropped rows for lakeSR Landsat 5’s DSWE1 (confident water) RS
 summaries.</div>
 </div>
-<div class="float" id="ls5-dswe1a-drop">
-<img src="images/LT05_DSWE1a_drop_summary.png" alt="Summary of dropped rows for Landsat 5’s DSWE1a (confident water and positive algal mask) RS summaries." />
-<div class="figcaption">Summary of dropped rows for Landsat 5’s DSWE1a (confident water and positive
-algal mask) RS
+<div class="float" id="site-ls5-dswe1-drop">
+<img src="images/siteSR/LT05_DSWE1_drop_summary.png" alt="Summary of dropped rows for siteSR Landsat 5’s DSWE1 (confident water) RS summaries." />
+<div class="figcaption">Summary of dropped rows for siteSR Landsat 5’s DSWE1 (confident water) RS
 summaries.</div>
 </div>
 </div>
 <div id="landsat-7-qa-summary" class="section level3 hasAnchor" number="7.2.3">
 <h3><span class="header-section-number">7.2.3</span> Landsat 7 QA Summary<a href="handoff.html#landsat-7-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="float" id="ls7-dswe1-drop">
-<img src="images/LE07_DSWE1_drop_summary.png" alt="Summary of dropped rows for Landsat 7’s DSWE1 (confident water) RS summaries." />
-<div class="figcaption">Summary of dropped rows for Landsat 7’s DSWE1 (confident water) RS
+<div class="float" id="lake-ls7-dswe1-drop">
+<img src="images/lakeSR/LE07_DSWE1_drop_summary.png" alt="Summary of dropped rows for lakeSR Landsat 7’s DSWE1 (confident water) RS summaries." />
+<div class="figcaption">Summary of dropped rows for lakeSR Landsat 7’s DSWE1 (confident water) RS
 summaries.</div>
 </div>
-<div class="float" id="ls7-dswe1a-drop">
-<img src="images/LE07_DSWE1a_drop_summary.png" alt="Summary of dropped rows for Landsat 7’s DSWE1a (confident water and positive algal mask) RS summaries." />
-<div class="figcaption">Summary of dropped rows for Landsat 7’s DSWE1a (confident water and positive
-algal mask) RS
+<div class="float" id="site-ls7-dswe1-drop">
+<img src="images/siteSR/LE07_DSWE1_drop_summary.png" alt="Summary of dropped rows for siteSR Landsat 7’s DSWE1 (confident water) RS summaries." />
+<div class="figcaption">Summary of dropped rows for siteSR Landsat 7’s DSWE1 (confident water) RS
 summaries.</div>
 </div>
 </div>
 <div id="landsat-8-qa-summary" class="section level3 hasAnchor" number="7.2.4">
 <h3><span class="header-section-number">7.2.4</span> Landsat 8 QA Summary<a href="handoff.html#landsat-8-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="float" id="ls8-dswe1-drop">
-<img src="images/LC08_DSWE1_drop_summary.png" alt="Summary of dropped rows for Landsat 8’s DSWE1 (confident water) RS summaries." />
-<div class="figcaption">Summary of dropped rows for Landsat 8’s DSWE1 (confident water) RS
+<div class="float" id="lake-ls8-dswe1-drop">
+<img src="images/lakeSR/LC08_DSWE1_drop_summary.png" alt="Summary of dropped rows for lakeSR Landsat 8’s DSWE1 (confident water) RS summaries." />
+<div class="figcaption">Summary of dropped rows for lakeSR Landsat 8’s DSWE1 (confident water) RS
 summaries.</div>
 </div>
-<div class="float">
-<img src="images/LC08_DSWE1a_drop_summary.png" alt="Summary of dropped rows for Landsat 8’s DSWE1a (confident water and positive algal mask) RS summaries." />
-<div class="figcaption">Summary of dropped rows for Landsat 8’s DSWE1a (confident water and positive
-algal mask) RS summaries.</div>
+<div class="float" id="site-ls8-dswe1-drop">
+<img src="images/siteSR/LC08_DSWE1_drop_summary.png" alt="Summary of dropped rows for siteSR Landsat 8’s DSWE1 (confident water) RS summaries." />
+<div class="figcaption">Summary of dropped rows for siteSR Landsat 8’s DSWE1 (confident water) RS
+summaries.</div>
 </div>
 </div>
 <div id="landsat-9-qa-summary" class="section level3 hasAnchor" number="7.2.5">
 <h3><span class="header-section-number">7.2.5</span> Landsat 9 QA Summary<a href="handoff.html#landsat-9-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="float" id="ls9-dswe1-drop">
-<img src="images/LC09_DSWE1_drop_summary.png" alt="Summary of dropped rows for Landsat 9’s DSWE1 (confident water) RS summaries." />
-<div class="figcaption">Summary of dropped rows for Landsat 9’s DSWE1 (confident water) RS
+<div class="float" id="lake-ls9-dswe1-drop">
+<img src="images/lakeSR/LC09_DSWE1_drop_summary.png" alt="Summary of dropped rows for lakeSR Landsat 9’s DSWE1 (confident water) RS summaries." />
+<div class="figcaption">Summary of dropped rows for lakeSR Landsat 9’s DSWE1 (confident water) RS
 summaries.</div>
 </div>
-<div class="float" id="ls9-dswe1a-drop">
-<img src="images/LC09_DSWE1a_drop_summary.png" alt="Summary of dropped rows for Landsat 9’s DSWE1a (confident water and positive algal mask) RS summaries." />
-<div class="figcaption">Summary of dropped rows for Landsat 9’s DSWE1a (confident water and positive
-algal mask) RS
+<div class="float" id="site-ls9-dswe1-drop">
+<img src="images/siteSR/LC09_DSWE1_drop_summary.png" alt="Summary of dropped rows for siteSR Landsat 9’s DSWE1 (confident water) RS summaries." />
+<div class="figcaption">Summary of dropped rows for siteSR Landsat 9’s DSWE1 (confident water) RS
 summaries.</div>
 </div>
 

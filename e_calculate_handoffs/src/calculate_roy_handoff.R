@@ -9,11 +9,6 @@ calculate_roy_handoff <- function(matched_data,
                    c(0.001, 0.001), c(0.001, 0.001),
                    c(0.1, 0.1))
   
-  log_likihood <- function(mu, sigma) {
-    R <-  dnorm(x, mu, sigma)
-    -sum(log(R))
-  }
-  
   df <- map2(bands,
              binwidth,
              \(band, bw) {
@@ -33,13 +28,16 @@ calculate_roy_handoff <- function(matched_data,
                # calculate models
                roy <- lm(y ~ x)
                
+               set.seed(57) # just for some local reproducibility in the random sample
                # need a sample here, deming is slowwww
                random <- tibble(y = y, x = x) %>% 
                  slice_sample(., n = 10000)
                roy_dem <- deming(y ~ x, random)
-                 
-                 # plot and save handoff fig
-                 linear_plot <- ggplot() +
+               
+               unit <- if (band == "med_SurfaceTemp") { " deg K" } else { " Rrs" }
+               
+               # plot and save handoff fig
+               linear_plot <- ggplot() +
                  geom_bin2d(aes(x = x, y = y, fill = after_stat(count)), binwidth = bw) + 
                  scale_fill_viridis_c(name = "Density", alpha = 0.5) + 
                  geom_abline(intercept = 0, slope = 1, color = "grey", lty = 2) + 
@@ -50,8 +48,8 @@ calculate_roy_handoff <- function(matched_data,
                              ylim = c(min(x, y), max(x, y))) +
                  labs(title = paste(band, mission_from, "to", 
                                     mission_to, "handoff", DSWE), 
-                      x = paste0(mission_from, " Rrs"), 
-                      y = paste0(mission_to, " Rrs")) +
+                      x = paste0(mission_from, unit), 
+                      y = paste0(mission_to, unit)) +
                  theme_bw()
                
                ggsave(plot = linear_plot, 
@@ -71,7 +69,7 @@ calculate_roy_handoff <- function(matched_data,
                  geom_abline(intercept = 0, slope = 0, color = "grey", lty = 2) + 
                  labs(title = paste(band, mission_from, "to", 
                                     mission_to, "residuals", DSWE), 
-                      x = paste(band, "Rrs"), 
+                      x = paste0(band, unit), 
                       y = "linear model residual") +
                  theme_bw()
                
@@ -95,7 +93,7 @@ calculate_roy_handoff <- function(matched_data,
                  geom_abline(intercept = 0, slope = 0, color = "grey", lty = 2) + 
                  labs(title = paste(band, mission_from, "to", 
                                     mission_to, "residuals", DSWE), 
-                      x = paste(band, "Rrs"), 
+                      x = paste0(band, unit), 
                       y = "deming model residual") +
                  theme_bw()
                
@@ -112,14 +110,14 @@ calculate_roy_handoff <- function(matched_data,
                
                # return a summary table
                ols <- tibble(band = band, 
-                      intercept = roy$coefficients[[1]], 
-                      slope = roy$coefficients[[2]], 
-                      method = "lm",
-                      min_in_val = min(x),
-                      max_in_val = max(x),
-                      sat_corr = mission_from,
-                      sat_to = mission_to,
-                      dswe = DSWE) 
+                             intercept = roy$coefficients[[1]], 
+                             slope = roy$coefficients[[2]], 
+                             method = "lm",
+                             min_in_val = min(x),
+                             max_in_val = max(x),
+                             sat_corr = mission_from,
+                             sat_to = mission_to,
+                             dswe = DSWE) 
                deming <- tibble(band = band, 
                                 intercept = roy_dem$coefficients[[1]], 
                                 slope = roy_dem$coefficients[[2]], 
@@ -131,6 +129,7 @@ calculate_roy_handoff <- function(matched_data,
                                 dswe = DSWE) 
                
                bind_rows(ols, deming)
+               
              }) %>% 
     bind_rows()
   

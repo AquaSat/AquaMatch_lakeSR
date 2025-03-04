@@ -52,11 +52,12 @@ if (config::get(config = general_config)$update_bookdown) {
                                LS9_for89 = e_LS9_forLS89corr_quantiles,
                                LS57_match = e_LS57_DSWE1_matches,
                                LS78_match = e_LS78_DSWE1_matches,
-                               LS89_match = e_LS89_DSWE1_matches
+                               LS89_match = e_LS89_DSWE1_matches,
+                               coefficients = e_collated_handoffs
                              ))
                },
                packages = c("tidyverse", "bookdown", "sf", "tigris", "nhdplusTools", 
-                            "tmap", "googledrive", "feather"),
+                            "tmap", "googledrive", "feather", "kableExtra"),
                deployment = "main")
   )
   

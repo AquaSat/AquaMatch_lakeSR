@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-02" />
+<meta name="date" content="2025-03-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,6 +52,8 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -243,9 +245,8 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="8.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-method"><i class="fa fa-check"></i><b>8.1</b> Roy method</a></li>
 <li class="chapter" data-level="8.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-method"><i class="fa fa-check"></i><b>8.2</b> Gardner method</a></li>
-<li class="chapter" data-level="8.3" data-path="define-handoff.html"><a href="define-handoff.html#establish"><i class="fa fa-check"></i><b>8.3</b> Establishing Landsat 4/5 and Landsat 8/9 similarity</a></li>
-<li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-roy-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Roy Handoffs</a></li>
-<li class="chapter" data-level="8.5" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.5</b> Implementing Gardner Handoffs</a></li>
+<li class="chapter" data-level="8.3" data-path="define-handoff.html"><a href="define-handoff.html#implementing-roy-handoffs"><i class="fa fa-check"></i><b>8.3</b> Implementing Roy Handoffs</a></li>
+<li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Gardner Handoffs</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>9</b> References</a></li>
 </ul>
@@ -281,9 +282,12 @@ relative to Landsat 7 (<code>corr7</code>) and Landsat 8 (<code>corr8</code>). T
 intermission handoffs create a continuous record of remote sensing from Landsat
 4 through 9 relative to Landsat 7 since Landsat 4 and 5 and Landsat 8 and 9 can
 be treated as interchangable due to the similarity in payload and radiometric
-resolution (see section <a href="define-handoff.html#establish">8.3</a> for details and caveats). Landsat 8
+resolution (see section <a href="#establish"><strong>??</strong></a> for details and caveats). Landsat 8
 handoffs (<code>corr8</code>) can only be applied to Landsat 7 and 9 due to mission
 overlap, so the standardized data timeseries is shorter.</p>
+<p>For the purposes of this document, we only present the handoff coefficients for
+DSWE1 (confident water) and do not investigate differences between the DSWE1 or
+DSWE1a coefficients, though we provide both.</p>
 <div id="roy-method" class="section level2 hasAnchor" number="8.1">
 <h2><span class="header-section-number">8.1</span> Roy method<a href="define-handoff.html#roy-method" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The Roy method for calculating intermission handoffs uses paired images at
@@ -295,25 +299,28 @@ within the overlapping paths in the WRS2 path-row framework (see figure
 <img src="images/path_overlap_roy.png" alt="An example of two overlapping WRS2 paths (grey area) separated by one day. Any location with data for both images would be considered a paired data point to define the Roy method intermission handoffs." />
 <div class="figcaption">An example of two overlapping WRS2 paths (grey area) separated by one day. Any
 location with data for both images would be considered a paired data point to
-define the Roy method intermission
-handoffs.</div>
+define the Roy method intermission handoffs.</div>
 </div>
 <p>While <span class="citation">Roy et al. (<a href="#ref-roy2016">2016</a>)</span> implemented this method on a pixel-by-pixel basis, we implement
 using the median band value per site. This is used in place of the explicit
 filters described in the Roy method (saturated pixels, cloudy/snowy pixels, and
 pixels with value changes greater than the changes in atmospheric correction),
 as we have implemented masks and QA filters to reduce these sources of error.
-Handoff coefficients are defined by the ordinary least squares regression line
-of the Landsat 5 against the Landsat 7 data and Landsat 7 against the Landsat 8
-data (see Table <a href="define-handoff.html#tab:roy-table">8.1</a>). For the purposes of this documentation,
-we only include figures for DSWE1 due to the size of the match datasets, but
-provide the OLS regression coefficients for both in Table <a href="#tab:roy-coeff"><strong>??</strong></a>.</p>
+Handoff coefficients are defined by the ordinary least squares (OLS) regression
+line or the Deming regression (MLE, assuming equal and constant error in both x
+and y variables). Because Deming regression is computationally intensive, the
+regression line is defined by a random sample of 10,000 matches. For the
+purposes of this documentation, we only include figures and tables for the
+Deming regression (MLE method) and DSWE1. Intercepts and slopes for all handoffs
+are available at the file path
+<code>e_calculate_handoffs/out/collated_handoffs_v2025-02-12.csv</code> and figures for all
+handoffs are created when the pipeline is run.</p>
 </div>
 <div id="gardner-method" class="section level2 hasAnchor" number="8.2">
 <h2><span class="header-section-number">8.2</span> Gardner method<a href="define-handoff.html#gardner-method" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Gardner method intermission handoffs are defined by the data obtained in the
 overlapping period of time between two adjacent-in-time missions (details
-provided in Table <a href="define-handoff.html#tab:gardner-table">8.2</a>). These data are filtered to sites
+provided in Table <a href="define-handoff.html#tab:gardner-table">8.4</a>). These data are filtered to sites
 that have at least one data point per year for at least 75% of the years of
 overlap. The filtered data are then summarized to each mission’s 1st-99th
 percentile value per band, and the handoff coefficients between missions are
@@ -326,24 +333,20 @@ percentile values used to define the intermission handoff are flagged
 and <code>corr8</code> relationships and their derived coefficients are provided in the
 sections below.</p>
 <p>One additional consideration when using the Gardner method is, even when the
-number of observations are is high, if there is a difference between total scene
-numbers, there may be systematic differences ingrained into the coefficients
-since x and y are not truly ‘random samples’, impacting the validity of the
-Central Limit Theorem. An example of possible systematic differences could be
-fewer observations from non-CONUS locations in Landsat 5 due to data
-transmission errors. We did not investigate the differences in n listed in Table
-<a href="define-handoff.html#tab:gardner-table">8.2</a> to determine what, if any, systematic differences are
-present between the two missions. We provide the Gardner method handoffs for
-continuity with the riverSR product for users who would like that
+number of observations are is high, if there is a difference between total
+observations contributing to the quantile summaries, and there may be systematic
+differences built into the coefficients. An example of possible systematic
+differences could be fewer observations from non-CONUS locations in Landsat 5
+due to data transmission errors. We did not investigate the differences in n
+listed in Table <a href="define-handoff.html#tab:gardner-table">8.4</a> to determine what, if any, systematic
+differences are present between the two missions. We provide the Gardner method
+handoffs for continuity with the riverSR product for users who would like that
 interoperability.</p>
 </div>
-<div id="establish" class="section level2 hasAnchor" number="8.3">
-<h2><span class="header-section-number">8.3</span> Establishing Landsat 4/5 and Landsat 8/9 similarity<a href="define-handoff.html#establish" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-</div>
-<div id="implementing-roy-handoffs" class="section level2 hasAnchor" number="8.4">
-<h2><span class="header-section-number">8.4</span> Implementing Roy Handoffs<a href="define-handoff.html#implementing-roy-handoffs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="implementing-roy-handoffs" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> Implementing Roy Handoffs<a href="define-handoff.html#implementing-roy-handoffs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <table>
-<caption><span id="tab:roy-table">Table 8.1: </span>Summary of mission data used to create the Roy method intermission handoff.</caption>
+<caption><span id="tab:roy-table">Table 8.1: </span>Summary of Landsat mission data used to create the Roy method intermission handoff for DSWE1.</caption>
 <thead>
 <tr class="header">
 <th align="left">Early mission</th>
@@ -364,243 +367,1050 @@ interoperability.</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Landsat 5 to 7 correction (<code>roy_corr7</code>)</strong></p>
-<pre><code>## [[1]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls57-fig-1"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls57-fig-1.png" alt="Roy method intermission handoffs of Landsat 5 relative to Landsat 7." width="288" />
-<p class="caption">
-Figure 8.1: Roy method intermission handoffs of Landsat 5 relative to Landsat 7.
-</p>
+<p><img src="../e_calculate_handoffs/roy/med_Blue_LS5_to_LS7_DSWE1_roy_handoff.jpg" width="900" /><img src="../e_calculate_handoffs/roy/med_Blue_LS5_to_LS7_DSWE1_roy_deming_residuals.jpg" width="900" /></p>
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:roy-coeff-dem-corr7">Table 8.2: </span>Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Deming (MLE) regression
+</caption>
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="4">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Coefficients
 </div>
-<pre><code>## 
-## [[2]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls57-fig-2"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls57-fig-2.png" alt="Roy method intermission handoffs of Landsat 5 relative to Landsat 7." width="288" />
-<p class="caption">
-Figure 8.2: Roy method intermission handoffs of Landsat 5 relative to Landsat 7.
-</p>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Input Value Range
 </div>
-<pre><code>## 
-## [[3]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls57-fig-3"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls57-fig-3.png" alt="Roy method intermission handoffs of Landsat 5 relative to Landsat 7." width="288" />
-<p class="caption">
-Figure 8.3: Roy method intermission handoffs of Landsat 5 relative to Landsat 7.
-</p>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+Band
+</th>
+<th style="text-align:center;">
+DSWE type
+</th>
+<th style="text-align:center;">
+Satellite to Correct
+</th>
+<th style="text-align:center;">
+Satellite to Harmonize to
+</th>
+<th style="text-align:center;">
+Intercept
+</th>
+<th style="text-align:center;">
+Slope
+</th>
+<th style="text-align:center;">
+Minimum Value in Handoff
+</th>
+<th style="text-align:center;">
+Maximum Value in Handoff
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+med_Blue
+</td>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="10">
+DSWE1
+</td>
+<td style="text-align:center;">
+LS5
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+0.002
+</td>
+<td style="text-align:center;">
+0.978
+</td>
+<td style="text-align:center;">
+-0.010
+</td>
+<td style="text-align:center;">
+0.199
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Green
+</td>
+<td style="text-align:center;">
+LS5
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+0.004
+</td>
+<td style="text-align:center;">
+1.014
+</td>
+<td style="text-align:center;">
+-0.005
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Red
+</td>
+<td style="text-align:center;">
+LS5
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+0.005
+</td>
+<td style="text-align:center;">
+0.968
+</td>
+<td style="text-align:center;">
+-0.009
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Nir
+</td>
+<td style="text-align:center;">
+LS5
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+0.002
+</td>
+<td style="text-align:center;">
+0.972
+</td>
+<td style="text-align:center;">
+-0.010
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_SurfaceTemp
+</td>
+<td style="text-align:center;">
+LS5
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+-7.690
+</td>
+<td style="text-align:center;">
+1.029
+</td>
+<td style="text-align:center;">
+273.151
+</td>
+<td style="text-align:center;">
+313.147
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Blue
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+-0.011
+</td>
+<td style="text-align:center;">
+0.818
+</td>
+<td style="text-align:center;">
+-0.008
+</td>
+<td style="text-align:center;">
+0.198
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Green
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+-0.009
+</td>
+<td style="text-align:center;">
+0.991
+</td>
+<td style="text-align:center;">
+-0.006
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Red
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+-0.009
+</td>
+<td style="text-align:center;">
+0.974
+</td>
+<td style="text-align:center;">
+-0.008
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Nir
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+-0.013
+</td>
+<td style="text-align:center;">
+0.925
+</td>
+<td style="text-align:center;">
+-0.010
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_SurfaceTemp
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+-13.820
+</td>
+<td style="text-align:center;">
+1.053
+</td>
+<td style="text-align:center;">
+273.151
+</td>
+<td style="text-align:center;">
+313.113
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Blue
+</td>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="10">
+DSWE1a
+</td>
+<td style="text-align:center;">
+LS5
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+0.001
+</td>
+<td style="text-align:center;">
+1.003
+</td>
+<td style="text-align:center;">
+-0.010
+</td>
+<td style="text-align:center;">
+0.199
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Green
+</td>
+<td style="text-align:center;">
+LS5
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+0.003
+</td>
+<td style="text-align:center;">
+1.031
+</td>
+<td style="text-align:center;">
+-0.005
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Red
+</td>
+<td style="text-align:center;">
+LS5
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+0.004
+</td>
+<td style="text-align:center;">
+0.987
+</td>
+<td style="text-align:center;">
+-0.009
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Nir
+</td>
+<td style="text-align:center;">
+LS5
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+0.001
+</td>
+<td style="text-align:center;">
+1.003
+</td>
+<td style="text-align:center;">
+-0.010
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_SurfaceTemp
+</td>
+<td style="text-align:center;">
+LS5
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+-6.027
+</td>
+<td style="text-align:center;">
+1.023
+</td>
+<td style="text-align:center;">
+273.151
+</td>
+<td style="text-align:center;">
+313.147
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Blue
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+-0.011
+</td>
+<td style="text-align:center;">
+0.818
+</td>
+<td style="text-align:center;">
+-0.008
+</td>
+<td style="text-align:center;">
+0.198
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Green
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+-0.009
+</td>
+<td style="text-align:center;">
+0.988
+</td>
+<td style="text-align:center;">
+-0.006
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Red
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+-0.009
+</td>
+<td style="text-align:center;">
+0.969
+</td>
+<td style="text-align:center;">
+-0.008
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Nir
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+-0.014
+</td>
+<td style="text-align:center;">
+0.961
+</td>
+<td style="text-align:center;">
+-0.010
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_SurfaceTemp
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+-13.594
+</td>
+<td style="text-align:center;">
+1.052
+</td>
+<td style="text-align:center;">
+273.151
+</td>
+<td style="text-align:center;">
+313.113
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:roy-coeff-dem-corr8">Table 8.3: </span>Handoff coefficients for Landsat 7 and 9 to harmonize to Landsat 8 using the Deming (MLE) regression
+</caption>
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="4">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Coefficients
 </div>
-<pre><code>## 
-## [[4]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls57-fig-4"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls57-fig-4.png" alt="Roy method intermission handoffs of Landsat 5 relative to Landsat 7." width="288" />
-<p class="caption">
-Figure 8.4: Roy method intermission handoffs of Landsat 5 relative to Landsat 7.
-</p>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Input Value Range
 </div>
-<pre><code>## 
-## [[5]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls57-fig-5"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls57-fig-5.png" alt="Roy method intermission handoffs of Landsat 5 relative to Landsat 7." width="288" />
-<p class="caption">
-Figure 8.5: Roy method intermission handoffs of Landsat 5 relative to Landsat 7.
-</p>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+Band
+</th>
+<th style="text-align:center;">
+DSWE type
+</th>
+<th style="text-align:center;">
+Satellite to Correct
+</th>
+<th style="text-align:center;">
+Satellite to Harmonize to
+</th>
+<th style="text-align:center;">
+Intercept
+</th>
+<th style="text-align:center;">
+Slope
+</th>
+<th style="text-align:center;">
+Minimum Value in Handoff
+</th>
+<th style="text-align:center;">
+Maximum Value in Handoff
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+med_Blue
+</td>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="10">
+DSWE1
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+0.014
+</td>
+<td style="text-align:center;">
+1.222
+</td>
+<td style="text-align:center;">
+-0.009
+</td>
+<td style="text-align:center;">
+0.188
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Green
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+0.010
+</td>
+<td style="text-align:center;">
+1.009
+</td>
+<td style="text-align:center;">
+-0.001
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Red
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+0.010
+</td>
+<td style="text-align:center;">
+1.027
+</td>
+<td style="text-align:center;">
+-0.010
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Nir
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+0.014
+</td>
+<td style="text-align:center;">
+1.081
+</td>
+<td style="text-align:center;">
+-0.010
+</td>
+<td style="text-align:center;">
+0.199
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_SurfaceTemp
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+13.119
+</td>
+<td style="text-align:center;">
+0.950
+</td>
+<td style="text-align:center;">
+273.151
+</td>
+<td style="text-align:center;">
+313.149
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Blue
+</td>
+<td style="text-align:center;">
+LS9
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+-0.001
+</td>
+<td style="text-align:center;">
+1.033
+</td>
+<td style="text-align:center;">
+-0.009
+</td>
+<td style="text-align:center;">
+0.197
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Green
+</td>
+<td style="text-align:center;">
+LS9
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+-0.001
+</td>
+<td style="text-align:center;">
+1.023
+</td>
+<td style="text-align:center;">
+0.001
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Red
+</td>
+<td style="text-align:center;">
+LS9
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+0.000
+</td>
+<td style="text-align:center;">
+1.008
+</td>
+<td style="text-align:center;">
+-0.010
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Nir
+</td>
+<td style="text-align:center;">
+LS9
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+0.000
+</td>
+<td style="text-align:center;">
+1.016
+</td>
+<td style="text-align:center;">
+-0.010
+</td>
+<td style="text-align:center;">
+0.199
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_SurfaceTemp
+</td>
+<td style="text-align:center;">
+LS9
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+-2.840
+</td>
+<td style="text-align:center;">
+1.010
+</td>
+<td style="text-align:center;">
+273.153
+</td>
+<td style="text-align:center;">
+313.149
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Blue
+</td>
+<td style="text-align:center;vertical-align: middle !important;" rowspan="10">
+DSWE1a
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+0.014
+</td>
+<td style="text-align:center;">
+1.222
+</td>
+<td style="text-align:center;">
+-0.010
+</td>
+<td style="text-align:center;">
+0.188
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Green
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+0.009
+</td>
+<td style="text-align:center;">
+1.012
+</td>
+<td style="text-align:center;">
+-0.001
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Red
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+0.009
+</td>
+<td style="text-align:center;">
+1.032
+</td>
+<td style="text-align:center;">
+-0.010
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Nir
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+0.014
+</td>
+<td style="text-align:center;">
+1.041
+</td>
+<td style="text-align:center;">
+-0.010
+</td>
+<td style="text-align:center;">
+0.199
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_SurfaceTemp
+</td>
+<td style="text-align:center;">
+LS7
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+12.915
+</td>
+<td style="text-align:center;">
+0.950
+</td>
+<td style="text-align:center;">
+273.151
+</td>
+<td style="text-align:center;">
+313.149
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Blue
+</td>
+<td style="text-align:center;">
+LS9
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+0.000
+</td>
+<td style="text-align:center;">
+1.020
+</td>
+<td style="text-align:center;">
+-0.009
+</td>
+<td style="text-align:center;">
+0.197
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Green
+</td>
+<td style="text-align:center;">
+LS9
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+0.000
+</td>
+<td style="text-align:center;">
+1.017
+</td>
+<td style="text-align:center;">
+0.001
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Red
+</td>
+<td style="text-align:center;">
+LS9
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+0.000
+</td>
+<td style="text-align:center;">
+1.005
+</td>
+<td style="text-align:center;">
+-0.010
+</td>
+<td style="text-align:center;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_Nir
+</td>
+<td style="text-align:center;">
+LS9
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+0.000
+</td>
+<td style="text-align:center;">
+1.033
+</td>
+<td style="text-align:center;">
+-0.010
+</td>
+<td style="text-align:center;">
+0.199
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+med_SurfaceTemp
+</td>
+<td style="text-align:center;">
+LS9
+</td>
+<td style="text-align:center;">
+LS8
+</td>
+<td style="text-align:center;">
+-1.811
+</td>
+<td style="text-align:center;">
+1.006
+</td>
+<td style="text-align:center;">
+273.153
+</td>
+<td style="text-align:center;">
+313.149
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<pre><code>## 
-## [[6]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls57-fig-6"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls57-fig-6.png" alt="Roy method intermission handoffs of Landsat 5 relative to Landsat 7." width="288" />
-<p class="caption">
-Figure 8.6: Roy method intermission handoffs of Landsat 5 relative to Landsat 7.
-</p>
-</div>
-<pre><code>## 
-## [[7]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls57-fig-7"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls57-fig-7.png" alt="Roy method intermission handoffs of Landsat 5 relative to Landsat 7." width="288" />
-<p class="caption">
-Figure 8.7: Roy method intermission handoffs of Landsat 5 relative to Landsat 7.
-</p>
-</div>
-<p><strong>Landsat 8 to 7 correction (<code>roy_corr7</code>)</strong></p>
-<pre><code>## [[1]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls87-fig-1"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls87-fig-1.png" alt="Roy method intermission handoffs of Landsat 8 relative to Landsat 7." width="288" />
-<p class="caption">
-Figure 8.8: Roy method intermission handoffs of Landsat 8 relative to Landsat 7.
-</p>
-</div>
-<pre><code>## 
-## [[2]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls87-fig-2"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls87-fig-2.png" alt="Roy method intermission handoffs of Landsat 8 relative to Landsat 7." width="288" />
-<p class="caption">
-Figure 8.9: Roy method intermission handoffs of Landsat 8 relative to Landsat 7.
-</p>
-</div>
-<pre><code>## 
-## [[3]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls87-fig-3"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls87-fig-3.png" alt="Roy method intermission handoffs of Landsat 8 relative to Landsat 7." width="288" />
-<p class="caption">
-Figure 8.10: Roy method intermission handoffs of Landsat 8 relative to Landsat 7.
-</p>
-</div>
-<pre><code>## 
-## [[4]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls87-fig-4"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls87-fig-4.png" alt="Roy method intermission handoffs of Landsat 8 relative to Landsat 7." width="288" />
-<p class="caption">
-Figure 8.11: Roy method intermission handoffs of Landsat 8 relative to Landsat 7.
-</p>
-</div>
-<pre><code>## 
-## [[5]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls87-fig-5"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls87-fig-5.png" alt="Roy method intermission handoffs of Landsat 8 relative to Landsat 7." width="288" />
-<p class="caption">
-Figure 8.12: Roy method intermission handoffs of Landsat 8 relative to Landsat 7.
-</p>
-</div>
-<pre><code>## 
-## [[6]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls87-fig-6"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls87-fig-6.png" alt="Roy method intermission handoffs of Landsat 8 relative to Landsat 7." width="288" />
-<p class="caption">
-Figure 8.13: Roy method intermission handoffs of Landsat 8 relative to Landsat 7.
-</p>
-</div>
-<pre><code>## 
-## [[7]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls87-fig-7"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls87-fig-7.png" alt="Roy method intermission handoffs of Landsat 8 relative to Landsat 7." width="288" />
-<p class="caption">
-Figure 8.14: Roy method intermission handoffs of Landsat 8 relative to Landsat 7.
-</p>
-</div>
-<p><strong>Landsat 7 to 8 correction (<code>roy_corr8</code>)</strong></p>
-<pre><code>## [[1]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls78-fig-1"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls78-fig-1.png" alt="Roy method intermission handoffs of Landsat 7 relative to Landsat 8." width="288" />
-<p class="caption">
-Figure 8.15: Roy method intermission handoffs of Landsat 7 relative to Landsat 8.
-</p>
-</div>
-<pre><code>## 
-## [[2]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls78-fig-2"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls78-fig-2.png" alt="Roy method intermission handoffs of Landsat 7 relative to Landsat 8." width="288" />
-<p class="caption">
-Figure 8.16: Roy method intermission handoffs of Landsat 7 relative to Landsat 8.
-</p>
-</div>
-<pre><code>## 
-## [[3]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls78-fig-3"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls78-fig-3.png" alt="Roy method intermission handoffs of Landsat 7 relative to Landsat 8." width="288" />
-<p class="caption">
-Figure 8.17: Roy method intermission handoffs of Landsat 7 relative to Landsat 8.
-</p>
-</div>
-<pre><code>## 
-## [[4]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls78-fig-4"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls78-fig-4.png" alt="Roy method intermission handoffs of Landsat 7 relative to Landsat 8." width="288" />
-<p class="caption">
-Figure 8.18: Roy method intermission handoffs of Landsat 7 relative to Landsat 8.
-</p>
-</div>
-<pre><code>## 
-## [[5]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls78-fig-5"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls78-fig-5.png" alt="Roy method intermission handoffs of Landsat 7 relative to Landsat 8." width="288" />
-<p class="caption">
-Figure 8.19: Roy method intermission handoffs of Landsat 7 relative to Landsat 8.
-</p>
-</div>
-<pre><code>## 
-## [[6]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls78-fig-6"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls78-fig-6.png" alt="Roy method intermission handoffs of Landsat 7 relative to Landsat 8." width="288" />
-<p class="caption">
-Figure 8.20: Roy method intermission handoffs of Landsat 7 relative to Landsat 8.
-</p>
-</div>
-<pre><code>## 
-## [[7]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls78-fig-7"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls78-fig-7.png" alt="Roy method intermission handoffs of Landsat 7 relative to Landsat 8." width="288" />
-<p class="caption">
-Figure 8.21: Roy method intermission handoffs of Landsat 7 relative to Landsat 8.
-</p>
-</div>
-<p><strong>Landsat 9 to 8 correction (<code>roy_corr8</code>)</strong></p>
-<pre><code>## [[1]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls98-fig-1"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls98-fig-1.png" alt="Roy method intermission handoffs of Landsat 9 relative to Landsat 8." width="288" />
-<p class="caption">
-Figure 8.22: Roy method intermission handoffs of Landsat 9 relative to Landsat 8.
-</p>
-</div>
-<pre><code>## 
-## [[2]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls98-fig-2"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls98-fig-2.png" alt="Roy method intermission handoffs of Landsat 9 relative to Landsat 8." width="288" />
-<p class="caption">
-Figure 8.23: Roy method intermission handoffs of Landsat 9 relative to Landsat 8.
-</p>
-</div>
-<pre><code>## 
-## [[3]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls98-fig-3"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls98-fig-3.png" alt="Roy method intermission handoffs of Landsat 9 relative to Landsat 8." width="288" />
-<p class="caption">
-Figure 8.24: Roy method intermission handoffs of Landsat 9 relative to Landsat 8.
-</p>
-</div>
-<pre><code>## 
-## [[4]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls98-fig-4"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls98-fig-4.png" alt="Roy method intermission handoffs of Landsat 9 relative to Landsat 8." width="288" />
-<p class="caption">
-Figure 8.25: Roy method intermission handoffs of Landsat 9 relative to Landsat 8.
-</p>
-</div>
-<pre><code>## 
-## [[5]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls98-fig-5"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls98-fig-5.png" alt="Roy method intermission handoffs of Landsat 9 relative to Landsat 8." width="288" />
-<p class="caption">
-Figure 8.26: Roy method intermission handoffs of Landsat 9 relative to Landsat 8.
-</p>
-</div>
-<pre><code>## 
-## [[6]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls98-fig-6"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls98-fig-6.png" alt="Roy method intermission handoffs of Landsat 9 relative to Landsat 8." width="288" />
-<p class="caption">
-Figure 8.27: Roy method intermission handoffs of Landsat 9 relative to Landsat 8.
-</p>
-</div>
-<pre><code>## 
-## [[7]]</code></pre>
-<div class="figure"><span style="display:block;" id="fig:roy-ls98-fig-7"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/roy-ls98-fig-7.png" alt="Roy method intermission handoffs of Landsat 9 relative to Landsat 8." width="288" />
-<p class="caption">
-Figure 8.28: Roy method intermission handoffs of Landsat 9 relative to Landsat 8.
-</p>
-</div>
-</div>
-<div id="implementing-gardner-handoffs" class="section level2 hasAnchor" number="8.5">
-<h2><span class="header-section-number">8.5</span> Implementing Gardner Handoffs<a href="define-handoff.html#implementing-gardner-handoffs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="implementing-gardner-handoffs" class="section level2 hasAnchor" number="8.4">
+<h2><span class="header-section-number">8.4</span> Implementing Gardner Handoffs<a href="define-handoff.html#implementing-gardner-handoffs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <table>
-<caption><span id="tab:gardner-table">Table 8.2: </span>Summary of missions for handoffs calculated by the Gardner method. Note that <em>n</em> is summarized by scene, not by number of individual site observations contributing to the quantiles.</caption>
+<caption><span id="tab:gardner-table">Table 8.4: </span>Summary of Landsat mission data for handoffs calculated by the Gardner method for DSWE1.</caption>
 <colgroup>
+<col width="10%" />
+<col width="9%" />
 <col width="11%" />
 <col width="10%" />
-<col width="13%" />
-<col width="11%" />
-<col width="10%" />
-<col width="21%" />
-<col width="20%" />
+<col width="8%" />
+<col width="25%" />
+<col width="24%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -609,8 +1419,8 @@ Figure 8.28: Roy method intermission handoffs of Landsat 9 relative to Landsat 8
 <th align="left">Correction type</th>
 <th align="left">Overlap Start</th>
 <th align="left">Overlap End</th>
-<th align="left">n Scenes of Early Mission</th>
-<th align="left">n Scenes of Late Mission</th>
+<th align="left">n Observations from Early Mission</th>
+<th align="left">n Observations from Late Mission</th>
 </tr>
 </thead>
 <tbody>
@@ -620,8 +1430,8 @@ Figure 8.28: Roy method intermission handoffs of Landsat 9 relative to Landsat 8
 <td align="left">corr7</td>
 <td align="left">1999-04-15</td>
 <td align="left">2013-02-11</td>
-<td align="left">75,677</td>
-<td align="left">105,313</td>
+<td align="left">13,274,751</td>
+<td align="left">22,268,200</td>
 </tr>
 <tr class="even">
 <td align="left">Landsat 7</td>
@@ -629,8 +1439,8 @@ Figure 8.28: Roy method intermission handoffs of Landsat 9 relative to Landsat 8
 <td align="left">corr7, corr8</td>
 <td align="left">2013-02-11</td>
 <td align="left">2022-04-16</td>
-<td align="left">53,509</td>
-<td align="left">78,806</td>
+<td align="left">9,407,692</td>
+<td align="left">6,248,939</td>
 </tr>
 <tr class="odd">
 <td align="left">Landsat 8</td>
@@ -638,95 +1448,11 @@ Figure 8.28: Roy method intermission handoffs of Landsat 9 relative to Landsat 8
 <td align="left">corr8</td>
 <td align="left">2021-09-27</td>
 <td align="left">2024-12-31</td>
-<td align="left">28,558</td>
-<td align="left">27,402</td>
+<td align="left">2,563,261</td>
+<td align="left">2,426,571</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Landsat 5 to 7 correction (<code>gard_corr7</code>)</strong></p>
-<pre><code>## [[1]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls57-fig-1.png" width="576" /></p>
-<pre><code>## 
-## [[2]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls57-fig-2.png" width="576" /></p>
-<pre><code>## 
-## [[3]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls57-fig-3.png" width="576" /></p>
-<pre><code>## 
-## [[4]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls57-fig-4.png" width="576" /></p>
-<pre><code>## 
-## [[5]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls57-fig-5.png" width="576" /></p>
-<pre><code>## 
-## [[6]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls57-fig-6.png" width="576" /></p>
-<pre><code>## 
-## [[7]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls57-fig-7.png" width="576" /></p>
-<p><strong>Landsat 8 to 7 correction (<code>gard_corr7</code>)</strong></p>
-<pre><code>## [[1]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls87-fig-1.png" width="576" /></p>
-<pre><code>## 
-## [[2]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls87-fig-2.png" width="576" /></p>
-<pre><code>## 
-## [[3]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls87-fig-3.png" width="576" /></p>
-<pre><code>## 
-## [[4]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls87-fig-4.png" width="576" /></p>
-<pre><code>## 
-## [[5]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls87-fig-5.png" width="576" /></p>
-<pre><code>## 
-## [[6]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls87-fig-6.png" width="576" /></p>
-<pre><code>## 
-## [[7]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls87-fig-7.png" width="576" /></p>
-<p><strong>Landsat 7 to 8 correction</strong> <strong>(<code>gard_corr8</code>)</strong></p>
-<pre><code>## [[1]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls78-fig-1.png" width="576" /></p>
-<pre><code>## 
-## [[2]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls78-fig-2.png" width="576" /></p>
-<pre><code>## 
-## [[3]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls78-fig-3.png" width="576" /></p>
-<pre><code>## 
-## [[4]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls78-fig-4.png" width="576" /></p>
-<pre><code>## 
-## [[5]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls78-fig-5.png" width="576" /></p>
-<pre><code>## 
-## [[6]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls78-fig-6.png" width="576" /></p>
-<pre><code>## 
-## [[7]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls78-fig-7.png" width="576" /></p>
-<p><strong>Landsat 9 to 8 correction (<code>gard_corr8</code>)</strong></p>
-<pre><code>## [[1]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls98-fig-1.png" width="576" /></p>
-<pre><code>## 
-## [[2]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls98-fig-2.png" width="576" /></p>
-<pre><code>## 
-## [[3]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls98-fig-3.png" width="576" /></p>
-<pre><code>## 
-## [[4]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls98-fig-4.png" width="576" /></p>
-<pre><code>## 
-## [[5]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls98-fig-5.png" width="576" /></p>
-<pre><code>## 
-## [[6]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls98-fig-6.png" width="576" /></p>
-<pre><code>## 
-## [[7]]</code></pre>
-<p><img src="AquaMatch_lakeSR_files/figure-html/gard-ls98-fig-7.png" width="576" /></p>
 
 </div>
 </div>

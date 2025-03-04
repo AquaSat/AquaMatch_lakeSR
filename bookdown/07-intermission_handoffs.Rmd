@@ -13,8 +13,20 @@ params:
   LS57_match: NA
   LS78_match: NA
   LS89_match: NA
-tables: TRUE
+  coefficients: NA
 ---
+
+```{r, echo = F}
+library(kableExtra)
+
+# filter for DSWE1 only
+e_LS5_forLS57corr_quantiles <- e_LS5_forLS57corr_quantiles %>% filter(dswe == "DSWE1")
+e_LS7_forLS78corr_quantiles <- e_LS7_forLS78corr_quantiles %>% filter(dswe == "DSWE1")
+e_LS8_forLS89corr_quantiles <- e_LS8_forLS89corr_quantiles %>% filter(dswe == "DSWE1")
+e_LS7_forLS57corr_quantiles <- e_LS7_forLS57corr_quantiles %>% filter(dswe == "DSWE1")
+e_LS8_forLS78corr_quantiles <- e_LS8_forLS78corr_quantiles %>% filter(dswe == "DSWE1")
+e_LS9_forLS89corr_quantiles <- e_LS9_forLS89corr_quantiles %>% filter(dswe == "DSWE1")
+```
 
 # Calculating intermission handoffs {#define-handoff}
 
@@ -37,6 +49,10 @@ resolution (see section \@ref(establish) for details and caveats). Landsat 8
 handoffs (`corr8`) can only be applied to Landsat 7 and 9 due to mission
 overlap, so the standardized data timeseries is shorter.
 
+For the purposes of this document, we only present the handoff coefficients for
+DSWE1 (confident water) and do not investigate differences between the DSWE1 or
+DSWE1a coefficients, though we provide both.
+
 ## Roy method
 
 The Roy method for calculating intermission handoffs uses paired images at
@@ -47,19 +63,22 @@ within the overlapping paths in the WRS2 path-row framework (see figure
 
 ![An example of two overlapping WRS2 paths (grey area) separated by one day. Any
 location with data for both images would be considered a paired data point to
-define the Roy method intermission
-handoffs.](images/path_overlap_roy.png){alt="An example of two overlapping WRS2 paths (grey area) separated by one day. Any location with data for both images would be considered a paired data point to define the Roy method intermission handoffs."}
+define the Roy method intermission handoffs.](images/path_overlap_roy.png)
 
 While @roy2016 implemented this method on a pixel-by-pixel basis, we implement
 using the median band value per site. This is used in place of the explicit
 filters described in the Roy method (saturated pixels, cloudy/snowy pixels, and
 pixels with value changes greater than the changes in atmospheric correction),
 as we have implemented masks and QA filters to reduce these sources of error.
-Handoff coefficients are defined by the ordinary least squares regression line
-of the Landsat 5 against the Landsat 7 data and Landsat 7 against the Landsat 8
-data (see Table \@ref(tab:roy-table)). For the purposes of this documentation,
-we only include figures for DSWE1 due to the size of the match datasets, but
-provide the OLS regression coefficients for both in Table \@ref(tab:roy-coeff).
+Handoff coefficients are defined by the ordinary least squares (OLS) regression
+line or the Deming regression (MLE, assuming equal and constant error in both x
+and y variables). Because Deming regression is computationally intensive, the
+regression line is defined by a random sample of 10,000 matches. For the
+purposes of this documentation, we only include figures and tables for the
+Deming regression (MLE method) and DSWE1. Intercepts and slopes for all handoffs
+are available at the file path
+`e_calculate_handoffs/out/collated_handoffs_v2025-02-12.csv` and figures for all
+handoffs are created when the pipeline is run.
 
 ## Gardner method
 
@@ -79,18 +98,15 @@ and `corr8` relationships and their derived coefficients are provided in the
 sections below.
 
 One additional consideration when using the Gardner method is, even when the
-number of observations are is high, if there is a difference between total scene
-numbers, there may be systematic differences ingrained into the coefficients
-since x and y are not truly 'random samples', impacting the validity of the
-Central Limit Theorem. An example of possible systematic differences could be
-fewer observations from non-CONUS locations in Landsat 5 due to data
-transmission errors. We did not investigate the differences in n listed in Table
-\@ref(tab:gardner-table) to determine what, if any, systematic differences are
-present between the two missions. We provide the Gardner method handoffs for
-continuity with the riverSR product for users who would like that
+number of observations are is high, if there is a difference between total
+observations contributing to the quantile summaries, and there may be systematic
+differences built into the coefficients. An example of possible systematic
+differences could be fewer observations from non-CONUS locations in Landsat 5
+due to data transmission errors. We did not investigate the differences in n
+listed in Table \@ref(tab:gardner-table) to determine what, if any, systematic
+differences are present between the two missions. We provide the Gardner method
+handoffs for continuity with the riverSR product for users who would like that
 interoperability.
-
-## Establishing Landsat 4/5 and Landsat 8/9 similarity {#establish}
 
 ## Implementing Roy Handoffs
 
@@ -98,103 +114,73 @@ interoperability.
 roy_handoff_table <- tibble("Early mission" = c("Landsat 5", "Landsat 7"),
                                 "Late mission" = c("Landsat 7", "Landsat 8"),
                                 "n matches" = c(c(format(nrow(e_LS57_DSWE1_matches), big.mark = ","), format(nrow(e_LS89_DSWE1_matches), big.mark = ","))))
-knitr::kable(roy_handoff_table, caption = "Summary of mission data used to create the Roy method intermission handoff.")
+knitr::kable(roy_handoff_table, caption = "Summary of Landsat mission data used to create the Roy method intermission handoff for DSWE1.")
 ```
 
 ```{r}
-create_roy_comp <- function(data, x_col, y_col, title, x_label, y_label, binwidth) {
-  ggplot(data, aes(x = .data[[x_col]], y = .data[[y_col]])) +
-    geom_bin2d(aes(fill = after_stat(count)), binwidth = binwidth) + 
-    scale_fill_viridis_c(name = "Density", alpha = 0.5) + 
-    geom_abline(intercept = 0, slope = 1, color = "grey", lty = 2) + 
-    geom_smooth(method = "lm", se = FALSE, color = "red") +
-coord_fixed(ratio = 1,
-      xlim = c(min(data[[x_col]], data[[y_col]]), max(data[[x_col]], data[[y_col]])),
-      ylim = c(min(data[[x_col]], data[[y_col]]), max(data[[x_col]], data[[y_col]]))) +
-        labs(title = title, 
-         x = x_label, y = y_label) +
-    theme_bw()
-}
+knitr::include_graphics("../e_calculate_handoffs/roy/med_Blue_LS5_to_LS7_DSWE1_roy_handoff.jpg")
+knitr::include_graphics("../e_calculate_handoffs/roy/med_Blue_LS5_to_LS7_DSWE1_roy_deming_residuals.jpg")
+
 ```
 
-**Landsat 5 to 7 correction (`roy_corr7`)**
-
-```{r roy-ls57-fig, fig.dim=c(3,3), fig.ncol=2, fig.cap = "Roy method intermission handoffs of Landsat 5 relative to Landsat 7."}
-plots <- pmap(.l = list(list(e_LS57_DSWE1_matches),
-               list("i.med_Red", "i.med_Green", "i.med_Blue", "i.med_Nir", 
-                    "i.med_Swir1", "i.med_Swir2", "i.med_SurfaceTemp"),
-               list("med_Red", "med_Green", "med_Blue", "med_Nir", 
-                    "med_Swir1", "med_Swir2", "med_SurfaceTemp"), 
-               list("Red", "Green", "Blue", "NIR", "SWIR 1", "SWIR 2", "Surface Temperature"),
-               list("Landsat 5"),
-               list("Landsat 7"),
-               list(c(0.001, 0.001), c(0.001, 0.001),
-                    c(0.001, 0.001), c(0.001, 0.001),
-                    c(0.001, 0.001), c(0.001, 0.001),
-                    c(0.1, 0.1))),
-     .f = create_roy_comp
-     )
-plots 
+```{r roy-coeff-dem-corr7}
+e_collated_handoffs %>% 
+  filter(correction == "Roy", method == "deming", sat_to == "LS7") %>% 
+  select(-c(B1, B2, correction, method)) %>% 
+  mutate(
+    intercept = round(intercept, 3),
+    slope = round(slope, 3),
+    min_in_val = round(min_in_val, 3),
+    max_in_val = round(max_in_val, 3)
+  ) %>% 
+  kable(
+    format = "html",
+    digits = 3,
+    caption = "Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Deming (MLE) regression",
+    align = c('l', 'c', 'c', 'c', 'c', 'c', 'c', 'c'),
+    col.names = c(
+      "Band",
+      "DSWE type",
+      "Satellite to Correct",
+      "Satellite to Harmonize to",
+      "Intercept",
+      "Slope",
+      "Minimum Value in Handoff",
+      "Maximum Value in Handoff")
+  ) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  collapse_rows(columns = 2, valign = "middle") %>%
+  add_header_above(c(" " = 4, "Coefficients" = 2, "Input Value Range" = 2))
 ```
 
-**Landsat 8 to 7 correction (`roy_corr7`)**
-
-```{r roy-ls87-fig, fig.dim=c(3,3), fig.ncol=2, fig.cap = "Roy method intermission handoffs of Landsat 8 relative to Landsat 7."}
-plots <- pmap(.l = list(list(e_LS78_DSWE1_matches),
-               list("med_Red", "med_Green", "med_Blue", "med_Nir", 
-                    "med_Swir1", "med_Swir2", "med_SurfaceTemp"), 
-               list("i.med_Red", "i.med_Green", "i.med_Blue", "i.med_Nir", 
-                    "i.med_Swir1", "i.med_Swir2", "i.med_SurfaceTemp"),
-               list("Red", "Green", "Blue", "NIR", "SWIR 1", "SWIR 2", "Surface Temperature"),
-               list("Landsat 7"),
-               list("Landsat 8"),
-               list(c(0.001, 0.001), c(0.001, 0.001),
-                    c(0.001, 0.001), c(0.001, 0.001),
-                    c(0.001, 0.001), c(0.001, 0.001),
-                    c(0.1, 0.1))),
-     .f = create_roy_comp
-     )
-plots 
-```
-
-**Landsat 7 to 8 correction (`roy_corr8`)**
-
-```{r roy-ls78-fig, fig.dim=c(3,3), fig.ncol=2, fig.cap = "Roy method intermission handoffs of Landsat 7 relative to Landsat 8."}
-plots <- pmap(.l = list(list(e_LS78_DSWE1_matches),
-               list("i.med_Red", "i.med_Green", "i.med_Blue", "i.med_Nir", 
-                    "i.med_Swir1", "i.med_Swir2", "i.med_SurfaceTemp"),
-               list("med_Red", "med_Green", "med_Blue", "med_Nir", 
-                    "med_Swir1", "med_Swir2", "med_SurfaceTemp"), 
-               list("Red", "Green", "Blue", "NIR", "SWIR 1", "SWIR 2", "Surface Temperature"),
-               list("Landsat 8"),
-               list("Landsat 7"),
-               list(c(0.001, 0.001), c(0.001, 0.001),
-                    c(0.001, 0.001), c(0.001, 0.001),
-                    c(0.001, 0.001), c(0.001, 0.001),
-                    c(0.1, 0.1))),
-     .f = create_roy_comp
-     )
-plots 
-```
-
-**Landsat 9 to 8 correction (`roy_corr8`)**
-
-```{r roy-ls98-fig, fig.dim=c(3,3), fig.ncol=2, fig.cap = "Roy method intermission handoffs of Landsat 9 relative to Landsat 8."}
-plots <- pmap(.l = list(list(e_LS89_DSWE1_matches),
-               list("med_Red", "med_Green", "med_Blue", "med_Nir", 
-                    "med_Swir1", "med_Swir2", "med_SurfaceTemp"), 
-               list("i.med_Red", "i.med_Green", "i.med_Blue", "i.med_Nir", 
-                    "i.med_Swir1", "i.med_Swir2", "i.med_SurfaceTemp"),
-               list("Red", "Green", "Blue", "NIR", "SWIR 1", "SWIR 2", "Surface Temperature"),
-               list("Landsat 9"),
-               list("Landsat 8"),
-               list(c(0.001, 0.001), c(0.001, 0.001),
-                    c(0.001, 0.001), c(0.001, 0.001),
-                    c(0.001, 0.001), c(0.001, 0.001),
-                    c(0.1, 0.1))),
-     .f = create_roy_comp
-     )
-plots 
+```{r roy-coeff-dem-corr8}
+e_collated_handoffs %>% 
+  filter(correction == "Roy", method == "deming", sat_to == "LS8") %>% 
+  select(-c(B1, B2, correction, method)) %>% 
+  mutate(
+    intercept = round(intercept, 3),
+    slope = round(slope, 3),
+    min_in_val = round(min_in_val, 3),
+    max_in_val = round(max_in_val, 3)
+  ) %>% 
+  kable(
+    format = "html",
+    digits = 3,
+    caption = "Handoff coefficients for Landsat 7 and 9 to harmonize to Landsat 8 using the Deming (MLE) regression",
+    align = c('l', 'c', 'c', 'c', 'c', 'c', 'c', 'c'),
+    col.names = c(
+      "Band",
+      "DSWE type",
+      "Satellite to Correct",
+      "Satellite to Harmonize to",
+      "Intercept",
+      "Slope",
+      "Minimum Value in Handoff",
+      "Maximum Value in Handoff")
+  ) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  collapse_rows(columns = 2, valign = "middle") %>%
+  add_header_above(c(" " = 4, "Coefficients" = 2, "Input Value Range" = 2))
 ```
 
 ## Implementing Gardner Handoffs
@@ -205,115 +191,12 @@ gardner_handoff_table <- tibble("Early mission" = c("Landsat 5", "Landsat 7", "L
                                 "Correction type" = c("corr7", "corr7, corr8", "corr8"),
                                 "Overlap Start" = c("1999-04-15", "2013-02-11", "2021-09-27"),
                                 "Overlap End" = c("2013-02-11", "2022-04-16", "2024-12-31"),
-                                "n Scenes of Early Mission" = c(format(e_LS5_forLS57corr_quantiles$n_scenes[1], big.mark = ","), 
-                                                                format(e_LS7_forLS78corr_quantiles$n_scenes[1], big.mark = ","),
-                                                                format(e_LS8_forLS89corr_quantiles$n_scenes[1], big.mark = ",")),
-                                "n Scenes of Late Mission" = c(format(e_LS7_forLS57corr_quantiles$n_scenes[1], big.mark = ","), 
-                                                               format(e_LS8_forLS78corr_quantiles$n_scenes[1], big.mark = ","), 
-                                                               format(e_LS9_forLS89corr_quantiles$n_scenes[1], big.mark = ",")))
+                                "n Observations from Early Mission" = c(format(e_LS5_forLS57corr_quantiles$n_rows[1], big.mark = ","), 
+                                                                format(e_LS7_forLS78corr_quantiles$n_rows[1], big.mark = ","),
+                                                                format(e_LS8_forLS89corr_quantiles$n_rows[1], big.mark = ",")),
+                                "n Observations from Late Mission" = c(format(e_LS7_forLS57corr_quantiles$n_rows[1], big.mark = ","), 
+                                                               format(e_LS8_forLS78corr_quantiles$n_rows[1], big.mark = ","), 
+                                                               format(e_LS9_forLS89corr_quantiles$n_rows[1], big.mark = ",")))
 
-knitr::kable(gardner_handoff_table, caption = "Summary of missions for handoffs calculated by the Gardner method. Note that *n* is summarized by scene, not by number of individual site observations contributing to the quantiles.")
-```
-
-```{r}
-plot_gard_quants <- function(data, x_col, y_col, title, x_label, y_label) {
-  ggplot(data, aes(x = .data[[x_col]], y = .data[[y_col]], color = dswe)) +
-    geom_point() +
-    facet_grid(. ~ dswe) +
-    geom_abline(intercept = 0, slope = 1, color = "grey", lty = 2) + 
-    geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, alpha = 0.5) +
-    coord_fixed(ratio = 1,
-      xlim = c(min(data[[x_col]], data[[y_col]]), max(data[[x_col]], data[[y_col]])),
-      ylim = c(min(data[[x_col]], data[[y_col]]), max(data[[x_col]], data[[y_col]]))) +
-    labs(title = title, 
-         x = x_label, y = y_label) +
-    theme_bw() +
-    scale_color_viridis_d()
-}
-```
-
-**Landsat 5 to 7 correction (`gard_corr7`)**
-
-```{r gard-ls57-fig, fig.width=6}
-e_LS5_forLS57corr_quantiles <- e_LS5_forLS57corr_quantiles %>% 
-  select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
-  rename_with(~ paste0('LS5_', .), .cols = med_Red:med_SurfaceTemp)
-e_LS7_forLS57corr_quantiles <- e_LS7_forLS57corr_quantiles %>% 
-  select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
-  rename_with(~ paste0('LS7_', .), .cols = med_Red:med_SurfaceTemp)
-LS57 <- full_join(e_LS5_forLS57corr_quantiles, e_LS7_forLS57corr_quantiles)
-plots <- pmap(.l = list(list(LS57),
-               list("LS5_med_Red", "LS5_med_Green", "LS5_med_Blue", "LS5_med_Nir", 
-                    "LS5_med_Swir1", "LS5_med_Swir2", "LS5_med_SurfaceTemp"),
-               list("LS7_med_Red", "LS7_med_Green", "LS7_med_Blue", "LS7_med_Nir", 
-                    "LS7_med_Swir1", "LS7_med_Swir2", "LS7_med_SurfaceTemp"), 
-               list("Red", "Green", "Blue", "NIR", "SWIR 1", "SWIR 2", "Surface Temperature"),
-               list("Landsat 5"),
-               list("Landsat 7")),
-     .f = plot_gard_quants
-     )
-plots
-```
-
-**Landsat 8 to 7 correction (`gard_corr7`)**
-
-```{r gard-ls87-fig, fig.width=6}
-e_LS7_forLS78corr_quantiles <- e_LS7_forLS78corr_quantiles %>% 
-  select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
-  rename_with(~ paste0('LS7_', .), .cols = med_Red:med_SurfaceTemp)
-e_LS8_forLS78corr_quantiles <- e_LS8_forLS78corr_quantiles %>% 
-  select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
-  rename_with(~ paste0('LS8_', .), .cols = med_Red:med_SurfaceTemp)
-LS78 <- full_join(e_LS7_forLS78corr_quantiles, e_LS8_forLS78corr_quantiles)
-plots <- pmap(.l = list(list(LS78),
-               list("LS8_med_Red", "LS8_med_Green", "LS8_med_Blue", "LS8_med_Nir", 
-                    "LS8_med_Swir1", "LS8_med_Swir2", "LS8_med_SurfaceTemp"),
-               list("LS7_med_Red", "LS7_med_Green", "LS7_med_Blue", "LS7_med_Nir", 
-                    "LS7_med_Swir1", "LS7_med_Swir2", "LS7_med_SurfaceTemp"), 
-               list("Red", "Green", "Blue", "NIR", "SWIR 1", "SWIR 2", "Surface Temperature"),
-               list("Landsat 8"),
-               list("Landsat 7")),
-     .f = plot_gard_quants
-     )
-plots
-```
-
-**Landsat 7 to 8 correction** **(`gard_corr8`)**
-
-```{r gard-ls78-fig, fig.width=6}
-plots <- pmap(.l = list(list(LS78),
-               list("LS7_med_Red", "LS7_med_Green", "LS7_med_Blue", "LS7_med_Nir", 
-                    "LS7_med_Swir1", "LS7_med_Swir2", "LS7_med_SurfaceTemp"), 
-               list("LS8_med_Red", "LS8_med_Green", "LS8_med_Blue", "LS8_med_Nir", 
-                    "LS8_med_Swir1", "LS8_med_Swir2", "LS8_med_SurfaceTemp"),
-               list("Red", "Green", "Blue", "NIR", "SWIR 1", "SWIR 2", "Surface Temperature"),
-               list("Landsat 7"),
-               list("Landsat 8")),
-     .f = plot_gard_quants
-     )
-plots 
-```
-
-**Landsat 9 to 8 correction (`gard_corr8`)**
-
-```{r gard-ls98-fig, fig.width=6}
-e_LS8_forLS89corr_quantiles <- e_LS8_forLS89corr_quantiles %>% 
-  select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
-  rename_with(~ paste0('LS8_', .), .cols = med_Red:med_SurfaceTemp)
-e_LS9_forLS89corr_quantiles <- e_LS9_forLS89corr_quantiles %>% 
-  select(quantile, med_Red:med_SurfaceTemp, dswe) %>% 
-  rename_with(~ paste0('LS9_', .), .cols = med_Red:med_SurfaceTemp)
-LS89 <- full_join(e_LS8_forLS89corr_quantiles, e_LS9_forLS89corr_quantiles)
-
-plots <- pmap(.l = list(list(LS89),
-               list("LS9_med_Red", "LS9_med_Green", "LS9_med_Blue", "LS9_med_Nir", 
-                    "LS9_med_Swir1", "LS9_med_Swir2", "LS9_med_SurfaceTemp"), 
-               list("LS8_med_Red", "LS8_med_Green", "LS8_med_Blue", "LS8_med_Nir", 
-                    "LS8_med_Swir1", "LS8_med_Swir2", "LS8_med_SurfaceTemp"),
-               list("Red", "Green", "Blue", "NIR", "SWIR 1", "SWIR 2", "Surface Temperature"),
-               list("Landsat 9"),
-               list("Landsat 8")),
-     .f = plot_gard_quants
-     )
-plots
+knitr::kable(gardner_handoff_table, caption = "Summary of Landsat mission data for handoffs calculated by the Gardner method for DSWE1.")
 ```

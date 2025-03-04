@@ -16,6 +16,8 @@
 #' statistics in the pCount_*dswe* column required for a record to be retained. 
 #' @param thermal_threshold Minimum acceptable value for the median surface 
 #' temperature (in Kelvin). Default: 273.15.
+#' @param thermal_maximum Maximum acceptable value for the median surface 
+#' temperature (in Kelvin). Default: 313.15.
 #' @param ir_threshold Maximum acceptable value for NIR/SWIR bands for glint 
 #' filtering. Default: 0.1
 #' @param document_drops Boolean, whether to generate a summary of dropped 
@@ -124,15 +126,15 @@ qa_and_document_LS <- function(mission_info,
       drop_reason <- tibble(all_data = "unfiltered Landsat data",
                             valid_thresh = sprintf("minimum number of pixels threshold (%s) met", min_no_pix),
                             temp_thresh = sprintf("thermal band threshold (%s °K) met", thermal_threshold),
-                            temp_max = sprintf("below thermal band maximum (%s °K)", thermal_threshold),
+                            temp_max = sprintf("below thermal band maximum (%s °K)", thermal_maximum),
                             ir_glint_thresh = sprintf("NIR/SWIR threshold (%s) met", ir_threshold)) %>% 
         pivot_longer(cols = all_data:ir_glint_thresh,
                      values_to = "reason") 
       
       drops <- full_join(row_summary, drop_reason) %>% 
         mutate(name = factor(name, levels = c("ir_glint_thresh",
-                                              "temp_thresh",
                                               "temp_max",
+                                              "temp_thresh",
                                               "valid_thresh",
                                               "all_data")),
                lab = paste0(reason, ": ", format(value, big.mark = ","), " records"))
@@ -147,7 +149,7 @@ qa_and_document_LS <- function(mission_info,
                         ylim =  c(-Inf, Inf),
                         nudge_y = max(drops$value) * 0.01,
                         hjust = "left") +
-        labs(title = paste0("Summary of ", paste(mission_info$mission_names, toupper(dswe), sep = " "), " data QA records"), 
+        labs(title = paste0("Summary of lakeSR ", paste(mission_info$mission_names, toupper(dswe), sep = " "), " data QA records"), 
              x = NULL, y = NULL) +
         scale_fill_manual(values = viridis(n = nrow(drops),
                                            direction = -1)) +

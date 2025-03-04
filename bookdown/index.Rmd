@@ -25,6 +25,7 @@ params:
   LS57_match: NA
   LS78_match: NA
   LS89_match: NA
+  coefficients: NA
 ---
 
 # Introduction
