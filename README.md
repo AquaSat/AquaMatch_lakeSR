@@ -11,11 +11,13 @@ all downstream uses of this work be available to the public when possible.
 
 Repository contact: B Steele (b dot steele at colostate dot edu)
 
+
 ## Running the Pipeline
 
 We encourage all users to walk through the `run_targets.Rmd` script to run this
 pipeline. This script walks through important configuration and authentication 
 steps necessary to successfully run the pipeline. 
+
 
 ## Targets Architecture
 
@@ -26,7 +28,8 @@ intermittent lakes/reservoirs/impoundments greater than 4 hectares.
 The architecture is broken up into grouped lists by function, those groups are 
 listed below with a description of what each group does.
 
-**a_Calculate_Centers**:
+
+### a_Calculate_Centers
 
 This {targets} list calculates "Point of Inaccessibility", also known as Cheybyshev 
 Center for all lakes/reservoirs/impoundments greater than 1ha in surface area 
@@ -46,7 +49,7 @@ Additional guidance is provided in the README and general configuration file of
 the lakeSR repository.
 
 
-**b_pull_Landsat_SRST_poi**:
+### b_pull_Landsat_SRST_poi
 
 This {targets} group uses the configuration file
 `b_pull_Landsat_SRST_poi/config_files/config_poi.yml` and the "Pole of
@@ -74,7 +77,7 @@ Additional guidance is provided in the README and general configuration file of
 the lakeSR repository.
 
 
-**c_collate_Landsat_data**:
+### c_collate_Landsat_data
 
 This {targets} list collates the data from the Google Earth Engine run 
 orchestrated in the {targets} group "b_pull_Landsat_SRST_poi" and creates publicly-
@@ -94,7 +97,7 @@ Additional guidance is provided in the README and general configuration file of
 the lakeSR repository.
 
 
-**d_qa_filter_sort:**
+### d_qa_filter_sort
 
 This {targets} list applies some rudimentary QA to the Landsat stacks and saves
 them as sorted files locally. LS 4/9 are complete .csv files, LS 578 are broken
@@ -104,7 +107,7 @@ information in the `d_qa_filter_sort/out/` folder. If set to FALSE, no files
 will be sent to Drive.
 
 
-**e_caclculate_handoffs:**
+### e_caclculate_handoffs
 
 This {targets} group creates "matched" data for two different 'intermission 
 handoff' methods that standardize the SR values relative to LS7
@@ -112,14 +115,14 @@ and to LS8. Handoffs are visualized and are saved as tables for use downstream i
 this group.
 
 
-
-**y_siteSR_targets:**
+### y_siteSR_targets
 
 This {targets} group pulls information from the siteSR workflow to use in the 
 Bookdown. If the configuration setting `update_bookown` is set to FALSE, this 
 list will be empty.
 
-**z_render_bookdown:**
+
+### z_render_bookdown
 
 This {targets} group tracks chapters of the bookdown for changes and renders
 the bookdown. If the configuration setting `update_bookown` is set to FALSE, this 

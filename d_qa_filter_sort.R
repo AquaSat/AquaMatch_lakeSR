@@ -232,7 +232,7 @@ if (config::get(config = general_config)$update_and_share) {
         drive_ids <- d_send_sorted_files_to_Drive %>% 
           select(name, id)
         write_csv(drive_ids,
-                  paste0("d_save_to_Drive/out/Landsat_sorted_files_drive_ids_v",
+                  paste0("d_qa_filteR_sort/out/Landsat_sorted_files_drive_ids_v",
                          d_version_identifier,
                          ".csv"))
         drive_ids
