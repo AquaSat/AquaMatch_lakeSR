@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-03" />
+<meta name="date" content="2025-03-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -181,7 +181,8 @@ div.csl-indent {
 <li class="chapter" data-level="3.1.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.1.1</b> Updates in AquaSat v2</a></li>
 <li class="chapter" data-level="3.1.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#poi"><i class="fa fa-check"></i><b>3.1.2</b> Pole of Inaccessibility</a></li>
 <li class="chapter" data-level="3.1.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation-of-lakesr"><i class="fa fa-check"></i><b>3.1.3</b> Technical Implementation of lakeSR</a></li>
-<li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.4</b> Case Study: Wisconsin Waterbodies</a></li>
+<li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#lakeSR-shoreline"><i class="fa fa-check"></i><b>3.1.4</b> Flagging shoreline proximity</a></li>
+<li class="chapter" data-level="3.1.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
 <li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR Acquisition Locations</a>
 <ul>
@@ -229,24 +230,36 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.4</b> Payload handling</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="handoff.html"><a href="handoff.html"><i class="fa fa-check"></i><b>7</b> Post-Hoc Quality Assurance</a>
+<li class="chapter" data-level="7" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html"><i class="fa fa-check"></i><b>7</b> Post-Hoc Quality Assurance</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="handoff.html"><a href="handoff.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR stack collation</a></li>
-<li class="chapter" data-level="7.2" data-path="handoff.html"><a href="handoff.html#post-hoc-filters"><i class="fa fa-check"></i><b>7.2</b> Post-hoc filters</a>
+<li class="chapter" data-level="7.1" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR stack collation</a></li>
+<li class="chapter" data-level="7.2" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#post-hoc-filters"><i class="fa fa-check"></i><b>7.2</b> Post-hoc filters</a>
 <ul>
-<li class="chapter" data-level="7.2.1" data-path="handoff.html"><a href="handoff.html#landsat-4-qa-summary"><i class="fa fa-check"></i><b>7.2.1</b> Landsat 4 QA Summary</a></li>
-<li class="chapter" data-level="7.2.2" data-path="handoff.html"><a href="handoff.html#landsat-5-qa-summary"><i class="fa fa-check"></i><b>7.2.2</b> Landsat 5 QA Summary</a></li>
-<li class="chapter" data-level="7.2.3" data-path="handoff.html"><a href="handoff.html#landsat-7-qa-summary"><i class="fa fa-check"></i><b>7.2.3</b> Landsat 7 QA Summary</a></li>
-<li class="chapter" data-level="7.2.4" data-path="handoff.html"><a href="handoff.html#landsat-8-qa-summary"><i class="fa fa-check"></i><b>7.2.4</b> Landsat 8 QA Summary</a></li>
-<li class="chapter" data-level="7.2.5" data-path="handoff.html"><a href="handoff.html#landsat-9-qa-summary"><i class="fa fa-check"></i><b>7.2.5</b> Landsat 9 QA Summary</a></li>
+<li class="chapter" data-level="7.2.1" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-4-qa-summary"><i class="fa fa-check"></i><b>7.2.1</b> Landsat 4 QA Summary</a></li>
+<li class="chapter" data-level="7.2.2" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-5-qa-summary"><i class="fa fa-check"></i><b>7.2.2</b> Landsat 5 QA Summary</a></li>
+<li class="chapter" data-level="7.2.3" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-7-qa-summary"><i class="fa fa-check"></i><b>7.2.3</b> Landsat 7 QA Summary</a></li>
+<li class="chapter" data-level="7.2.4" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-8-qa-summary"><i class="fa fa-check"></i><b>7.2.4</b> Landsat 8 QA Summary</a></li>
+<li class="chapter" data-level="7.2.5" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-9-qa-summary"><i class="fa fa-check"></i><b>7.2.5</b> Landsat 9 QA Summary</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="define-handoff.html"><a href="define-handoff.html"><i class="fa fa-check"></i><b>8</b> Calculating intermission handoffs</a>
 <ul>
 <li class="chapter" data-level="8.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-method"><i class="fa fa-check"></i><b>8.1</b> Roy method</a></li>
 <li class="chapter" data-level="8.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-method"><i class="fa fa-check"></i><b>8.2</b> Gardner method</a></li>
-<li class="chapter" data-level="8.3" data-path="define-handoff.html"><a href="define-handoff.html#implementing-roy-handoffs"><i class="fa fa-check"></i><b>8.3</b> Implementing Roy Handoffs</a></li>
-<li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Gardner Handoffs</a></li>
+<li class="chapter" data-level="8.3" data-path="define-handoff.html"><a href="define-handoff.html#implementing-roy-handoffs"><i class="fa fa-check"></i><b>8.3</b> Implementing Roy Handoffs</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.3.1</b> Roy Deming Correction Landsat 5 to Landsat 7</a></li>
+<li class="chapter" data-level="8.3.2" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.3.2</b> Roy Deming Correction Landsat 8 to Landsat 7</a></li>
+<li class="chapter" data-level="8.3.3" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.3.3</b> Roy Deming Correction Landsat 7 to Landsat 8</a></li>
+<li class="chapter" data-level="8.3.4" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-9-to-landsat-8"><i class="fa fa-check"></i><b>8.3.4</b> Roy Deming Correction Landsat 9 to Landsat 8</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Gardner Handoffs</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.4.1</b> Gardner Correction Landsat 5 to Landsat 7</a></li>
+<li class="chapter" data-level="8.4.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.4.2</b> Gardner Correction Landsat 8 to Landsat 7</a></li>
+<li class="chapter" data-level="8.4.3" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.4.3</b> Gardner Correction Landsat 7 to Landsat 8</a></li>
+<li class="chapter" data-level="8.4.4" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-9-to-landsat-8"><i class="fa fa-check"></i><b>8.4.4</b> Gardner Correction Landsat 9 to Landsat 8</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>9</b> References</a></li>
 </ul>
@@ -306,48 +319,57 @@ for the purpose of providing background information about the Landsat archive
 relevant to the creation and use of lakeSR.</em></p>
 <p>The Landsat archive of multispectral and thermal data in lakeSR is composed of
 Landsat missions 4 through 9 and spans more than 40 years.</p>
-<table>
+<table style="width:98%;">
 <colgroup>
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
+<col width="24%" />
+<col width="24%" />
+<col width="24%" />
+<col width="24%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th>Mission and Sensor</th>
+<th>Mission and
+Sensor</th>
 <th align="center">Launch Date</th>
-<th align="center">End of Science Mission</th>
+<th align="center">End of Science
+Mission</th>
 <th align="center">Decommission Date</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Landsat 4 TM <span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
+<td>Landsat 4 TM
+<span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
 <td align="center">1982-07-16</td>
 <td align="center">1993-12-14</td>
 <td align="center">2001-06-15</td>
 </tr>
 <tr class="even">
-<td>Landsat 5 TM <span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
+<td>Landsat 5 TM
+<span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
 <td align="center">1984-03-01</td>
 <td align="center">2011-11-18</td>
 <td align="center">2013-06-05</td>
 </tr>
 <tr class="odd">
-<td>Landsat 7 ETM+ <span class="citation">(<a href="#ref-eros-7">EROS Center 2020b</a>)</span></td>
+<td>Landsat 7 ETM+
+<span class="citation">(<a href="#ref-eros-7">EROS Center 2020b</a>)</span></td>
 <td align="center">1999-04-15</td>
 <td align="center">2022-04-06</td>
 <td align="center">N/A</td>
 </tr>
 <tr class="even">
-<td>Landsat 8 OLI/TIRS <span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
+<td>Landsat 8
+OLI/TIRS
+<span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
 <td align="center">2013-02-11</td>
 <td align="center">N/A</td>
 <td align="center">N/A</td>
 </tr>
 <tr class="odd">
-<td>Landsat 9 OLI-2/TIRS-2 <span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
+<td>Landsat 9
+OLI-2/TIRS-2
+<span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
 <td align="center">2021-09-27</td>
 <td align="center">N/A</td>
 <td align="center">N/A</td>
@@ -386,11 +408,11 @@ the Landsat archive.</p>
 <p>The spatial resolution of the Level 1 data that the SR and ST products are
 derived from has not changed for optical bands over time (Aerosol, RGB, NIR,
 SWIR) but has varied over the historic record for thermal data:</p>
-<table style="width:65%;">
+<table style="width:71%;">
 <colgroup>
-<col width="20%" />
-<col width="22%" />
-<col width="22%" />
+<col width="23%" />
+<col width="23%" />
+<col width="23%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -472,34 +494,31 @@ background information about the Landsat archive relevant to the creation and
 use of lakeSR.</em></p>
 <p>The Landsat Collection 2 Surface Temperature (ST) product is calculated using a
 single-channel algorithm <span class="citation">(<a href="#ref-cook2014a">M. J. Cook 2014</a>; <a href="#ref-cook2014b">M. Cook et al. 2014</a>)</span> to convert the thermal band
-data to temperature estimates in degrees Kelvin. These data are considered
+data to temperature estimates in degrees Kelvin. While these data are considered
 interoperable over space and time with few differences in the ST algorithm
-product within Collection 2, with the acknowledgement of the
-previously-documented spectral and radiometric resolution differences.</p>
+product within Collection 2, there do appear to be slight differences in the ST
+product between sensors. Like with the surface reflectance product, we calculate
+between-mission handoffs for the TM/ETM/TIRS products in Section
+<a href="define-handoff.html#define-handoff">8</a>.</p>
 <p>It is important to note that the thermal band resolution is coarser than the
 optical bands in all Landsat missions (see Section <a href="LS-C2-SRST.html#sensor-resolution">5.2.2</a>). At
 this time we do not account for mixed thermal pixel boundaries due to the
 difference in pixel resolution between optical and thermal sensors in lakeSR or
-siteSR, however the median value of the POI in lakeSR should be a reasonable
-estimate and without contamination as long as the reported distance to shore is
-at least 100 meters greater than the 120 meter buffer around the POI to account
-for the resolution differences. Note that reservoirs and lakes with fluctuating
-water levels may require more careful considerations. While we provide summary
-statistics of these data for comparative and QAQC purposes, additional data
-handling may be necessary to use these data as precise estimates of water
-surface temperature. <span class="citation">Herrick et al. (<a href="#ref-herrick2023">2023</a>)</span> provides an example of ST product debiasing.</p>
+siteSR outside of the flags described in Section <a href="locs-data-acq.html#lakeSR-shoreline">3.1.4</a> and
+Section <a href="locs-data-acq.html#fl-wb-assignment">3.2.2</a>. Additional data handling may be necessary to
+use these data as precise estimates of water surface temperature given these
+constraints.</p>
 <p>We do provide surface temperature summary statistics in the siteSR product as
 well, and users should approach the data with caution when a WQP monitoring site
 is near to a shoreline. While we do not have explicit guidance for the use of
 the surface temperature estimates for siteSR, we do provide some characteristics
 of sites and their relationships to NHD flowlines and waterbodies (see Section
-<a href="locs-data-acq.html#fl-wb-assignment">3.2.2</a> for a description of these additional descriptors).
-Users could use a combination of <code>MonitoringLocationTypeName</code>, the flags
-assigned from our NHD assignment process, and the distance columns from that
-process to assess whether or not the temperature data is appropriate for a given
-site. Additional assessments (e.g. distance to shore) may be necessary to assess
-whether it is appropriate to use the temperature data for discrete analysis of
-temperature trends/patterns.</p>
+<a href="locs-data-acq.html#fl-wb-assignment">3.2.2</a> additional descriptors). Users could use a combination
+of <code>MonitoringLocationTypeName</code>, the flags assigned from our NHD assignment
+process, and the distance columns from that process to assess whether or not the
+temperature data is appropriate for a given site. Additional assessments may be
+necessary to assess whether it is appropriate to use the temperature data for
+discrete analysis of temperature trends/patterns.</p>
 
 </div>
 </div>
@@ -519,9 +538,6 @@ EROS Center. 2020a. <span>“USGS EROS Archive - Landsat Archives - Landsat 4-5 
 </div>
 <div id="ref-eros-89" class="csl-entry">
 ———. 2020c. <span>“USGS EROS Archive - Landsat Archives - Landsat 8-9 OLI/TIRS Collection 2 Level-2 Science Products.”</span> <a href="https://doi.org/doi.org/10.5066/P9OGBGM6">https://doi.org/doi.org/10.5066/P9OGBGM6</a>.
-</div>
-<div id="ref-herrick2023" class="csl-entry">
-Herrick, C., B. G. Steele, J. A. Brentrup, K. L. Cottingham, M. J. Ducey, D. A. Lutz, M. W. Palace, M. C. Thompson, J. V. Trout-Haney, and K. C. Weathers. 2023. <span>“lakeCoSTR: A Tool to Facilitate Use of Landsat Collection 2 to Estimate Lake Surface Water Temperatures.”</span> <em>Ecosphere</em> 14 (1): e4357. <a href="https://doi.org/10.1002/ecs2.4357">https://doi.org/10.1002/ecs2.4357</a>.
 </div>
 <div id="ref-qiu2021" class="csl-entry">
 Qiu, Shirley, Zhe Zhu, Rong Shang, and Christopher J. Crawford. 2021. <span>“Can Landsat 7 Preserve Its Science Capability with a Drifting Orbit?”</span> <em>Science of Remote Sensing</em> 4. <a href="https://doi.org/10.1016/j.srs.2021.100026">https://doi.org/10.1016/j.srs.2021.100026</a>.

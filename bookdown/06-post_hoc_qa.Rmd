@@ -4,7 +4,6 @@ editor_options:
     wrap: 80
 bibliography: references.bib
 params:
-  cfg: NA
   LS5_for57: NA
   LS7_for57: NA
   LS7_for78: NA
@@ -17,42 +16,16 @@ params:
 tables: TRUE
 ---
 
-```{r chunk-opts-6, echo=FALSE}
+```{r chunk-opts-6, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, 
                       message = FALSE, 
                       warning = FALSE, 
                       error = FALSE)
 
-library(tidyverse)
-library(googledrive)
-library(arrow)
-
-# for whatever reason, knitr::include_graphics is being kind of weird
-# so here, we'll copy the files from d_qa_filter_calc_handoff/out and put them in images here
-# Define source and destination directories
-source_dir <- "../d_qa_filter_sort/out/"
-dest_dir <- "images/lakeSR/"
-
-# Get list of files to copy
-files_to_copy <- list.files(source_dir, full.names = TRUE)
-
-# Copy files
-file.copy(from = files_to_copy, to = dest_dir, overwrite = TRUE)
-
-# do the same for the siteSR drops
-# Define source and destination directories
-source_dir <- file.path("..", lakeSR_config$siteSR_repo_directory, "7_qa_and_apply_handoffs/out/")
-dest_dir <- "images/siteSR/"
-
-# Get list of files to copy
-files_to_copy <- list.files(source_dir, full.names = TRUE)
-
-# Copy files
-file.copy(from = files_to_copy, to = dest_dir, overwrite = TRUE)
 
 ```
 
-# Post-Hoc Quality Assurance {#handoff}
+# Post-Hoc Quality Assurance {#post-hoc-qa}
 
 Up until this point in the workflow, no data filtering has occurred other than
 the masking procedures that eliminate obviously contaminated pixel-level data
@@ -122,48 +95,47 @@ remote sensing data as much as possible.
 
 While there are numerous other diagnostic tests we could apply to filter the RS
 data, these are the QA filters that we deem to be the most foundational and
-unifying for reliable RS data across the US and Territories. Figures
-\@ref(fig:lake-ls4-dswe1-drop) through \@ref(fig:site-ls9-dswe1-drop) show how
-many rows of data were dropped through this QA process. For the purposes of this
-documentation, we show summaries for DSWE1 data only, but running the pipeline
-locally results in summaries for both DSWE1 and DSWE1a data.
+unifying for reliable RS data across the US and Territories. Figures in the sections
+below show how many rows of data were dropped through this QA process. For the 
+purposes of this documentation, we show summaries for DSWE1 data only, but 
+running the pipeline locally results in summaries for both DSWE1 and DSWE1a data.
 
 ### Landsat 4 QA Summary
 
 ![Summary of dropped rows for lakeSR Landsat 4's DSWE1 (confident water) RS
-summaries.](images/lakeSR/LT04_dswe1_drop_summary.png){#lake-ls4-dswe1-drop}
+summaries.](images/lakeSR/LT04_dswe1_drop_summary.png){#fig:lake-ls4-dswe1-drop}
 
 ![Summary of dropped rows for siteSR Landsat 4's DSWE1 (confident water) RS
-summaries.](images/siteSR/LT04_dswe1_drop_summary.png){#site-ls4-dswe1-drop}
+summaries.](images/siteSR/LT04_dswe1_drop_summary.png){#fig:site-ls4-dswe1-drop}
 
 ### Landsat 5 QA Summary
 
 ![Summary of dropped rows for lakeSR Landsat 5's DSWE1 (confident water) RS
-summaries.](images/lakeSR/LT05_DSWE1_drop_summary.png){#lake-ls5-dswe1-drop}
+summaries.](images/lakeSR/LT05_DSWE1_drop_summary.png){#fig:lake-ls5-dswe1-drop}
 
 ![Summary of dropped rows for siteSR Landsat 5's DSWE1 (confident water) RS
-summaries.](images/siteSR/LT05_DSWE1_drop_summary.png){#site-ls5-dswe1-drop}
+summaries.](images/siteSR/LT05_DSWE1_drop_summary.png){#fig:site-ls5-dswe1-drop}
 
 ### Landsat 7 QA Summary
 
 ![Summary of dropped rows for lakeSR Landsat 7's DSWE1 (confident water) RS
-summaries.](images/lakeSR/LE07_DSWE1_drop_summary.png){#lake-ls7-dswe1-drop}
+summaries.](images/lakeSR/LE07_DSWE1_drop_summary.png){#fig:lake-ls7-dswe1-drop}
 
 ![Summary of dropped rows for siteSR Landsat 7's DSWE1 (confident water) RS
-summaries.](images/siteSR/LE07_DSWE1_drop_summary.png){#site-ls7-dswe1-drop}
+summaries.](images/siteSR/LE07_DSWE1_drop_summary.png){#fig:site-ls7-dswe1-drop}
 
 ### Landsat 8 QA Summary
 
 ![Summary of dropped rows for lakeSR Landsat 8's DSWE1 (confident water) RS
-summaries.](images/lakeSR/LC08_DSWE1_drop_summary.png){#lake-ls8-dswe1-drop}
+summaries.](images/lakeSR/LC08_DSWE1_drop_summary.png){#fig:lake-ls8-dswe1-drop}
 
 ![Summary of dropped rows for siteSR Landsat 8's DSWE1 (confident water) RS
-summaries.](images/siteSR/LC08_DSWE1_drop_summary.png){#site-ls8-dswe1-drop}
+summaries.](images/siteSR/LC08_DSWE1_drop_summary.png){#fig:site-ls8-dswe1-drop}
 
 ### Landsat 9 QA Summary
 
 ![Summary of dropped rows for lakeSR Landsat 9's DSWE1 (confident water) RS
-summaries.](images/lakeSR/LC09_DSWE1_drop_summary.png){#lake-ls9-dswe1-drop}
+summaries.](images/lakeSR/LC09_DSWE1_drop_summary.png){#fig:lake-ls9-dswe1-drop}
 
 ![Summary of dropped rows for siteSR Landsat 9's DSWE1 (confident water) RS
-summaries.](images/siteSR/LC09_DSWE1_drop_summary.png){#site-ls9-dswe1-drop}
+summaries.](images/siteSR/LC09_DSWE1_drop_summary.png){#fig:site-ls9-dswe1-drop}

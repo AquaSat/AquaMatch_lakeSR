@@ -3,9 +3,10 @@ tar_source("d_qa_filter_sort/src/")
 
 # High-level QA filter and handoff calculations -----------------------------
 
-# This {targets} list applies some rudimentary QA to the Landsat stacks, and then
-# calculates 'intermission handoffs' that standardize the SR values relative to LS7
-# and to LS8.
+# This {targets} list applies some rudimentary QA to the Landsat stacks and saves
+# them as sorted files locally. LS 4/9 are complete .csv files, LS 578 are broken
+# up by HUC2 for memory and space considerations. These files are sent to Drive
+# in group -f-.
 
 d_qa_filter_sort <- list(
   
@@ -87,7 +88,7 @@ d_qa_filter_sort <- list(
   # create a list of HUC2's to map over
   tar_target(
     name = d_unique_huc2,
-    command = unique(str_sub(a_combined_poi$lakeSR_id, 1, 2))
+    command = unique(str_sub(a_poi_with_flags$lakeSR_id, 1, 2))
   ),
   
   # Landsat 4 is small enough for a single file
@@ -99,7 +100,7 @@ d_qa_filter_sort <- list(
                                      filter(mission_names == "Landsat 4"),
                                    dswe = c_dswe_types),
     pattern = map(c_dswe_types),
-    packages = c("data.table", "tidyverse", "arrow")
+    packages = c("data.table", "tidyverse", "arrow", "stringi")
   ),
   
   # Landsat 5, 7, 8 need to be separated by HUC2
@@ -112,7 +113,7 @@ d_qa_filter_sort <- list(
                                    dswe = c_dswe_types, 
                                    HUC2 = d_unique_huc2),
     pattern = cross(c_dswe_types, d_unique_huc2), 
-    packages = c("data.table", "tidyverse", "arrow"),
+    packages = c("data.table", "tidyverse", "arrow", "stringi"),
     deployment = "main" # too big for multicore
   ),
   
@@ -125,7 +126,7 @@ d_qa_filter_sort <- list(
                                    dswe = c_dswe_types, 
                                    HUC2 = d_unique_huc2),
     pattern = cross(c_dswe_types, d_unique_huc2), 
-    packages = c("data.table", "tidyverse", "arrow"),
+    packages = c("data.table", "tidyverse", "arrow", "stringi"),
     deployment = "main" # too big for multicore
   ),
   
@@ -138,7 +139,7 @@ d_qa_filter_sort <- list(
                                    dswe = c_dswe_types, 
                                    HUC2 = d_unique_huc2),
     pattern = cross(c_dswe_types, d_unique_huc2), 
-    packages = c("data.table", "tidyverse", "arrow"),
+    packages = c("data.table", "tidyverse", "arrow", "stringi"),
     deployment = "main" # too big for multicore
   ),
   
@@ -151,7 +152,7 @@ d_qa_filter_sort <- list(
                                      filter(mission_names == "Landsat 9"),
                                    dswe = c_dswe_types),
     pattern = map(c_dswe_types),
-    packages = c("data.table", "tidyverse", "arrow")
+    packages = c("data.table", "tidyverse", "arrow", "stringi")
   ),
   
   # make a list of the collated and sorted files created
@@ -164,5 +165,84 @@ d_qa_filter_sort <- list(
   
 )
 
+# if collating the sorted files in Drive admin update configuration, add to d group
+if (config::get(config = general_config)$update_and_share) {
+  
+  d_qa_filter_sort <- list(
+    
+    d_qa_filter_sort, 
+    
+    # check for Drive folders and architecture per config setup
+    tar_target(
+      name = d_check_Drive_parent_folder,
+      command = if (lakeSR_config$parent_Drive_folder != "") {
+        tryCatch({
+          drive_auth(lakeSR_config$google_email)
+          drive_ls(lakeSR_config$parent_Drive_folder)
+        }, error = function(e) {
+          drive_mkdir(lakeSR_config$parent_Drive_folder)
+        })
+      },
+      packages = "googledrive",
+      cue = tar_cue("always")
+    ),
+    
+    tar_target(
+      name = d_check_Drive_sorted_folder,
+      command =  {
+        d_check_Drive_parent_folder
+        tryCatch({
+          drive_auth(lakeSR_config$google_email)
+          if (lakeSR_config$parent_Drive_folder != "") {
+            version_path <- paste0(lakeSR_config$parent_Drive_folder,
+                                   paste0("QA_sorted_v", d_version_identifier, "/"))
+          } else {
+            version_path <- paste0("QA_sorted_v", d_version_identifier, "/")
+          }
+          drive_ls(version_path)
+        }, error = function(e) {
+          # if there is an error, check both the 'collated_raw' folder and the 'version'
+          # folder
+          if (lakeSR_config$parent_Drive_folder != "") {
+            drive_mkdir(path = lakeSR_config$parent_Drive_folder, name = paste0("QA_sorted_v", d_version_identifier))
+          } else {
+            drive_mkdir(name = paste0("QA_sorted_v", d_version_identifier))
+          }
+        })
+        return(version_path)
+      },
+      packages = "googledrive",
+      cue = tar_cue("always"),
+      deployment = "main" # this ends up making a million folders if you use multicore
+    ),
+    
+    tar_target(
+      name = d_send_sorted_files_to_Drive,
+      command = export_single_file(file_path = d_all_sorted_Landsat_files,
+                                   drive_path = d_check_Drive_sorted_folder,
+                                   google_email = lakeSR_config$google_email),
+      packages = c("tidyverse", "googledrive"),
+      pattern = map(d_all_sorted_Landsat_files)
+    ), 
+    
+    tar_target(
+      name = d_save_sorted_drive_info,
+      command = {
+        d_check_dir_structure
+        drive_ids <- d_send_sorted_files_to_Drive %>% 
+          select(name, id)
+        write_csv(drive_ids,
+                  paste0("d_save_to_Drive/out/Landsat_sorted_files_drive_ids_v",
+                         d_version_identifier,
+                         ".csv"))
+        drive_ids
+      },
+      packages = c("tidyverse", "googledrive"),
+      deployment = "main"
+    )
+    
+  )
+  
+}
 
 

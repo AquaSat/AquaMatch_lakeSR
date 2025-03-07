@@ -85,7 +85,7 @@ calculate_roy_handoff <- function(matched_data,
                       width = 6, height = 3, units = 'in')
                
                
-               deming_residuals <- y - x*roy_dem$coefficients[[2]] + roy_dem$coefficients[[1]]
+               deming_residuals <- y - (x*roy_dem$coefficients[[2]] + roy_dem$coefficients[[1]])
                
                deming_resid_plot <- ggplot() +
                  geom_bin2d(aes(x = x, y = deming_residuals, fill = after_stat(count)), binwidth = bw) +

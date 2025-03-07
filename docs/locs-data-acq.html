@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-03" />
+<meta name="date" content="2025-03-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -181,7 +181,8 @@ div.csl-indent {
 <li class="chapter" data-level="3.1.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.1.1</b> Updates in AquaSat v2</a></li>
 <li class="chapter" data-level="3.1.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#poi"><i class="fa fa-check"></i><b>3.1.2</b> Pole of Inaccessibility</a></li>
 <li class="chapter" data-level="3.1.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation-of-lakesr"><i class="fa fa-check"></i><b>3.1.3</b> Technical Implementation of lakeSR</a></li>
-<li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.4</b> Case Study: Wisconsin Waterbodies</a></li>
+<li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#lakeSR-shoreline"><i class="fa fa-check"></i><b>3.1.4</b> Flagging shoreline proximity</a></li>
+<li class="chapter" data-level="3.1.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
 <li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR Acquisition Locations</a>
 <ul>
@@ -229,24 +230,36 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.4</b> Payload handling</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="handoff.html"><a href="handoff.html"><i class="fa fa-check"></i><b>7</b> Post-Hoc Quality Assurance</a>
+<li class="chapter" data-level="7" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html"><i class="fa fa-check"></i><b>7</b> Post-Hoc Quality Assurance</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="handoff.html"><a href="handoff.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR stack collation</a></li>
-<li class="chapter" data-level="7.2" data-path="handoff.html"><a href="handoff.html#post-hoc-filters"><i class="fa fa-check"></i><b>7.2</b> Post-hoc filters</a>
+<li class="chapter" data-level="7.1" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR stack collation</a></li>
+<li class="chapter" data-level="7.2" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#post-hoc-filters"><i class="fa fa-check"></i><b>7.2</b> Post-hoc filters</a>
 <ul>
-<li class="chapter" data-level="7.2.1" data-path="handoff.html"><a href="handoff.html#landsat-4-qa-summary"><i class="fa fa-check"></i><b>7.2.1</b> Landsat 4 QA Summary</a></li>
-<li class="chapter" data-level="7.2.2" data-path="handoff.html"><a href="handoff.html#landsat-5-qa-summary"><i class="fa fa-check"></i><b>7.2.2</b> Landsat 5 QA Summary</a></li>
-<li class="chapter" data-level="7.2.3" data-path="handoff.html"><a href="handoff.html#landsat-7-qa-summary"><i class="fa fa-check"></i><b>7.2.3</b> Landsat 7 QA Summary</a></li>
-<li class="chapter" data-level="7.2.4" data-path="handoff.html"><a href="handoff.html#landsat-8-qa-summary"><i class="fa fa-check"></i><b>7.2.4</b> Landsat 8 QA Summary</a></li>
-<li class="chapter" data-level="7.2.5" data-path="handoff.html"><a href="handoff.html#landsat-9-qa-summary"><i class="fa fa-check"></i><b>7.2.5</b> Landsat 9 QA Summary</a></li>
+<li class="chapter" data-level="7.2.1" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-4-qa-summary"><i class="fa fa-check"></i><b>7.2.1</b> Landsat 4 QA Summary</a></li>
+<li class="chapter" data-level="7.2.2" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-5-qa-summary"><i class="fa fa-check"></i><b>7.2.2</b> Landsat 5 QA Summary</a></li>
+<li class="chapter" data-level="7.2.3" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-7-qa-summary"><i class="fa fa-check"></i><b>7.2.3</b> Landsat 7 QA Summary</a></li>
+<li class="chapter" data-level="7.2.4" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-8-qa-summary"><i class="fa fa-check"></i><b>7.2.4</b> Landsat 8 QA Summary</a></li>
+<li class="chapter" data-level="7.2.5" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-9-qa-summary"><i class="fa fa-check"></i><b>7.2.5</b> Landsat 9 QA Summary</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="define-handoff.html"><a href="define-handoff.html"><i class="fa fa-check"></i><b>8</b> Calculating intermission handoffs</a>
 <ul>
 <li class="chapter" data-level="8.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-method"><i class="fa fa-check"></i><b>8.1</b> Roy method</a></li>
 <li class="chapter" data-level="8.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-method"><i class="fa fa-check"></i><b>8.2</b> Gardner method</a></li>
-<li class="chapter" data-level="8.3" data-path="define-handoff.html"><a href="define-handoff.html#implementing-roy-handoffs"><i class="fa fa-check"></i><b>8.3</b> Implementing Roy Handoffs</a></li>
-<li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Gardner Handoffs</a></li>
+<li class="chapter" data-level="8.3" data-path="define-handoff.html"><a href="define-handoff.html#implementing-roy-handoffs"><i class="fa fa-check"></i><b>8.3</b> Implementing Roy Handoffs</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.3.1</b> Roy Deming Correction Landsat 5 to Landsat 7</a></li>
+<li class="chapter" data-level="8.3.2" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.3.2</b> Roy Deming Correction Landsat 8 to Landsat 7</a></li>
+<li class="chapter" data-level="8.3.3" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.3.3</b> Roy Deming Correction Landsat 7 to Landsat 8</a></li>
+<li class="chapter" data-level="8.3.4" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-9-to-landsat-8"><i class="fa fa-check"></i><b>8.3.4</b> Roy Deming Correction Landsat 9 to Landsat 8</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Gardner Handoffs</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.4.1</b> Gardner Correction Landsat 5 to Landsat 7</a></li>
+<li class="chapter" data-level="8.4.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.4.2</b> Gardner Correction Landsat 8 to Landsat 7</a></li>
+<li class="chapter" data-level="8.4.3" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.4.3</b> Gardner Correction Landsat 7 to Landsat 8</a></li>
+<li class="chapter" data-level="8.4.4" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-9-to-landsat-8"><i class="fa fa-check"></i><b>8.4.4</b> Gardner Correction Landsat 9 to Landsat 8</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>9</b> References</a></li>
 </ul>
@@ -285,7 +298,7 @@ a 120 meter radius of a defined location. For siteSR, we use a 200 meter buffer.
 <p>For lakeSR, we use the NHDPlusV2 dataset for lakes within the conterminous US
 and US Territories using the {nhdplusTools} R package <span class="citation">(<a href="#ref-blodgett2023">Blodgett and Johnson 2023</a>)</span> and the
 NHD Best Resolution <span class="citation">(e.g. <a href="#ref-usgs-nhd-ak">US Geological Survey 2023b</a>)</span> data through The National Map. All
-waterbody polygons were downloaded and processed in November 2024 by
+waterbody polygons were downloaded and processed in 2025-02-12 by
 HUC4 using the most updated version available at the time of download.</p>
 <div class="figure"><span style="display:block;" id="fig:NHDPlusV2-HUC4"></span>
 <img src="https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/thumbnails/image/WBD_SubRegions_24x18.png" alt="NHD HUC4 map for the United States and Territories, courtesy of the USGS."  />
@@ -304,11 +317,11 @@ the NHD file. If the <a href="https://www.usgs.gov/ngp-standards-and-specificati
 of the waterbody belonged to an intermittent category (39001, 39005, 39006,
 43614) the threshold for inclusion was increased to 0.04 km<sup>2</sup> (4 hectares) to
 reduce processing time when extracting data from Google Earth Engine. This
-filtering resulted in 729,941 waterbodies
-included in our dataset, including 313,248
-non-CONUS waterbodies. This is a
-1,185 percent
-increase over the 56,792 lakes included in the original AquaSat product.</p>
+filtering resulted in 729,941
+waterbodies included in our dataset, including
+313,248 non-CONUS waterbodies. This is a
+1,185
+percent increase over the 56,792 lakes included in the original AquaSat product.</p>
 <p>For each waterbody, the Pole of Inaccessibility (see Section <a href="locs-data-acq.html#poi">3.1.2</a>) and
 distance-to-shore radius was calculated using the <code>polylabelr::poi()</code> function.
 It is important to note that the <code>poi()</code> function can sometimes attribute a POI
@@ -383,8 +396,33 @@ of cores you allow for processing (we used 11 cores
 during the development of this workflow and it takes on the order of tens of
 minutes).</p>
 </div>
-<div id="case-study-wisconsin-waterbodies" class="section level3 hasAnchor" number="3.1.4">
-<h3><span class="header-section-number">3.1.4</span> Case Study: Wisconsin Waterbodies<a href="locs-data-acq.html#case-study-wisconsin-waterbodies" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="lakeSR-shoreline" class="section level3 hasAnchor" number="3.1.4">
+<h3><span class="header-section-number">3.1.4</span> Flagging shoreline proximity<a href="locs-data-acq.html#lakeSR-shoreline" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Within the context of lakeSR, we do not identify whether there are multiple
+waterbodies/visible water sources within the site buffer used for lakeSR
+extraction. We do offer two flags to help users assess possibilities of
+shoreline contamination through a simple calculation. This calculation is based
+on the distance to shore calculated in the POI step, which does not account for
+differing shoreline locations due to water surface level change. A flagged pixel
+for shoreline proximity also does not imply that the data are contaminated,
+rather is intended as a diagnostic tool to identify sites that may be more
+likely to have some sort of shoreline contamination.</p>
+<p>To determine the possibility of shoreline contamination, we add the site buffer
+used for GEE extraction (defined in the lakeSR GEE configuration file) to the
+pixel size of the sensor used for reflectance detection (see Section
+<a href="LS-C2-SRST.html#sensor-resolution">5.2.2</a> for details). For optical bands (Red, Green, Blue, Nir,
+Swir) we use the site buffer plus 30 meters. For thermal bands, we create 3 flag
+columns for each sensor’s (Landsat 4/5: TM, Landsat 7: ETM, Landsat 8/9: TIRS)
+native thermal resolution (120, 60, 100 meters). These flags are binary:</p>
+<blockquote>
+<p>0: unlikely shoreline contamination (distance to shore is greater than the sum
+of the site buffer and pixel size)</p>
+<p>1: possible shoreline contamination (distance to shore is less than or equal
+to sum of the site buffer and pixel size</p>
+</blockquote>
+</div>
+<div id="case-study-wisconsin-waterbodies" class="section level3 hasAnchor" number="3.1.5">
+<h3><span class="header-section-number">3.1.5</span> Case Study: Wisconsin Waterbodies<a href="locs-data-acq.html#case-study-wisconsin-waterbodies" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The state of Wisconsin contains more than 15,000 freshwater lakes. LimnoSat-US
 contained just 2,694 waterbodies within
 Wisconsin (Figure <a href="locs-data-acq.html#fig:v1-WI-lakes">3.2</a>), whereas AquaSat v2 via the lakeSR
@@ -411,8 +449,8 @@ Figure 3.3: Point of inaccessibility for Wisconsin lakes included in AquaSat v2 
 are present after the harmonization procedure for each parameter. siteSR
 collates these sites, then reduces that collation to only distinct sites. Across
 chlorophyll-<em>a</em>, Secchi disc depth, and DOC, there are currently
-313,901 distinct sites in the United
-States and Territories for which we create stacks.</p>
+315,892 distinct sites in the
+United States and Territories for which we create stacks.</p>
 <p>Every site in the WQP has a <code>MonitoringLocationTypeName</code> associated with it. For
 the purposes of siteSR, we do not subset the sites by these types, but they are
 helpful for understanding the type of data included in siteSR.</p>
@@ -436,10 +474,11 @@ therefore be sent through the GEE data acquisition process detailed in Section
 <a href="LS-SRST-pull.html#LS-SRST-pull">6</a>. This dataset is a compilation of 38 years of the Landsat
 record and enumerates the proportion of time a single 30x30 meter pixel has the
 presence of water. As long as a WQP monitoring location has at least one pixel
-within a 200m radius that has had water at least 80% of the time during that 38
-year period, we include it in the list of sites we acquire Landsat stacks for.
-After this assessment, 111,347
-sites were deemed to be visible by remote sensing.</p>
+within a 200 meter radius that has had water at least 80% of the time during
+that 38 year period, we include it in the list of sites we acquire Landsat
+stacks for. After this assessment,
+111,347 sites were deemed to be
+visible by remote sensing.</p>
 <div class="figure"><span style="display:block;" id="fig:siteSR-filtered"></span>
 <img src="AquaMatch_lakeSR_files/figure-html/siteSR-filtered-1.png" alt="Water Quality Portal data location types present in siteSR after filitering for those that are deemed visible by remote sensing. Count of sites provided above bar, divided by `MonitoringLocationTypeName`." width="672" />
 <p class="caption">
@@ -451,14 +490,14 @@ Figure 3.5: Water Quality Portal data location types present in siteSR after fil
 <h3><span class="header-section-number">3.2.2</span> Assignment of NHD flowline and waterbodies<a href="locs-data-acq.html#fl-wb-assignment" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For each WQP montioring location, we attempt to assign HUC8’s wherever they are
 missing from the <code>HUCEightDigitCode</code> column output from the WQP (n =
-2757). To do this we use the
-<code>get_huc()</code> function from {nhdplusTools} <span class="citation">(<a href="#ref-blodgett2023">Blodgett and Johnson 2023</a>)</span> package in R. After
-HUC8 assignment is finished only
-27 sites remained without a
-HUC8 assignment. All of these sites were coastal sites outside of the extent of
-NHD boundaries. In siteSR, the <code>flag_HUC8</code> column indicates whether this HUC8
-was assigned within the WQP (value of 0), assigned in this process (value of 1),
-or was unable to be assigned (value of 2).</p>
+2757). To do this we
+use the <code>get_huc()</code> function from {nhdplusTools} <span class="citation">(<a href="#ref-blodgett2023">Blodgett and Johnson 2023</a>)</span> package in R.
+After HUC8 assignment is finished only
+27 sites remained
+without a HUC8 assignment. All of these sites were coastal sites outside of the
+extent of NHD boundaries. In siteSR, the <code>flag_HUC8</code> column indicates whether
+this HUC8 was assigned within the WQP (value of 0), assigned in this process
+(value of 1), or was unable to be assigned (value of 2).</p>
 <p>Using the HUC8 information to iterate, we then can use {nhdplusTools} to assign
 waterbodies and flowlines to sites within the CONUS and data from The National
 Map best resolution files (<span class="citation">(e.g. <a href="#ref-usgs-nhd-ak">US Geological Survey 2023b</a>)</span>) for sites outside of CONUS by
@@ -469,17 +508,20 @@ only contain Lake, Ponds, and Reservoirs (NHD feature types 390 and 436). We
 flag (<code>flag_wb</code>) the results of this assignment as follows:</p>
 <blockquote>
 <p>0: point inside NHD waterbody polygon</p>
-<p>1: point &lt;= 500m proximate to NHD waterbody polygon</p>
-<p>2: point unable to be assigned to waterbody (it is &gt; 500m proximate to NHD
+<p>1: point &lt;= GEE buffer (default 120m) proximate to NHD waterbody</p>
+<p>2: point &gt; GEE buffer and &lt;= 500m proximate to NHD waterbody polygon</p>
+<p>3: point unable to be assigned to waterbody (it is &gt; 500m proximate to NHD
 waterbody polygon)</p>
-<p>3: point does not have HUC8 assignment or MonitoringLocationTypeName does not
+<p>4: point does not have HUC8 assignment or MonitoringLocationTypeName does not
 contain “lake” or “reservoir”, so no waterbody assigned</p>
 </blockquote>
 <p>For all points with a flag 0/1 we provide the NHD identifier for the polygon the
 monitoring location is associated with (comid for NHDPlusV2 and permanent
 identifier for NHD Best Resolution), for all points with a flag value of 1/2, we
 provide the distance (in meters) to the nearest NHD waterbody of feature type
-390 or 436.</p>
+390 or 436. For waterbodies with a flag of 0, we provide distance to shore. We
+follow lakeSR’s implementation of flags for shoreline proximity for these sites
+as well.</p>
 <p>Flowlines are assigned to sites with a MonitoringLocationTypeName that contains
 “lake”, “reservoir”, “stream”, or “river”. NHD flowlines are filtered to contain
 streams/rivers and artificial paths (that is flowlines in waterbodies) (NHD
@@ -487,7 +529,7 @@ feature types 460 and 558). We flag (<code>flag_fl</code>) the results of this a
 as follows:</p>
 <blockquote>
 <p>0: point &lt;= 100m proximate to flowline</p>
-<p>1: point &lt;= 500m proximate to flowline</p>
+<p>1: point &gt; 100m &lt;= GEE buffer (default = 200m) proximate to flowline</p>
 <p>2: point is a lake or reservoir site and is &gt; 500m proximate to flowline</p>
 <p>3: point is a stream/river site, unable to be assigned to flowline (distance
 to flowline is greater than 500 meters)</p>
@@ -499,6 +541,13 @@ the monitoring location is associated with (comid for NHDPlusV2 and permanent
 identifier for NHD Best Resolution), for all points with a flag value of 1-3, we
 provide the distance (in meters) to the nearest NHD flowline of feature type 460
 or 558.</p>
+<p>For all sites, we calculate how many waterbodies or flowlines are within the
+buffer distance set in the siteSR GEE configuration file. Any site that has more
+than one waterbody and/or flow line within the buffer distance may be including
+reflectance data from another surface water source. Within the context of
+siteSR, we do not investigate what, if any, impacts multiple waterbodies,
+flowlines, or combinations thereof have on the validity of the reflectance data
+or thermal data summary.</p>
 <p>We provide these identifiers and additional metadata to help users make informed
 decisions about data quality that may be inferred through the information
 included in these columns relative to the remote sensing data obtained in

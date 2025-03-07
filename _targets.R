@@ -44,21 +44,6 @@ config_list <- list(
     name = lakeSR_config,
     command = config::get(config = general_config),
     cue = tar_cue("always")
-  ), 
-  
-  # Grab location of the local {targets} siteSR pipeline OR error if
-  # the location doesn't exist yet
-  tar_target(
-    name = config_siteSR_directory,
-    command = if(dir.exists(lakeSR_config$siteSR_repo_directory)) {
-      lakeSR_config$siteSR_repo_directory
-    } else {
-      #Throw an error if the pipeline does not exist
-      stop("The siteSR pipeline is not at the location specified in the
-             config.yml file. Check the location specified as `siteSR_repo_directory`
-             in the config.yml file and rerun the pipeline.")
-    },
-    cue = tar_cue("always")
   )
   
 )
@@ -71,7 +56,6 @@ tar_source(files = c(
   "c_collate_Landsat_data.R",
   "d_qa_filter_sort.R",
   "e_calculate_handoffs.R",
-  "f_save_to_Drive.R",
   "y_siteSR_targets.R",
   "z_render_bookdown.R"
 )
@@ -86,7 +70,6 @@ list(
   c_collate_Landsat_data,
   d_qa_filter_sort,
   e_calculate_handoffs,
-  f_save_to_Drive,
   y_siteSR_list,
   z_render_bookdown
 )

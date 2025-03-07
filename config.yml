@@ -1,8 +1,6 @@
 default:
   # The default setting for the configuration file is set to use pre-existing 
   # centers and collated datasets. 
-  siteSR_repo_directory: "../AquaMatch_siteSR_WQP/" # relative directory path where
-  # the siteSR directory is located
   google_email: "therossyndicate@gmail.com" # enter google email
   calculate_centers: FALSE # the center calculation will not run, and previously-
   # collated centers will be used
@@ -13,24 +11,24 @@ default:
   # data will be used
   collated_version: "2025-02-12" # yyyy-mm-dd of version, must be a date listed in the 
   # suffix of the .csv files stored in c_collate_Landsat_data/out/
-  parent_Drive_folder: "~/lakeSR_Landsat_C2/" # character string, parent folder 
-  # location to store the sorted files. Can also be "" if no parent folder desired.
+  parent_Drive_folder: "~/lakeSR_Landsat_C2/" # optional. character string, parent folder 
+  # location to store files on Google Drive. Can also be "" if no parent folder desired.
+  # Only used if calculate_centers, run_gee, and/or update_and_share set to TRUE.
   update_and_share: TRUE # boolean, indication of whether the compiled qa'd files
   # and handoffs should be shared to Drive
   update_bookdown: TRUE # boolean, if the bookdown will be re-rendered
+  siteSR_repo_directory: "../AquaMatch_siteSR_WQP/" # relative directory path where
+  # the siteSR directory is located. only needed if update_bookdown is set to TRUE
 
 admin_update:
-  # this setting creates publicly available files using the ROSS account
-  siteSR_repo_directory: "../AquaMatch_siteSR_WQP/" # relative directory path where
-  # the siteSR directory is located
-  google_email: "therossyndicate@gmail.com" # enter google email
-  calculate_centers: TRUE # the center calculation will run locally
-  centers_version: "2025-02-12"
-  run_GEE: TRUE # the GEE acquisition will be run locally
-  # collated version date will populate from the `run_date` listed in the config
-  # file for the GEE run: `b_pull_Landsat_SRST_poi/config_files/config_poi.yml`
-  parent_Drive_folder: "~/lakeSR_Landsat_C2/" # character string, parent folder 
-  # location to store the sorted files. Can also be "" if no parent folder desired.
-  update_and_share: TRUE # boolean, indication of whether the compiled qa'd files
-  # and handoffs should be shared to Drive
-  update_bookdown: TRUE # boolean, if the bookdown will be re-rendered and/or knit
+  # this setting will run the entire pipeline and will create publicly available 
+  # files using the google_email account listed
+  google_email: "therossyndicate@gmail.com" 
+  calculate_centers: TRUE
+  centers_version: "2025-02-12" # update upon initial run, or if changes in -a-
+  # group. if unchanged, updated files will be overwritten.
+  run_GEE: TRUE 
+  parent_Drive_folder: "~/lakeSR_Landsat_C2/"
+  update_and_share: TRUE 
+  update_bookdown: TRUE 
+  siteSR_repo_directory: "../AquaMatch_siteSR_WQP/" 

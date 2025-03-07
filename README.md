@@ -35,20 +35,43 @@ function in the {polylabelr} package. Alaska, HI, and some other HUC4 waterbodie
 are not included in the NHDPlusv2, so they are downloaded by url from The 
 National Map and are processed in a separate target. 
 
-**Note**: this group of targets will take a few hours to complete.
+*Timing Note*
+This group of targets will take a few hours to complete.
+
+*Configuration Note*
+This group is either run completely or pulled from exisiting files based on lakeSR 
+general configuration file using the boolean `calculate_centers` setting. If set
+to `FALSE` a version date must be provided in the `centers_version` setting. 
+Additional guidance is provided in the README and general configuration file of
+the lakeSR repository.
 
 
 **b_pull_Landsat_SRST_poi**:
 
-This {targets} group uses the config file `config_files/config_poi.yml` and the 
-Chebyshev Center points created in the `a_Calculate_Centers` group to pull 
-Landsat Collection 2 Surface Reflectance and Surface Temperature using the GEE
-API. This group of targets ends with a branched target that maps over each of the WRS2
-path rows that intersect with the points. 
+This {targets} group uses the configuration file
+`b_pull_Landsat_SRST_poi/config_files/config_poi.yml` and the "Pole of
+Inaccessibility" points created in the `a_Calculate_Centers` group to pull
+Landsat Collection 2 Surface Reflectance and Surface Temperature using the
+Google Earth Engine (GEE) API. In this group, we use the most conservative LS4-7
+pixel filters, as we are applying these settings across such a large continuum
+of time and space. This group ends with a branched target that sends tasks to
+Google Earth engine by mapping over WRS2 path rows that intersect with the
+points created in the `a_Calculate_Centers` group. 
 
-**Note**: this group of targets takes a very, very long time, ranging between 8 
-and 45 minutes per path row branch. There are just under 800 path rows with 
-points in them, resulting in run time on the order of days to a week.
+*Timing Note*
+This group of targets takes a very long time, running 2 minutes - 1 hour per path-row
+branch in `b_eeRun_poi`. There are just under 800 path rows executed in this
+target. Anecdotally speaking, processing time is often defined by the number of
+queued tasks globally, so weekends and nights are often periods of quicker
+processing than weekday during business hours. As written for data publication, 
+run time is 7-10 days.
+
+*Configuration Note*
+This group is either run completely or pulled from exisiting files based on lakeSR 
+general configuration file using the boolean `run_GEE` setting. If set
+to `FALSE` a version date must be provided in the `collated_version` setting. 
+Additional guidance is provided in the README and general configuration file of
+the lakeSR repository.
 
 
 **c_collate_Landsat_data**:
@@ -58,14 +81,46 @@ orchestrated in the {targets} group "b_pull_Landsat_SRST_poi" and creates public
 available files for downstream use, storing a list of Drive ids in a .csv in the
 `c_collate_Landsat_data/out/` folder.
 
-**Note**: this group of targets takes a few hours to run, as the download, 
+*Timing Note*
+This group of targets takes a few hours to run, as the download, 
 collation, and upload process is quite time consuming, even with mulitcore 
 processing.
 
+*Configuration Note*
+This group is either run completely or pulled from exisiting files based on lakeSR 
+general configuration file using the boolean `run_GEE` setting. If set
+to `FALSE` a version date must be provided in the `collated_version` setting. 
+Additional guidance is provided in the README and general configuration file of
+the lakeSR repository.
 
-**d_qa_filter_calc_handoff**:
 
-This {targets} list applies some rudimentary QA to the Landsat stacks, and then
-calculates 'intermission handoffs' that standardize the SR values relative to LS7
-and to LS8.
+**d_qa_filter_sort:**
 
+This {targets} list applies some rudimentary QA to the Landsat stacks and saves
+them as sorted files locally. LS 4/9 are complete .csv files, LS 578 are broken
+up by HUC2 for memory and space considerations. If `update_and_share` is set to TRUE, the workflow
+will send dated, publicly available files to Google Drive and save Drive file 
+information in the `d_qa_filter_sort/out/` folder. If set to FALSE, no files
+will be sent to Drive.
+
+
+**e_caclculate_handoffs:**
+
+This {targets} group creates "matched" data for two different 'intermission 
+handoff' methods that standardize the SR values relative to LS7
+and to LS8. Handoffs are visualized and are saved as tables for use downstream in
+this group.
+
+
+
+**y_siteSR_targets:**
+
+This {targets} group pulls information from the siteSR workflow to use in the 
+Bookdown. If the configuration setting `update_bookown` is set to FALSE, this 
+list will be empty.
+
+**z_render_bookdown:**
+
+This {targets} group tracks chapters of the bookdown for changes and renders
+the bookdown. If the configuration setting `update_bookown` is set to FALSE, this 
+list will be empty.

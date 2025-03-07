@@ -181,7 +181,7 @@ product](https://github.com/AquaSat/AquaMatch_siteSR_WQP) which is more suited
 to extracting data of that nature. Please note, calculating hand-off
 coefficients from small numbers of lakes may not provide robust enough summary
 statistics for intermission comparison and timeseries analysis. See Section
-\@ref(handoff) for additional guidance.
+\@ref(define-handoff) for additional guidance.
 
 ## Technical Implementation of GEE Acquisition Script
 

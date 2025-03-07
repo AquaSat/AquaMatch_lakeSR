@@ -1,9 +1,29 @@
+# Grab files from siteSR for bookdown -----------------------------
+
+# This {targets} group pulls information from the siteSR workflow to use in the 
+# Bookdown. If the configuration setting `update_bookown` is set to FALSE, this 
+# list will be empty.
 
 # check to see if bookdown should be updated, 
 # otherwise these targets are not needed
 if (config::get(config = general_config)$update_bookdown) {
   
   y_siteSR_list <- list(
+    
+    # Grab location of the local {targets} siteSR pipeline OR error if
+    # the location doesn't exist yet
+    tar_target(
+      name = config_siteSR_directory,
+      command = if(dir.exists(lakeSR_config$siteSR_repo_directory)) {
+        lakeSR_config$siteSR_repo_directory
+      } else {
+        #Throw an error if the pipeline does not exist
+        stop("The siteSR pipeline is not at the location specified in the
+             config.yml file. Check the location specified as `siteSR_repo_directory`
+             in the config.yml file and rerun the pipeline.")
+      },
+      cue = tar_cue("always")
+    ), 
     
     tar_file_read(
       name = p4_harmonized_sites_Drive_id,

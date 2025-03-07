@@ -159,7 +159,10 @@ calculate_bestres_centers <- function(HUC4) {
              mutate(lakeSR_id = paste(HUC4, lakeSR_id, sep = "_")) %>% 
              relocate(lakeSR_id, permanent_identifier, poi_Latitude, poi_Longitude, poi_dist_m))
   } else { # if there are no waterbodies that meet criteria, return null
+    
     NULL
+    
   }
+  
   
 }

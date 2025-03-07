@@ -1,11 +1,11 @@
 # Source functions for this {targets} list
 tar_source("e_calculate_handoffs/src/")
 
-# High-level QA filter and handoff calculations -----------------------------
+# Calculate handoff coefficients -----------------------------
 
-# This {targets} list applies some rudimentary QA to the Landsat stacks, and then
-# calculates 'intermission handoffs' that standardize the SR values relative to LS7
-# and to LS8.
+# This {targets} group creates "matched" data for two different 'intermission 
+# handoff' methods that standardize the SR values relative to LS7
+# and to LS8. Handoffs are visualized and are saved as tables for use downstream.
 
 e_calculate_handoffs <- list(
   
@@ -430,7 +430,7 @@ e_calculate_handoffs <- list(
     command = calculate_roy_handoff(matched_data = e_LS89_DSWE1_matches, 
                                     mission_from = "LS9",
                                     mission_to = "LS8",
-                                    invert_mission_match = FALSE,
+                                    invert_mission_match = TRUE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1"),
     packages = c("tidyverse", "deming"),
@@ -478,7 +478,7 @@ e_calculate_handoffs <- list(
     command = calculate_roy_handoff(matched_data = e_LS89_DSWE1a_matches, 
                                     mission_from = "LS9",
                                     mission_to = "LS8",
-                                    invert_mission_match = FALSE,
+                                    invert_mission_match = TRUE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1a"),
     packages = c("tidyverse", "deming"),

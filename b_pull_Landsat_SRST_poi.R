@@ -103,7 +103,7 @@ if (config::get(config = general_config)$run_GEE) {
     tar_target(
       name = b_ref_locations_poi,
       command = reformat_locations(yml = b_yml_poi, 
-                                   locations = a_combined_poi)
+                                   locations = a_poi_with_flags)
     ),
     
     # get WRS tiles/indication of whether buffered points are contained by them

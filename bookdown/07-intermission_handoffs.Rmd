@@ -18,14 +18,21 @@ params:
 
 ```{r, echo = F}
 library(kableExtra)
+library(tidyverse)
 
 # filter for DSWE1 only
-e_LS5_forLS57corr_quantiles <- e_LS5_forLS57corr_quantiles %>% filter(dswe == "DSWE1")
-e_LS7_forLS78corr_quantiles <- e_LS7_forLS78corr_quantiles %>% filter(dswe == "DSWE1")
-e_LS8_forLS89corr_quantiles <- e_LS8_forLS89corr_quantiles %>% filter(dswe == "DSWE1")
-e_LS7_forLS57corr_quantiles <- e_LS7_forLS57corr_quantiles %>% filter(dswe == "DSWE1")
-e_LS8_forLS78corr_quantiles <- e_LS8_forLS78corr_quantiles %>% filter(dswe == "DSWE1")
-e_LS9_forLS89corr_quantiles <- e_LS9_forLS89corr_quantiles %>% filter(dswe == "DSWE1")
+e_LS5_forLS57corr_quantiles <- e_LS5_forLS57corr_quantiles %>% 
+  filter(dswe == "DSWE1")
+e_LS7_forLS78corr_quantiles <- e_LS7_forLS78corr_quantiles %>% 
+  filter(dswe == "DSWE1")
+e_LS8_forLS89corr_quantiles <- e_LS8_forLS89corr_quantiles %>% 
+  filter(dswe == "DSWE1")
+e_LS7_forLS57corr_quantiles <- e_LS7_forLS57corr_quantiles %>% 
+  filter(dswe == "DSWE1")
+e_LS8_forLS78corr_quantiles <- e_LS8_forLS78corr_quantiles %>% 
+  filter(dswe == "DSWE1")
+e_LS9_forLS89corr_quantiles <- e_LS9_forLS89corr_quantiles %>% 
+  filter(dswe == "DSWE1")
 ```
 
 # Calculating intermission handoffs {#define-handoff}
@@ -41,13 +48,12 @@ implement two versions of intermission handoffs: the method described in
 ("Gardner method").
 
 In AquaSat v2, we provide coefficients to standardize remote sensing values
-relative to Landsat 7 (`corr7`) and Landsat 8 (`corr8`). The Landsat 7
-intermission handoffs create a continuous record of remote sensing from Landsat
-4 through 9 relative to Landsat 7 since Landsat 4 and 5 and Landsat 8 and 9 can
-be treated as interchangable due to the similarity in payload and radiometric
-resolution (see section \@ref(establish) for details and caveats). Landsat 8
-handoffs (`corr8`) can only be applied to Landsat 7 and 9 due to mission
-overlap, so the standardized data timeseries is shorter.
+relative to Landsat 7 and Landsat 8. The Landsat 7 intermission handoffs create
+a continuous record of remote sensing from Landsat 4 through 9 relative to
+Landsat 7 since Landsat 4 and 5 and Landsat 8 and 9 can be treated as
+interchangable due to the similarity in payload and radiometric resolution. Data
+corrected to Landsat 8 relative values can only be applied to Landsat 7 and 9
+due to mission overlap, so the standardized data timeseries is shorter.
 
 For the purposes of this document, we only present the handoff coefficients for
 DSWE1 (confident water) and do not investigate differences between the DSWE1 or
@@ -58,12 +64,9 @@ DSWE1a coefficients, though we provide both.
 The Roy method for calculating intermission handoffs uses paired images at
 specific sites, where the reflectance data are obtained are from two missions
 (e.g. Landsat 7 and Landsat 8) separated by one day at a specific location
-within the overlapping paths in the WRS2 path-row framework (see figure
-@ref(path-overlap-roy)).
+within the overlapping paths in the WRS2 path-row framework:
 
-![An example of two overlapping WRS2 paths (grey area) separated by one day. Any
-location with data for both images would be considered a paired data point to
-define the Roy method intermission handoffs.](images/path_overlap_roy.png)
+![An example of two overlapping WRS2 paths (grey area) separated by one day. Any location with data for both images would be considered a paired data point to define the Roy method intermission handoffs.](images/path_overlap_roy.png)
 
 While @roy2016 implemented this method on a pixel-by-pixel basis, we implement
 using the median band value per site. This is used in place of the explicit
@@ -83,23 +86,20 @@ handoffs are created when the pipeline is run.
 ## Gardner method
 
 Gardner method intermission handoffs are defined by the data obtained in the
-overlapping period of time between two adjacent-in-time missions (details
-provided in Table \@ref(tab:gardner-table)). These data are filtered to sites
-that have at least one data point per year for at least 75% of the years of
-overlap. The filtered data are then summarized to each mission's 1st-99th
-percentile value per band, and the handoff coefficients between missions are
-defined by the second-order polynomial relationship between them. When n is
-high, quantiles are equivalent to describing the central tendency of the
-distribution of the x:y relationship due to the Central Limit Theorem. Because
-we use a second-order polynomial, all values outside of the 1st and 99th
-percentile values used to define the intermission handoff are flagged
-`corr7_flag`, `corr8_flag` and should be used with extreme caution. All `corr7`
-and `corr8` relationships and their derived coefficients are provided in the
-sections below.
+overlapping period of time between two adjacent-in-time missions. These data are
+filtered to sites that have at least one data point per year for at least 75% of
+the years of overlap. The filtered data are then summarized to each mission's
+1st-99th percentile value per band, and the handoff coefficients between
+missions are defined by the second-order polynomial relationship between them.
+When n is high, quantiles are equivalent to describing the central tendency of
+the distribution of the x:y relationship due to the Central Limit Theorem.
+Because we use a second-order polynomial, all values outside of the 1st and 99th
+percentile values used to define the intermission handoff are flagged and should
+be used with extreme caution.
 
 One additional consideration when using the Gardner method is, even when the
 number of observations are is high, if there is a difference between total
-observations contributing to the quantile summaries, and there may be systematic
+observations contributing to the quantile summaries, there may be systematic
 differences built into the coefficients. An example of possible systematic
 differences could be fewer observations from non-CONUS locations in Landsat 5
 due to data transmission errors. We did not investigate the differences in n
@@ -110,85 +110,202 @@ interoperability.
 
 ## Implementing Roy Handoffs
 
-```{r roy-table}
+Table \@ref(tab:roy-table) describes the number of matches contributing to the
+intermission handoffs using the Roy method. We also include figures of the
+OLS/MLE relationships and the residuals for the MLE corrections in addition to a
+table of the coefficients for each DSWE1 MLE handoff.
+
+```{r roy-table, echo = F}
 roy_handoff_table <- tibble("Early mission" = c("Landsat 5", "Landsat 7"),
                                 "Late mission" = c("Landsat 7", "Landsat 8"),
                                 "n matches" = c(c(format(nrow(e_LS57_DSWE1_matches), big.mark = ","), format(nrow(e_LS89_DSWE1_matches), big.mark = ","))))
 knitr::kable(roy_handoff_table, caption = "Summary of Landsat mission data used to create the Roy method intermission handoff for DSWE1.")
-```
-
-```{r}
-knitr::include_graphics("../e_calculate_handoffs/roy/med_Blue_LS5_to_LS7_DSWE1_roy_handoff.jpg")
-knitr::include_graphics("../e_calculate_handoffs/roy/med_Blue_LS5_to_LS7_DSWE1_roy_deming_residuals.jpg")
 
 ```
 
-```{r roy-coeff-dem-corr7}
+```{r roy-coeff-dem-corr7, echo = F}
 e_collated_handoffs %>% 
   filter(correction == "Roy", method == "deming", sat_to == "LS7") %>% 
   select(-c(B1, B2, correction, method)) %>% 
-  mutate(
-    intercept = round(intercept, 3),
-    slope = round(slope, 3),
-    min_in_val = round(min_in_val, 3),
-    max_in_val = round(max_in_val, 3)
-  ) %>% 
+
   kable(
     format = "html",
     digits = 3,
-    caption = "Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Deming (MLE) regression",
+    caption = "Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Roy method and Deming (MLE) regression",
     align = c('l', 'c', 'c', 'c', 'c', 'c', 'c', 'c'),
     col.names = c(
       "Band",
       "DSWE type",
-      "Satellite to Correct",
-      "Satellite to Harmonize to",
+      cell_spec("Satellite<br>to Correct", format = "html", escape = FALSE),
+      cell_spec("Satellite<br>to Harmonize to", format = "html", escape = FALSE),
       "Intercept",
       "Slope",
-      "Minimum Value in Handoff",
-      "Maximum Value in Handoff")
+      cell_spec("Minimum Value<br>in Handoff", format = "html", escape = FALSE),
+      cell_spec("Maximum Value<br>in Handoff", format = "html", escape = FALSE)),
+    escape = FALSE
   ) %>%
+      column_spec(1:8, width = "auto") %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  collapse_rows(columns = 2, valign = "middle") %>%
-  add_header_above(c(" " = 4, "Coefficients" = 2, "Input Value Range" = 2))
+  collapse_rows(columns = c(2, 3, 4), valign = "middle") %>%
+  add_header_above(c(" " = 4, "Coefficients" = 2, "Input Value Range" = 2))%>%
+  scroll_box(width = "100%")
 ```
 
 ```{r roy-coeff-dem-corr8}
 e_collated_handoffs %>% 
   filter(correction == "Roy", method == "deming", sat_to == "LS8") %>% 
   select(-c(B1, B2, correction, method)) %>% 
-  mutate(
-    intercept = round(intercept, 3),
-    slope = round(slope, 3),
-    min_in_val = round(min_in_val, 3),
-    max_in_val = round(max_in_val, 3)
-  ) %>% 
   kable(
-    format = "html",
+   format = "html",
     digits = 3,
-    caption = "Handoff coefficients for Landsat 7 and 9 to harmonize to Landsat 8 using the Deming (MLE) regression",
+    caption = "Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Roy method and Deming (MLE) regression",
     align = c('l', 'c', 'c', 'c', 'c', 'c', 'c', 'c'),
     col.names = c(
       "Band",
       "DSWE type",
-      "Satellite to Correct",
-      "Satellite to Harmonize to",
+      cell_spec("Satellite<br>to Correct", format = "html", escape = FALSE),
+      cell_spec("Satellite<br>to Harmonize to", format = "html", escape = FALSE),
       "Intercept",
       "Slope",
-      "Minimum Value in Handoff",
-      "Maximum Value in Handoff")
+      cell_spec("Minimum Value<br>in Handoff", format = "html", escape = FALSE),
+      cell_spec("Maximum Value<br>in Handoff", format = "html", escape = FALSE)),
+    escape = FALSE
   ) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  collapse_rows(columns = 2, valign = "middle") %>%
-  add_header_above(c(" " = 4, "Coefficients" = 2, "Input Value Range" = 2))
+      column_spec(1:8, width = "auto") %>%
+   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  collapse_rows(columns = c(2, 3, 4), valign = "middle") %>%
+  add_header_above(c(" " = 4, "Coefficients" = 2, "Input Value Range" = 2))%>%
+  scroll_box(width = "100%")
 ```
+
+<details>
+
+<summary>Roy Deming Handoff and Residual Figures</summary>
+
+### Roy Deming Correction Landsat 5 to Landsat 7
+
+For each of the handoff figures below, the blue line is the Deming (MLE)
+regression, the red line is the OLS regression line, and the grey dashed line is
+the 1:1 line. Coefficients for the Deming regression are provided in Table
+\@ref(tab:roy-coeff-dem-corr7). Color of dots represents the density of points
+in at a given x, y location. In the residual plots, the grey dashed line is a 0
+intercept, 0 slope line visual aide.
+
+![](images/roy/handoffs/med_Blue_LS5_to_LS7_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_Blue_LS5_to_LS7_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+![](images/roy/handoffs/med_Green_LS5_to_LS7_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_Green_LS5_to_LS7_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+![](images/roy/handoffs/med_Red_LS7_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_Red_LS5_to_LS7_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+![](images/roy/handoffs/med_Nir_LS5_to_LS7_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_Nir_LS5_to_LS7_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+![](images/roy/handoffs/med_SurfaceTemp_LS5_to_LS7_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_SurfaceTemp_LS5_to_LS7_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+### Roy Deming Correction Landsat 8 to Landsat 7
+
+For each of the handoff figures below, the blue line is the Deming (MLE)
+regression, the red line is the OLS regression line, and the grey dashed line is
+the 1:1 line. Coefficients for the Deming regression are provided in Table
+\@ref(tab:roy-coeff-dem-corr7). Color of dots represents the density of points
+in at a given x, y location. In the residual plots, the grey dashed line is a 0
+intercept, 0 slope line visual aide.
+
+![](images/roy/handoffs/med_Blue_LS8_to_LS7_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_Blue_LS8_to_LS7_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+![](images/roy/handoffs/med_Green_LS8_to_LS7_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_Green_LS8_to_LS7_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+![](images/roy/handoffs/med_Red_LS8_to_LS7_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_Red_LS8_to_LS7_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+![](images/roy/handoffs/med_Nir_LS8_to_LS7_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_Nir_LS8_to_LS7_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+![](images/roy/handoffs/med_SurfaceTemp_LS8_to_LS7_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_SurfaceTemp_LS8_to_LS7_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+### Roy Deming Correction Landsat 7 to Landsat 8
+
+For each of the handoff figures below, the blue line is the Deming (MLE)
+regression, the red line is the OLS regression line, and the grey dashed line is
+the 1:1 line. Coefficients for the Deming regression are provided in Table
+\@ref(tab:roy-coeff-dem-corr8). Color of dots represents the density of points
+in at a given x, y location. In the residual plots, the grey dashed line is a 0
+intercept, 0 slope line visual aide.
+
+![](images/roy/handoffs/med_Blue_LS7_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_Blue_LS7_to_LS8_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+![](images/roy/handoffs/med_Green_LS7_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_Green_LS7_to_LS8_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+![](images/roy/handoffs/med_Red_LS7_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_Red_LS7_to_LS8_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+![](images/roy/handoffs/med_Nir_LS7_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_Nir_LS7_to_LS8_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+![](images/roy/handoffs/med_SurfaceTemp_LS7_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_SurfaceTemp_LS7_to_LS8_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+### Roy Deming Correction Landsat 9 to Landsat 8
+
+For each of the handoff figures below, the blue line is the Deming (MLE)
+regression, the red line is the OLS regression line, and the grey dashed line is
+the 1:1 line. Coefficients for the Deming regression are provided in Table
+\@ref(tab:roy-coeff-dem-corr8). Color of dots represents the density of points
+in at a given x, y location. In the residual plots, the grey dashed line is a 0
+intercept, 0 slope line visual aide.
+
+![](images/roy/handoffs/med_Blue_LS9_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_Blue_LS9_to_LS8_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+![](images/roy/handoffs/med_Green_LS9_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_Green_LS9_to_LS8_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+![](images/roy/handoffs/med_Red_LS9_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_Red_LS9_to_LS8_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+![](images/roy/handoffs/med_Nir_LS9_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_Nir_LS9_to_LS8_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+![](images/roy/handoffs/med_SurfaceTemp_LS9_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
+
+![](images/roy/residuals/med_SurfaceTemp_LS9_to_LS8_DSWE1_roy_deming_residuals.jpg){width="600"}
+
+</details>
 
 ## Implementing Gardner Handoffs
 
 ```{r gardner-table}
 gardner_handoff_table <- tibble("Early mission" = c("Landsat 5", "Landsat 7", "Landsat 8"),
                                 "Late mission" = c("Landsat 7", "Landsat 8", "Landsat 9"),
-                                "Correction type" = c("corr7", "corr7, corr8", "corr8"),
+                                "Correction to" = c("Landsat 7", "Landsat 7, Landsat8", "Landsat 8"),
                                 "Overlap Start" = c("1999-04-15", "2013-02-11", "2021-09-27"),
                                 "Overlap End" = c("2013-02-11", "2022-04-16", "2024-12-31"),
                                 "n Observations from Early Mission" = c(format(e_LS5_forLS57corr_quantiles$n_rows[1], big.mark = ","), 
@@ -200,3 +317,184 @@ gardner_handoff_table <- tibble("Early mission" = c("Landsat 5", "Landsat 7", "L
 
 knitr::kable(gardner_handoff_table, caption = "Summary of Landsat mission data for handoffs calculated by the Gardner method for DSWE1.")
 ```
+
+```{r gard-coeff-corr7, echo = F}
+e_collated_handoffs %>% 
+  filter(correction == "Gardner", sat_to == "LS7") %>% 
+  select(-c(slope, correction, method))  %>% 
+  arrange(dswe) %>% 
+  kable(
+    format = "html",
+    digits = 3,
+    caption = "Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Deming (MLE) regression",
+    align = c('l', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c'),
+    col.names = c(
+      "Band",
+      "DSWE type",
+      cell_spec("Satellite<br>to Correct", format = "html", escape = FALSE),
+      cell_spec("Satellite<br>to Harmonize to", format = "html", escape = FALSE),
+      "Intercept",
+      "B1",
+      "B2",
+      cell_spec("Minimum Value<br>in Handoff", format = "html", escape = FALSE),
+      cell_spec("Maximum Value<br>in Handoff", format = "html", escape = FALSE)),
+    escape = FALSE
+  ) %>%
+      column_spec(1:8, width = "auto") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  collapse_rows(columns = c(2, 3, 4), valign = "middle") %>%
+  add_header_above(c(" " = 4, "Coefficients" = 3, "Input Value Range" = 2))%>%
+  scroll_box(width = "100%")
+```
+
+```{r gard-coeff-corr8, echo = F}
+e_collated_handoffs %>% 
+  filter(correction == "Gardner", sat_to == "LS8") %>% 
+  select(-c(slope, correction, method)) %>% 
+  arrange(dswe) %>% 
+  kable(
+    format = "html",
+    digits = 3,
+    caption = "Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Deming (MLE) regression",
+    align = c('l', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c'),
+    col.names = c(
+      "Band",
+      "DSWE type",
+      cell_spec("Satellite<br>to Correct", format = "html", escape = FALSE),
+      cell_spec("Satellite<br>to Harmonize to", format = "html", escape = FALSE),
+      "Intercept",
+      "B1",
+      "B2",
+      cell_spec("Minimum Value<br>in Handoff", format = "html", escape = FALSE),
+      cell_spec("Maximum Value<br>in Handoff", format = "html", escape = FALSE)),
+    escape = FALSE
+  ) %>%
+      column_spec(1:8, width = "auto") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  collapse_rows(columns = c(2, 3, 4), valign = "middle") %>%
+  add_header_above(c(" " = 4, "Coefficients" = 3, "Input Value Range" = 2))%>%
+  scroll_box(width = "100%")
+```
+
+
+<details>
+
+<summary>Gardner Handoff and Residual Figures relative to Landsat 7</summary>
+
+### Gardner Correction Landsat 5 to Landsat 7
+
+For each of the handoff figures below, the red line is the second order
+polynomial regression and the grey dashed line is the 1:1 line. Coefficients for
+the second order polynomial regression are provided in Table
+\@ref(tab:gard-coeff-corr7). Color of dots represents the density of points in
+at a given x, y location. In the residual plots, the grey dashed line is a 0
+intercept, 0 slope line visual aide.
+
+![](images/gardner/handoffs/med_Blue_LS5_to_LS7_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_Blue_LS5_to_LS7_DSWE1_gard_residuals.jpg){width="600"}
+
+![](images/gardner/handoffs/med_Green_LS5_to_LS7_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_Green_LS5_to_LS7_DSWE1_gard_residuals.jpg){width="600"}
+
+![](images/gardner/handoffs/med_Red_LS5_to_LS7_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_Red_LS5_to_LS7_DSWE1_gard_residuals.jpg){width="600"}
+
+![](images/gardner/handoffs/med_Nir_LS5_to_LS7_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_Nir_LS5_to_LS7_DSWE1_gard_residuals.jpg){width="600"}
+
+![](images/gardner/handoffs/med_SurfaceTemp_LS5_to_LS7_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_SurfaceTemp_LS5_to_LS7_DSWE1_gard_residuals.jpg){width="600"}
+
+### Gardner Correction Landsat 8 to Landsat 7
+
+For each of the handoff figures below, the red line is the second order
+polynomial regression and the grey dashed line is the 1:1 line. Coefficients for
+the second order polynomial regression are provided in Table
+\@ref(tab:gard-coeff-corr7). Color of dots represents the density of points in
+at a given x, y location. In the residual plots, the grey dashed line is a 0
+intercept, 0 slope line visual aide.
+
+![](images/gardner/handoffs/med_Blue_LS8_to_LS7_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_Blue_LS8_to_LS7_DSWE1_gard_residuals.jpg){width="600"}
+
+![](images/gardner/handoffs/med_Green_LS8_to_LS7_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_Green_LS8_to_LS7_DSWE1_gard_residuals.jpg){width="600"}
+
+![](images/gardner/handoffs/med_Red_LS8_to_LS7_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_Red_LS8_to_LS7_DSWE1_gard_residuals.jpg){width="600"}
+
+![](images/gardner/handoffs/med_Nir_LS8_to_LS7_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_Nir_LS8_to_LS7_DSWE1_gard_residuals.jpg){width="600"}
+
+![](images/gardner/handoffs/med_SurfaceTemp_LS8_to_LS7_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_SurfaceTemp_LS8_to_LS7_DSWE1_gard_residuals.jpg){width="600"}
+
+### Gardner Correction Landsat 7 to Landsat 8
+
+For each of the handoff figures below, the red line is the second order
+polynomial regression and the grey dashed line is the 1:1 line. Coefficients for
+the second order polynomial regression are provided in Table
+\@ref(tab:gard-coeff-corr8). Color of dots represents the density of points in
+at a given x, y location. In the residual plots, the grey dashed line is a 0
+intercept, 0 slope line visual aide.
+
+![](images/gardner/handoffs/med_Blue_LS7_to_LS8_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_Blue_LS7_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
+
+![](images/gardner/handoffs/med_Green_LS7_to_LS8_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_Green_LS7_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
+
+![](images/gardner/handoffs/med_Red_LS7_to_LS8_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_Red_LS7_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
+
+![](images/gardner/handoffs/med_Nir_LS7_to_LS8_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_Nir_LS7_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
+
+![](images/gardner/handoffs/med_SurfaceTemp_LS7_to_LS8_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_SurfaceTemp_LS7_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
+
+### Gardner Correction Landsat 9 to Landsat 8
+
+For each of the handoff figures below, the red line is the second order
+polynomial regression and the grey dashed line is the 1:1 line. Coefficients for
+the second order polynomial regression are provided in Table
+\@ref(tab:gard-coeff-corr8). Color of dots represents the density of points in
+at a given x, y location. In the residual plots, the grey dashed line is a 0
+intercept, 0 slope line visual aide.
+
+![](images/gardner/handoffs/med_Blue_LS9_to_LS8_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_Blue_LS9_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
+
+![](images/gardner/handoffs/med_Green_LS9_to_LS8_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_Green_LS9_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
+
+![](images/gardner/handoffs/med_Red_LS9_to_LS8_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_Red_LS9_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
+
+![](images/gardner/handoffs/med_Nir_LS9_to_LS8_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_Nir_LS9_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
+
+![](images/gardner/handoffs/med_SurfaceTemp_LS9_to_LS8_DSWE1_gard_handoff.jpg){width="600"}
+
+![](images/gardner/residuals/med_SurfaceTemp_LS9_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
+
+</details>

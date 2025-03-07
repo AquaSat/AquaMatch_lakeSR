@@ -7,6 +7,8 @@ tab:roy-table
 tab:roy-coeff-dem-corr7
 tab:roy-coeff-dem-corr8
 tab:gardner-table
+tab:gard-coeff-corr7
+tab:gard-coeff-corr8
 introduction
 background
 lakesr-code-architecture
@@ -19,6 +21,7 @@ waterbodies
 updates-in-aquasat-v2
 poi
 technical-implementation-of-lakesr
+lakeSR-shoreline
 case-study-wisconsin-waterbodies
 siteSR-locs
 rs-vis
@@ -47,7 +50,7 @@ technical-implementation-of-gee-acquisition-script
 masking-functions
 dswe-implementation
 payload-handling
-handoff
+post-hoc-qa
 raw-lakesr
 post-hoc-filters
 landsat-4-qa-summary
@@ -59,5 +62,13 @@ define-handoff
 roy-method
 gardner-method
 implementing-roy-handoffs
+roy-deming-correction-landsat-5-to-landsat-7
+roy-deming-correction-landsat-8-to-landsat-7
+roy-deming-correction-landsat-7-to-landsat-8
+roy-deming-correction-landsat-9-to-landsat-8
 implementing-gardner-handoffs
+gardner-correction-landsat-5-to-landsat-7
+gardner-correction-landsat-8-to-landsat-7
+gardner-correction-landsat-7-to-landsat-8
+gardner-correction-landsat-9-to-landsat-8
 references
