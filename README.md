@@ -112,7 +112,8 @@ will be sent to Drive.
 This {targets} group creates "matched" data for two different 'intermission 
 handoff' methods that standardize the SR values relative to LS7
 and to LS8. Handoffs are visualized and are saved as tables for use downstream in
-this group.
+this group. Corrections are calculated for all neighboring missions, even if not explicitly
+used downstream (e.g. LS 4/5 and LS 8/9).
 
 
 ### y_siteSR_targets

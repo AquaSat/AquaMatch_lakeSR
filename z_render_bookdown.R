@@ -62,8 +62,8 @@ if (config::get(config = general_config)$update_bookdown) {
       command = {
         # Define source and destination directories
         source_dir <- "e_calculate_handoffs/gardner/"
-        handoff_dir <- "images/gardner/handoffs/"
-        resid_dir <- "images/gardner/residuals/"
+        handoff_dir <- "bookdown/images/gardner/handoffs/"
+        resid_dir <- "bookdown/images/gardner/residuals/"
         dir.create(handoff_dir, recursive = T, showWarnings = FALSE)
         dir.create(resid_dir, recursive = T, showWarnings = FALSE)
         # Get list of files to copy
@@ -115,15 +115,12 @@ if (config::get(config = general_config)$update_bookdown) {
                  e_calculate_gardner_LS5_to_LS7
                  e_calculate_gardner_LS8_to_LS7
                  e_calculate_gardner_LS7_to_LS8
-                 e_calculate_gardner_LS9_to_LS8
                  e_Roy_LS5_to_LS7_DSWE1_handoff
                  e_Roy_LS8_to_LS7_DSWE1_handoff
                  e_Roy_LS7_to_LS8_DSWE1_handoff 
-                 e_Roy_LS9_to_LS8_DSWE1_handoff
                  e_Roy_LS5_to_LS7_DSWE1a_handoff
                  e_Roy_LS8_to_LS7_DSWE1a_handoff
                  e_Roy_LS7_to_LS8_DSWE1a_handoff 
-                 e_Roy_LS9_to_LS8_DSWE1a_handoff
                  move_gardner_DSWE1_images
                  move_roy_dem_DSWE1_images
                  # list chapters
@@ -146,11 +143,8 @@ if (config::get(config = general_config)$update_bookdown) {
                                LS7_for57 = e_LS7_forLS57corr_quantiles,
                                LS7_for78 = e_LS7_forLS78corr_quantiles,
                                LS8_for78 = e_LS8_forLS78corr_quantiles,
-                               LS8_for89 = e_LS8_forLS89corr_quantiles,
-                               LS9_for89 = e_LS9_forLS89corr_quantiles,
                                LS57_match = e_LS57_DSWE1_matches,
                                LS78_match = e_LS78_DSWE1_matches,
-                               LS89_match = e_LS89_DSWE1_matches,
                                coefficients = e_collated_handoffs
                              ))
                },

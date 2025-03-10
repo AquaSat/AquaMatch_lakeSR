@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-06" />
+<meta name="date" content="2025-03-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -251,14 +251,12 @@ div.csl-indent {
 <li class="chapter" data-level="8.3.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.3.1</b> Roy Deming Correction Landsat 5 to Landsat 7</a></li>
 <li class="chapter" data-level="8.3.2" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.3.2</b> Roy Deming Correction Landsat 8 to Landsat 7</a></li>
 <li class="chapter" data-level="8.3.3" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.3.3</b> Roy Deming Correction Landsat 7 to Landsat 8</a></li>
-<li class="chapter" data-level="8.3.4" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-9-to-landsat-8"><i class="fa fa-check"></i><b>8.3.4</b> Roy Deming Correction Landsat 9 to Landsat 8</a></li>
 </ul></li>
 <li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Gardner Handoffs</a>
 <ul>
 <li class="chapter" data-level="8.4.1" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.4.1</b> Gardner Correction Landsat 5 to Landsat 7</a></li>
 <li class="chapter" data-level="8.4.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.4.2</b> Gardner Correction Landsat 8 to Landsat 7</a></li>
 <li class="chapter" data-level="8.4.3" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.4.3</b> Gardner Correction Landsat 7 to Landsat 8</a></li>
-<li class="chapter" data-level="8.4.4" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-9-to-landsat-8"><i class="fa fa-check"></i><b>8.4.4</b> Gardner Correction Landsat 9 to Landsat 8</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>9</b> References</a></li>
@@ -320,8 +318,8 @@ line or the Deming regression (MLE, assuming equal and constant error in both x
 and y variables). Because Deming regression is computationally intensive, the
 regression line is defined by a random sample of 10,000 matches. For the
 purposes of this documentation, we only include figures and tables for the
-Deming regression (MLE method) and DSWE1. Intercepts and slopes for all handoffs
-are available at the file path
+Deming regression (minimum likelihood estimation method) and DSWE1. Intercepts
+and slopes for all handoffs are available at the file path
 <code>e_calculate_handoffs/out/collated_handoffs_v2025-02-12.csv</code> and figures for all
 handoffs are created when the pipeline is run.</p>
 </div>
@@ -347,7 +345,10 @@ due to data transmission errors. We did not investigate the differences in n
 listed in Table <a href="define-handoff.html#tab:gardner-table">8.4</a> to determine what, if any, systematic
 differences are present between the two missions. We provide the Gardner method
 handoffs for continuity with the riverSR product for users who would like that
-interoperability.</p>
+interoperability. As with the Roy, et al. method, intercepts
+and slopes for all handoffs are available at the file path
+<code>e_calculate_handoffs/out/collated_handoffs_v2025-02-12.csv</code> and figures for all
+handoffs are created when the pipeline is run.</p>
 </div>
 <div id="implementing-roy-handoffs" class="section level2 hasAnchor" number="8.3">
 <h2><span class="header-section-number">8.3</span> Implementing Roy Handoffs<a href="define-handoff.html#implementing-roy-handoffs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -373,7 +374,7 @@ table of the coefficients for each DSWE1 MLE handoff.</p>
 <tr class="even">
 <td align="left">Landsat 7</td>
 <td align="left">Landsat 8</td>
-<td align="left">588,214</td>
+<td align="left">1,453,659</td>
 </tr>
 </tbody>
 </table>
@@ -841,13 +842,13 @@ Slope
 <td style="text-align:left;width: auto; ">
 med_Blue
 </td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="10">
+<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="5">
 DSWE1
 </td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="5">
+<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="10">
 LS7
 </td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="20">
+<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="10">
 LS8
 </td>
 <td style="text-align:center;width: auto; ">
@@ -936,98 +937,7 @@ med_SurfaceTemp
 med_Blue
 </td>
 <td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="5">
-LS9
-</td>
-<td style="text-align:center;width: auto; ">
-0.001
-</td>
-<td style="text-align:center;width: auto; ">
-0.968
-</td>
-<td style="text-align:center;width: auto; ">
--0.009
-</td>
-<td style="text-align:center;width: auto; ">
-0.189
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Green
-</td>
-<td style="text-align:center;width: auto; ">
-0.001
-</td>
-<td style="text-align:center;width: auto; ">
-0.977
-</td>
-<td style="text-align:center;width: auto; ">
-0.001
-</td>
-<td style="text-align:center;width: auto; ">
-0.199
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Red
-</td>
-<td style="text-align:center;width: auto; ">
-0.000
-</td>
-<td style="text-align:center;width: auto; ">
-0.992
-</td>
-<td style="text-align:center;width: auto; ">
--0.010
-</td>
-<td style="text-align:center;width: auto; ">
-0.200
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Nir
-</td>
-<td style="text-align:center;width: auto; ">
-0.000
-</td>
-<td style="text-align:center;width: auto; ">
-0.984
-</td>
-<td style="text-align:center;width: auto; ">
--0.010
-</td>
-<td style="text-align:center;width: auto; ">
-0.199
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_SurfaceTemp
-</td>
-<td style="text-align:center;width: auto; ">
-2.810
-</td>
-<td style="text-align:center;width: auto; ">
-0.990
-</td>
-<td style="text-align:center;width: auto; ">
-273.151
-</td>
-<td style="text-align:center;width: auto; ">
-313.149
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Blue
-</td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="10">
 DSWE1a
-</td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="5">
-LS7
 </td>
 <td style="text-align:center;width: auto; ">
 0.014
@@ -1110,94 +1020,6 @@ med_SurfaceTemp
 313.149
 </td>
 </tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Blue
-</td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="5">
-LS9
-</td>
-<td style="text-align:center;width: auto; ">
-0.000
-</td>
-<td style="text-align:center;width: auto; ">
-0.981
-</td>
-<td style="text-align:center;width: auto; ">
--0.009
-</td>
-<td style="text-align:center;width: auto; ">
-0.189
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Green
-</td>
-<td style="text-align:center;width: auto; ">
-0.000
-</td>
-<td style="text-align:center;width: auto; ">
-0.983
-</td>
-<td style="text-align:center;width: auto; ">
-0.001
-</td>
-<td style="text-align:center;width: auto; ">
-0.199
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Red
-</td>
-<td style="text-align:center;width: auto; ">
-0.000
-</td>
-<td style="text-align:center;width: auto; ">
-0.995
-</td>
-<td style="text-align:center;width: auto; ">
--0.010
-</td>
-<td style="text-align:center;width: auto; ">
-0.200
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Nir
-</td>
-<td style="text-align:center;width: auto; ">
-0.000
-</td>
-<td style="text-align:center;width: auto; ">
-0.968
-</td>
-<td style="text-align:center;width: auto; ">
--0.010
-</td>
-<td style="text-align:center;width: auto; ">
-0.199
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_SurfaceTemp
-</td>
-<td style="text-align:center;width: auto; ">
-1.797
-</td>
-<td style="text-align:center;width: auto; ">
-0.994
-</td>
-<td style="text-align:center;width: auto; ">
-273.151
-</td>
-<td style="text-align:center;width: auto; ">
-313.149
-</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -1261,25 +1083,6 @@ intercept, 0 slope line visual aide.</p>
 <p><img src="images/roy/residuals/med_Nir_LS7_to_LS8_DSWE1_roy_deming_residuals.jpg" width="600" /></p>
 <p><img src="images/roy/handoffs/med_SurfaceTemp_LS7_to_LS8_DSWE1_roy_handoff.jpg" width="600" /></p>
 <p><img src="images/roy/residuals/med_SurfaceTemp_LS7_to_LS8_DSWE1_roy_deming_residuals.jpg" width="600" /></p>
-</div>
-<div id="roy-deming-correction-landsat-9-to-landsat-8" class="section level3 hasAnchor" number="8.3.4">
-<h3><span class="header-section-number">8.3.4</span> Roy Deming Correction Landsat 9 to Landsat 8<a href="define-handoff.html#roy-deming-correction-landsat-9-to-landsat-8" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>For each of the handoff figures below, the blue line is the Deming (MLE)
-regression, the red line is the OLS regression line, and the grey dashed line is
-the 1:1 line. Coefficients for the Deming regression are provided in Table
-<a href="define-handoff.html#tab:roy-coeff-dem-corr8">8.3</a>. Color of dots represents the density of points
-in at a given x, y location. In the residual plots, the grey dashed line is a 0
-intercept, 0 slope line visual aide.</p>
-<p><img src="images/roy/handoffs/med_Blue_LS9_to_LS8_DSWE1_roy_handoff.jpg" width="600" /></p>
-<p><img src="images/roy/residuals/med_Blue_LS9_to_LS8_DSWE1_roy_deming_residuals.jpg" width="600" /></p>
-<p><img src="images/roy/handoffs/med_Green_LS9_to_LS8_DSWE1_roy_handoff.jpg" width="600" /></p>
-<p><img src="images/roy/residuals/med_Green_LS9_to_LS8_DSWE1_roy_deming_residuals.jpg" width="600" /></p>
-<p><img src="images/roy/handoffs/med_Red_LS9_to_LS8_DSWE1_roy_handoff.jpg" width="600" /></p>
-<p><img src="images/roy/residuals/med_Red_LS9_to_LS8_DSWE1_roy_deming_residuals.jpg" width="600" /></p>
-<p><img src="images/roy/handoffs/med_Nir_LS9_to_LS8_DSWE1_roy_handoff.jpg" width="600" /></p>
-<p><img src="images/roy/residuals/med_Nir_LS9_to_LS8_DSWE1_roy_deming_residuals.jpg" width="600" /></p>
-<p><img src="images/roy/handoffs/med_SurfaceTemp_LS9_to_LS8_DSWE1_roy_handoff.jpg" width="600" /></p>
-<p><img src="images/roy/residuals/med_SurfaceTemp_LS9_to_LS8_DSWE1_roy_deming_residuals.jpg" width="600" /></p>
 </details>
 </div>
 </div>
@@ -1325,15 +1128,6 @@ intercept, 0 slope line visual aide.</p>
 <td align="left">2022-04-16</td>
 <td align="left">9,407,692</td>
 <td align="left">6,248,939</td>
-</tr>
-<tr class="odd">
-<td align="left">Landsat 8</td>
-<td align="left">Landsat 9</td>
-<td align="left">Landsat 8</td>
-<td align="left">2021-09-27</td>
-<td align="left">2024-12-31</td>
-<td align="left">2,563,261</td>
-<td align="left">2,426,571</td>
 </tr>
 </tbody>
 </table>
@@ -1867,13 +1661,13 @@ B2
 <td style="text-align:left;width: auto; ">
 med_Blue
 </td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="10">
+<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="5">
 DSWE1
 </td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="5">
+<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="10">
 LS7
 </td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="20">
+<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="10">
 LS8
 </td>
 <td style="text-align:center;width: auto; ">
@@ -1977,113 +1771,7 @@ med_SurfaceTemp
 med_Blue
 </td>
 <td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="5">
-LS9
-</td>
-<td style="text-align:center;width: auto; ">
-0.000
-</td>
-<td style="text-align:center;width: auto; ">
-0.987
-</td>
-<td style="text-align:center;width: auto; ">
--0.065
-</td>
-<td style="text-align:center;width: auto; ">
-0.000
-</td>
-<td style="text-align:center;">
-0.106
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Green
-</td>
-<td style="text-align:center;width: auto; ">
--0.001
-</td>
-<td style="text-align:center;width: auto; ">
-1.017
-</td>
-<td style="text-align:center;width: auto; ">
--0.171
-</td>
-<td style="text-align:center;width: auto; ">
-0.006
-</td>
-<td style="text-align:center;">
-0.147
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Red
-</td>
-<td style="text-align:center;width: auto; ">
-0.000
-</td>
-<td style="text-align:center;width: auto; ">
-0.987
-</td>
-<td style="text-align:center;width: auto; ">
-0.057
-</td>
-<td style="text-align:center;width: auto; ">
--0.002
-</td>
-<td style="text-align:center;">
-0.145
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Nir
-</td>
-<td style="text-align:center;width: auto; ">
-0.000
-</td>
-<td style="text-align:center;width: auto; ">
-1.005
-</td>
-<td style="text-align:center;width: auto; ">
--0.071
-</td>
-<td style="text-align:center;width: auto; ">
--0.003
-</td>
-<td style="text-align:center;">
-0.113
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_SurfaceTemp
-</td>
-<td style="text-align:center;width: auto; ">
--97.619
-</td>
-<td style="text-align:center;width: auto; ">
-1.686
-</td>
-<td style="text-align:center;width: auto; ">
--0.001
-</td>
-<td style="text-align:center;width: auto; ">
-273.650
-</td>
-<td style="text-align:center;">
-310.558
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Blue
-</td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="10">
 DSWE1a
-</td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="5">
-LS7
 </td>
 <td style="text-align:center;width: auto; ">
 -0.010
@@ -2181,109 +1869,6 @@ med_SurfaceTemp
 306.420
 </td>
 </tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Blue
-</td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="5">
-LS9
-</td>
-<td style="text-align:center;width: auto; ">
-0.000
-</td>
-<td style="text-align:center;width: auto; ">
-0.988
-</td>
-<td style="text-align:center;width: auto; ">
--0.062
-</td>
-<td style="text-align:center;width: auto; ">
-0.000
-</td>
-<td style="text-align:center;">
-0.105
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Green
-</td>
-<td style="text-align:center;width: auto; ">
--0.001
-</td>
-<td style="text-align:center;width: auto; ">
-1.020
-</td>
-<td style="text-align:center;width: auto; ">
--0.198
-</td>
-<td style="text-align:center;width: auto; ">
-0.006
-</td>
-<td style="text-align:center;">
-0.146
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Red
-</td>
-<td style="text-align:center;width: auto; ">
-0.000
-</td>
-<td style="text-align:center;width: auto; ">
-0.989
-</td>
-<td style="text-align:center;width: auto; ">
-0.045
-</td>
-<td style="text-align:center;width: auto; ">
--0.002
-</td>
-<td style="text-align:center;">
-0.144
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Nir
-</td>
-<td style="text-align:center;width: auto; ">
-0.000
-</td>
-<td style="text-align:center;width: auto; ">
-1.003
-</td>
-<td style="text-align:center;width: auto; ">
-0.053
-</td>
-<td style="text-align:center;width: auto; ">
--0.003
-</td>
-<td style="text-align:center;">
-0.147
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_SurfaceTemp
-</td>
-<td style="text-align:center;width: auto; ">
--92.638
-</td>
-<td style="text-align:center;width: auto; ">
-1.653
-</td>
-<td style="text-align:center;width: auto; ">
--0.001
-</td>
-<td style="text-align:center;width: auto; ">
-273.676
-</td>
-<td style="text-align:center;">
-310.590
-</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -2347,25 +1932,6 @@ intercept, 0 slope line visual aide.</p>
 <p><img src="images/gardner/residuals/med_Nir_LS7_to_LS8_DSWE1_gard_residuals.jpg" width="600" /></p>
 <p><img src="images/gardner/handoffs/med_SurfaceTemp_LS7_to_LS8_DSWE1_gard_handoff.jpg" width="600" /></p>
 <p><img src="images/gardner/residuals/med_SurfaceTemp_LS7_to_LS8_DSWE1_gard_residuals.jpg" width="600" /></p>
-</div>
-<div id="gardner-correction-landsat-9-to-landsat-8" class="section level3 hasAnchor" number="8.4.4">
-<h3><span class="header-section-number">8.4.4</span> Gardner Correction Landsat 9 to Landsat 8<a href="define-handoff.html#gardner-correction-landsat-9-to-landsat-8" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>For each of the handoff figures below, the red line is the second order
-polynomial regression and the grey dashed line is the 1:1 line. Coefficients for
-the second order polynomial regression are provided in Table
-<a href="define-handoff.html#tab:gard-coeff-corr8">8.6</a>. Color of dots represents the density of points in
-at a given x, y location. In the residual plots, the grey dashed line is a 0
-intercept, 0 slope line visual aide.</p>
-<p><img src="images/gardner/handoffs/med_Blue_LS9_to_LS8_DSWE1_gard_handoff.jpg" width="600" /></p>
-<p><img src="images/gardner/residuals/med_Blue_LS9_to_LS8_DSWE1_gard_residuals.jpg" width="600" /></p>
-<p><img src="images/gardner/handoffs/med_Green_LS9_to_LS8_DSWE1_gard_handoff.jpg" width="600" /></p>
-<p><img src="images/gardner/residuals/med_Green_LS9_to_LS8_DSWE1_gard_residuals.jpg" width="600" /></p>
-<p><img src="images/gardner/handoffs/med_Red_LS9_to_LS8_DSWE1_gard_handoff.jpg" width="600" /></p>
-<p><img src="images/gardner/residuals/med_Red_LS9_to_LS8_DSWE1_gard_residuals.jpg" width="600" /></p>
-<p><img src="images/gardner/handoffs/med_Nir_LS9_to_LS8_DSWE1_gard_handoff.jpg" width="600" /></p>
-<p><img src="images/gardner/residuals/med_Nir_LS9_to_LS8_DSWE1_gard_residuals.jpg" width="600" /></p>
-<p><img src="images/gardner/handoffs/med_SurfaceTemp_LS9_to_LS8_DSWE1_gard_handoff.jpg" width="600" /></p>
-<p><img src="images/gardner/residuals/med_SurfaceTemp_LS9_to_LS8_DSWE1_gard_residuals.jpg" width="600" /></p>
 </details>
 
 </div>

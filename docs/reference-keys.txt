@@ -65,10 +65,8 @@ implementing-roy-handoffs
 roy-deming-correction-landsat-5-to-landsat-7
 roy-deming-correction-landsat-8-to-landsat-7
 roy-deming-correction-landsat-7-to-landsat-8
-roy-deming-correction-landsat-9-to-landsat-8
 implementing-gardner-handoffs
 gardner-correction-landsat-5-to-landsat-7
 gardner-correction-landsat-8-to-landsat-7
 gardner-correction-landsat-7-to-landsat-8
-gardner-correction-landsat-9-to-landsat-8
 references

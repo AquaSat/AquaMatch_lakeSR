@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-06" />
+<meta name="date" content="2025-03-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -251,14 +251,12 @@ div.csl-indent {
 <li class="chapter" data-level="8.3.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.3.1</b> Roy Deming Correction Landsat 5 to Landsat 7</a></li>
 <li class="chapter" data-level="8.3.2" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.3.2</b> Roy Deming Correction Landsat 8 to Landsat 7</a></li>
 <li class="chapter" data-level="8.3.3" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.3.3</b> Roy Deming Correction Landsat 7 to Landsat 8</a></li>
-<li class="chapter" data-level="8.3.4" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-9-to-landsat-8"><i class="fa fa-check"></i><b>8.3.4</b> Roy Deming Correction Landsat 9 to Landsat 8</a></li>
 </ul></li>
 <li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Gardner Handoffs</a>
 <ul>
 <li class="chapter" data-level="8.4.1" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.4.1</b> Gardner Correction Landsat 5 to Landsat 7</a></li>
 <li class="chapter" data-level="8.4.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.4.2</b> Gardner Correction Landsat 8 to Landsat 7</a></li>
 <li class="chapter" data-level="8.4.3" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.4.3</b> Gardner Correction Landsat 7 to Landsat 8</a></li>
-<li class="chapter" data-level="8.4.4" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-9-to-landsat-8"><i class="fa fa-check"></i><b>8.4.4</b> Gardner Correction Landsat 9 to Landsat 8</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>9</b> References</a></li>
@@ -354,23 +352,20 @@ the lakeSR repository.</p>
 <p><strong>d_qa_filter_sort:</strong></p>
 <p>This {targets} list applies some rudimentary QA to the Landsat stacks and saves
 them as sorted files locally. LS 4/9 are complete .csv files, LS 578 are broken
-up by HUC2 for memory and space considerations. These files are sent to Drive
-in group -f-.</p>
+up by HUC2 for memory and space considerations. If <code>update_and_share</code> is set to TRUE, the workflow
+will send dated, publicly available files to Google Drive and save Drive file
+information in the <code>d_qa_filter_sort/out/</code> folder. If set to FALSE, no files
+will be sent to Drive.</p>
 <p>See Section <a href="post-hoc-qa.html#post-hoc-qa">7</a> for detailed methodology of this portion of the
 workflow.</p>
 <p><strong>e_caclculate_handoffs:</strong></p>
 <p>This {targets} group creates “matched” data for two different ‘intermission
 handoff’ methods that standardize the SR values relative to LS7
 and to LS8. Handoffs are visualized and are saved as tables for use downstream in
-this group.</p>
+this group. Corrections are calculated for all neighboring missions, even if not explicitly
+used downstream (e.g. LS 4/5 and LS 8/9).</p>
 <p>See Section <a href="define-handoff.html#define-handoff">8</a> for detailed methodology of this portion of the
 workflow.</p>
-<p><strong>f_save_to_Drive:</strong></p>
-<p>This {targets} group saves the output of the -d- group, if the general lakeSR
-configuration is set to do so. If <code>update_and_share</code> is set to TRUE, the workflow
-will send dated, publicly available files to Google Drive and save Drive file
-information in the <code>f_save_to_Drive/out/</code> folder. If set to FALSE, this {targets}
-list is empty.</p>
 <p><strong>y_siteSR_targets:</strong></p>
 <p>This {targets} group pulls information from the siteSR workflow to use in the
 Bookdown. If the configuration setting <code>update_bookown</code> is set to FALSE, this

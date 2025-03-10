@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-06" />
+<meta name="date" content="2025-03-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -251,14 +251,12 @@ div.csl-indent {
 <li class="chapter" data-level="8.3.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.3.1</b> Roy Deming Correction Landsat 5 to Landsat 7</a></li>
 <li class="chapter" data-level="8.3.2" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.3.2</b> Roy Deming Correction Landsat 8 to Landsat 7</a></li>
 <li class="chapter" data-level="8.3.3" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.3.3</b> Roy Deming Correction Landsat 7 to Landsat 8</a></li>
-<li class="chapter" data-level="8.3.4" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-9-to-landsat-8"><i class="fa fa-check"></i><b>8.3.4</b> Roy Deming Correction Landsat 9 to Landsat 8</a></li>
 </ul></li>
 <li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Gardner Handoffs</a>
 <ul>
 <li class="chapter" data-level="8.4.1" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.4.1</b> Gardner Correction Landsat 5 to Landsat 7</a></li>
 <li class="chapter" data-level="8.4.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.4.2</b> Gardner Correction Landsat 8 to Landsat 7</a></li>
 <li class="chapter" data-level="8.4.3" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.4.3</b> Gardner Correction Landsat 7 to Landsat 8</a></li>
-<li class="chapter" data-level="8.4.4" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-9-to-landsat-8"><i class="fa fa-check"></i><b>8.4.4</b> Gardner Correction Landsat 9 to Landsat 8</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>9</b> References</a></li>
@@ -508,20 +506,23 @@ only contain Lake, Ponds, and Reservoirs (NHD feature types 390 and 436). We
 flag (<code>flag_wb</code>) the results of this assignment as follows:</p>
 <blockquote>
 <p>0: point inside NHD waterbody polygon</p>
-<p>1: point &lt;= GEE buffer (default 120m) proximate to NHD waterbody</p>
-<p>2: point &gt; GEE buffer and &lt;= 500m proximate to NHD waterbody polygon</p>
+<p>1: point within GEE buffer distance (default 200 m for siteSR) proximate to
+NHD waterbody</p>
+<p>2: point between GEE buffer distance and 500m proximate to NHD waterbody
+polygon</p>
 <p>3: point unable to be assigned to waterbody (it is &gt; 500m proximate to NHD
 waterbody polygon)</p>
 <p>4: point does not have HUC8 assignment or MonitoringLocationTypeName does not
-contain “lake” or “reservoir”, so no waterbody assigned</p>
+contain “lake” or “reservoir”. No waterbody assigned.</p>
 </blockquote>
-<p>For all points with a flag 0/1 we provide the NHD identifier for the polygon the
-monitoring location is associated with (comid for NHDPlusV2 and permanent
-identifier for NHD Best Resolution), for all points with a flag value of 1/2, we
-provide the distance (in meters) to the nearest NHD waterbody of feature type
-390 or 436. For waterbodies with a flag of 0, we provide distance to shore. We
-follow lakeSR’s implementation of flags for shoreline proximity for these sites
-as well.</p>
+<p>For all points with a flag value of 0 or 1 we provide the NHD identifier for the
+polygon the monitoring location is associated with (comid for NHDPlusV2 and
+permanent identifier for NHD Best Resolution), for all points with a flag value
+of 1 or 2, we provide the distance (in meters) to the nearest NHD waterbody of
+feature type 390 or 436. For waterbodies with a flag of 0, we provide distance
+to shore. We follow lakeSR’s implementation of flags for shoreline proximity for
+these sites as well, but with the siteSR default site buffer of 200 m instead of
+lakeSR’s buffer of 120 m.</p>
 <p>Flowlines are assigned to sites with a MonitoringLocationTypeName that contains
 “lake”, “reservoir”, “stream”, or “river”. NHD flowlines are filtered to contain
 streams/rivers and artificial paths (that is flowlines in waterbodies) (NHD
@@ -529,12 +530,14 @@ feature types 460 and 558). We flag (<code>flag_fl</code>) the results of this a
 as follows:</p>
 <blockquote>
 <p>0: point &lt;= 100m proximate to flowline</p>
-<p>1: point &gt; 100m &lt;= GEE buffer (default = 200m) proximate to flowline</p>
-<p>2: point is a lake or reservoir site and is &gt; 500m proximate to flowline</p>
-<p>3: point is a stream/river site, unable to be assigned to flowline (distance
-to flowline is greater than 500 meters)</p>
-<p>4: point does not have HUC8 assignment or MonitoringLocationTypeName does not
-contain “stream”, “river”, “lake”, or “reservoir”, so no flowline assigned</p>
+<p>1: point between 100m and GEE buffer distance (default 200 m for siteSR)
+proximate to flowline</p>
+<p>2: point between GEE buffer distance and 500 m proximate to flowline</p>
+<p>3: point unable to be assigned to flowline for a stream site because distance
+to nearest stream &gt; 500 m</p>
+<p>4: point is a lake or reservoir site and is &gt; 500m proximate to flowline</p>
+<p>5: point does not have HUC8 assignment or MonitoringLocationTypeName does not
+contain “stream”, “river”, “lake”, or “reservoir”. No flowline assigned.</p>
 </blockquote>
 <p>For all points with a flag 0/1/2 we provide the NHD identifier for the flowline
 the monitoring location is associated with (comid for NHDPlusV2 and permanent

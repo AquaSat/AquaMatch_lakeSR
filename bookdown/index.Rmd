@@ -18,11 +18,8 @@ params:
   LS7_for57: NA
   LS7_for78: NA
   LS8_for78: NA
-  LS8_for89: NA
-  LS9_for89: NA
   LS57_match: NA
   LS78_match: NA
-  LS89_match: NA
   coefficients: NA
 ---
 

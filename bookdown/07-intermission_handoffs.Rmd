@@ -8,11 +8,8 @@ params:
   LS7_for57: NA
   LS7_for78: NA
   LS8_for78: NA
-  LS8_for89: NA
-  LS9_for89: NA
   LS57_match: NA
   LS78_match: NA
-  LS89_match: NA
   coefficients: NA
 ---
 
@@ -25,13 +22,9 @@ e_LS5_forLS57corr_quantiles <- e_LS5_forLS57corr_quantiles %>%
   filter(dswe == "DSWE1")
 e_LS7_forLS78corr_quantiles <- e_LS7_forLS78corr_quantiles %>% 
   filter(dswe == "DSWE1")
-e_LS8_forLS89corr_quantiles <- e_LS8_forLS89corr_quantiles %>% 
-  filter(dswe == "DSWE1")
 e_LS7_forLS57corr_quantiles <- e_LS7_forLS57corr_quantiles %>% 
   filter(dswe == "DSWE1")
 e_LS8_forLS78corr_quantiles <- e_LS8_forLS78corr_quantiles %>% 
-  filter(dswe == "DSWE1")
-e_LS9_forLS89corr_quantiles <- e_LS9_forLS89corr_quantiles %>% 
   filter(dswe == "DSWE1")
 ```
 
@@ -78,10 +71,11 @@ line or the Deming regression (MLE, assuming equal and constant error in both x
 and y variables). Because Deming regression is computationally intensive, the
 regression line is defined by a random sample of 10,000 matches. For the
 purposes of this documentation, we only include figures and tables for the
-Deming regression (MLE method) and DSWE1. Intercepts and slopes for all handoffs
-are available at the file path
+Deming regression (minimum likelihood estimation method) and DSWE1. Intercepts 
+and slopes for all handoffs are available at the file path
 `e_calculate_handoffs/out/collated_handoffs_v2025-02-12.csv` and figures for all
-handoffs are created when the pipeline is run.
+handoffs are created when the pipeline is run. 
+
 
 ## Gardner method
 
@@ -106,7 +100,10 @@ due to data transmission errors. We did not investigate the differences in n
 listed in Table \@ref(tab:gardner-table) to determine what, if any, systematic
 differences are present between the two missions. We provide the Gardner method
 handoffs for continuity with the riverSR product for users who would like that
-interoperability.
+interoperability. As with the Roy, et al. method, intercepts 
+and slopes for all handoffs are available at the file path
+`e_calculate_handoffs/out/collated_handoffs_v2025-02-12.csv` and figures for all
+handoffs are created when the pipeline is run. 
 
 ## Implementing Roy Handoffs
 
@@ -118,7 +115,7 @@ table of the coefficients for each DSWE1 MLE handoff.
 ```{r roy-table, echo = F}
 roy_handoff_table <- tibble("Early mission" = c("Landsat 5", "Landsat 7"),
                                 "Late mission" = c("Landsat 7", "Landsat 8"),
-                                "n matches" = c(c(format(nrow(e_LS57_DSWE1_matches), big.mark = ","), format(nrow(e_LS89_DSWE1_matches), big.mark = ","))))
+                                "n matches" = c(c(format(nrow(e_LS57_DSWE1_matches), big.mark = ","), format(nrow(e_LS78_DSWE1_matches), big.mark = ","))))
 knitr::kable(roy_handoff_table, caption = "Summary of Landsat mission data used to create the Roy method intermission handoff for DSWE1.")
 
 ```
@@ -126,8 +123,7 @@ knitr::kable(roy_handoff_table, caption = "Summary of Landsat mission data used 
 ```{r roy-coeff-dem-corr7, echo = F}
 e_collated_handoffs %>% 
   filter(correction == "Roy", method == "deming", sat_to == "LS7") %>% 
-  select(-c(B1, B2, correction, method)) %>% 
-
+  select(-c(B1, B2, correction, method)) %>%
   kable(
     format = "html",
     digits = 3,
@@ -269,51 +265,20 @@ intercept, 0 slope line visual aide.
 
 ![](images/roy/residuals/med_SurfaceTemp_LS7_to_LS8_DSWE1_roy_deming_residuals.jpg){width="600"}
 
-### Roy Deming Correction Landsat 9 to Landsat 8
-
-For each of the handoff figures below, the blue line is the Deming (MLE)
-regression, the red line is the OLS regression line, and the grey dashed line is
-the 1:1 line. Coefficients for the Deming regression are provided in Table
-\@ref(tab:roy-coeff-dem-corr8). Color of dots represents the density of points
-in at a given x, y location. In the residual plots, the grey dashed line is a 0
-intercept, 0 slope line visual aide.
-
-![](images/roy/handoffs/med_Blue_LS9_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
-
-![](images/roy/residuals/med_Blue_LS9_to_LS8_DSWE1_roy_deming_residuals.jpg){width="600"}
-
-![](images/roy/handoffs/med_Green_LS9_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
-
-![](images/roy/residuals/med_Green_LS9_to_LS8_DSWE1_roy_deming_residuals.jpg){width="600"}
-
-![](images/roy/handoffs/med_Red_LS9_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
-
-![](images/roy/residuals/med_Red_LS9_to_LS8_DSWE1_roy_deming_residuals.jpg){width="600"}
-
-![](images/roy/handoffs/med_Nir_LS9_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
-
-![](images/roy/residuals/med_Nir_LS9_to_LS8_DSWE1_roy_deming_residuals.jpg){width="600"}
-
-![](images/roy/handoffs/med_SurfaceTemp_LS9_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
-
-![](images/roy/residuals/med_SurfaceTemp_LS9_to_LS8_DSWE1_roy_deming_residuals.jpg){width="600"}
-
 </details>
 
 ## Implementing Gardner Handoffs
 
 ```{r gardner-table}
-gardner_handoff_table <- tibble("Early mission" = c("Landsat 5", "Landsat 7", "Landsat 8"),
-                                "Late mission" = c("Landsat 7", "Landsat 8", "Landsat 9"),
-                                "Correction to" = c("Landsat 7", "Landsat 7, Landsat8", "Landsat 8"),
-                                "Overlap Start" = c("1999-04-15", "2013-02-11", "2021-09-27"),
-                                "Overlap End" = c("2013-02-11", "2022-04-16", "2024-12-31"),
+gardner_handoff_table <- tibble("Early mission" = c("Landsat 5", "Landsat 7"),
+                                "Late mission" = c("Landsat 7", "Landsat 8"),
+                                "Correction to" = c("Landsat 7", "Landsat 7, Landsat8"),
+                                "Overlap Start" = c("1999-04-15", "2013-02-11"),
+                                "Overlap End" = c("2013-02-11", "2022-04-16"),
                                 "n Observations from Early Mission" = c(format(e_LS5_forLS57corr_quantiles$n_rows[1], big.mark = ","), 
-                                                                format(e_LS7_forLS78corr_quantiles$n_rows[1], big.mark = ","),
-                                                                format(e_LS8_forLS89corr_quantiles$n_rows[1], big.mark = ",")),
+                                                                format(e_LS7_forLS78corr_quantiles$n_rows[1], big.mark = ",")),
                                 "n Observations from Late Mission" = c(format(e_LS7_forLS57corr_quantiles$n_rows[1], big.mark = ","), 
-                                                               format(e_LS8_forLS78corr_quantiles$n_rows[1], big.mark = ","), 
-                                                               format(e_LS9_forLS89corr_quantiles$n_rows[1], big.mark = ",")))
+                                                               format(e_LS8_forLS78corr_quantiles$n_rows[1], big.mark = ",")))
 
 knitr::kable(gardner_handoff_table, caption = "Summary of Landsat mission data for handoffs calculated by the Gardner method for DSWE1.")
 ```
@@ -352,6 +317,8 @@ e_collated_handoffs %>%
   filter(correction == "Gardner", sat_to == "LS8") %>% 
   select(-c(slope, correction, method)) %>% 
   arrange(dswe) %>% 
+  # don't need LS9 here, as it is nearly 1:1 and the assumption is LS 8 = LS 9
+  filter(sat_corr != "LS9") %>% 
   kable(
     format = "html",
     digits = 3,
@@ -468,33 +435,5 @@ intercept, 0 slope line visual aide.
 
 ![](images/gardner/residuals/med_SurfaceTemp_LS7_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
 
-### Gardner Correction Landsat 9 to Landsat 8
-
-For each of the handoff figures below, the red line is the second order
-polynomial regression and the grey dashed line is the 1:1 line. Coefficients for
-the second order polynomial regression are provided in Table
-\@ref(tab:gard-coeff-corr8). Color of dots represents the density of points in
-at a given x, y location. In the residual plots, the grey dashed line is a 0
-intercept, 0 slope line visual aide.
-
-![](images/gardner/handoffs/med_Blue_LS9_to_LS8_DSWE1_gard_handoff.jpg){width="600"}
-
-![](images/gardner/residuals/med_Blue_LS9_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
-
-![](images/gardner/handoffs/med_Green_LS9_to_LS8_DSWE1_gard_handoff.jpg){width="600"}
-
-![](images/gardner/residuals/med_Green_LS9_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
-
-![](images/gardner/handoffs/med_Red_LS9_to_LS8_DSWE1_gard_handoff.jpg){width="600"}
-
-![](images/gardner/residuals/med_Red_LS9_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
-
-![](images/gardner/handoffs/med_Nir_LS9_to_LS8_DSWE1_gard_handoff.jpg){width="600"}
-
-![](images/gardner/residuals/med_Nir_LS9_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
-
-![](images/gardner/handoffs/med_SurfaceTemp_LS9_to_LS8_DSWE1_gard_handoff.jpg){width="600"}
-
-![](images/gardner/residuals/med_SurfaceTemp_LS9_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
 
 </details>

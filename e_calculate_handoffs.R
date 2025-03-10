@@ -6,6 +6,8 @@ tar_source("e_calculate_handoffs/src/")
 # This {targets} group creates "matched" data for two different 'intermission 
 # handoff' methods that standardize the SR values relative to LS7
 # and to LS8. Handoffs are visualized and are saved as tables for use downstream.
+# Corrections are calculated for all neighboring missions, even if not explicitly
+# used downstream (e.g. LS 4/5 and LS 8/9).
 
 e_calculate_handoffs <- list(
   
@@ -475,7 +477,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_Roy_LS9_to_LS8_DSWE1a_handoff,
-    command = calculate_roy_handoff(matched_data = e_LS89_DSWE1a_matches, 
+    command = calculate_roy_handoff(matched_data = e_LS89_DSWE1a_matches,
                                     mission_from = "LS9",
                                     mission_to = "LS8",
                                     invert_mission_match = TRUE,
@@ -490,12 +492,10 @@ e_calculate_handoffs <- list(
     name = e_Roy_handoffs,
     command = list(e_Roy_LS5_to_LS7_DSWE1_handoff,
                    e_Roy_LS8_to_LS7_DSWE1_handoff,
-                   e_Roy_LS7_to_LS8_DSWE1_handoff, 
-                   e_Roy_LS9_to_LS8_DSWE1_handoff,
+                   e_Roy_LS7_to_LS8_DSWE1_handoff,
                    e_Roy_LS5_to_LS7_DSWE1a_handoff,
                    e_Roy_LS8_to_LS7_DSWE1a_handoff,
-                   e_Roy_LS7_to_LS8_DSWE1a_handoff, 
-                   e_Roy_LS9_to_LS8_DSWE1a_handoff) %>% 
+                   e_Roy_LS7_to_LS8_DSWE1a_handoff) %>% 
       bind_rows() %>% 
       mutate(correction = "Roy")
   ),
@@ -504,8 +504,7 @@ e_calculate_handoffs <- list(
     name = e_Gardner_handoffs,
     command = list(e_calculate_gardner_LS5_to_LS7,
                    e_calculate_gardner_LS8_to_LS7,
-                   e_calculate_gardner_LS7_to_LS8,
-                   e_calculate_gardner_LS9_to_LS8) %>% 
+                   e_calculate_gardner_LS7_to_LS8) %>% 
       bind_rows() %>% 
       mutate(method = "poly",
              correction = "Gardner")

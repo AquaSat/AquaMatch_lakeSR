@@ -5,8 +5,10 @@ tar_source("d_qa_filter_sort/src/")
 
 # This {targets} list applies some rudimentary QA to the Landsat stacks and saves
 # them as sorted files locally. LS 4/9 are complete .csv files, LS 578 are broken
-# up by HUC2 for memory and space considerations. These files are sent to Drive
-# in group -f-.
+# up by HUC2 for memory and space considerations. If `update_and_share` is set 
+# to TRUE, the workflow will send dated, publicly available files to Google 
+# Drive and save Drive file information in the `d_qa_filter_sort/out/` folder. 
+# If set to FALSE, no files will be sent to Drive.
 
 d_qa_filter_sort <- list(
   

@@ -96,8 +96,10 @@ the lakeSR repository.
 
 This {targets} list applies some rudimentary QA to the Landsat stacks and saves
 them as sorted files locally. LS 4/9 are complete .csv files, LS 578 are broken
-up by HUC2 for memory and space considerations. These files are sent to Drive
-in group -f-.
+up by HUC2 for memory and space considerations. If `update_and_share` is set to TRUE, the workflow
+will send dated, publicly available files to Google Drive and save Drive file 
+information in the `d_qa_filter_sort/out/` folder. If set to FALSE, no files
+will be sent to Drive.
 
 See Section \@ref(post-hoc-qa) for detailed methodology of this portion of the 
 workflow.
@@ -108,19 +110,11 @@ workflow.
 This {targets} group creates "matched" data for two different 'intermission 
 handoff' methods that standardize the SR values relative to LS7
 and to LS8. Handoffs are visualized and are saved as tables for use downstream in
-this group.
+this group. Corrections are calculated for all neighboring missions, even if not explicitly
+used downstream (e.g. LS 4/5 and LS 8/9).
 
 See Section \@ref(define-handoff) for detailed methodology of this portion of the 
 workflow.
-
-
-**f_save_to_Drive:**
-
-This {targets} group saves the output of the -d- group, if the general lakeSR
-configuration is set to do so. If `update_and_share` is set to TRUE, the workflow
-will send dated, publicly available files to Google Drive and save Drive file 
-information in the `f_save_to_Drive/out/` folder. If set to FALSE, this {targets}
-list is empty.
 
 
 **y_siteSR_targets:**
