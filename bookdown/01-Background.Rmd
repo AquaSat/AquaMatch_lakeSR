@@ -27,6 +27,55 @@ groups of targets that perform specific tasks, listed below with a brief summary
 about what task(s) each group completes. This particular workflow incorporates
 both R and Python programming languages to complete these tasks.
 
+### Configuration Files
+
+**config.yml:**
+
+lakeSR_WQP relies on this configuration file to run specific profiles that
+determine what operations are being run. The file contains two configuration
+profiles: "default" and "admin_update".
+
+-   "default" uses publicly-posted stable versions of datasets from
+    AquaMatch_harmonize_WQP and is intended for those who wish to modify choices
+    made after Landsat stacks are acquired (e.g. baseline quality assurance filters
+    {targets} group -d- and calculation of handoff coefficients group -e-). By 
+    default, the bookdown is not rendered in this option, as changes to the pipeline
+    may require non-automated changes to the text of the bookdown. 
+
+-   "admin_update" is intended for use by ROSSyndicate members when updating
+    siteSR datasets and create publicly-stable versions of the siteSR_WQP to be
+    stored in the AquaMatch_siteSR_WQP repository. This configuration could also
+    be used by others to re-run the pipeline and wish to make changes to the 
+    site location calculations ({targets} group -a-) or GEE implementation 
+    ({targets} group -b-) and collation ({targets} group -c-). By 
+    default, the bookdown is rendered in this option, but keep in mind not all 
+    changes implemented are not automatically reflected in the bookdown. 
+
+Advanced users are welcome to adapt the pipeline to incorporate other masks or 
+filters or to incorporate other quality assurance filters or handoff
+methods. **Note: the Landsat Surface Reflectance product should not be used without
+applying a handoff coefficient if you are using data from multiple Landsat
+missions.** See Section \@ref(define-handoff) for details on this process.
+
+Proper configuration of `harmonize_repo_directory`
+is imperative as the siteSR_WQP workflow references files inside
+AquaMatch_harmonize_WQP file structure. If this is
+incorrectly set up, users will receive a message to communicate this. All
+repositories stored on the AquaSat v2 GitHub will contain files that link to
+versions of the data that the AquaSat v2 team has harmonized so that a local run
+is not necessitated. If the configuration setting for `update_bookdown` is set 
+as TRUE, configuration of `siteSR_repo_directory` is also required, as the bookdown
+pulls information from siteSR to render. 
+
+**gee_config.yml**:
+
+This configuration file defines parameters of the GEE pull. This configuration
+can be customized. To create a different configuration of the GEE pull, fill out
+the yaml file at the file path `b_pull_Landast_SRST_poi/gee_config.yml`. If you 
+change the name of this file, you will need to update the file name at line 32 
+of the `_targets.R` file.
+
+
 ### {targets} groups
 
 **a_Calculate_Centers**:
@@ -144,7 +193,7 @@ output of harmonized, tiered, and aggregated datasets per water quality
 parameter. lakeSR provides calculated Landsat intermission handoff coefficients
 for interoperability between sensors (see Section \@ref(define-handoff)).
 In order to run the siteSR_WQP workflow, you must have a cloned version of
-AquaMatch_harmonize_WQP and AquaMatch_lakeSR codebase on your local computer.
+AquaMatch_harmonize_WQP codebase on your local computer.
 Section \@ref(setup-description) covers details about this requirement.
 
 ### Configuration Files {#setup-description}
@@ -152,75 +201,86 @@ Section \@ref(setup-description) covers details about this requirement.
 **config.yml:**
 
 siteSR_WQP relies on this configuration file to run specific profiles that
-determine what operations are being run. The file contains three configuration
-profiles: "default", "admin_update", and "use_stable".
+determine what operations are being run. The file provides two configuration
+profiles: "default" and  "admin_update".
 
--   "default" runs the pipeline **without** using any stable versions of
-    datasets made with AquaMatch_harmonize_WQP. This requires that the
-    AquaMatch_harmonize_WQP pipeline has been run locally.
-
--   "use_stable" uses publicly-posted stable versions of datasets from
-    AquaMatch_harmonize_WQP and is intended for those who wish to modify choices
-    made in siteSR_WQP or for those who wish to have the complete pipeline on
-    their local device
+-   "default" runs the pipeline using archived versions of
+    datasets made with specific {targets} groups within this workflow. In this
+    setting, {targets} groups -4- (collating locations from WQP), -5- (determining
+    remote sensing visibility), and -6- (pulling the Landsat record from GEE) are 
+    not run, but rather archived files are pulled in to reduce run time.  
 
 -   "admin_update" is intended for use by ROSSyndicate members when updating
     siteSR datasets and create publicly-stable versions of the siteSR_WQP to be
-    stored in the AquaMatch_siteSR_WQP repository
+    stored in the AquaMatch_siteSR_WQP repository. This configuration could also
+    be used by others to re-run the pipeline and wish to make changes to the 
+    site location collation ({targets} group -4-), remote sensing visibility 
+    thresholds ({targets} group -5-) or GEE implementation 
+    ({targets} group -6-).
 
-All configurations will be reliant on the stable version of handoff coefficients
-calculated in AquaMatch_lakeSR, as re-running that workflow takes multiple days.
-Advanced users are welcome to adapt the pipeline to incorporate other handoff
-methods. **The Landsat Surface Reflectance product should not be used without
+**Note: The Landsat Surface Reflectance product should not be used without
 applying a handoff coefficient if you are using data from multiple Landsat
 missions.** See Section \@ref(define-handoff) for details on this process.
 
-Proper configuration of `harmonize_repo_directory` and `lakeSR_repo_directory`
+Proper configuration of `harmonize_repo_directory` 
 is imperative as the siteSR_WQP workflow references files inside
-AquaMatch_harmonize_WQP and AquaMatch_lakeSR file structures. If this is
+AquaMatch_harmonize_WQP file structure. If this is
 incorrectly set up, users will receive a message to communicate this. All
 repositories stored on the AquaSat v2 GitHub will contain files that link to
 versions of the data that the AquaSat v2 team has harmonized so that a local run
-is not necessitated. Any run of the "default" configuration will require that
-the harmonize pipeline has been run locally.
+is not necessitated. 
 
 **gee_config.yml**:
 
 This configuration file defines parameters of the GEE pull. This configuration
 can be customized. To create a different configuration of the GEE pull, fill out
 the yaml file at the file path `gee_config.yml`. If you change the name of this
-file, you will need to update the file name at line 13 of the `5_siteSR_stack.R`
-file.
+file, you will need to update the file name at line 9 of the 
+`5_determine_RS_visibility.R` script.
+
 
 ### {targets} Groups
 
 **\_targets.R:**
 
-This initial group of targets checks the configuration settings in `config.yml`,
-checks for the harmonization and lakeSR pipelines, and checks for Google Drive
-folder architecture. This group also acquires target objects from the
+This initial group of targets checks the configuration settings in config.yml, 
+checks for the harmonization and lakeSR pipelines, and checks for Google Drive 
+folder architecture. This group also acquires target objects from the 
 harmonization and lakeSR pipelines.
 
 **4_compile_sites:**
 
-This {targets} group collates the sites from the harmonization pipeline,
-creating a list of locations to acquire remote sensing data. All locations are
-associated with a HUC8 if one is not listed in the metadata for the site from
-the WQP, then the unique HUC4s are used to associate points with waterbodies and
-flowlines of the NHDPlusV2 (CONUS) or NHD Best Resolution (non-CONUS HUCs)
+This {targets} group collates the sites from the harmonization pipeline, 
+creating a list of locations to acquire remote sensing data. All locations are 
+associated with a HUC8 if one is not listed in the metadata for the site from 
+the WQP, then the unique HUC4s are used to associate points with waterbodies 
+and flowlines of the NHDPlusV2 (CONUS) or NHD Best Resolution (non-CONUS HUCs) 
 files.
 
-**5_siteSR_stack:**
+**5_determine_RS_visibility:**
 
-The resulting list of *in situ* locations are used to acquire Landsat Collection
-2 SRST data in this {targets} group. Sites are assessed for visibility using the
-JRC Global Surface Water [@pekel2016] which is based on the historical Landsat
-record. Sites determined to be visible are used to define the GEE Landsat pull.
+The resulting list of in situ locations are used to assess remote-sensing
+visibility in this {targets} group. Sites are assessed for visibility using the 
+JRC Global Surface Water [@pekel2016] which is based on the historical Landsat 
+record. This {targets} group takes a number of hours to run, if the configuration 
+of `run_pekel` is set to TRUE. If the configuration is set to FALSE, run time 
+will be dependent on your internet connection (to access the previously-created 
+files) and the number of cores available to run the workflow.
 
-**6_siteSR_collate_filter_handoff:**
+**6_siteSR_stack:**
 
-*forthcoming*
+This group of {targets} acquires Landsat Collection 2 SRST stacks for sites 
+determined to be visible in the previous {targets} group. Data are collated in
+this step. This {targets} group takes about three days to run, if the 
+configuration `run_GEE` is set to TRUE. If the configuration is set to FALSE, 
+run time will be dependent on your internet connection (to access the 
+previously-created files) and the number of cores available to run the workflow.
 
-**7_siteSR_matchup:**
+**7_siteSR_qa:**
 
-*forthcoming*
+Collated Landsat data are filtered for quality based on broadly applicable 
+thresholds.
+
+**8_siteSR_matchup:**
+
+forthcoming

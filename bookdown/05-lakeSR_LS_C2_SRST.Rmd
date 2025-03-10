@@ -330,6 +330,31 @@ the lakeSR and siteSR data products can choose to use the DSWE1a product if
 applicable to their research, however, this threshold was defined in the
 Illinois and Ohio Rivers and may not be applicable in all environments.
 
+## Additional diagnostic data columns
+
+During the masking and flagging step of the workflow, we tally pixels that met
+certain criteria for use as diagnostic tools. This includes tallying of varying
+DSWE types (greater than 0 – water of some kind with any confidence, 1 high
+confidence water, 1a high confidence water with positive algal mask, 3 high
+confidence vegetated water) within the buffered area. These tallies are of any
+pixel that meets the DSWE category and met the hillshade, cloud,
+opacity/aerosol, realistic, and glint thresholds. The number of pixels that were
+high opacity/high aerosol, overly negative values, and likely sun glint were
+also tallied within the buffer. These tallies are of the entire buffer area and
+no additional masks are incorporated into the tallies (e.g. the sun glint mask
+and infrared mask may also indicate high reflectance from shoreline vegetation
+within the buffered area). Counts of pixels were tallied per band to indicate
+the number of pixels that were below zero, below the threshold for realistic
+values, or above the glint threshold. These tallies were completed in
+conjunction with the hillshade, cloud, opacity/aerosol and DSWE masks,
+representing the number of pixels that were masked after the baseline pixel QA
+process. The number of pixels that had infrared reflectance values (NIR, SWIR1,
+and SWIR2) greater than 0.1 were also tallied, but these pixels were not masked
+out. Columns for the proportion of pixels masked by clouds and shaded by terrain
+are also provided, no additive mask is used when tallying these pixels. These
+tallies are meant to be used as diagnostic tools for further quality control and
+modeling purposes, though we do not have recommended uses at this time.
+
 ## Payload handling
 
 Because GEE is a free service to those at academic or governmental institutions,

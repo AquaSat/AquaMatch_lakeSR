@@ -10,6 +10,8 @@
 #' (e.g. 'LT05') and 'mission_names' (e.g. 'Landsat 5'). 
 #' @param dswe character string indicating the DSWE setting to filter the files
 #' by. 
+#' @param metadata_files vector of file paths to the metadata files associated 
+#' with the Landsat stack
 #' @param collated_files vector of file paths to the collated Landsat data files 
 #' to be processed. Assumed to be arrow::feather() files. 
 #' @param min_no_pixels Minimum number of pixels contributing to the summary 
@@ -31,6 +33,7 @@
 #' 
 qa_and_document_LS <- function(mission_info,
                                dswe, 
+                               metadata_files,
                                collated_files,
                                min_no_pix = 8, 
                                thermal_threshold = 273.15,
@@ -58,8 +61,23 @@ qa_and_document_LS <- function(mission_info,
     .[grepl(mission_info$mission_id, .)] %>% 
     .[grepl(paste0("_", dswe, "_"), .)]
   
+
   # make sure there are files that exist with those filters
   if (length(mission_files > 0)) {
+    
+    # read in appropriate metadata for filtering
+    metadata_fn <- metadata_files %>% 
+      .[grepl(str_extract(mission_info$mission_names, "\\d"), str_extract(basename(.), "LS\\d+"))]
+    # make the name for image quality, since it changes through mission groups
+    image_qual_name <- if (mission_info$mission_id %in% c("LT04", "LT05", "LE07")) {
+      "IMAGE_QUALITY"
+    } else {
+      "IMAGE_QUALITY_OLI"
+    }
+    metadata <- read_feather(metadata_fn) %>% 
+      select(c(`system:index`, all_of(image_qual_name)))
+    names(metadata) <- c("sat_id", "image_qual")
+    
     # store pcount column name via dswe designation
     pCount_column <- sym(paste0("pCount_", tolower(dswe)))
     
@@ -70,10 +88,19 @@ qa_and_document_LS <- function(mission_info,
     row_df <- map(mission_files, 
                   \(fp) {
                     
-                    data <- read_feather(fp)
+                    data <- read_feather(fp) 
+                    setDT(data)
+                    data[, sat_id := stri_replace_last_regex(`system:index`, "_\\d{4}_\\d+$", "")]
+
                     all_data <- nrow(data)
                     # note, this workflow iteratively overwrites the 'data' 
                     # object to save memory.
+                    
+                    data <- data %>% 
+                      left_join(., metadata) %>% 
+                      filter(image_qual >= 8)
+                    image_qual <- nrow(data)
+                    data <- data %>% select(-image_qual)
                     
                     # filter for at least 8 pixels
                     data <- data %>% 
@@ -105,6 +132,7 @@ qa_and_document_LS <- function(mission_info,
                     
                     # return row summary of filtered data
                     tibble(all_data = all_data,
+                           image_qual = image_qual,
                            valid_thresh = valid_thresh,
                            temp_thresh = temp_thresh,
                            temp_max = temp_max,
@@ -124,6 +152,7 @@ qa_and_document_LS <- function(mission_info,
                   .by = name)
       
       drop_reason <- tibble(all_data = "unfiltered Landsat data",
+                            image_qual = "filtered for optical image quality >= 8",
                             valid_thresh = sprintf("minimum number of pixels threshold (%s) met", min_no_pix),
                             temp_thresh = sprintf("thermal band threshold (%s °K) met", thermal_threshold),
                             temp_max = sprintf("below thermal band maximum (%s °K)", thermal_maximum),
@@ -136,6 +165,7 @@ qa_and_document_LS <- function(mission_info,
                                               "temp_max",
                                               "temp_thresh",
                                               "valid_thresh",
+                                              "image_qual",
                                               "all_data")),
                lab = paste0(reason, ": ", format(value, big.mark = ","), " records"))
       

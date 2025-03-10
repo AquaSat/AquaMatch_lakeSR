@@ -44,7 +44,6 @@ sort_qa_Landsat_data <- function(qa_files,
                       lakeSR_id = stri_extract_last_regex(`system:index`, "\\d{4}_\\d+$"), 
                       dswe_filter = stri_extract_first_regex(fp, "DSWE\\d+a?"),
                       mission = stri_extract_first_regex(`system:index`, "L[A-Z]0\\d"), 
-                      sat_id = stri_replace_last_regex(`system:index`, "_\\d{4}_\\d+$", ""),
                       date = as.IDate(stri_extract_first_regex(`system:index`, "\\d{8}"), format = "%Y%m%d")
                     )]
                     dt[, huc2 := str_sub(lakeSR_id, 1, 2)]
@@ -86,7 +85,6 @@ sort_qa_Landsat_data <- function(qa_files,
                       lakeSR_id = stri_extract_last_regex(`system:index`, "\\d{4}_\\d+$"), 
                       dswe_filter = stri_extract_first_regex(fp, "DSWE\\d+a?"),
                       mission = stri_extract_first_regex(`system:index`, "L[A-Z]0\\d"), 
-                      sat_id = stri_replace_last_regex(`system:index`, "_\\d{4}_\\d+$", ""),
                       date = as.IDate(stri_extract_first_regex(`system:index`, "\\d{8}"), format = "%Y%m%d")
                     )]
                     dt[, huc2 := str_sub(lakeSR_id, 1, 2)]

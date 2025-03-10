@@ -67,9 +67,10 @@ remote sensing data as much as possible.
 
 -   total count of pixels (`pCount_dswe1` or `pCount_dswe1a`) contributing to
     summary values must be ≥ 8. This is a slight change from AquaSat v1 which
-    required 10 pixels. Due to the more rigorous masking procedures (thant ASv1)
-    we believe allows for a slightly more conservative QA filter via the
-    reduction of required pixels for inclusion in the lakeSR dataset.
+    required 10 pixels. Due to the more rigorous masking procedures (than
+    AquaSat v1) we believe allows for a slightly more conservative QA filter via
+    the reduction of required pixels for inclusion in the lakeSR and siteSR
+    datasets.
 
 -   if the median temperature is below freezing (`med_SurfaceTemp` \< 273.15 °
     K), the row is dropped. This is our best attempt at removing data during any
@@ -77,7 +78,7 @@ remote sensing data as much as possible.
     the thermal estimates. In particular, cirrus clouds can go unnoticed in
     cloud detection algorithms used that inform our masking procedures.
 
--   if the median temperature is greater than or euqal to 40°C (313.15 °K) the
+-   if the median temperature is greater than or equal to 40°C (313.15 °K) the
     row is dropped. This maximum was defined based on the maximum value included
     @willard2021 composed of *in situ* measurementes and remote sensing
     estimates.
@@ -95,10 +96,11 @@ remote sensing data as much as possible.
 
 While there are numerous other diagnostic tests we could apply to filter the RS
 data, these are the QA filters that we deem to be the most foundational and
-unifying for reliable RS data across the US and Territories. Figures in the sections
-below show how many rows of data were dropped through this QA process. For the 
-purposes of this documentation, we show summaries for DSWE1 data only, but 
-running the pipeline locally results in summaries for both DSWE1 and DSWE1a data.
+unifying for reliable RS data across the US and Territories. Figures in the
+sections below show how many rows of data were dropped through this QA process.
+For the purposes of this documentation, we show summaries for DSWE1 data only,
+but running the pipeline locally results in summaries for both DSWE1 and DSWE1a
+data.
 
 ### Landsat 4 QA Summary
 

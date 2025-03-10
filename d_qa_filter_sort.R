@@ -31,6 +31,19 @@ d_qa_filter_sort <- list(
     deployment = "main",
   ),
   
+  # get the appropriate version date to filter files, just in case there is more
+  # than one version
+  tar_target(
+    name = d_version_identifier,
+    command = {
+      if (lakeSR_config$run_GEE) {
+        b_yml_poi$run_date 
+      } else { 
+        lakeSR_config$collated_version 
+      }
+    }
+  ),
+  
   
   # collate and qa each mission ---------------------------------------------------
   
@@ -44,6 +57,14 @@ d_qa_filter_sort <- list(
                      mission_names = c("Landsat 4", "Landsat 5", "Landsat 7", "Landsat 8", "Landsat 9"))
   ),
   
+  # track metadata files, we'll use those in the filtering process
+  tar_target(
+    name = d_metadata_files,
+    command = list.files(file.path("c_collate_Landsat_data/mid/", d_version_identifier), 
+                         full.names = TRUE) %>% 
+      .[grepl("metadata", .)]
+  ),
+  
   # walk through QA of missions and DSWE types
   tar_target(
     name = d_qa_Landsat_files,
@@ -51,24 +72,12 @@ d_qa_filter_sort <- list(
       d_check_dir_structure
       qa_and_document_LS(mission_info = d_mission_identifiers, 
                          dswe = c_dswe_types, 
+                         metadata_files = d_metadata_files,
                          collated_files = c_collated_files)
     },
-    packages = c("arrow", "data.table", "tidyverse", "ggrepel", "viridis"),
+    packages = c("arrow", "data.table", "tidyverse", "ggrepel", "viridis", "stringi"),
     pattern = cross(d_mission_identifiers, c_dswe_types),
     deployment = "main"
-  ),
-  
-  # get the appropriate version date to filter files, just in case there is more
-  # than one version
-  tar_target(
-    name = d_version_identifier,
-    command = {
-      if (lakeSR_config$run_GEE) {
-        b_yml_poi$run_date 
-      } else { 
-        lakeSR_config$collated_version 
-      }
-    }
   ),
   
   # get a list of the qa'd files
@@ -83,6 +92,7 @@ d_qa_filter_sort <- list(
   
   
   # collate qa'd data and sort as needed ------------------------------------
+  
   
   # here, we collate small datasets (Landsat 4/9) into a single .csv file, and 
   # collate larger datasets (Landsat 5-7-8) into multiple .csv's, sorted by HUC2.
@@ -164,7 +174,13 @@ d_qa_filter_sort <- list(
                           d_collated_Landsat7_by_huc2, d_collated_Landsat8_by_huc2,
                           d_Landsat9_collated_data))
   )
-  
+  # , 
+  # 
+  # # convert metadata to .csv files for data storage
+  # tar_target(
+  #   
+  # )
+  # 
 )
 
 # if collating the sorted files in Drive admin update configuration, add to d group

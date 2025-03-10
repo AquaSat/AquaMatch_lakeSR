@@ -292,12 +292,14 @@ implement two versions of intermission handoffs: the method described in
 relative to Landsat 7 and Landsat 8. The Landsat 7 intermission handoffs create
 a continuous record of remote sensing from Landsat 4 through 9 relative to
 Landsat 7 since Landsat 4 and 5 and Landsat 8 and 9 can be treated as
-interchangable due to the similarity in payload and radiometric resolution. Data
-corrected to Landsat 8 relative values can only be applied to Landsat 7 and 9
-due to mission overlap, so the standardized data timeseries is shorter.</p>
+interchangable due to the similarity in sensor payload and radiometric resolution. Data
+corrected to Landsat 8 relative values can only be applied to Landsat 7
+due to lack of mission overlap between Landsat 8 and Landsat 5, so the resulting
+standardized data timeseries is shorter.</p>
 <p>For the purposes of this document, we only present the handoff coefficients for
 DSWE1 (confident water) and do not investigate differences between the DSWE1 or
-DSWE1a coefficients, though we provide both.</p>
+DSWE1a coefficients, though we provide both. Users should use these handoff
+coefficients if using data from more than one sensor group (TM, ETM+, OLI).</p>
 <div id="roy-method" class="section level2 hasAnchor" number="8.1">
 <h2><span class="header-section-number">8.1</span> Roy method<a href="define-handoff.html#roy-method" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The Roy method for calculating intermission handoffs uses paired images at
@@ -1023,6 +1025,15 @@ med_SurfaceTemp
 </tbody>
 </table>
 </div>
+<p>Application of Roy-style handoffs is straightforward and is completed as simple
+application of a linear equation:</p>
+<p><span class="math display">\[
+y = mx + b
+\]</span></p>
+<p>Where <span class="math inline">\(b\)</span> is the intercept, <span class="math inline">\(m\)</span> is the slope, <span class="math inline">\(x\)</span> is the band reflectance value
+from the mission <code>Satellite to Correct</code> in Table <a href="define-handoff.html#tab:roy-coeff-dem-corr7">8.2</a> or
+<a href="define-handoff.html#tab:roy-coeff-dem-corr8">8.3</a> and <span class="math inline">\(y\)</span> is the harmonized reflectance value relative
+to the mission <code>Satellite to Harmonize to</code> in the previously-mentioned tables.</p>
 <details>
 <summary>
 Roy Deming Handoff and Residual Figures
@@ -2009,6 +2020,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

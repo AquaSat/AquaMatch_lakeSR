@@ -14,7 +14,7 @@ default:
   parent_Drive_folder: "~/lakeSR_Landsat_C2/" # optional. character string, parent folder 
   # location to store files on Google Drive. Can also be "" if no parent folder desired.
   # Only used if calculate_centers, run_gee, and/or update_and_share set to TRUE.
-  update_and_share: FALSE # boolean, indication of whether the compiled qa'd files
+  update_and_share: TRUE # boolean, indication of whether the compiled qa'd files
   # and handoffs should be shared to Drive
   update_bookdown: TRUE # boolean, if the bookdown will be re-rendered
   siteSR_repo_directory: "../AquaMatch_siteSR_WQP/" # relative directory path where
