@@ -167,20 +167,22 @@ d_qa_filter_sort <- list(
     packages = c("data.table", "tidyverse", "arrow", "stringi")
   ),
   
+  # metadata
+  tar_target(
+    name = d_Landsat_metadata_formatted,
+    command = prep_LS_metadata_for_export(file = d_metadata_files, 
+                                          file_type = "csv", 
+                                          out_path = "d_qa_filter_sort/sort/"),
+  ),
+  
   # make a list of the collated and sorted files created
   tar_target(
     name = d_all_sorted_Landsat_files,
     command = as.vector(c(d_Landsat4_collated_data, d_collated_Landsat5_by_huc2,
                           d_collated_Landsat7_by_huc2, d_collated_Landsat8_by_huc2,
-                          d_Landsat9_collated_data))
+                          d_Landsat9_collated_data, d_Landsat_metadata_formatted))
   )
-  # , 
-  # 
-  # # convert metadata to .csv files for data storage
-  # tar_target(
-  #   
-  # )
-  # 
+  
 )
 
 # if collating the sorted files in Drive admin update configuration, add to d group
