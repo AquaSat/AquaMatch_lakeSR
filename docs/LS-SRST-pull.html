@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-10" />
+<meta name="date" content="2025-03-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -166,7 +166,8 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#lakesr-code-architecture"><i class="fa fa-check"></i><b>2.1</b> lakeSR Code Architecture</a>
 <ul>
-<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.1</b> {targets} groups</a></li>
+<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#configuration-files"><i class="fa fa-check"></i><b>2.1.1</b> Configuration Files</a></li>
+<li class="chapter" data-level="2.1.2" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.2</b> {targets} groups</a></li>
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="background.html"><a href="background.html#sitesr_wqp-code-architecture"><i class="fa fa-check"></i><b>2.2</b> siteSR_WQP Code Architecture</a>
 <ul>
@@ -228,7 +229,8 @@ div.csl-indent {
 <li class="chapter" data-level="6.3.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#masking-functions"><i class="fa fa-check"></i><b>6.3.1</b> Custom Earth Engine Masking Functions</a></li>
 <li class="chapter" data-level="6.3.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#dswe-implementation"><i class="fa fa-check"></i><b>6.3.2</b> Defining water area</a></li>
 </ul></li>
-<li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.4</b> Payload handling</a></li>
+<li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#additional-diagnostic-data-columns"><i class="fa fa-check"></i><b>6.4</b> Additional diagnostic data columns</a></li>
+<li class="chapter" data-level="6.5" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.5</b> Payload handling</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html"><i class="fa fa-check"></i><b>7</b> Post-Hoc Quality Assurance</a>
 <ul>
@@ -566,8 +568,33 @@ applicable to their research, however, this threshold was defined in the
 Illinois and Ohio Rivers and may not be applicable in all environments.</p>
 </div>
 </div>
-<div id="payload-handling" class="section level2 hasAnchor" number="6.4">
-<h2><span class="header-section-number">6.4</span> Payload handling<a href="LS-SRST-pull.html#payload-handling" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="additional-diagnostic-data-columns" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> Additional diagnostic data columns<a href="LS-SRST-pull.html#additional-diagnostic-data-columns" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>During the masking and flagging step of the workflow, we tally pixels that met
+certain criteria for use as diagnostic tools. This includes tallying of varying
+DSWE types (greater than 0 – water of some kind with any confidence, 1 high
+confidence water, 1a high confidence water with positive algal mask, 3 high
+confidence vegetated water) within the buffered area. These tallies are of any
+pixel that meets the DSWE category and met the hillshade, cloud,
+opacity/aerosol, realistic, and glint thresholds. The number of pixels that were
+high opacity/high aerosol, overly negative values, and likely sun glint were
+also tallied within the buffer. These tallies are of the entire buffer area and
+no additional masks are incorporated into the tallies (e.g. the sun glint mask
+and infrared mask may also indicate high reflectance from shoreline vegetation
+within the buffered area). Counts of pixels were tallied per band to indicate
+the number of pixels that were below zero, below the threshold for realistic
+values, or above the glint threshold. These tallies were completed in
+conjunction with the hillshade, cloud, opacity/aerosol and DSWE masks,
+representing the number of pixels that were masked after the baseline pixel QA
+process. The number of pixels that had infrared reflectance values (NIR, SWIR1,
+and SWIR2) greater than 0.1 were also tallied, but these pixels were not masked
+out. Columns for the proportion of pixels masked by clouds and shaded by terrain
+are also provided, no additive mask is used when tallying these pixels. These
+tallies are meant to be used as diagnostic tools for further quality control and
+modeling purposes, though we do not have recommended uses at this time.</p>
+</div>
+<div id="payload-handling" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> Payload handling<a href="LS-SRST-pull.html#payload-handling" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Because GEE is a free service to those at academic or governmental institutions,
 there are limits to the total number of tasks being run co-currently on GEE’s
 platform. For this reason, tasks are sent to GEE as path-row groups as soon as

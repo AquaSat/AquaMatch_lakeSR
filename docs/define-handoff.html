@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-10" />
+<meta name="date" content="2025-03-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -166,7 +166,8 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#lakesr-code-architecture"><i class="fa fa-check"></i><b>2.1</b> lakeSR Code Architecture</a>
 <ul>
-<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.1</b> {targets} groups</a></li>
+<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#configuration-files"><i class="fa fa-check"></i><b>2.1.1</b> Configuration Files</a></li>
+<li class="chapter" data-level="2.1.2" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.2</b> {targets} groups</a></li>
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="background.html"><a href="background.html#sitesr_wqp-code-architecture"><i class="fa fa-check"></i><b>2.2</b> siteSR_WQP Code Architecture</a>
 <ul>
@@ -228,7 +229,8 @@ div.csl-indent {
 <li class="chapter" data-level="6.3.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#masking-functions"><i class="fa fa-check"></i><b>6.3.1</b> Custom Earth Engine Masking Functions</a></li>
 <li class="chapter" data-level="6.3.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#dswe-implementation"><i class="fa fa-check"></i><b>6.3.2</b> Defining water area</a></li>
 </ul></li>
-<li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.4</b> Payload handling</a></li>
+<li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#additional-diagnostic-data-columns"><i class="fa fa-check"></i><b>6.4</b> Additional diagnostic data columns</a></li>
+<li class="chapter" data-level="6.5" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.5</b> Payload handling</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html"><i class="fa fa-check"></i><b>7</b> Post-Hoc Quality Assurance</a>
 <ul>
@@ -292,10 +294,10 @@ implement two versions of intermission handoffs: the method described in
 relative to Landsat 7 and Landsat 8. The Landsat 7 intermission handoffs create
 a continuous record of remote sensing from Landsat 4 through 9 relative to
 Landsat 7 since Landsat 4 and 5 and Landsat 8 and 9 can be treated as
-interchangable due to the similarity in sensor payload and radiometric resolution. Data
-corrected to Landsat 8 relative values can only be applied to Landsat 7
-due to lack of mission overlap between Landsat 8 and Landsat 5, so the resulting
-standardized data timeseries is shorter.</p>
+interchangeable due to the similarity in sensor payload and radiometric
+resolution. Data corrected to Landsat 8 relative values can only be applied to
+Landsat 7 due to lack of mission overlap between Landsat 8 and Landsat 5, so the
+resulting standardized data timeseries.</p>
 <p>For the purposes of this document, we only present the handoff coefficients for
 DSWE1 (confident water) and do not investigate differences between the DSWE1 or
 DSWE1a coefficients, though we provide both. Users should use these handoff
@@ -308,7 +310,9 @@ specific sites, where the reflectance data are obtained are from two missions
 within the overlapping paths in the WRS2 path-row framework:</p>
 <div class="float">
 <img src="images/path_overlap_roy.png" alt="An example of two overlapping WRS2 paths (grey area) separated by one day. Any location with data for both images would be considered a paired data point to define the Roy method intermission handoffs." />
-<div class="figcaption">An example of two overlapping WRS2 paths (grey area) separated by one day. Any location with data for both images would be considered a paired data point to define the Roy method intermission handoffs.</div>
+<div class="figcaption">An example of two overlapping WRS2 paths (grey area) separated by one day. Any
+location with data for both images would be considered a paired data point to
+define the Roy method intermission handoffs.</div>
 </div>
 <p>While <span class="citation">Roy et al. (<a href="#ref-roy2016">2016</a>)</span> implemented this method on a pixel-by-pixel basis, we implement
 using the median band value per site. This is used in place of the explicit
@@ -332,12 +336,10 @@ overlapping period of time between two adjacent-in-time missions. These data are
 filtered to sites that have at least one data point per year for at least 75% of
 the years of overlap. The filtered data are then summarized to each mission’s
 1st-99th percentile value per band, and the handoff coefficients between
-missions are defined by the second-order polynomial relationship between them.
-When n is high, quantiles are equivalent to describing the central tendency of
-the distribution of the x:y relationship due to the Central Limit Theorem.
-Because we use a second-order polynomial, all values outside of the 1st and 99th
-percentile values used to define the intermission handoff are flagged and should
-be used with extreme caution.</p>
+missions are defined by the second-order polynomial (quadratic) relationship
+between them. Because we use a second-order polynomial, all values outside of
+the 1st and 99th percentile values used to define the intermission handoff are
+flagged and should be used with extreme caution.</p>
 <p>One additional consideration when using the Gardner method is, even when the
 number of observations are is high, if there is a difference between total
 observations contributing to the quantile summaries, there may be systematic
@@ -347,8 +349,8 @@ due to data transmission errors. We did not investigate the differences in n
 listed in Table <a href="define-handoff.html#tab:gardner-table">8.4</a> to determine what, if any, systematic
 differences are present between the two missions. We provide the Gardner method
 handoffs for continuity with the riverSR product for users who would like that
-interoperability. As with the Roy, et al. method, intercepts
-and slopes for all handoffs are available at the file path
+interoperability. As with the Roy, et al. method, intercepts and slopes for all
+handoffs are available at the file path
 <code>e_calculate_handoffs/out/collated_handoffs_v2025-02-12.csv</code> and figures for all
 handoffs are created when the pipeline is run.</p>
 </div>
@@ -1031,9 +1033,12 @@ application of a linear equation:</p>
 y = mx + b
 \]</span></p>
 <p>Where <span class="math inline">\(b\)</span> is the intercept, <span class="math inline">\(m\)</span> is the slope, <span class="math inline">\(x\)</span> is the band reflectance value
-from the mission <code>Satellite to Correct</code> in Table <a href="define-handoff.html#tab:roy-coeff-dem-corr7">8.2</a> or
-<a href="define-handoff.html#tab:roy-coeff-dem-corr8">8.3</a> and <span class="math inline">\(y\)</span> is the harmonized reflectance value relative
-to the mission <code>Satellite to Harmonize to</code> in the previously-mentioned tables.</p>
+from the mission <code>Satellite to Correct</code> in Table <a href="define-handoff.html#tab:roy-coeff-dem-corr7">8.2</a>
+or <a href="define-handoff.html#tab:roy-coeff-dem-corr8">8.3</a> and <span class="math inline">\(y\)</span> is the harmonized reflectance value
+relative to the mission <code>Satellite to Harmonize to</code> in the previously-mentioned
+tables. To reduce output data product size, we do not apply these handoffs
+within the output data product, but rather provide users the tools to apply the
+handoffs to the filtered lakeSR and siteSR data.</p>
 <details>
 <summary>
 Roy Deming Handoff and Residual Figures
@@ -1883,6 +1888,19 @@ med_SurfaceTemp
 </tbody>
 </table>
 </div>
+<p>Application of Gardner-style handoffs is completed as simple application of a
+second order polynomial equation:</p>
+<p><span class="math display">\[
+y = b0 + b1*x + b2*x^2
+\]</span></p>
+<p>Where <span class="math inline">\(b0\)</span> is the intercept, <span class="math inline">\(b1\)</span> is the coefficient of the <span class="math inline">\(x\)</span> value, <span class="math inline">\(b2\)</span> is
+the coefficient of the quadratic term <span class="math inline">\(x^2\)</span>, <span class="math inline">\(x\)</span> is the band reflectance value
+from the mission <code>Satellite to Correct</code> in Table <a href="#tab:gard-coeff-dem-corr7"><strong>??</strong></a>
+or <a href="#tab:gard-coeff-dem-corr8"><strong>??</strong></a> and <span class="math inline">\(y\)</span> is the harmonized reflectance value
+relative to the mission <code>Satellite to Harmonize to</code> in the previously-mentioned
+tables. To reduce output data product size, we do not apply these handoffs
+within the output data product, but rather provide users the tools to apply the
+handoffs to the filtered lakeSR and siteSR data.</p>
 <details>
 <summary>
 Gardner Handoff and Residual Figures relative to Landsat 7
@@ -1954,7 +1972,7 @@ intercept, 0 slope line visual aide.</p>
 Gardner, John R., Xiao Yang, Simon N. Topp, Matthew R. V. Ross, Elizabeth H. Altenau, and Tamlin M. Pavelsky. 2021. <span>“The Color of Rivers.”</span> <em>Geophysical Research Letters</em> 48 (1): e2020GL088946. <a href="https://doi.org/10.1029/2020GL088946">https://doi.org/10.1029/2020GL088946</a>.
 </div>
 <div id="ref-maciel2023" class="csl-entry">
-Maciel, Daniel Andrade, Nima Pahlevan, Claudio Clemente Faria Barbosa, Evlyn Márcia Leão de Moraes de Novo, Rejane Souza Paulino, Vitor Souza Martins, Eric Vermote, and Christopher J. Crawford. 2023. <span>“Validity of the Landsat Surface Reflectance Archive for Aquatic Science: Implications for Cloud-Based Analysis.”</span> <em>Limnology and Oceanography Letters</em> n/a (n/a). <a href="https://doi.org/10.1002/lol2.10344">https://doi.org/10.1002/lol2.10344</a>.
+Maciel, Daniel Andrade, Nima Pahlevan, Claudio Clemente Faria Barbosa, Evlyn Márcia Leão de Moraes de Novo, Rejane Souza Paulino, Vitor Souza Martins, Eric Vermote, and Christopher J. Crawford. 2023. <span>“Validity of the Landsat Surface Reflectance Archive for Aquatic Science: Implications for Cloud-Based Analysis.”</span> <em>Limnology and Oceanography Letters</em> 8 (6). <a href="https://doi.org/10.1002/lol2.10344">https://doi.org/10.1002/lol2.10344</a>.
 </div>
 <div id="ref-roy2016" class="csl-entry">
 Roy, D. P., V. Kovalskyy, H. K. Zhang, E. F. Vermote, L. Yan, S. S. Kumar, and A. Egorov. 2016. <span>“Characterization of Landsat-7 to Landsat-8 Reflective Wavelength and Normalized Difference Vegetation Index Continuity.”</span> <em>Remote Sensing of Environment</em>, Landsat 8 science results, 185 (November): 57–70. <a href="https://doi.org/10.1016/j.rse.2015.12.024">https://doi.org/10.1016/j.rse.2015.12.024</a>.

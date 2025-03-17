@@ -173,6 +173,8 @@ d_qa_filter_sort <- list(
     command = prep_LS_metadata_for_export(file = d_metadata_files, 
                                           file_type = "csv", 
                                           out_path = "d_qa_filter_sort/sort/"),
+    pattern = map(d_metadata_files), 
+    packages = c("data.table", "tidyverse", "arrow", "stringi")
   ),
   
   # make a list of the collated and sorted files created

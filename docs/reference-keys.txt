@@ -12,6 +12,7 @@ tab:gard-coeff-corr8
 introduction
 background
 lakesr-code-architecture
+configuration-files
 targets-groups
 sitesr_wqp-code-architecture
 setup-description
@@ -49,6 +50,7 @@ custom-config
 technical-implementation-of-gee-acquisition-script
 masking-functions
 dswe-implementation
+additional-diagnostic-data-columns
 payload-handling
 post-hoc-qa
 raw-lakesr
