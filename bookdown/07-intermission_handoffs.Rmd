@@ -368,12 +368,12 @@ $$
 
 Where $b0$ is the intercept, $b1$ is the coefficient of the $x$ value, $b2$ is
 the coefficient of the quadratic term $x^2$, $x$ is the band reflectance value
-from the mission `Satellite to Correct` in Table \@ref(tab:gard-coeff-dem-corr7)
-or \@ref(tab:gard-coeff-dem-corr8) and $y$ is the harmonized reflectance value
-relative to the mission `Satellite to Harmonize to` in the previously-mentioned
-tables. To reduce output data product size, we do not apply these handoffs
-within the output data product, but rather provide users the tools to apply the
-handoffs to the filtered lakeSR and siteSR data.
+from the mission `Satellite to Correct` in Table \@ref(tab:gard-coeff-corr7) or
+\@ref(tab:gard-coeff-corr8) and $y$ is the harmonized reflectance value relative
+to the mission `Satellite to Harmonize to` in the previously-mentioned tables.
+To reduce output data product size, we do not apply these handoffs within the
+output data product, but rather provide users the tools to apply the handoffs to
+the filtered lakeSR and siteSR data.
 
 <details>
 
