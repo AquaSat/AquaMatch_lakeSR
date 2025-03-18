@@ -90,9 +90,10 @@ filtered to sites that have at least one data point per year for at least 75% of
 the years of overlap. The filtered data are then summarized to each mission's
 1st-99th percentile value per band, and the handoff coefficients between
 missions are defined by the second-order polynomial (quadratic) relationship
-between them. Because we use a second-order polynomial, all values outside of
-the 1st and 99th percentile values used to define the intermission handoff are
-flagged and should be used with extreme caution.
+between them. Because this method uses a second-order polynomial to define the
+handoff relationship, all input (x) values outside of the 1st and 99th
+percentile values used to define the intermission handoff should be used with
+extreme caution.
 
 One additional consideration when using the Gardner method is, even when the
 number of observations are is high, if there is a difference between total

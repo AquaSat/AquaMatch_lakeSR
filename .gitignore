@@ -11,7 +11,7 @@ env/
 a_Calculate_Centers/mid/*
 a_Calculate_Centers/out/*
 a_Calculate_Centers/nhd/*
-!a_Calculate_Centers/out/combined_poi_drive_ids.csv
+!a_Calculate_Centers/out/poi_flagged_drive_ids.csv
 
 b_pull_Landsat_SRST_poi/mid/*
 b_pull_Landsat_SRST_poi/out/*
@@ -20,11 +20,12 @@ b_pull_Landsat_SRST_poi/out/*
 
 c_collate_Landsat_data/down/*
 c_collate_Landsat_data/mid/*
+!c_collate_Landsat_data/out/raw_collated_files_drive_ids_v2025-02-12.csv
 
 d_qa_filter_sort/qa/*
 d_qa_filter_sort/sort/*
 d_qa_filter_sort/out/*
-!d_qa_filteR_sort/out/Landsat_sorted_files_drive_ids_v2025-02-24.csv
+!d_qa_filteR_sort/out/Landsat_sorted_files_drive_ids_v2025-02-12.csv
 
 e_calculate_handoffs/gardner/*
 e_calculate_handoffs/roy/*

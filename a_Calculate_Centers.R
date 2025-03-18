@@ -179,7 +179,8 @@ if (config::get(config = general_config)$calculate_centers) {
         target = a_poi_with_flags, 
         drive_path = a_check_Drive_targets_folder,
         google_email = lakeSR_config$google_email,
-        date_stamp = lakeSR_config$centers_version),
+        date_stamp = lakeSR_config$centers_version,
+        file_type = ".csv"),
       packages = c("tidyverse", "googledrive")
     ),
     
@@ -231,7 +232,8 @@ if (config::get(config = general_config)$calculate_centers) {
         id_df = a_combined_poi_drive_ids, 
         local_folder = "a_Calculate_Centers/mid/", 
         google_email = lakeSR_config$google_email, 
-        version_date = lakeSR_config$centers_version
+        version_date = lakeSR_config$centers_version,
+        file_type = ".csv"
       ),
       packages = c("tidyverse", "googledrive")
     )
