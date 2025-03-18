@@ -7,16 +7,16 @@ bibliography: references.bib
 
 # Landsat Collection 2 SRST Data Product {#LS-SRST-pull}
 
-The lakeSR-Landsat data product is a set of tabular datasets, representing the
-Landsat surface reflectance (SR) and surface tempearture (ST) data summarized
-for the point of inaccessibility (POI) location which is meant to represent
-pelagic conditions at a given waterbody (identified by its NHD unique
-identifier, see Section \@ref(locs-data-acq)). This data product contains "full
-stacks" of the Landsat Collection 2 record - that is, all summarized Landsat
-data available from all Landsat missions that met our within-image QA criteria.
+The lakeSR data product is a set of tabular datasets, representing the Landsat
+surface reflectance (SR) and surface tempearture (ST) data summarized for the
+point of inaccessibility (POI) location which is meant to represent pelagic
+conditions at a given waterbody (identified by its NHD unique identifier, see
+Section \@ref(locs-data-acq)). This data product contains "full stacks" of the
+Landsat Collection 2 record - that is, all summarized Landsat data available
+from all Landsat missions that met our within-image QA criteria.
 
-The siteSR-Landsat data product is similar, but is acquired at unique sampling
-locations as described in \@ref(siteSR-locs).
+The siteSR data product is similar, but is acquired at unique sampling locations
+as described in \@ref(siteSR-locs).
 
 ## Changes from AquaSat v1 and LimnoSat-US
 
@@ -164,16 +164,15 @@ The workflow for data acquisition from GEE for lakeSR and siteSR is as follows:
 lakeSR (and siteSR) can be modified to be run by a user by setting up a new
 config file and altering the {targets} workflow to point to that config file. To
 configure a new run of this workflow, fill out the yaml file at the file path
-`b_pull_Landsat_SRST_poi/config_files/config.yml` and modify the `_targets.R`
-script at line 28 to reflect the updated config file.
-
-To run the pipeline with this custom configuration, follow the steps in
-`run_targets.Rmd`, which will run the pipeline.
+`b_pull_Landsat_SRST_poi/config_files/config.yml` for lakeSR and
+`gee_config.yml` for siteSR. To run the pipeline with this custom configuration,
+follow the steps in `run_targets.Rmd`, which will assure proper set up and run
+the pipeline.
 
 If you wish to make changes to any processes that are not indicated in the
 config file (using a different set of lakes/source files, remote sensing masking
 procedures, summary statistics, QAQC filtering, mission handoff corrections,
-etc.) we encourage you to do so. Just remember, this pipeline takes DAYS to run
+etc.) we encourage you to do so. Just remember, this pipeline takes days to run
 due to the bottleneck when submitting tasks to Google Earth Engine. If you wish
 to extract remote sensing data for specific locations in a lake, we encourage
 you to look to our [siteSR data
@@ -202,11 +201,11 @@ overview of some of the custom masking procedures and their justification, if
 applicable. We use the most aggressive masking procedures in the lakeSR and
 siteSR products in order to attempt to have consistent and robust data across
 such a large area of data acquisition. An interactive masking viewer is
-available for [Landsat
+available for select scenes for [Landsat
 4/5/7](https://ee-aquamatch.projects.earthengine.app/view/asv2landsat57interactivemask)
 and [Landsat
 8/9](https://ee-aquamatch.projects.earthengine.app/view/asv2landsat89interactivemask)
-to see these masks in action.
+to see some of the masks in action.
 
 -   `apply_rad_mask`: Masks out all pixels that are radiometrically saturated in
     any optical band using the QA_RADSAT QA band. The Landsat User Guides

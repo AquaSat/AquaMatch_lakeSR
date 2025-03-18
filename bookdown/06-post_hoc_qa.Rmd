@@ -65,6 +65,12 @@ still result in erroneous or misleading SR values. To address this we implement
 post-hoc filters that are applied to the stack to reduce uncertainty in the
 remote sensing data as much as possible.
 
+-   image quality (acquired from scene-level metadata files) must be \>= 8. In
+    Landsat 4, 5, and 7 this value is stored in the metadata column
+    `IMAGE_QUALITY`, in Landsat 8 and 9, this value originates from the column
+    `IMAGE_QUALITY_OLI`. These column indicate the overall quality of the image
+    on a scale of 0 (worst) to 9 (best).
+
 -   total count of pixels (`pCount_dswe1` or `pCount_dswe1a`) contributing to
     summary values must be ≥ 8. This is a slight change from AquaSat v1 which
     required 10 pixels. Due to the more rigorous masking procedures (than
@@ -80,7 +86,7 @@ remote sensing data as much as possible.
 
 -   if the median temperature is greater than or equal to 40°C (313.15 °K) the
     row is dropped. This maximum was defined based on the maximum value included
-    @willard2021 composed of *in situ* measurementes and remote sensing
+    @willard2021 composed of *in situ* measurements and remote sensing
     estimates.
 
 -   either NIR surface reflectance or SWIR1 and SWIR2 surface reflectance must
@@ -95,49 +101,60 @@ remote sensing data as much as possible.
     approach.
 
 While there are numerous other diagnostic tests we could apply to filter the RS
-data, these are the QA filters that we deem to be the most foundational and
-unifying for reliable RS data across the US and Territories. Figures in the
-sections below show how many rows of data were dropped through this QA process.
-For the purposes of this documentation, we show summaries for DSWE1 data only,
-but running the pipeline locally results in summaries for both DSWE1 and DSWE1a
-data.
+data, these are the QA filters that we deem to be the most universal for
+reliable RS data across the US and Territories. Figures in the sections below
+show how many rows of data were dropped through this QA process. For the
+purposes of this documentation, we show summaries for DSWE1 data only, but
+running the pipeline locally results in graphical summaries for both DSWE1 and
+DSWE1a data.
 
 ### Landsat 4 QA Summary
 
-![Summary of dropped rows for lakeSR Landsat 4's DSWE1 (confident water) RS
-summaries.](images/lakeSR/LT04_dswe1_drop_summary.png){#fig:lake-ls4-dswe1-drop}
+![Summary of rows retained during lakeSR quality filtering for Landsat 4 DSWE1
+(confident water) remote sensing
+summaries.](images/siteSR/LT04_DSWE1_drop_summary.png){#fig:site-ls9-dswe1-drop
+alt="Summary of rows retained during siteSR Landsat 9's quality filtering for DSWE1 (confident water) remote sensing summaries."}
 
-![Summary of dropped rows for siteSR Landsat 4's DSWE1 (confident water) RS
-summaries.](images/siteSR/LT04_dswe1_drop_summary.png){#fig:site-ls4-dswe1-drop}
+![Summary of rows retained during siteSR quality filtering for Landsat 4 DSWE1
+(confident water) remote sensing
+summaries.](images/siteSR/LT04_DSWE1_drop_summary.png){alt="Summary of rows retained during siteSR Landsat 9's quality filtering for DSWE1 (confident water) remote sensing summaries."}
 
 ### Landsat 5 QA Summary
 
-![Summary of dropped rows for lakeSR Landsat 5's DSWE1 (confident water) RS
-summaries.](images/lakeSR/LT05_DSWE1_drop_summary.png){#fig:lake-ls5-dswe1-drop}
+![Summary of rows retained during lakeSR quality filtering for Landsat 5 DSWE1
+(confident water) remote sensing
+summaries.](images/siteSR/LT05_DSWE1_drop_summary.png){alt="Summary of rows retained during siteSR Landsat 9's quality filtering for DSWE1 (confident water) remote sensing summaries."}
 
-![Summary of dropped rows for siteSR Landsat 5's DSWE1 (confident water) RS
-summaries.](images/siteSR/LT05_DSWE1_drop_summary.png){#fig:site-ls5-dswe1-drop}
+![Summary of rows retained during siteSR quality filtering for Landsat 5 DSWE1
+(confident water) remote sensing
+summaries.](images/siteSR/LT05_DSWE1_drop_summary.png){alt="Summary of rows retained during siteSR Landsat 9's quality filtering for DSWE1 (confident water) remote sensing summaries."}
 
 ### Landsat 7 QA Summary
 
-![Summary of dropped rows for lakeSR Landsat 7's DSWE1 (confident water) RS
-summaries.](images/lakeSR/LE07_DSWE1_drop_summary.png){#fig:lake-ls7-dswe1-drop}
+![Summary of rows retained during lakeSR quality filtering for Landsat 7 DSWE1
+(confident water) remote sensing
+summaries.](images/siteSR/LE07_DSWE1_drop_summary.png){alt="Summary of rows retained during siteSR Landsat 9's quality filtering for DSWE1 (confident water) remote sensing summaries."}
 
-![Summary of dropped rows for siteSR Landsat 7's DSWE1 (confident water) RS
-summaries.](images/siteSR/LE07_DSWE1_drop_summary.png){#fig:site-ls7-dswe1-drop}
+![Summary of rows retained during siteSR quality filtering for Landsat 7 DSWE1
+(confident water) remote sensing
+summaries.](images/siteSR/LE07_DSWE1_drop_summary.png){alt="Summary of rows retained during siteSR Landsat 9's quality filtering for DSWE1 (confident water) remote sensing summaries."}
 
 ### Landsat 8 QA Summary
 
-![Summary of dropped rows for lakeSR Landsat 8's DSWE1 (confident water) RS
+![Summary of rows retained during lakeSR quality filtering for Landsat 8 DSWE1
+(confident water) remote sensing
 summaries.](images/lakeSR/LC08_DSWE1_drop_summary.png){#fig:lake-ls8-dswe1-drop}
 
-![Summary of dropped rows for siteSR Landsat 8's DSWE1 (confident water) RS
+![Summary of rows retained during siteSR quality filtering for Landsat 8 DSWE1
+(confident water) remote sensing
 summaries.](images/siteSR/LC08_DSWE1_drop_summary.png){#fig:site-ls8-dswe1-drop}
 
 ### Landsat 9 QA Summary
 
-![Summary of dropped rows for lakeSR Landsat 9's DSWE1 (confident water) RS
+![Summary of rows retained during lakeSR quality filtering for Landsat 9 DSWE1
+(confident water) remote sensing
 summaries.](images/lakeSR/LC09_DSWE1_drop_summary.png){#fig:lake-ls9-dswe1-drop}
 
-![Summary of dropped rows for siteSR Landsat 9's DSWE1 (confident water) RS
-summaries.](images/siteSR/LC09_DSWE1_drop_summary.png){#fig:site-ls9-dswe1-drop}
+![Summary of rows retained during siteeSR quality filtering for Landsat 9 DSWE1
+(confident water) remote sensing
+summaries.](images/siteSR/LC09_DSWE1_drop_summary.png)

@@ -102,12 +102,12 @@ States and permanently inhabited territories.
 
 ### Pole of Inaccessibility {#poi}
 
-The USGS National Hydrography products contain smaller waterbodies and higher
-resolution polygons than the HydroLakes shapes, which makes it computationally
-impossible to use the Chebyshev Center ["deepest point", @yang2020] calculation
-used in LimnoSat-US due to the number of vertices in each polygon. To replace
-this important step in the update, we employ the concept of "pole of
-inaccessibility" [POI, @stefansson1920].
+The USGS National Hydrography products contain smaller and higher resolution
+polygons than the HydroLakes shapes, which makes it computationally impossible
+to use the Chebyshev Center ["deepest point", @yang2020] calculation used in
+LimnoSat-US due to the number of vertices in each polygon. To replace this
+important step in the update, we employ the concept of "pole of inaccessibility"
+[POI, @stefansson1920].
 
 The concept of POI is used to define the geographic center of a circle with the
 largest circumference within any complex polygon. The foundational principle is
@@ -251,20 +251,20 @@ tm_shape(WI_for_viz) +
   tm_dots("black")
 ```
 
-## siteSR Acquisition Locations {#siteSR-locs}
+## siteSR_WQP Acquisition Locations {#siteSR-locs}
 
 The AquaMatch_harmonize_WQP workflow outputs site metadata for all sites that
-are present after the harmonization procedure for each parameter. siteSR
+are present after the harmonization procedure for each parameter. siteSR_WQP
 collates these sites, then reduces that collation to only distinct sites. Across
 chlorophyll-*a*, Secchi disc depth, and DOC, there are currently
 `r format(nrow(p4_WQP_site_NHD_info), big.mark = ",")` distinct sites in the
 United States and Territories for which we create stacks.
 
 Every site in the WQP has a `MonitoringLocationTypeName` associated with it. For
-the purposes of siteSR, we do not subset the sites by these types, but they are
-helpful for understanding the type of data included in siteSR.
+the purposes of siteSR_WQP, we do not subset the sites by these types, but they
+are helpful for understanding the type of data included in siteSR_WQP.
 
-```{r siteSR-types, fig.cap="Water Quality Portal data location types present in siteSR. Unique WQP monitoring location count above bar, divided by `MonitoringLocationTypeName`."}
+```{r siteSR-types, fig.cap="Water Quality Portal data location types present in siteSR_WQP. Unique WQP monitoring location count above bar, divided by `MonitoringLocationTypeName`."}
 ggplot(p4_WQP_site_NHD_info, aes(x = MonitoringLocationTypeName)) +
   geom_bar() +
   theme_bw() +
@@ -293,7 +293,7 @@ stacks for. After this assessment,
 `r format(nrow(p5_visible_sites), big.mark = ",")` sites were deemed to be
 visible by remote sensing.
 
-```{r siteSR-filtered, fig.cap="Water Quality Portal data location types present in siteSR after filitering for those that are deemed visible by remote sensing. Count of sites provided above bar, divided by `MonitoringLocationTypeName`."}
+```{r siteSR-filtered, fig.cap="Water Quality Portal data location types present in siteSR_WQP after filitering for those that are deemed visible by remote sensing. Count of sites provided above bar, divided by `MonitoringLocationTypeName`."}
 p5_visible_sites %>% 
   rename(siteSR_id = id) %>% 
   left_join(., p4_WQP_site_NHD_info) %>% 
@@ -338,7 +338,7 @@ flag (`flag_wb`) the results of this assignment as follows:
 > waterbody polygon)
 >
 > 4: point does not have HUC8 assignment or MonitoringLocationTypeName does not
-> contain "lake" or "reservoir". No waterbody assigned.
+> contain "lake" or "reservoir". No waterbody is assigned.
 
 For all points with a flag value of 0 or 1 we provide the NHD identifier for the
 polygon the monitoring location is associated with (comid for NHDPlusV2 and
@@ -389,7 +389,7 @@ decisions about data quality that may be inferred through the information
 included in these columns relative to the remote sensing data obtained in
 siteSR, they are present to assist in data interpretation.
 
-### siteSR updates in AquaSat v2
+### siteSR_WQP updates in AquaSat v2
 
 In our updated workflow, we acquire and provide the historical Landsat stacks
 for all sites collated from the harmonization pipeline, regardless of whether

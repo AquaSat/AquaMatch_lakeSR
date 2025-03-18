@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-17" />
+<meta name="date" content="2025-03-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -185,11 +185,11 @@ div.csl-indent {
 <li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#lakeSR-shoreline"><i class="fa fa-check"></i><b>3.1.4</b> Flagging shoreline proximity</a></li>
 <li class="chapter" data-level="3.1.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR Acquisition Locations</a>
+<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR_WQP Acquisition Locations</a>
 <ul>
 <li class="chapter" data-level="3.2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#rs-vis"><i class="fa fa-check"></i><b>3.2.1</b> Assessing for RS visibility</a></li>
 <li class="chapter" data-level="3.2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#fl-wb-assignment"><i class="fa fa-check"></i><b>3.2.2</b> Assignment of NHD flowline and waterbodies</a></li>
-<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR updates in AquaSat v2</a></li>
+<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr_wqp-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR_WQP updates in AquaSat v2</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>4</b> Satellite Data Acquisition Software and Settings</a>
@@ -200,7 +200,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
 <li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
 <li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#proj-setting"><i class="fa fa-check"></i><b>4.2.3</b> GEE project setting</a></li>
-<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
+<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#auth"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
@@ -283,8 +283,8 @@ div.csl-indent {
 <h1><span class="header-section-number">5</span> Landsat Collection 2 SRST<a href="LS-C2-SRST.html#LS-C2-SRST" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="initialisms-and-landsat-jargon" class="section level2 hasAnchor" number="5.1">
 <h2><span class="header-section-number">5.1</span> Initialisms and Landsat Jargon<a href="LS-C2-SRST.html#initialisms-and-landsat-jargon" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><em>SR</em>: surface reflectance</p>
-<p><em>ST</em>: surface temperature</p>
+<p><em>SR</em>: surface reflectance product</p>
+<p><em>ST</em>: surface temperature product</p>
 <p><em>Collection 2 (C2)</em>: The second version of the Landsat record - the transition
 to C2 began in 2020. There were extensive changes to the data storage and
 metadata when moving from Collection 1 to C2. An overview of the differences is
@@ -319,48 +319,57 @@ for the purpose of providing background information about the Landsat archive
 relevant to the creation and use of lakeSR.</em></p>
 <p>The Landsat archive of multispectral and thermal data in lakeSR is composed of
 Landsat missions 4 through 9 and spans more than 40 years.</p>
-<table>
+<table style="width:98%;">
 <colgroup>
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
+<col width="24%" />
+<col width="24%" />
+<col width="24%" />
+<col width="24%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th>Mission and Sensor</th>
+<th>Mission and
+Sensor</th>
 <th align="center">Launch Date</th>
-<th align="center">End of Science Mission</th>
+<th align="center">End of Science
+Mission</th>
 <th align="center">Decommission Date</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Landsat 4 TM <span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
+<td>Landsat 4 TM
+<span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
 <td align="center">1982-07-16</td>
 <td align="center">1993-12-14</td>
 <td align="center">2001-06-15</td>
 </tr>
 <tr class="even">
-<td>Landsat 5 TM <span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
+<td>Landsat 5 TM
+<span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
 <td align="center">1984-03-01</td>
 <td align="center">2011-11-18</td>
 <td align="center">2013-06-05</td>
 </tr>
 <tr class="odd">
-<td>Landsat 7 ETM+ <span class="citation">(<a href="#ref-eros-7">EROS Center 2020b</a>)</span></td>
+<td>Landsat 7 ETM+
+<span class="citation">(<a href="#ref-eros-7">EROS Center 2020b</a>)</span></td>
 <td align="center">1999-04-15</td>
 <td align="center">2022-04-06</td>
 <td align="center">N/A</td>
 </tr>
 <tr class="even">
-<td>Landsat 8 OLI/TIRS <span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
+<td>Landsat 8
+OLI/TIRS
+<span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
 <td align="center">2013-02-11</td>
 <td align="center">N/A</td>
 <td align="center">N/A</td>
 </tr>
 <tr class="odd">
-<td>Landsat 9 OLI-2/TIRS-2 <span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
+<td>Landsat 9
+OLI-2/TIRS-2
+<span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
 <td align="center">2021-09-27</td>
 <td align="center">N/A</td>
 <td align="center">N/A</td>
@@ -376,8 +385,8 @@ the Landsat 7 scanline error that began on May 31, 2003, data were collected as
 available despite the scanline error since the data are still of acceptable
 quality <a href="https://www.usgs.gov/faqs/what-landsat-7-etm-slc-data">per the USGS</a>.
 Additionally, Landsat 7 began to experience orbital drift beginning in 2017,
-resulting in top-of-atmosphere (and therefore also surface reflectance) that had
-growing uncertainties over time as the drift increased <span class="citation">(<a href="#ref-qiu2021">Qiu et al. 2021</a>)</span>. Qui
+resulting in top-of-atmosphere (and therefore also surface reflectance) values
+that had growing uncertainties over time as the drift increased <span class="citation">(<a href="#ref-qiu2021">Qiu et al. 2021</a>)</span>. Qui
 <span class="citation">(<a href="#ref-qiu2021">2021</a>)</span> suggests that data are not robust enough for trend analysis after
 the start of the growing season in 2020, but because their analysis was of NDVI,
 we conservatively truncate the data at the end of 2019.</p>
@@ -399,11 +408,11 @@ the Landsat archive.</p>
 <p>The spatial resolution of the Level 1 data that the SR and ST products are
 derived from has not changed for optical bands over time (Aerosol, RGB, NIR,
 SWIR) but has varied over the historic record for thermal data:</p>
-<table style="width:65%;">
+<table style="width:71%;">
 <colgroup>
-<col width="20%" />
-<col width="22%" />
-<col width="22%" />
+<col width="23%" />
+<col width="23%" />
+<col width="23%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -449,7 +458,7 @@ Collection 2 Surface
 Reflectance</a>
 product page and has been summarized here for the purpose of providing
 background information about the Landsat archive relevant to the creation and
-use of lakeSR.</em></p>
+use of lakeSR and siteSR products.</em></p>
 <p>The Landsat C2 SR product is a Level 2 data product that has been
 atmospherically corrected from the Level 1 Top of Atmosphere product using a
 myriad of inputs to create a reasonably consistent data product across space and
@@ -465,7 +474,7 @@ auxiliary data inputs to generate a scientifically viable product.</em></p>
 <div id="sr-atmospheric-processing" class="section level3 hasAnchor" number="5.3.1">
 <h3><span class="header-section-number">5.3.1</span> SR Atmospheric Processing<a href="LS-C2-SRST.html#sr-atmospheric-processing" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The SR product for Landsat 4-7 is calculated using the Land Ecosystem
-Distrubance Adaptive Procesing System (LEDAPS) <span class="citation">(<a href="#ref-schmidt2013">Schmidt et al. 2013</a>)</span> and Landsat 8 and
+Disturbance Adaptive Processing System (LEDAPS) <span class="citation">(<a href="#ref-schmidt2013">Schmidt et al. 2013</a>)</span> and Landsat 8 and
 9 SR data are calculated using the Land Surface Reflectance Code (LaSRC)
 algorithm <span class="citation">(<a href="#ref-vermote2018">Vermote et al. 2018</a>)</span>. The two algorithms are functionally different, but the
 outcome is the same: a consistently-processed surface reflectance product that
@@ -482,7 +491,7 @@ Collection 2 Surface
 Temperature</a>
 product page and has been summarized here for the purpose of providing
 background information about the Landsat archive relevant to the creation and
-use of lakeSR.</em></p>
+use of lakeSR and siteSR products.</em></p>
 <p>The Landsat Collection 2 Surface Temperature (ST) product is calculated using a
 single-channel algorithm <span class="citation">(<a href="#ref-cook2014a">M. J. Cook 2014</a>; <a href="#ref-cook2014b">M. Cook et al. 2014</a>)</span> to convert the thermal band
 data to temperature estimates in degrees Kelvin. While these data are considered
@@ -509,7 +518,9 @@ of <code>MonitoringLocationTypeName</code>, the flags assigned from our NHD assi
 process, and the distance columns from that process to assess whether or not the
 temperature data is appropriate for a given site. Additional assessments may be
 necessary to assess whether it is appropriate to use the temperature data for
-discrete analysis of temperature trends/patterns.</p>
+discrete analysis of temperature trends/patterns. King, et al. (-<span class="citation">King, Bean, and Gohring (<a href="#ref-king">2024</a>)</span>) have
+noted that handoff coefficients should be used for the surface temperature
+product as well, see Section <a href="define-handoff.html#define-handoff">8</a> for details.</p>
 
 </div>
 </div>
@@ -529,6 +540,9 @@ EROS Center. 2020a. <span>“USGS EROS Archive - Landsat Archives - Landsat 4-5 
 </div>
 <div id="ref-eros-89" class="csl-entry">
 ———. 2020c. <span>“USGS EROS Archive - Landsat Archives - Landsat 8-9 OLI/TIRS Collection 2 Level-2 Science Products.”</span> <a href="https://doi.org/doi.org/10.5066/P9OGBGM6">https://doi.org/doi.org/10.5066/P9OGBGM6</a>.
+</div>
+<div id="ref-king" class="csl-entry">
+King, Tyler V., Robert A. Bean, and Evan J. Gohring. 2024. <span>“Remote Sensing and in-Situ Data to Support Chlorophyll-a Mapping in Blue Mesa Reservoir from Sentinel-2 Imagery | U.S. Geological Survey.”</span> <a href="https://doi.org/10.5066/P9XULQAS">https://doi.org/10.5066/P9XULQAS</a>.
 </div>
 <div id="ref-qiu2021" class="csl-entry">
 Qiu, Shirley, Zhe Zhu, Rong Shang, and Christopher J. Crawford. 2021. <span>“Can Landsat 7 Preserve Its Science Capability with a Drifting Orbit?”</span> <em>Science of Remote Sensing</em> 4. <a href="https://doi.org/10.1016/j.srs.2021.100026">https://doi.org/10.1016/j.srs.2021.100026</a>.

@@ -31,7 +31,7 @@ both R and Python programming languages to complete these tasks.
 
 **config.yml:**
 
-lakeSR_WQP relies on this configuration file to run specific profiles that
+lakeSR relies on this configuration file to run specific profiles that
 determine what operations are being run. The file contains two configuration
 profiles: "default" and "admin_update".
 
@@ -53,8 +53,8 @@ profiles: "default" and "admin_update".
 
 Advanced users are welcome to adapt the pipeline to incorporate other masks or 
 filters or to incorporate other quality assurance filters or handoff
-methods. **Note: the Landsat Surface Reflectance product should not be used without
-applying a handoff coefficient if you are using data from multiple Landsat
+methods. **Note: the Landsat Surface Reflectance and Surface Temperature products should not be used without
+applying a handoff coefficient to harmonize data between missions if you are using data from multiple Landsat
 missions.** See Section \@ref(define-handoff) for details on this process.
 
 Proper configuration of `harmonize_repo_directory`
@@ -184,8 +184,7 @@ list will be empty.
 
 [siteSR_WQP code](https://github.com/AquaSat/AquaMatch_siteSR_WQP) is built upon
 the output of
-[AquaMatch_harmonize_WQP](https://github.com/AquaSat/AquaMatch_harmonize_WQP)
-and [lakeSR](https://github.com/AquaSat/AquaMatch_lakeSR).
+[AquaMatch_harmonize_WQP](https://github.com/AquaSat/AquaMatch_harmonize_WQP).
 AquaMatch_harmonize_WQP provides harmonized *in situ* data from the Water
 Quality Portal for pairing with remote sensing data acquired at the sites of *in
 situ* data. This workflow picks up where AquaMatch_harmonize_WQP ends, with the
@@ -259,7 +258,7 @@ files.
 
 **5_determine_RS_visibility:**
 
-The resulting list of in situ locations are used to assess remote-sensing
+The resulting list of *in situ* locations are used to assess remote-sensing
 visibility in this {targets} group. Sites are assessed for visibility using the 
 JRC Global Surface Water [@pekel2016] which is based on the historical Landsat 
 record. This {targets} group takes a number of hours to run, if the configuration 
@@ -279,8 +278,4 @@ previously-created files) and the number of cores available to run the workflow.
 **7_siteSR_qa:**
 
 Collated Landsat data are filtered for quality based on broadly applicable 
-thresholds.
-
-**8_siteSR_matchup:**
-
-forthcoming
+thresholds and exported from the pipeline for data archiving.

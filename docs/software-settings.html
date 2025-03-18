@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-17" />
+<meta name="date" content="2025-03-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -185,11 +185,11 @@ div.csl-indent {
 <li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#lakeSR-shoreline"><i class="fa fa-check"></i><b>3.1.4</b> Flagging shoreline proximity</a></li>
 <li class="chapter" data-level="3.1.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR Acquisition Locations</a>
+<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR_WQP Acquisition Locations</a>
 <ul>
 <li class="chapter" data-level="3.2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#rs-vis"><i class="fa fa-check"></i><b>3.2.1</b> Assessing for RS visibility</a></li>
 <li class="chapter" data-level="3.2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#fl-wb-assignment"><i class="fa fa-check"></i><b>3.2.2</b> Assignment of NHD flowline and waterbodies</a></li>
-<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR updates in AquaSat v2</a></li>
+<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr_wqp-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR_WQP updates in AquaSat v2</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>4</b> Satellite Data Acquisition Software and Settings</a>
@@ -200,7 +200,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
 <li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
 <li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#proj-setting"><i class="fa fa-check"></i><b>4.2.3</b> GEE project setting</a></li>
-<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
+<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#auth"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
@@ -282,9 +282,10 @@ div.csl-indent {
 <div id="software-settings" class="section level1 hasAnchor" number="4">
 <h1><span class="header-section-number">4</span> Satellite Data Acquisition Software and Settings<a href="software-settings.html#software-settings" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>Currently, all satellite data in AquaSat v2 are obtained using the Python API
-for Google Earth Engine (GEE) <span class="citation">(<a href="#ref-gorelick2017">Gorelick et al. 2017</a>)</span>. While the orchestration of data
+for Google Earth Engine <span class="citation">(GEE, <a href="#ref-gorelick2017">Gorelick et al. 2017</a>)</span>. While the orchestration of data
 acquisition is performed by the {targets} workflow, all code directly related to
-GEE data acquisition is written in Python.</p>
+GEE data acquisition is written in Python. If you are running the ‘default’
+configuration for lakeSR or siteSR the following directions are not applicable.</p>
 <div id="reticulate-conda-environment" class="section level2 hasAnchor" number="4.1">
 <h2><span class="header-section-number">4.1</span> {reticulate} Conda Environment<a href="software-settings.html#reticulate-conda-environment" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>RStudio <span class="citation">(<a href="#ref-positteam2023">Posit team 2023</a>)</span> is an IDE that, alongside the {reticulate} package
@@ -346,10 +347,11 @@ pipeline to assure a smooth run of the workflow.</p>
 </div>
 <div id="google-earth-engine-setup" class="section level2 hasAnchor" number="4.2">
 <h2><span class="header-section-number">4.2</span> Google Earth Engine Setup<a href="software-settings.html#google-earth-engine-setup" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>In order to run any GEE-related targets, you will need to have a Google Earth
-Engine account (see <a href="software-settings.html#create-account">4.2.1</a>), a Google Earth Engine Cloud Project
-(described in <a href="software-settings.html#proj-setting">4.2.3</a>) , gcloud CLI set up on your computer (see
-<a href="software-settings.html#gcloud">4.2.2</a>), and you will need to alter the configuration file (described in
+<p>If running the ‘admin_update’ configuration for either lakeSR or siteSR, you
+will need to have a GEE account (<span class="citation">(<a href="#ref-ref"><strong>ref?</strong></a>)</span>(create-account)), the gcloud CLI installed
+and configured (<span class="citation">(<a href="#ref-ref"><strong>ref?</strong></a>)</span>(gcloud)), create an Earth Engine Project
+(<span class="citation">(<a href="#ref-ref"><strong>ref?</strong></a>)</span>(proj-setting)), have successful authenticated your account (<span class="citation">(<a href="#ref-ref"><strong>ref?</strong></a>)</span>(auth)),
+and you will need to alter the configuration file (described in Section
 <a href="software-settings.html#proj-setting">4.2.3</a>).</p>
 <div id="create-account" class="section level3 hasAnchor" number="4.2.1">
 <h3><span class="header-section-number">4.2.1</span> Create a GEE account<a href="software-settings.html#create-account" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -387,8 +389,8 @@ accessed by clicking on the icon to the right of the highlighted box in the
 figure above. This workflow will not run without specifying an Earth Engine
 Project that is managed by the Google Account you authenticate this run with.</p>
 </div>
-<div id="gee-authentication" class="section level3 hasAnchor" number="4.2.4">
-<h3><span class="header-section-number">4.2.4</span> GEE Authentication<a href="software-settings.html#gee-authentication" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="auth" class="section level3 hasAnchor" number="4.2.4">
+<h3><span class="header-section-number">4.2.4</span> GEE Authentication<a href="software-settings.html#auth" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Once <code>gcloud</code> is installed and initialized, the configuration file is properly
 set up, and the Conda environment is set up, you can authenticate your GEE
 instance. For this workflow, this is completed in the <code>run_targets.Rmd</code> script

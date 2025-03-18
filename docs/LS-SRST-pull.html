@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-17" />
+<meta name="date" content="2025-03-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -185,11 +185,11 @@ div.csl-indent {
 <li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#lakeSR-shoreline"><i class="fa fa-check"></i><b>3.1.4</b> Flagging shoreline proximity</a></li>
 <li class="chapter" data-level="3.1.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR Acquisition Locations</a>
+<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR_WQP Acquisition Locations</a>
 <ul>
 <li class="chapter" data-level="3.2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#rs-vis"><i class="fa fa-check"></i><b>3.2.1</b> Assessing for RS visibility</a></li>
 <li class="chapter" data-level="3.2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#fl-wb-assignment"><i class="fa fa-check"></i><b>3.2.2</b> Assignment of NHD flowline and waterbodies</a></li>
-<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR updates in AquaSat v2</a></li>
+<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr_wqp-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR_WQP updates in AquaSat v2</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>4</b> Satellite Data Acquisition Software and Settings</a>
@@ -200,7 +200,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
 <li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
 <li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#proj-setting"><i class="fa fa-check"></i><b>4.2.3</b> GEE project setting</a></li>
-<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
+<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#auth"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
@@ -281,15 +281,15 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="LS-SRST-pull" class="section level1 hasAnchor" number="6">
 <h1><span class="header-section-number">6</span> Landsat Collection 2 SRST Data Product<a href="LS-SRST-pull.html#LS-SRST-pull" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>The lakeSR-Landsat data product is a set of tabular datasets, representing the
-Landsat surface reflectance (SR) and surface tempearture (ST) data summarized
-for the point of inaccessibility (POI) location which is meant to represent
-pelagic conditions at a given waterbody (identified by its NHD unique
-identifier, see Section <a href="locs-data-acq.html#locs-data-acq">3</a>). This data product contains “full
-stacks” of the Landsat Collection 2 record - that is, all summarized Landsat
-data available from all Landsat missions that met our within-image QA criteria.</p>
-<p>The siteSR-Landsat data product is similar, but is acquired at unique sampling
-locations as described in <a href="locs-data-acq.html#siteSR-locs">3.2</a>.</p>
+<p>The lakeSR data product is a set of tabular datasets, representing the Landsat
+surface reflectance (SR) and surface tempearture (ST) data summarized for the
+point of inaccessibility (POI) location which is meant to represent pelagic
+conditions at a given waterbody (identified by its NHD unique identifier, see
+Section <a href="locs-data-acq.html#locs-data-acq">3</a>). This data product contains “full stacks” of the
+Landsat Collection 2 record - that is, all summarized Landsat data available
+from all Landsat missions that met our within-image QA criteria.</p>
+<p>The siteSR data product is similar, but is acquired at unique sampling locations
+as described in <a href="locs-data-acq.html#siteSR-locs">3.2</a>.</p>
 <div id="changes-from-aquasat-v1-and-limnosat-us" class="section level2 hasAnchor" number="6.1">
 <h2><span class="header-section-number">6.1</span> Changes from AquaSat v1 and LimnoSat-US<a href="LS-SRST-pull.html#changes-from-aquasat-v1-and-limnosat-us" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>While much of the general architecture from the precedent data products remained
@@ -412,14 +412,14 @@ the RStudio IDE</p></li>
 <p>lakeSR (and siteSR) can be modified to be run by a user by setting up a new
 config file and altering the {targets} workflow to point to that config file. To
 configure a new run of this workflow, fill out the yaml file at the file path
-<code>b_pull_Landsat_SRST_poi/config_files/config.yml</code> and modify the <code>_targets.R</code>
-script at line 28 to reflect the updated config file.</p>
-<p>To run the pipeline with this custom configuration, follow the steps in
-<code>run_targets.Rmd</code>, which will run the pipeline.</p>
+<code>b_pull_Landsat_SRST_poi/config_files/config.yml</code> for lakeSR and
+<code>gee_config.yml</code> for siteSR. To run the pipeline with this custom configuration,
+follow the steps in <code>run_targets.Rmd</code>, which will assure proper set up and run
+the pipeline.</p>
 <p>If you wish to make changes to any processes that are not indicated in the
 config file (using a different set of lakes/source files, remote sensing masking
 procedures, summary statistics, QAQC filtering, mission handoff corrections,
-etc.) we encourage you to do so. Just remember, this pipeline takes DAYS to run
+etc.) we encourage you to do so. Just remember, this pipeline takes days to run
 due to the bottleneck when submitting tasks to Google Earth Engine. If you wish
 to extract remote sensing data for specific locations in a lake, we encourage
 you to look to our <a href="https://github.com/AquaSat/AquaMatch_siteSR_WQP">siteSR data
@@ -448,11 +448,11 @@ overview of some of the custom masking procedures and their justification, if
 applicable. We use the most aggressive masking procedures in the lakeSR and
 siteSR products in order to attempt to have consistent and robust data across
 such a large area of data acquisition. An interactive masking viewer is
-available for <a href="https://ee-aquamatch.projects.earthengine.app/view/asv2landsat57interactivemask">Landsat
+available for select scenes for <a href="https://ee-aquamatch.projects.earthengine.app/view/asv2landsat57interactivemask">Landsat
 4/5/7</a>
 and <a href="https://ee-aquamatch.projects.earthengine.app/view/asv2landsat89interactivemask">Landsat
 8/9</a>
-to see these masks in action.</p>
+to see some of the masks in action.</p>
 <ul>
 <li><p><code>apply_rad_mask</code>: Masks out all pixels that are radiometrically saturated in
 any optical band using the QA_RADSAT QA band. The Landsat User Guides

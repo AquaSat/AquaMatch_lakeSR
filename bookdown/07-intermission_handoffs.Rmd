@@ -33,12 +33,13 @@ e_LS8_forLS78corr_quantiles <- e_LS8_forLS78corr_quantiles %>%
 It is necessary to standardize band values between Landsat missions in order to
 create a robust timeseries. @maciel2023 notes the issues in using the Landsat
 Surface Reflectance product as a timeseries without careful handling of data
-between missions. This standardization process attempts to address changes in
-sensor spectral response and atmospheric correction procedures. For the purposes
-of AquaSat v2, we call this standardization process "intermission handoffs". We
-implement two versions of intermission handoffs: the method described in
-@roy2016 ("Roy method") and an adapted version of that described in @gardner2021
-("Gardner method").
+between missions. @king notes that this type of standardization is necessary for
+the thermal band, as well. This standardization process attempts to address
+changes in sensor spectral response and atmospheric correction procedures. For
+the purposes of AquaSat v2, we call this standardization process "intermission
+handoffs". We implement two versions of intermission handoffs: the method
+described in @roy2016 ("Roy method") and an adapted version of that described in
+@gardner2021 ("Gardner method").
 
 In AquaSat v2, we provide coefficients to standardize remote sensing values
 relative to Landsat 7 and Landsat 8. The Landsat 7 intermission handoffs create
@@ -62,8 +63,9 @@ specific sites, where the reflectance data are obtained are from two missions
 within the overlapping paths in the WRS2 path-row framework:
 
 ![An example of two overlapping WRS2 paths (grey area) separated by one day. Any
-location with data for both images would be considered a paired data point to
-define the Roy method intermission handoffs.](images/path_overlap_roy.png)
+location with data for both images (in the grey area) would be considered a
+paired data point to define the Roy method intermission
+handoffs.](images/path_overlap_roy.png)
 
 While @roy2016 implemented this method on a pixel-by-pixel basis, we implement
 using the median band value per site. This is used in place of the explicit

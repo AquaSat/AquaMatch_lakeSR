@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-17" />
+<meta name="date" content="2025-03-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -185,11 +185,11 @@ div.csl-indent {
 <li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#lakeSR-shoreline"><i class="fa fa-check"></i><b>3.1.4</b> Flagging shoreline proximity</a></li>
 <li class="chapter" data-level="3.1.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR Acquisition Locations</a>
+<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR_WQP Acquisition Locations</a>
 <ul>
 <li class="chapter" data-level="3.2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#rs-vis"><i class="fa fa-check"></i><b>3.2.1</b> Assessing for RS visibility</a></li>
 <li class="chapter" data-level="3.2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#fl-wb-assignment"><i class="fa fa-check"></i><b>3.2.2</b> Assignment of NHD flowline and waterbodies</a></li>
-<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR updates in AquaSat v2</a></li>
+<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr_wqp-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR_WQP updates in AquaSat v2</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>4</b> Satellite Data Acquisition Software and Settings</a>
@@ -200,7 +200,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
 <li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
 <li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#proj-setting"><i class="fa fa-check"></i><b>4.2.3</b> GEE project setting</a></li>
-<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
+<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#auth"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
@@ -302,7 +302,7 @@ both R and Python programming languages to complete these tasks.</p>
 <div id="configuration-files" class="section level3 hasAnchor" number="2.1.1">
 <h3><span class="header-section-number">2.1.1</span> Configuration Files<a href="background.html#configuration-files" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p><strong>config.yml:</strong></p>
-<p>lakeSR_WQP relies on this configuration file to run specific profiles that
+<p>lakeSR relies on this configuration file to run specific profiles that
 determine what operations are being run. The file contains two configuration
 profiles: “default” and “admin_update”.</p>
 <ul>
@@ -323,8 +323,8 @@ changes implemented are not automatically reflected in the bookdown.</p></li>
 </ul>
 <p>Advanced users are welcome to adapt the pipeline to incorporate other masks or
 filters or to incorporate other quality assurance filters or handoff
-methods. <strong>Note: the Landsat Surface Reflectance product should not be used without
-applying a handoff coefficient if you are using data from multiple Landsat
+methods. <strong>Note: the Landsat Surface Reflectance and Surface Temperature products should not be used without
+applying a handoff coefficient to harmonize data between missions if you are using data from multiple Landsat
 missions.</strong> See Section <a href="define-handoff.html#define-handoff">8</a> for details on this process.</p>
 <p>Proper configuration of <code>harmonize_repo_directory</code>
 is imperative as the siteSR_WQP workflow references files inside
@@ -425,8 +425,7 @@ list will be empty.</p>
 <h2><span class="header-section-number">2.2</span> siteSR_WQP Code Architecture<a href="background.html#sitesr_wqp-code-architecture" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><a href="https://github.com/AquaSat/AquaMatch_siteSR_WQP">siteSR_WQP code</a> is built upon
 the output of
-<a href="https://github.com/AquaSat/AquaMatch_harmonize_WQP">AquaMatch_harmonize_WQP</a>
-and <a href="https://github.com/AquaSat/AquaMatch_lakeSR">lakeSR</a>.
+<a href="https://github.com/AquaSat/AquaMatch_harmonize_WQP">AquaMatch_harmonize_WQP</a>.
 AquaMatch_harmonize_WQP provides harmonized <em>in situ</em> data from the Water
 Quality Portal for pairing with remote sensing data acquired at the sites of <em>in
 situ</em> data. This workflow picks up where AquaMatch_harmonize_WQP ends, with the
@@ -488,7 +487,7 @@ the WQP, then the unique HUC4s are used to associate points with waterbodies
 and flowlines of the NHDPlusV2 (CONUS) or NHD Best Resolution (non-CONUS HUCs)
 files.</p>
 <p><strong>5_determine_RS_visibility:</strong></p>
-<p>The resulting list of in situ locations are used to assess remote-sensing
+<p>The resulting list of <em>in situ</em> locations are used to assess remote-sensing
 visibility in this {targets} group. Sites are assessed for visibility using the
 JRC Global Surface Water <span class="citation">(<a href="#ref-pekel2016">Pekel et al. 2016</a>)</span> which is based on the historical Landsat
 record. This {targets} group takes a number of hours to run, if the configuration
@@ -504,9 +503,7 @@ run time will be dependent on your internet connection (to access the
 previously-created files) and the number of cores available to run the workflow.</p>
 <p><strong>7_siteSR_qa:</strong></p>
 <p>Collated Landsat data are filtered for quality based on broadly applicable
-thresholds.</p>
-<p><strong>8_siteSR_matchup:</strong></p>
-<p>forthcoming</p>
+thresholds and exported from the pipeline for data archiving.</p>
 
 </div>
 </div>

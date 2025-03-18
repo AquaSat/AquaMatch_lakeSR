@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-17" />
+<meta name="date" content="2025-03-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -185,11 +185,11 @@ div.csl-indent {
 <li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#lakeSR-shoreline"><i class="fa fa-check"></i><b>3.1.4</b> Flagging shoreline proximity</a></li>
 <li class="chapter" data-level="3.1.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR Acquisition Locations</a>
+<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR_WQP Acquisition Locations</a>
 <ul>
 <li class="chapter" data-level="3.2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#rs-vis"><i class="fa fa-check"></i><b>3.2.1</b> Assessing for RS visibility</a></li>
 <li class="chapter" data-level="3.2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#fl-wb-assignment"><i class="fa fa-check"></i><b>3.2.2</b> Assignment of NHD flowline and waterbodies</a></li>
-<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR updates in AquaSat v2</a></li>
+<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr_wqp-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR_WQP updates in AquaSat v2</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>4</b> Satellite Data Acquisition Software and Settings</a>
@@ -200,7 +200,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
 <li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
 <li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#proj-setting"><i class="fa fa-check"></i><b>4.2.3</b> GEE project setting</a></li>
-<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
+<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#auth"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
@@ -318,6 +318,11 @@ still result in erroneous or misleading SR values. To address this we implement
 post-hoc filters that are applied to the stack to reduce uncertainty in the
 remote sensing data as much as possible.</p>
 <ul>
+<li><p>image quality (acquired from scene-level metadata files) must be &gt;= 8. In
+Landsat 4, 5, and 7 this value is stored in the metadata column
+<code>IMAGE_QUALITY</code>, in Landsat 8 and 9, this value originates from the column
+<code>IMAGE_QUALITY_OLI</code>. These column indicate the overall quality of the image
+on a scale of 0 (worst) to 9 (best).</p></li>
 <li><p>total count of pixels (<code>pCount_dswe1</code> or <code>pCount_dswe1a</code>) contributing to
 summary values must be ≥ 8. This is a slight change from AquaSat v1 which
 required 10 pixels. Due to the more rigorous masking procedures (than
@@ -331,7 +336,7 @@ the thermal estimates. In particular, cirrus clouds can go unnoticed in
 cloud detection algorithms used that inform our masking procedures.</p></li>
 <li><p>if the median temperature is greater than or equal to 40°C (313.15 °K) the
 row is dropped. This maximum was defined based on the maximum value included
-<span class="citation">Willard et al. (<a href="#ref-willard2021">2021</a>)</span> composed of <em>in situ</em> measurementes and remote sensing
+<span class="citation">Willard et al. (<a href="#ref-willard2021">2021</a>)</span> composed of <em>in situ</em> measurements and remote sensing
 estimates.</p></li>
 <li><p>either NIR surface reflectance or SWIR1 and SWIR2 surface reflectance must
 be &lt; 0.1, this is to remove any extracted samples where sun glint has
@@ -345,74 +350,84 @@ dataset and remove data of this nature, we embraced this conditional
 approach.</p></li>
 </ul>
 <p>While there are numerous other diagnostic tests we could apply to filter the RS
-data, these are the QA filters that we deem to be the most foundational and
-unifying for reliable RS data across the US and Territories. Figures in the
-sections below show how many rows of data were dropped through this QA process.
-For the purposes of this documentation, we show summaries for DSWE1 data only,
-but running the pipeline locally results in summaries for both DSWE1 and DSWE1a
-data.</p>
+data, these are the QA filters that we deem to be the most universal for
+reliable RS data across the US and Territories. Figures in the sections below
+show how many rows of data were dropped through this QA process. For the
+purposes of this documentation, we show summaries for DSWE1 data only, but
+running the pipeline locally results in graphical summaries for both DSWE1 and
+DSWE1a data.</p>
 <div id="landsat-4-qa-summary" class="section level3 hasAnchor" number="7.2.1">
 <h3><span class="header-section-number">7.2.1</span> Landsat 4 QA Summary<a href="post-hoc-qa.html#landsat-4-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="float" id="fig:lake-ls4-dswe1-drop">
-<img src="images/lakeSR/LT04_DSWE1_drop_summary.png" alt="Summary of dropped rows for lakeSR Landsat 4’s DSWE1 (confident water) RS summaries." />
-<div class="figcaption">Summary of dropped rows for lakeSR Landsat 4’s DSWE1 (confident water) RS
+<div class="float" id="fig:site-ls9-dswe1-drop">
+<img src="images/siteSR/LT04_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR Landsat 9&#39;s quality filtering for DSWE1 (confident water) remote sensing summaries." />
+<div class="figcaption">Summary of rows retained during lakeSR quality filtering for Landsat 4 DSWE1
+(confident water) remote sensing
 summaries.</div>
 </div>
-<div class="float" id="fig:site-ls4-dswe1-drop">
-<img src="images/siteSR/LT04_DSWE1_drop_summary.png" alt="Summary of dropped rows for siteSR Landsat 4’s DSWE1 (confident water) RS summaries." />
-<div class="figcaption">Summary of dropped rows for siteSR Landsat 4’s DSWE1 (confident water) RS
+<div class="float">
+<img src="images/siteSR/LT04_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR Landsat 9&#39;s quality filtering for DSWE1 (confident water) remote sensing summaries." />
+<div class="figcaption">Summary of rows retained during siteSR quality filtering for Landsat 4 DSWE1
+(confident water) remote sensing
 summaries.</div>
 </div>
 </div>
 <div id="landsat-5-qa-summary" class="section level3 hasAnchor" number="7.2.2">
 <h3><span class="header-section-number">7.2.2</span> Landsat 5 QA Summary<a href="post-hoc-qa.html#landsat-5-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="float" id="fig:lake-ls5-dswe1-drop">
-<img src="images/lakeSR/LT05_DSWE1_drop_summary.png" alt="Summary of dropped rows for lakeSR Landsat 5’s DSWE1 (confident water) RS summaries." />
-<div class="figcaption">Summary of dropped rows for lakeSR Landsat 5’s DSWE1 (confident water) RS
+<div class="float">
+<img src="images/siteSR/LT05_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR Landsat 9&#39;s quality filtering for DSWE1 (confident water) remote sensing summaries." />
+<div class="figcaption">Summary of rows retained during lakeSR quality filtering for Landsat 5 DSWE1
+(confident water) remote sensing
 summaries.</div>
 </div>
-<div class="float" id="fig:site-ls5-dswe1-drop">
-<img src="images/siteSR/LT05_DSWE1_drop_summary.png" alt="Summary of dropped rows for siteSR Landsat 5’s DSWE1 (confident water) RS summaries." />
-<div class="figcaption">Summary of dropped rows for siteSR Landsat 5’s DSWE1 (confident water) RS
+<div class="float">
+<img src="images/siteSR/LT05_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR Landsat 9&#39;s quality filtering for DSWE1 (confident water) remote sensing summaries." />
+<div class="figcaption">Summary of rows retained during siteSR quality filtering for Landsat 5 DSWE1
+(confident water) remote sensing
 summaries.</div>
 </div>
 </div>
 <div id="landsat-7-qa-summary" class="section level3 hasAnchor" number="7.2.3">
 <h3><span class="header-section-number">7.2.3</span> Landsat 7 QA Summary<a href="post-hoc-qa.html#landsat-7-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="float" id="fig:lake-ls7-dswe1-drop">
-<img src="images/lakeSR/LE07_DSWE1_drop_summary.png" alt="Summary of dropped rows for lakeSR Landsat 7’s DSWE1 (confident water) RS summaries." />
-<div class="figcaption">Summary of dropped rows for lakeSR Landsat 7’s DSWE1 (confident water) RS
+<div class="float">
+<img src="images/siteSR/LE07_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR Landsat 9&#39;s quality filtering for DSWE1 (confident water) remote sensing summaries." />
+<div class="figcaption">Summary of rows retained during lakeSR quality filtering for Landsat 7 DSWE1
+(confident water) remote sensing
 summaries.</div>
 </div>
-<div class="float" id="fig:site-ls7-dswe1-drop">
-<img src="images/siteSR/LE07_DSWE1_drop_summary.png" alt="Summary of dropped rows for siteSR Landsat 7’s DSWE1 (confident water) RS summaries." />
-<div class="figcaption">Summary of dropped rows for siteSR Landsat 7’s DSWE1 (confident water) RS
+<div class="float">
+<img src="images/siteSR/LE07_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR Landsat 9&#39;s quality filtering for DSWE1 (confident water) remote sensing summaries." />
+<div class="figcaption">Summary of rows retained during siteSR quality filtering for Landsat 7 DSWE1
+(confident water) remote sensing
 summaries.</div>
 </div>
 </div>
 <div id="landsat-8-qa-summary" class="section level3 hasAnchor" number="7.2.4">
 <h3><span class="header-section-number">7.2.4</span> Landsat 8 QA Summary<a href="post-hoc-qa.html#landsat-8-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="float" id="fig:lake-ls8-dswe1-drop">
-<img src="images/lakeSR/LC08_DSWE1_drop_summary.png" alt="Summary of dropped rows for lakeSR Landsat 8’s DSWE1 (confident water) RS summaries." />
-<div class="figcaption">Summary of dropped rows for lakeSR Landsat 8’s DSWE1 (confident water) RS
+<img src="images/lakeSR/LC08_DSWE1_drop_summary.png" alt="Summary of rows retained during lakeSR quality filtering for Landsat 8 DSWE1 (confident water) remote sensing summaries." />
+<div class="figcaption">Summary of rows retained during lakeSR quality filtering for Landsat 8 DSWE1
+(confident water) remote sensing
 summaries.</div>
 </div>
 <div class="float" id="fig:site-ls8-dswe1-drop">
-<img src="images/siteSR/LC08_DSWE1_drop_summary.png" alt="Summary of dropped rows for siteSR Landsat 8’s DSWE1 (confident water) RS summaries." />
-<div class="figcaption">Summary of dropped rows for siteSR Landsat 8’s DSWE1 (confident water) RS
+<img src="images/siteSR/LC08_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR quality filtering for Landsat 8 DSWE1 (confident water) remote sensing summaries." />
+<div class="figcaption">Summary of rows retained during siteSR quality filtering for Landsat 8 DSWE1
+(confident water) remote sensing
 summaries.</div>
 </div>
 </div>
 <div id="landsat-9-qa-summary" class="section level3 hasAnchor" number="7.2.5">
 <h3><span class="header-section-number">7.2.5</span> Landsat 9 QA Summary<a href="post-hoc-qa.html#landsat-9-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="float" id="fig:lake-ls9-dswe1-drop">
-<img src="images/lakeSR/LC09_DSWE1_drop_summary.png" alt="Summary of dropped rows for lakeSR Landsat 9’s DSWE1 (confident water) RS summaries." />
-<div class="figcaption">Summary of dropped rows for lakeSR Landsat 9’s DSWE1 (confident water) RS
+<img src="images/lakeSR/LC09_DSWE1_drop_summary.png" alt="Summary of rows retained during lakeSR quality filtering for Landsat 9 DSWE1 (confident water) remote sensing summaries." />
+<div class="figcaption">Summary of rows retained during lakeSR quality filtering for Landsat 9 DSWE1
+(confident water) remote sensing
 summaries.</div>
 </div>
-<div class="float" id="fig:site-ls9-dswe1-drop">
-<img src="images/siteSR/LC09_DSWE1_drop_summary.png" alt="Summary of dropped rows for siteSR Landsat 9’s DSWE1 (confident water) RS summaries." />
-<div class="figcaption">Summary of dropped rows for siteSR Landsat 9’s DSWE1 (confident water) RS
+<div class="float">
+<img src="images/siteSR/LC09_DSWE1_drop_summary.png" alt="Summary of rows retained during siteeSR quality filtering for Landsat 9 DSWE1 (confident water) remote sensing summaries." />
+<div class="figcaption">Summary of rows retained during siteeSR quality filtering for Landsat 9 DSWE1
+(confident water) remote sensing
 summaries.</div>
 </div>
 

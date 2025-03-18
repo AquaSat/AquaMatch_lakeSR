@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-17" />
+<meta name="date" content="2025-03-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -185,11 +185,11 @@ div.csl-indent {
 <li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#lakeSR-shoreline"><i class="fa fa-check"></i><b>3.1.4</b> Flagging shoreline proximity</a></li>
 <li class="chapter" data-level="3.1.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR Acquisition Locations</a>
+<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR_WQP Acquisition Locations</a>
 <ul>
 <li class="chapter" data-level="3.2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#rs-vis"><i class="fa fa-check"></i><b>3.2.1</b> Assessing for RS visibility</a></li>
 <li class="chapter" data-level="3.2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#fl-wb-assignment"><i class="fa fa-check"></i><b>3.2.2</b> Assignment of NHD flowline and waterbodies</a></li>
-<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR updates in AquaSat v2</a></li>
+<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr_wqp-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR_WQP updates in AquaSat v2</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>4</b> Satellite Data Acquisition Software and Settings</a>
@@ -200,7 +200,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
 <li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
 <li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#proj-setting"><i class="fa fa-check"></i><b>4.2.3</b> GEE project setting</a></li>
-<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
+<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#auth"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
@@ -284,12 +284,13 @@ div.csl-indent {
 <p>It is necessary to standardize band values between Landsat missions in order to
 create a robust timeseries. <span class="citation">Maciel et al. (<a href="#ref-maciel2023">2023</a>)</span> notes the issues in using the Landsat
 Surface Reflectance product as a timeseries without careful handling of data
-between missions. This standardization process attempts to address changes in
-sensor spectral response and atmospheric correction procedures. For the purposes
-of AquaSat v2, we call this standardization process “intermission handoffs”. We
-implement two versions of intermission handoffs: the method described in
-<span class="citation">Roy et al. (<a href="#ref-roy2016">2016</a>)</span> (“Roy method”) and an adapted version of that described in <span class="citation">Gardner et al. (<a href="#ref-gardner2021">2021</a>)</span>
-(“Gardner method”).</p>
+between missions. <span class="citation">King, Bean, and Gohring (<a href="#ref-king">2024</a>)</span> notes that this type of standardization is necessary for
+the thermal band, as well. This standardization process attempts to address
+changes in sensor spectral response and atmospheric correction procedures. For
+the purposes of AquaSat v2, we call this standardization process “intermission
+handoffs”. We implement two versions of intermission handoffs: the method
+described in <span class="citation">Roy et al. (<a href="#ref-roy2016">2016</a>)</span> (“Roy method”) and an adapted version of that described in
+<span class="citation">Gardner et al. (<a href="#ref-gardner2021">2021</a>)</span> (“Gardner method”).</p>
 <p>In AquaSat v2, we provide coefficients to standardize remote sensing values
 relative to Landsat 7 and Landsat 8. The Landsat 7 intermission handoffs create
 a continuous record of remote sensing from Landsat 4 through 9 relative to
@@ -309,10 +310,11 @@ specific sites, where the reflectance data are obtained are from two missions
 (e.g. Landsat 7 and Landsat 8) separated by one day at a specific location
 within the overlapping paths in the WRS2 path-row framework:</p>
 <div class="float">
-<img src="images/path_overlap_roy.png" alt="An example of two overlapping WRS2 paths (grey area) separated by one day. Any location with data for both images would be considered a paired data point to define the Roy method intermission handoffs." />
+<img src="images/path_overlap_roy.png" alt="An example of two overlapping WRS2 paths (grey area) separated by one day. Any location with data for both images (in the grey area) would be considered a paired data point to define the Roy method intermission handoffs." />
 <div class="figcaption">An example of two overlapping WRS2 paths (grey area) separated by one day. Any
-location with data for both images would be considered a paired data point to
-define the Roy method intermission handoffs.</div>
+location with data for both images (in the grey area) would be considered a
+paired data point to define the Roy method intermission
+handoffs.</div>
 </div>
 <p>While <span class="citation">Roy et al. (<a href="#ref-roy2016">2016</a>)</span> implemented this method on a pixel-by-pixel basis, we implement
 using the median band value per site. This is used in place of the explicit
@@ -1970,6 +1972,9 @@ intercept, 0 slope line visual aide.</p>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-gardner2021" class="csl-entry">
 Gardner, John R., Xiao Yang, Simon N. Topp, Matthew R. V. Ross, Elizabeth H. Altenau, and Tamlin M. Pavelsky. 2021. <span>“The Color of Rivers.”</span> <em>Geophysical Research Letters</em> 48 (1): e2020GL088946. <a href="https://doi.org/10.1029/2020GL088946">https://doi.org/10.1029/2020GL088946</a>.
+</div>
+<div id="ref-king" class="csl-entry">
+King, Tyler V., Robert A. Bean, and Evan J. Gohring. 2024. <span>“Remote Sensing and in-Situ Data to Support Chlorophyll-a Mapping in Blue Mesa Reservoir from Sentinel-2 Imagery | U.S. Geological Survey.”</span> <a href="https://doi.org/10.5066/P9XULQAS">https://doi.org/10.5066/P9XULQAS</a>.
 </div>
 <div id="ref-maciel2023" class="csl-entry">
 Maciel, Daniel Andrade, Nima Pahlevan, Claudio Clemente Faria Barbosa, Evlyn Márcia Leão de Moraes de Novo, Rejane Souza Paulino, Vitor Souza Martins, Eric Vermote, and Christopher J. Crawford. 2023. <span>“Validity of the Landsat Surface Reflectance Archive for Aquatic Science: Implications for Cloud-Based Analysis.”</span> <em>Limnology and Oceanography Letters</em> 8 (6). <a href="https://doi.org/10.1002/lol2.10344">https://doi.org/10.1002/lol2.10344</a>.

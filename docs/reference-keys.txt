@@ -27,14 +27,14 @@ case-study-wisconsin-waterbodies
 siteSR-locs
 rs-vis
 fl-wb-assignment
-sitesr-updates-in-aquasat-v2
+sitesr_wqp-updates-in-aquasat-v2
 software-settings
 reticulate-conda-environment
 google-earth-engine-setup
 create-account
 gcloud
 proj-setting
-gee-authentication
+auth
 LS-C2-SRST
 initialisms-and-landsat-jargon
 valid-dates
