@@ -8,7 +8,7 @@ bibliography: references.bib
 # Satellite Data Acquisition Software and Settings {#software-settings}
 
 Currently, all satellite data in AquaSat v2 are obtained using the Python API
-for Google Earth Engine [GEE, @gorelick2017]. While the orchestration of data
+for Google Earth Engine [GEE, @gorelick2023]. While the orchestration of data
 acquisition is performed by the {targets} workflow, all code directly related to
 GEE data acquisition is written in Python. If you are running the 'default'
 configuration for lakeSR or siteSR the following directions are not applicable.

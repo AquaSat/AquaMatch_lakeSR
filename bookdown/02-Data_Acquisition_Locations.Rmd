@@ -180,7 +180,7 @@ native thermal resolution (120, 60, 100 meters). These flags are binary:
 > of the site buffer and pixel size)
 >
 > 1: possible shoreline contamination (distance to shore is less than or equal
-> to sum of the site buffer and pixel size
+> to sum of the site buffer and pixel size)
 
 ### Case Study: Wisconsin Waterbodies
 
@@ -313,17 +313,17 @@ use the `get_huc()` function from {nhdplusTools} [@blodgett2023] package in R.
 After HUC8 assignment is finished only
 `r p4_WQP_site_NHD_info %>% filter(flag_HUC8 == 2) %>% nrow(.)` sites remained
 without a HUC8 assignment. All of these sites were coastal sites outside of the
-extent of NHD boundaries. In siteSR, the `flag_HUC8` column indicates whether
+extent of NHD boundaries. In siteSR_WQP, the `flag_HUC8` column indicates whether
 this HUC8 was assigned within the WQP (value of 0), assigned in this process
 (value of 1), or was unable to be assigned (value of 2).
 
 Using the HUC8 information to iterate, we then can use {nhdplusTools} to assign
 waterbodies and flowlines to sites within the CONUS and data from The National
-Map best resolution files ([e.g. @usgs-nhd-ak]) for sites outside of CONUS by
-HUC4. For all sites with a `MonitoringLocationTypeName` that contains "lake" or
+Map best resolution files [e.g. @usgs-nhd-ak] for sites outside of CONUS by
+HUC4. For all sites with a `MonitoringLocationTypeName` that contains the words "lake" or
 "reservoir", we assign NHD ids to each point for the waterbody it is contained
 by or the waterbody it is closest to. NHD waterbody file has been filtered to
-only contain Lake, Ponds, and Reservoirs (NHD feature types 390 and 436). We
+only contain Lake, Ponds, and Reservoirs (NHD feature types 390 and 436) when performing this task. We
 flag (`flag_wb`) the results of this assignment as follows:
 
 > 0: point inside NHD waterbody polygon

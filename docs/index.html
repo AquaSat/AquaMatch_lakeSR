@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-18" />
+<meta name="date" content="2025-03-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -161,7 +161,10 @@ div.csl-indent {
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#note"><i class="fa fa-check"></i><b>1.1</b> Note</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>2</b> Background</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#lakesr-code-architecture"><i class="fa fa-check"></i><b>2.1</b> lakeSR Code Architecture</a>
@@ -283,7 +286,7 @@ div.csl-indent {
 <h1 class="title">AquaSat v2: lakeSR and siteSR</h1>
 <h2 class="subtitle"><em>Compiled Satellite Surface Reflectance and Surface Temperature for Waterbodies in the United States and US Territories</em></h2>
 <p class="author"><em>ROSSyndicate</em></p>
-<p class="date"><em>2025-03-18</em></p>
+<p class="date"><em>2025-03-20</em></p>
 </div>
 <div id="introduction" class="section level1 hasAnchor" number="1">
 <h1><span class="header-section-number">1</span> Introduction<a href="index.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
@@ -297,7 +300,11 @@ div.csl-indent {
 <p>The goal of these data products is to facilitate assessment and monitoring of waterbodies within the United States and Territories using both <em>in situ</em> and remote sensing data.</p>
 <p>AquaSat v2 builds upon AquaSat <span class="citation">(<a href="#ref-ross2019">Ross et al. 2019</a>)</span> (referred to here as “AquaSat v1”) and LimnoSat-US <span class="citation">(<a href="#ref-limnosat">Topp et al. 2020</a>)</span>. AquaSat v1 focused on pairing remote sensing data with <em>in situ</em> observations and measurements while LimnoSat-US acquired remote sensing for all waterbodies greater than 10 hectares across the Continental United States (CONUS) regardless of whether <em>in situ</em> measurements were available for that waterbody. In AquaSat v2, we bring these products together. For instance, lakeSR can define Landsat intermission handoffs to enable use of Landsat as a timeseries product, siteSR products can be used to create parameter-specific algorithms, and those algorithms can be applied to lakeSR to create a timeseries of water quality for waterbodies in the US and territories.</p>
 <p>AquaSat v2 code is built on the {targets} workflow management system for R <span class="citation">(<a href="#ref-landau2021">Landau 2021</a>)</span>. The {targets} architecture is based on lists of functions performed in a specific order, each function called a <em>target</em>. The primary benefit of {targets} workflows is that code is only run if a target, a target’s code, or a target’s dependencies have changed (or become “outdated” in {targets} speak).</p>
+<div id="note" class="section level2 hasAnchor" number="1.1">
+<h2><span class="header-section-number">1.1</span> Note<a href="index.html#note" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Images used in analyses courtesy of the United States Geological Survey. Any use of trade, firm, or product names is for descriptive purposes only and does not imply endorsement by the U.S. Government.</p>
 
+</div>
 </div>
 <h3> References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">

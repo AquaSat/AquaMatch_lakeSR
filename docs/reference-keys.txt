@@ -10,6 +10,7 @@ tab:gardner-table
 tab:gard-coeff-corr7
 tab:gard-coeff-corr8
 introduction
+note
 background
 lakesr-code-architecture
 configuration-files

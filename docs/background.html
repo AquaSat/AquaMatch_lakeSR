@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-18" />
+<meta name="date" content="2025-03-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -161,7 +161,10 @@ div.csl-indent {
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#note"><i class="fa fa-check"></i><b>1.1</b> Note</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>2</b> Background</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#lakesr-code-architecture"><i class="fa fa-check"></i><b>2.1</b> lakeSR Code Architecture</a>
@@ -427,10 +430,8 @@ list will be empty.</p>
 the output of
 <a href="https://github.com/AquaSat/AquaMatch_harmonize_WQP">AquaMatch_harmonize_WQP</a>.
 AquaMatch_harmonize_WQP provides harmonized <em>in situ</em> data from the Water
-Quality Portal for pairing with remote sensing data acquired at the sites of <em>in
-situ</em> data. This workflow picks up where AquaMatch_harmonize_WQP ends, with the
-output of harmonized, tiered, and aggregated datasets per water quality
-parameter. lakeSR provides calculated Landsat intermission handoff coefficients
+Quality Portal for pairing remote sensing data acquired at the sites of <em>in
+situ</em> data collection with <em>in situ</em> measurements. This workflow picks up where AquaMatch_harmonize_WQP ends, retrieving the WQP sites at which there are historical <em>in situ</em> data. lakeSR provides calculated Landsat intermission handoff coefficients
 for interoperability between sensors (see Section <a href="define-handoff.html#define-handoff">8</a>).
 In order to run the siteSR_WQP workflow, you must have a cloned version of
 AquaMatch_harmonize_WQP codebase on your local computer.

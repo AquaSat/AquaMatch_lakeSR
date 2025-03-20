@@ -146,7 +146,8 @@ calculate_bestres_centers <- function(HUC4) {
     # and now grab the poi lat/lon from the poi_df and drop geometry
     poi <- contained_poi %>%
       left_join(., poi_df) %>% 
-      st_drop_geometry()
+      st_drop_geometry() %>% 
+      left_join(., wbd_info)
     
     # clean up workspace for quicker processing
     # remove the fp and all contents completely before next HUC4
