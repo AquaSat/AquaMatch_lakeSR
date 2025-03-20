@@ -7,16 +7,16 @@ bibliography: references.bib
 
 # Landsat Collection 2 SRST Data Product {#LS-SRST-pull}
 
-The lakeSR-Landsat data product is a set of tabular datasets, representing the
-Landsat surface reflectance (SR) and surface tempearture (ST) data summarized
-for the point of inaccessibility (POI) location which is meant to represent
-pelagic conditions at a given waterbody (identified by its NHD unique
-identifier, see Section \@ref(locs-data-acq)). This data product contains "full
-stacks" of the Landsat Collection 2 record - that is, all summarized Landsat
-data available from all Landsat missions that met our QA criteria.
+The lakeSR data product is a set of tabular datasets, representing the Landsat
+surface reflectance (SR) and surface tempearture (ST) data summarized for the
+point of inaccessibility (POI) location which is meant to represent pelagic
+conditions at a given waterbody (identified by its NHD unique identifier, see
+Section \@ref(locs-data-acq)). This data product contains "full stacks" of the
+Landsat Collection 2 record - that is, all summarized Landsat data available
+from all Landsat missions that met our within-image QA criteria.
 
-The siteSR-Landsat data product is similar, but is acquired at unique sampling
-locations as described in \@ref(siteSR-locs).
+The siteSR data product is similar, but is acquired at unique sampling locations
+as described in \@ref(siteSR-locs).
 
 ## Changes from AquaSat v1 and LimnoSat-US
 
@@ -113,19 +113,21 @@ this example, location 1 would be extracted for both path-row 1 and 2, location
 -   masking changes. Many updates were made to assure high quality data through
     the use of updated masking procedures. The following masks were added in
     this workflow and are detailed below in Section \@ref(masking-functions):
-    `apply_fill_mask_457`, `apply_fill_mask_89`, `apply_realistic_mask_457`,
-    `apply_realistic_mask_89`, `apply_opac_mask` (Landsat 4, 5, 7 only),
-    `apply_sr_aero_mask` (Landsat 8, 9 only). The cloud mask was also updated to
+    `apply_fill_mask_457`, `apply_fill_mask_89`, `add_realistic_mask_457`,
+    `add_realistic_mask_89`, `add_opac_mask` (Landsat 4, 5, 7 only),
+    `add_sr_aero_mask` (Landsat 8, 9 only). The cloud mask was also updated to
     include all sources of contamination (including cloud shadow and dilated
     clouds) in addition to clouds, snow, and ice. The proportion of pixels
     within the location buffer that were masked out due to clouds is now tracked
     as `prop_clouds` as an additional method of QA handling downstream of the
     GEE extraction.
 
--   DSWE implementation. We have moved from using the JRC Global Surface Water
-    Mapping Layers @pekel2016 to using the Dynamic Surface Water Extent
-    algorithm to identify water pixels in a given Landsat image. See Section
-    \@ref(dswe-implementation) for details.
+-   DSWE-like implementation for water detection. We have moved from using the
+    JRC Global Surface Water Mapping Layers @pekel2016 to using a modified
+    Dynamic Surface Water Extent (DSWE) algorithm based on the USGS
+    implementation of DSWE described in LSDS-2042 version 3
+    [@usgeologicalsurvey2023]. See Section \@ref(dswe-implementation) for
+    details.
 
 -   removing no-data acquisitions before GEE export. In the AquaSat v2 update,
     we remove any rows from the summarized GEE product before export. This adds
@@ -162,16 +164,15 @@ The workflow for data acquisition from GEE for lakeSR and siteSR is as follows:
 lakeSR (and siteSR) can be modified to be run by a user by setting up a new
 config file and altering the {targets} workflow to point to that config file. To
 configure a new run of this workflow, fill out the yaml file at the file path
-`b_pull_Landsat_SRST_poi/config_files/config.yml` and modify the `_targets.R`
-script at line 28 to reflect the updated config file.
-
-To run the pipeline with this custom configuration, follow the steps in
-`run_targets.Rmd`, which will run the pipeline.
+`b_pull_Landsat_SRST_poi/config_files/config.yml` for lakeSR and
+`gee_config.yml` for siteSR. To run the pipeline with this custom configuration,
+follow the steps in `run_targets.Rmd`, which will assure proper set up and run
+the pipeline.
 
 If you wish to make changes to any processes that are not indicated in the
 config file (using a different set of lakes/source files, remote sensing masking
 procedures, summary statistics, QAQC filtering, mission handoff corrections,
-etc.) we encourage you to do so. Just remember, this pipeline takes DAYS to run
+etc.) we encourage you to do so. Just remember, this pipeline takes days to run
 due to the bottleneck when submitting tasks to Google Earth Engine. If you wish
 to extract remote sensing data for specific locations in a lake, we encourage
 you to look to our [siteSR data
@@ -179,7 +180,7 @@ product](https://github.com/AquaSat/AquaMatch_siteSR_WQP) which is more suited
 to extracting data of that nature. Please note, calculating hand-off
 coefficients from small numbers of lakes may not provide robust enough summary
 statistics for intermission comparison and timeseries analysis. See Section
-\@ref(handoff) for additional guidance.
+\@ref(define-handoff) for additional guidance.
 
 ## Technical Implementation of GEE Acquisition Script
 
@@ -200,17 +201,19 @@ overview of some of the custom masking procedures and their justification, if
 applicable. We use the most aggressive masking procedures in the lakeSR and
 siteSR products in order to attempt to have consistent and robust data across
 such a large area of data acquisition. An interactive masking viewer is
-available for [Landsat
+available for select scenes for [Landsat
 4/5/7](https://ee-aquamatch.projects.earthengine.app/view/asv2landsat57interactivemask)
-and Landsat 8/9 to see these masks in action.
+and [Landsat
+8/9](https://ee-aquamatch.projects.earthengine.app/view/asv2landsat89interactivemask)
+to see some of the masks in action.
 
 -   `apply_rad_mask`: Masks out all pixels that are radiometrically saturated in
     any optical band using the QA_RADSAT QA band. The Landsat User Guides
     [@usgs-ls47user; @usgs-ls89user] note that radiometrically saturated data
     are "unusable". Saturated bands happen infrequently in Landsat 8 and 9, but
-    we still apply this mask to all Landat mission data for continuity.
+    we still apply this mask to all Landsat mission data for continuity.
 
--   `apply_cf_mask`: Applies mask for any pixels obstructed by clouds and
+-   `add_cf_mask`: Adds a mask band for any pixels obstructed by clouds and
     snow/ice using the CLOUD_QA band. This is a general QA band that describes
     clouds/snow/ice detected by algorithms defined by the atmospheric processing
     procedure. We have elected to only include pixels that do not contain
@@ -221,14 +224,14 @@ and Landsat 8/9 to see these masks in action.
     > Users are advised to engage the QA “Dilated Cloud” (bit 1) AND “Cloud”
     > (bit 3) OFF condition to correctly identify clear pixels over water.
 
--   `apply_sr_aero_mask`: Applies mask for any pixels in Landsat 8 and 9 that
+-   `add_sr_aero_mask`: Adds a mask band for any pixels in Landsat 8 and 9 that
     have 'medium' or 'high' aerosol QA flags from the SR_QA_AEROSOL band.
     Because water is particularly difficult to assess from space, we are more
     aggressive in this mask than suggested by the Landsat 8 and 9 User Guide
     [@usgs-ls89user] which states: "Note that pixels classified as high aerosol
     content are not recommended for use."
 
--   `apply_opac_mask`: Applies mask to remove pixels where atmospheric opacity
+-   `add_opac_mask`: Adds a mask band to remove pixels where atmospheric opacity
     is greater than 0.3 in Landsat 4, 5, and 7 using the SR_ATMOS_OPACITY band.
     For similar reasons as a more aggressive aerosol mask in Landsat 8 & 9, we
     use this mask in addition to the cloud mask (`apply_cf_mask`). The Landsat
@@ -241,28 +244,65 @@ and Landsat 8/9 to see these masks in action.
     > atmospheric opacity will be less reliable, especially under high solar
     > zenith angle conditions.
 
--   `apply_fill_mask_457` and `apply_fill_mask_89`: Applies a mask where any
+-   `apply_fill_mask_457` and `apply_fill_mask_89`: Adds a mask band where any
     band value is 0 before applying scaling factors to bands. Filled values are
     infrequent; however, when acquiring data across such a large area and time
     they are bound to happen.
 
--   `apply_realistic_mask_457` and `apply_realistic_mask_89`: Applies a mask
-    where any band is less than -0.01 after scaling, indicating overcorrection
-    of SR product. While the stated minimum value of the 'valid range' for the
-    SR product is 7273 prior to application of scaling factors (0.0000075 after
-    scaling), we know that this product has been fine-tuned on terrestrial data
-    and small over-corrections of the surface reflectance, especially over dark
-    surfaces, is likely to happen. We explicitly allow for very small negative
-    reflectance values to be sure we do not remove very deep, oligotrophic
-    and/or high DOC water systems from our data set.
+-   `add_realistic_mask_457` and `add_realistic_mask_89`: Adds a mask band where
+    any band is less than -0.01 after scaling, indicating overcorrection of SR
+    product. While the stated minimum value of the 'valid range' for the SR
+    product is 7273 prior to application of scaling factors (0.0000075 after
+    scaling), we know that the Level-2 Surface Reflectance product has been
+    fine-tuned on terrestrial data and small over-corrections of surface
+    reflectance, especially over dark surfaces, is likely to happen. We
+    explicitly allow for very small negative reflectance values to be sure we do
+    not remove very deep, oligotrophic and/or high DOC water systems from our
+    data set while implementing this QA filter.
+
+-   `add_glint_mask`: Adds a mask band where any optical band is \> 0.2,
+    indicating likely sun glint artifacts.
+
+-   `add_ir_glint_flag`: Adds a band where any near infrared or shortwave
+    infrared value is greater than 0.1, but does not mask the pixel. This flag
+    is meant to be a diagnostic for downstream users to make additional
+    qualititative assessment of sun glint affected data and is tallied with all
+    masks implemented.
+
+We track pixel-level instances of the use of the aerosol mask in Landsat 8/9,
+the opacity mask in Landsat 4/5/7, the realistic mask (holistically and per
+band), and the sun glint mask (holistically and per band) in our GEE workflow.
+These tallies represent the number of pixels masked for each QA procedure prior
+to summarizing the data within the buffered area.
 
 ### Defining water area {#dswe-implementation}
 
-We use the Dynamic Surface Water Extent (DSWE) algorithm to define what pixels
-are water within the buffer of our specific locations. DSWE was defined in
-@jones2019 for Landsat Collection 1 and re-implemented for Collection 2 as a
-Level-3 data product in @usgs-dswe. Implementation of the DSWE algorithm results
-in the following values per pixel:
+We use an adapted version Dynamic Surface Water Extent (DSWE) algorithm to
+define what pixels are water within the buffer of our specific locations. DSWE
+was defined in @jones2019 for Landsat Collection 1 and re-implemented for
+Collection 2 as a Level-3 data product in @usgeologicalsurvey2023. Differences
+between the Level-3 implementation and the on-the-fly calculation made within
+our workflow are as follows:
+
+1.  we use the Level 2 SR product instead of the Level 2 Analysis Ready Data
+    Product to calculate DSWE threshold values
+
+2.  we mask any DSWE values that are not fully illuminated (a value of 0 in the
+    function below) as defined by the ee.Terrain.hillShadow function in Google
+    Earth Engine using the MERIT DEM version 1.0.3 [@yamazaki2017] at an extent
+    of 3000 meters surrounding a given point for analysis.
+
+    ![Screen shot of code used for implementation of hill shadow to determine
+    masking procedures of the DSWE value.](images/hillshadow.png){width="600"}
+
+    This is different from the implementation described in the Level 3 data
+    product which uses a set of hillshade and landcover thresholds to determine
+    whether or not the resulting DSWE value should be masked. Based on extensive
+    visual inspection, our adaptation seems to label pixels as expected.
+
+Our implementation of the DSWE algorithm results in the following values per
+pixel based on the thresholds described in @usgeologicalsurvey2023 table 2.2 and
+2.3
 
 -   a value of 0 indicates no water/fill
 
@@ -289,6 +329,31 @@ the lakeSR and siteSR data products can choose to use the DSWE1a product if
 applicable to their research, however, this threshold was defined in the
 Illinois and Ohio Rivers and may not be applicable in all environments.
 
+## Additional diagnostic data columns
+
+During the masking and flagging step of the workflow, we tally pixels that met
+certain criteria for use as diagnostic tools. This includes tallying of varying
+DSWE types (greater than 0 – water of some kind with any confidence, 1 high
+confidence water, 1a high confidence water with positive algal mask, 3 high
+confidence vegetated water) within the buffered area. These tallies are of any
+pixel that meets the DSWE category and met the hillshade, cloud,
+opacity/aerosol, realistic, and glint thresholds. The number of pixels that were
+high opacity/high aerosol, overly negative values, and likely sun glint were
+also tallied within the buffer. These tallies are of the entire buffer area and
+no additional masks are incorporated into the tallies (e.g. the sun glint mask
+and infrared mask may also indicate high reflectance from shoreline vegetation
+within the buffered area). Counts of pixels were tallied per band to indicate
+the number of pixels that were below zero, below the threshold for realistic
+values, or above the glint threshold. These tallies were completed in
+conjunction with the hillshade, cloud, opacity/aerosol and DSWE masks,
+representing the number of pixels that were masked after the baseline pixel QA
+process. The number of pixels that had infrared reflectance values (NIR, SWIR1,
+and SWIR2) greater than 0.1 were also tallied, but these pixels were not masked
+out. Columns for the proportion of pixels masked by clouds and shaded by terrain
+are also provided, no additive mask is used when tallying these pixels. These
+tallies are meant to be used as diagnostic tools for further quality control and
+modeling purposes, though we do not have recommended uses at this time.
+
 ## Payload handling
 
 Because GEE is a free service to those at academic or governmental institutions,
@@ -303,4 +368,11 @@ check for tasks sent to GEE to determine if any have failed (target
 you can not tell whether or not they have completed or failed. This stores a
 text file at the filepath
 `b_pull_Landsat_SRST_poi/out/GEE_task_errors_vRUN_DATE.csv` containing the names
-of the tasks that have failed.
+of the tasks that have failed. If no tasks have failed, no file will be present.
+Generally speaking failed tasks would indicate an error within the GEE
+acquisition script, usually due to changes in the
+`b_pull_Landsat_SRST_poi/py/run_GEE_per_pathrow.py` script. We recommend
+checking the task status of the GEE run at
+<https://code.earthengine.google.com/tasks> after any changes to that file,
+which will indicate if tasks are failing without waiting for the total
+completion of the GEE target.

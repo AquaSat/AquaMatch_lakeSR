@@ -6,8 +6,6 @@
 #' 
 #' @param target The target to be exported (as an object not a string).
 #' 
-#' @param target_name The name of the target to be exported (as a string, not an object).
-#' 
 #' @param drive_path A path to the folder on Google Drive where the file
 #' should be saved.
 #' 
@@ -16,17 +14,20 @@
 #' 
 #' @param date_stamp A string to version the upload by. default is NULL
 #'
-#' @param feather Logical value. If TRUE, export the file as a feather file. If
-#' FALSE, then ".rds". Defaults to FALSE.
+#' @param file_type Character string. Options to export file: '.feather', '.rds', 
+#' or '.csv'. Defaults to rds.
 #' 
 #' @returns 
 #' The contents of the folder indicated in the `drive_path` argument.
 #' 
-export_single_target <- function(target, target_name, drive_path, stable, google_email,
-                               date_stamp = NULL, feather = FALSE){
+export_single_target <- function(target, drive_path, stable, google_email,
+                                 date_stamp = NULL, file_type = ".rds"){
   
-  # Feather or RDS?
-  if (feather) {extension <- ".feather"} else {extension <- ".rds"}
+  # file type
+  if (!file_type %in% c(".rds", ".feather", ".csv")) {
+    stop("file_type argument not recognized. Must be one of: '.feather', '.rds', 
+           or '.csv'.")
+  }
   
   # Authorize using the google email provided
   drive_auth(google_email)
@@ -36,21 +37,25 @@ export_single_target <- function(target, target_name, drive_path, stable, google
   
   # Create a temporary file exported locally, which can then be used to upload
   # to Google Drive
-  file_local_path <- tempfile(fileext = extension)
+  file_local_path <- tempfile(fileext = file_type)
   
-  # If feather == TRUE then .feather; else .rds
-  if(feather){
+  if (file_type == ".feather") {
     write_feather(x = target,
                   path = file_local_path)
-  } else {
+  } 
+  if (file_type == ".rds") {
     write_rds(x = target,
+              file = file_local_path)
+  }
+  if (file_type == ".csv") {
+    write_csv(x = target,
               file = file_local_path)
   }
   
   filename <- if (!is.null(date_stamp)) {
-    paste0(target_string, "_v", date_stamp, extension)
+    paste0(target_string, "_v", date_stamp, file_type)
   } else {
-    paste0(target_string, extension)
+    paste0(target_string, file_type)
   }
   
   # Once locally exported, send to Google Drive
@@ -68,7 +73,7 @@ export_single_target <- function(target, target_name, drive_path, stable, google
   
   # return the contents of the drive path
   drive_ls(drive_path) %>% 
-    filter(grepl(target_name, name))
+    filter(grepl(target_string, name))
   
 }
 

@@ -103,7 +103,7 @@ if (config::get(config = general_config)$run_GEE) {
     tar_target(
       name = b_ref_locations_poi,
       command = reformat_locations(yml = b_yml_poi, 
-                                   locations = a_combined_poi)
+                                   locations = a_poi_with_flags)
     ),
     
     # get WRS tiles/indication of whether buffered points are contained by them
@@ -152,6 +152,7 @@ if (config::get(config = general_config)$run_GEE) {
       name = b_eeRun_poi,
       command = {
         b_eeRun_script
+        b_yml_poi
         run_GEE_per_pathrow(WRS_pathrow = b_WRS_pathrow_poi)
       },
       pattern = map(b_WRS_pathrow_poi),
@@ -194,7 +195,7 @@ if (config::get(config = general_config)$run_GEE) {
       command = export_single_target(
         target = b_yml_poi, 
         target_name = "b_yml_poi",
-        drive_path = a_check_Drive_poi_folder,
+        drive_path = a_check_Drive_targets_folder,
         google_email = lakeSR_config$google_email,
         date_stamp = b_yml_poi$run_date),
       packages = c("tidyverse", "googledrive")
@@ -237,7 +238,8 @@ if (config::get(config = general_config)$run_GEE) {
         google_email = lakeSR_config$google_email, 
         version_date = lakeSR_config$collated_version
       ),
-      packages = c("tidyverse", "googledrive")
+      packages = c("tidyverse", "googledrive"),
+      cue = tar_cue("always")
     )
     
   )

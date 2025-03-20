@@ -120,14 +120,35 @@ if (config::get(config = general_config)$calculate_centers) {
       }
     ),
     
+    # and now, we'll add a flag to any locations whose distance to shore is less
+    # than the yml configuration of buffer radius plus 30 m for optical bands. Additionally,
+    # we will add a flag for any location that is less than buffer distance plus
+    # 100 m from shoreline, indicating possible shoreline mixed pixels.
+    tar_target(
+      name = a_poi_with_flags,
+      command = a_combined_poi %>% 
+        mutate(flag_optical_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 30,
+                                                1,  # possible shoreline contamination
+                                                0), # no expected shoreline contamination
+               flag_thermal_TM_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 120,
+                                                   1, # possible shoreline contamination
+                                                   0), # no expected shoreline contamination
+               flag_thermal_ETM_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 60,
+                                                    1, # possible shoreline contamination
+                                                    0), # no expected shoreline contamination
+               flag_thermal_TIRS_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 100,
+                                                     1, # possible shoreline contamination
+                                                     0)) # no expected shoreline contamination
+    ),
+    
     # check for drive folder if set to export
     tar_target(
-      name = a_check_Drive_poi_folder,
+      name = a_check_Drive_targets_folder,
       command = {
         b_check_Drive_parent_folder
         tryCatch({
           drive_auth(lakeSR_config$google_email)
-          folder_name = "lakeSR_combined_poi"
+          folder_name = "lakeSR_targets"
           if (b_yml_poi$parent_folder != "") {
             path <- file.path("~",
                               b_yml_poi$parent_folder, 
@@ -155,11 +176,11 @@ if (config::get(config = general_config)$calculate_centers) {
     tar_target(
       name = a_send_combined_poi_to_drive,
       command = export_single_target(
-        target = a_combined_poi, 
-        target_name = "a_combined_poi",
-        drive_path = a_check_Drive_poi_folder,
+        target = a_poi_with_flags, 
+        drive_path = a_check_Drive_targets_folder,
         google_email = lakeSR_config$google_email,
-        date_stamp = lakeSR_config$centers_version),
+        date_stamp = lakeSR_config$centers_version,
+        file_type = ".csv"),
       packages = c("tidyverse", "googledrive")
     ),
     
@@ -170,7 +191,7 @@ if (config::get(config = general_config)$calculate_centers) {
         drive_ids <- a_send_combined_poi_to_drive %>% 
           select(name, id)
         write_csv(drive_ids,
-                  "a_Calculate_Centers/out/combined_poi_drive_ids.csv")
+                  "a_Calculate_Centers/out/poi_flagged_drive_ids.csv")
         drive_ids
       },
       packages = c("tidyverse", "googledrive")
@@ -190,28 +211,29 @@ if (config::get(config = general_config)$calculate_centers) {
       name = a_check_dir_structure,
       command = {
         # make `mid` directory
-          if(!dir.exists("a_Calculate_Centers/mid/")){
-            dir.create("a_Calculate_Centers/mid/")
-          }
+        if(!dir.exists("a_Calculate_Centers/mid/")){
+          dir.create("a_Calculate_Centers/mid/")
+        }
       },
       cue = tar_cue("always")
     ),
     
     tar_file_read(
       name = a_combined_poi_drive_ids,
-      command = "a_Calculate_Centers/out/combined_poi_drive_ids.csv",
+      command ="a_Calculate_Centers/out/poi_flagged_drive_ids.csv",
       read = read_csv(!!.x),
       cue = tar_cue("always")
     ),
     
     tar_target(
-      name = a_combined_poi,
+      name = a_poi_with_flags,
       command = retrieve_target(
-        target = "a_combined_poi", 
+        target = "a_poi_with_flags", 
         id_df = a_combined_poi_drive_ids, 
         local_folder = "a_Calculate_Centers/mid/", 
         google_email = lakeSR_config$google_email, 
-        version_date = lakeSR_config$centers_version
+        version_date = lakeSR_config$centers_version,
+        file_type = ".csv"
       ),
       packages = c("tidyverse", "googledrive")
     )

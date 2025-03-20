@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4 Satellite Data Acquisition Software and Settings | AquaSat v2: lakeSR and siteSR</title>
   <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
-  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4 Satellite Data Acquisition Software and Settings | AquaSat v2: lakeSR and siteSR" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-01-21" />
+<meta name="date" content="2025-03-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,6 +52,8 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -159,12 +161,16 @@ div.csl-indent {
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#note"><i class="fa fa-check"></i><b>1.1</b> Note</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>2</b> Background</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#lakesr-code-architecture"><i class="fa fa-check"></i><b>2.1</b> lakeSR Code Architecture</a>
 <ul>
-<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.1</b> {targets} groups</a></li>
+<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#configuration-files"><i class="fa fa-check"></i><b>2.1.1</b> Configuration Files</a></li>
+<li class="chapter" data-level="2.1.2" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.2</b> {targets} groups</a></li>
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="background.html"><a href="background.html#sitesr_wqp-code-architecture"><i class="fa fa-check"></i><b>2.2</b> siteSR_WQP Code Architecture</a>
 <ul>
@@ -179,13 +185,14 @@ div.csl-indent {
 <li class="chapter" data-level="3.1.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.1.1</b> Updates in AquaSat v2</a></li>
 <li class="chapter" data-level="3.1.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#poi"><i class="fa fa-check"></i><b>3.1.2</b> Pole of Inaccessibility</a></li>
 <li class="chapter" data-level="3.1.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation-of-lakesr"><i class="fa fa-check"></i><b>3.1.3</b> Technical Implementation of lakeSR</a></li>
-<li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.4</b> Case Study: Wisconsin Waterbodies</a></li>
+<li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#lakeSR-shoreline"><i class="fa fa-check"></i><b>3.1.4</b> Flagging shoreline proximity</a></li>
+<li class="chapter" data-level="3.1.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR Acquisition Locations</a>
+<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR_WQP Acquisition Locations</a>
 <ul>
 <li class="chapter" data-level="3.2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#rs-vis"><i class="fa fa-check"></i><b>3.2.1</b> Assessing for RS visibility</a></li>
 <li class="chapter" data-level="3.2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#fl-wb-assignment"><i class="fa fa-check"></i><b>3.2.2</b> Assignment of NHD flowline and waterbodies</a></li>
-<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR updates in AquaSat v2</a></li>
+<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr_wqp-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR_WQP updates in AquaSat v2</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>4</b> Satellite Data Acquisition Software and Settings</a>
@@ -196,7 +203,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
 <li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
 <li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#proj-setting"><i class="fa fa-check"></i><b>4.2.3</b> GEE project setting</a></li>
-<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
+<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#auth"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
@@ -225,18 +232,39 @@ div.csl-indent {
 <li class="chapter" data-level="6.3.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#masking-functions"><i class="fa fa-check"></i><b>6.3.1</b> Custom Earth Engine Masking Functions</a></li>
 <li class="chapter" data-level="6.3.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#dswe-implementation"><i class="fa fa-check"></i><b>6.3.2</b> Defining water area</a></li>
 </ul></li>
-<li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.4</b> Payload handling</a></li>
+<li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#additional-diagnostic-data-columns"><i class="fa fa-check"></i><b>6.4</b> Additional diagnostic data columns</a></li>
+<li class="chapter" data-level="6.5" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.5</b> Payload handling</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="handoff.html"><a href="handoff.html"><i class="fa fa-check"></i><b>7</b> Calculating Intermission Handoffs</a>
+<li class="chapter" data-level="7" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html"><i class="fa fa-check"></i><b>7</b> Post-Hoc Quality Assurance</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="handoff.html"><a href="handoff.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR stacks</a></li>
-<li class="chapter" data-level="7.2" data-path="handoff.html"><a href="handoff.html#define-handoff"><i class="fa fa-check"></i><b>7.2</b> Calculating handoffs</a>
+<li class="chapter" data-level="7.1" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR stack collation</a></li>
+<li class="chapter" data-level="7.2" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#post-hoc-filters"><i class="fa fa-check"></i><b>7.2</b> Post-hoc filters</a>
 <ul>
-<li class="chapter" data-level="7.2.1" data-path="handoff.html"><a href="handoff.html#corr7-handoff-coefficients"><i class="fa fa-check"></i><b>7.2.1</b> <code>corr7</code> handoff coefficients</a></li>
-<li class="chapter" data-level="7.2.2" data-path="handoff.html"><a href="handoff.html#corr8-handoff-coefficients"><i class="fa fa-check"></i><b>7.2.2</b> <code>corr8</code> handoff coefficients</a></li>
+<li class="chapter" data-level="7.2.1" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-4-qa-summary"><i class="fa fa-check"></i><b>7.2.1</b> Landsat 4 QA Summary</a></li>
+<li class="chapter" data-level="7.2.2" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-5-qa-summary"><i class="fa fa-check"></i><b>7.2.2</b> Landsat 5 QA Summary</a></li>
+<li class="chapter" data-level="7.2.3" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-7-qa-summary"><i class="fa fa-check"></i><b>7.2.3</b> Landsat 7 QA Summary</a></li>
+<li class="chapter" data-level="7.2.4" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-8-qa-summary"><i class="fa fa-check"></i><b>7.2.4</b> Landsat 8 QA Summary</a></li>
+<li class="chapter" data-level="7.2.5" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-9-qa-summary"><i class="fa fa-check"></i><b>7.2.5</b> Landsat 9 QA Summary</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>8</b> References</a></li>
+<li class="chapter" data-level="8" data-path="define-handoff.html"><a href="define-handoff.html"><i class="fa fa-check"></i><b>8</b> Calculating intermission handoffs</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-method"><i class="fa fa-check"></i><b>8.1</b> Roy method</a></li>
+<li class="chapter" data-level="8.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-method"><i class="fa fa-check"></i><b>8.2</b> Gardner method</a></li>
+<li class="chapter" data-level="8.3" data-path="define-handoff.html"><a href="define-handoff.html#implementing-roy-handoffs"><i class="fa fa-check"></i><b>8.3</b> Implementing Roy Handoffs</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.3.1</b> Roy Deming Correction Landsat 5 to Landsat 7</a></li>
+<li class="chapter" data-level="8.3.2" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.3.2</b> Roy Deming Correction Landsat 8 to Landsat 7</a></li>
+<li class="chapter" data-level="8.3.3" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.3.3</b> Roy Deming Correction Landsat 7 to Landsat 8</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Gardner Handoffs</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.4.1</b> Gardner Correction Landsat 5 to Landsat 7</a></li>
+<li class="chapter" data-level="8.4.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.4.2</b> Gardner Correction Landsat 8 to Landsat 7</a></li>
+<li class="chapter" data-level="8.4.3" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.4.3</b> Gardner Correction Landsat 7 to Landsat 8</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>9</b> References</a></li>
 </ul>
 
       </nav>
@@ -257,9 +285,10 @@ div.csl-indent {
 <div id="software-settings" class="section level1 hasAnchor" number="4">
 <h1><span class="header-section-number">4</span> Satellite Data Acquisition Software and Settings<a href="software-settings.html#software-settings" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>Currently, all satellite data in AquaSat v2 are obtained using the Python API
-for Google Earth Engine (GEE) <span class="citation">(<a href="#ref-gorelick2017">Gorelick et al. 2017</a>)</span>. While the orchestration of data
+for Google Earth Engine <span class="citation">(GEE, <a href="#ref-gorelick2023">Gorelick 2023</a>)</span>. While the orchestration of data
 acquisition is performed by the {targets} workflow, all code directly related to
-GEE data acquisition is written in Python.</p>
+GEE data acquisition is written in Python. If you are running the ‘default’
+configuration for lakeSR or siteSR the following directions are not applicable.</p>
 <div id="reticulate-conda-environment" class="section level2 hasAnchor" number="4.1">
 <h2><span class="header-section-number">4.1</span> {reticulate} Conda Environment<a href="software-settings.html#reticulate-conda-environment" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>RStudio <span class="citation">(<a href="#ref-positteam2023">Posit team 2023</a>)</span> is an IDE that, alongside the {reticulate} package
@@ -321,10 +350,11 @@ pipeline to assure a smooth run of the workflow.</p>
 </div>
 <div id="google-earth-engine-setup" class="section level2 hasAnchor" number="4.2">
 <h2><span class="header-section-number">4.2</span> Google Earth Engine Setup<a href="software-settings.html#google-earth-engine-setup" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>In order to run any GEE-related targets, you will need to have a Google Earth
-Engine account (see <a href="software-settings.html#create-account">4.2.1</a>), a Google Earth Engine Cloud Project
-(described in <a href="software-settings.html#proj-setting">4.2.3</a>) , gcloud CLI set up on your computer (see
-<a href="software-settings.html#gcloud">4.2.2</a>), and you will need to alter the configuration file (described in
+<p>If running the ‘admin_update’ configuration for either lakeSR or siteSR, you
+will need to have a GEE account (<span class="citation">(<a href="#ref-ref"><strong>ref?</strong></a>)</span>(create-account)), the gcloud CLI installed
+and configured (<span class="citation">(<a href="#ref-ref"><strong>ref?</strong></a>)</span>(gcloud)), create an Earth Engine Project
+(<span class="citation">(<a href="#ref-ref"><strong>ref?</strong></a>)</span>(proj-setting)), have successful authenticated your account (<span class="citation">(<a href="#ref-ref"><strong>ref?</strong></a>)</span>(auth)),
+and you will need to alter the configuration file (described in Section
 <a href="software-settings.html#proj-setting">4.2.3</a>).</p>
 <div id="create-account" class="section level3 hasAnchor" number="4.2.1">
 <h3><span class="header-section-number">4.2.1</span> Create a GEE account<a href="software-settings.html#create-account" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -362,8 +392,8 @@ accessed by clicking on the icon to the right of the highlighted box in the
 figure above. This workflow will not run without specifying an Earth Engine
 Project that is managed by the Google Account you authenticate this run with.</p>
 </div>
-<div id="gee-authentication" class="section level3 hasAnchor" number="4.2.4">
-<h3><span class="header-section-number">4.2.4</span> GEE Authentication<a href="software-settings.html#gee-authentication" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="auth" class="section level3 hasAnchor" number="4.2.4">
+<h3><span class="header-section-number">4.2.4</span> GEE Authentication<a href="software-settings.html#auth" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Once <code>gcloud</code> is installed and initialized, the configuration file is properly
 set up, and the Conda environment is set up, you can authenticate your GEE
 instance. For this workflow, this is completed in the <code>run_targets.Rmd</code> script
@@ -380,9 +410,6 @@ Fajardo, Otto. 2023. <em>Pyreadr: Reads/Writes r RData and Rds Files into/from P
 </div>
 <div id="ref-gorelick2023" class="csl-entry">
 Gorelick, N. 2023. <em>Earthengine-Api: Earth Engine Python API</em>. Google. <a href="https://github.com/google/earthengine-api">https://github.com/google/earthengine-api</a>.
-</div>
-<div id="ref-gorelick2017" class="csl-entry">
-Gorelick, N, M Hancher, M Dixon, S Ilyushchenko, D Thau, and R Moore. 2017. <span>“Google Earth Engine: Planetary-Scale Geospatial Analysis for Everyone.”</span> <em>Remote Sensing of Environment</em>. <a href="https://doi.org/10.1016/j.rse.2017.06.031">https://doi.org/10.1016/j.rse.2017.06.031</a>.
 </div>
 <div id="ref-harris2020" class="csl-entry">
 Harris, Charles R., K. Jarrod Millman, Stéfan J. van der Walt, Ralf Gommers, Pauli Virtanen, David Cournapeau, Eric Wieser, et al. 2020. <span>“Array Programming with NumPy.”</span> <em>Nature</em> 585 (7825): 357–62. <a href="https://doi.org/10.1038/s41586-020-2649-2">https://doi.org/10.1038/s41586-020-2649-2</a>.
@@ -457,6 +484,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

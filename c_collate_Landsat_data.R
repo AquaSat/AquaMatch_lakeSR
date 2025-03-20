@@ -116,7 +116,8 @@ if (config::get(config = general_config)$run_GEE) {
                                         dswe = NULL,
                                         separate_missions = FALSE,
                                         depends = c_download_files),
-      packages = c("data.table", "tidyverse", "arrow")
+      packages = c("data.table", "tidyverse", "arrow"),
+      deployment = "main"
     ),
     
     # make target of first two digits of PR - basically, the files are too large
@@ -155,23 +156,29 @@ if (config::get(config = general_config)$run_GEE) {
     ),
     
     tar_target(
-      name = c_check_Drive_collated,
+      name = c_check_Drive_collated_folder,
       command =  {
         b_check_Drive_parent_folder
         tryCatch({
           drive_auth(b_yml_poi$google_email)
           if (b_yml_poi$parent_folder != "") {
-            path <- file.path(b_yml_poi$parent_folder, 
-                              "collated_raw")
+            parent_folder <- file.path("~",
+                                     paste0(b_yml_poi$parent_folder, "/"))
+            version_path <- file.path("~",
+                                      b_yml_poi$parent_folder, 
+                                      paste0("collated_raw_v", b_yml_poi$run_date, "/"))
           } else {
-            path <- paste0(b_yml_poi$proj_folder, 
-                           "collated_raw")
+            parent_folder <- b_yml_poi$proj_folder
+            version_path <- file.path(b_yml_poi$proj_folder, 
+                                      paste0("collated_raw_v", b_yml_poi$run_date, "/"))
           }
-          drive_ls(path)
+          drive_ls(version_path)
         }, error = function(e) {
-          drive_mkdir(path)
+          # if there is an error, check both the 'collated_raw' folder and the 'version'
+          # folder
+          drive_mkdir(path = parent_folder, name = paste0("collated_raw_v", b_yml_poi$run_date))
         })
-        return(path)
+        return(version_path)
       },
       packages = "googledrive",
       cue = tar_cue("always")    
@@ -180,7 +187,7 @@ if (config::get(config = general_config)$run_GEE) {
     tar_target(
       name = c_send_collated_files_to_drive,
       command = export_single_file(file_path = c_collated_files,
-                                   drive_path = c_check_Drive_collated,
+                                   drive_path = c_check_Drive_collated_folder,
                                    google_email = b_yml_poi$google_email),
       packages = c("tidyverse", "googledrive"),
       pattern = c_collated_files
@@ -208,6 +215,25 @@ if (config::get(config = general_config)$run_GEE) {
   # if not re-running/collating the GEE pull, grab the drive info, download the
   # files and then store the list of files as a target
   c_collate_Landsat_data <- list(
+    
+    # set dswe types
+    tar_target(
+      name = c_dswe_types,
+      command = {
+        dswe = NULL
+        if (grepl("1", b_yml_poi$DSWE_setting)) {
+          dswe = c(dswe, "DSWE1")
+        } 
+        if (grepl("1a", b_yml_poi$DSWE_setting)) {
+          dswe = c(dswe, "DSWE1a")
+        } 
+        if (grepl("3", b_yml_poi$DSWE_setting)) {
+          dswe = c(dswe, "DSWE3")
+        } 
+        dswe
+      },
+      deployment = "main"
+    ), 
     
     tar_file_read(
       name = c_save_collated_drive_info,

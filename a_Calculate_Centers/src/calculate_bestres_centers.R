@@ -75,6 +75,10 @@ calculate_bestres_centers <- function(HUC4) {
     rowid_to_column("lakeSR_id") %>% 
     ungroup()
   
+  wbd_info <- wbd_valid %>% 
+    st_drop_geometry() %>% 
+    select(permanent_identifier, gnis_id, gnis_name, areasqkm, reachcode, ftype, fcode)
+  
   # for each polygon, calculate a center. Because sf doesn't map easily, using a 
   # loop. Each loop adds a row the the poi_df dataframe.
   poi_df <- tibble(
@@ -142,7 +146,8 @@ calculate_bestres_centers <- function(HUC4) {
     # and now grab the poi lat/lon from the poi_df and drop geometry
     poi <- contained_poi %>%
       left_join(., poi_df) %>% 
-      st_drop_geometry()
+      st_drop_geometry() %>% 
+      left_join(., wbd_info)
     
     # clean up workspace for quicker processing
     # remove the fp and all contents completely before next HUC4
@@ -153,9 +158,12 @@ calculate_bestres_centers <- function(HUC4) {
     # return the dataframe with location info
     return(poi %>% 
              mutate(lakeSR_id = paste(HUC4, lakeSR_id, sep = "_")) %>% 
-             select(lakeSR_id, permanent_identifier, poi_Latitude, poi_Longitude, poi_dist_m))
+             relocate(lakeSR_id, permanent_identifier, poi_Latitude, poi_Longitude, poi_dist_m))
   } else { # if there are no waterbodies that meet criteria, return null
+    
     NULL
+    
   }
+  
   
 }

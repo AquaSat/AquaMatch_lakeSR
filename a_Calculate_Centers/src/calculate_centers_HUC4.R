@@ -28,11 +28,19 @@ calculate_centers_HUC4 <- function(HUC4) {
     wbd_filter <- wbd %>% 
       mutate(comid = as.character(comid)) %>% 
       filter(
-        # filter the waterbodies for ftypes of interest. 390 = lake/pond; 436 = res;
-        # 361 = playa 
+        # filter the waterbodies for ftypes of interest. 390 = lake/pond; 436 = res
         ftype %in% c("LakePond", "Reservoir"),
         # ...and for area > 1 hectare (0.01 km^2)
-        areasqkm >= 0.01) 
+        areasqkm >= 0.01) %>% 
+      mutate(ftype = case_when(ftype == "LakePond" ~ 390,
+                               ftype == "Reservoir" ~ 436,
+                               TRUE ~ NA_real_),
+             gnis_id = if_else(gnis_id == "", 
+                               NA_character_, 
+                               gnis_id),
+             gnis_name = if_else(gnis_name == "",
+                                 NA_character_,
+                                 gnis_name))
     
     # grab smaller (<4ha) lakes/ponds that are characterized as intermittent by NHD
     intermittent <- wbd_filter %>% 
@@ -73,6 +81,10 @@ calculate_centers_HUC4 <- function(HUC4) {
       # add a rowid for future steps
       rowid_to_column("lakeSR_id") %>% 
       ungroup()
+    
+    wbd_info <- wbd_valid %>% 
+      st_drop_geometry() %>% 
+      select(comid, gnis_id, gnis_name, areasqkm, reachcode, ftype, fcode)
     
     # some HUC4s have very few waterbodies that meet the above filtering. If we try 
     # to do this next step and there are no rows in the wbd dataframe, the pipeline
@@ -144,14 +156,15 @@ calculate_centers_HUC4 <- function(HUC4) {
       # and now grab the poi lat/lon from the poi_df and drop geometry
       poi <- contained_poi %>%
         left_join(., poi_df) %>% 
-        st_drop_geometry()
+        st_drop_geometry() %>% 
+        left_join(., wbd_info)
       
     }
     
     #return the dataframe with location info
     return(poi %>% 
              mutate(lakeSR_id = paste(HUC4, lakeSR_id, sep = '_')) %>% 
-             select(lakeSR_id, comid, poi_Latitude, poi_Longitude, poi_dist_m))
+             relocate(lakeSR_id, comid, poi_Latitude, poi_Longitude, poi_dist_m))
     
   } else { # if the object is null note it in a text doc to come back to. 
     message(paste0("HUC4 ", HUC4, " contains no waterbodies, noting in 'a_Calculate_Centers/mid/no_wbd_huc4.txt'"))

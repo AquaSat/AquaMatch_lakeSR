@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>AquaSat v2: lakeSR and siteSR</title>
   <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
-  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
 
   <meta property="og:title" content="AquaSat v2: lakeSR and siteSR" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-01-21" />
+<meta name="date" content="2025-03-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,6 +52,8 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -159,12 +161,16 @@ div.csl-indent {
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#note"><i class="fa fa-check"></i><b>1.1</b> Note</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>2</b> Background</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#lakesr-code-architecture"><i class="fa fa-check"></i><b>2.1</b> lakeSR Code Architecture</a>
 <ul>
-<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.1</b> {targets} groups</a></li>
+<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#configuration-files"><i class="fa fa-check"></i><b>2.1.1</b> Configuration Files</a></li>
+<li class="chapter" data-level="2.1.2" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.2</b> {targets} groups</a></li>
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="background.html"><a href="background.html#sitesr_wqp-code-architecture"><i class="fa fa-check"></i><b>2.2</b> siteSR_WQP Code Architecture</a>
 <ul>
@@ -179,13 +185,14 @@ div.csl-indent {
 <li class="chapter" data-level="3.1.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.1.1</b> Updates in AquaSat v2</a></li>
 <li class="chapter" data-level="3.1.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#poi"><i class="fa fa-check"></i><b>3.1.2</b> Pole of Inaccessibility</a></li>
 <li class="chapter" data-level="3.1.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation-of-lakesr"><i class="fa fa-check"></i><b>3.1.3</b> Technical Implementation of lakeSR</a></li>
-<li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.4</b> Case Study: Wisconsin Waterbodies</a></li>
+<li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#lakeSR-shoreline"><i class="fa fa-check"></i><b>3.1.4</b> Flagging shoreline proximity</a></li>
+<li class="chapter" data-level="3.1.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR Acquisition Locations</a>
+<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR_WQP Acquisition Locations</a>
 <ul>
 <li class="chapter" data-level="3.2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#rs-vis"><i class="fa fa-check"></i><b>3.2.1</b> Assessing for RS visibility</a></li>
 <li class="chapter" data-level="3.2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#fl-wb-assignment"><i class="fa fa-check"></i><b>3.2.2</b> Assignment of NHD flowline and waterbodies</a></li>
-<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR updates in AquaSat v2</a></li>
+<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr_wqp-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR_WQP updates in AquaSat v2</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>4</b> Satellite Data Acquisition Software and Settings</a>
@@ -196,7 +203,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
 <li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
 <li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#proj-setting"><i class="fa fa-check"></i><b>4.2.3</b> GEE project setting</a></li>
-<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
+<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#auth"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
@@ -225,18 +232,39 @@ div.csl-indent {
 <li class="chapter" data-level="6.3.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#masking-functions"><i class="fa fa-check"></i><b>6.3.1</b> Custom Earth Engine Masking Functions</a></li>
 <li class="chapter" data-level="6.3.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#dswe-implementation"><i class="fa fa-check"></i><b>6.3.2</b> Defining water area</a></li>
 </ul></li>
-<li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.4</b> Payload handling</a></li>
+<li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#additional-diagnostic-data-columns"><i class="fa fa-check"></i><b>6.4</b> Additional diagnostic data columns</a></li>
+<li class="chapter" data-level="6.5" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.5</b> Payload handling</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="handoff.html"><a href="handoff.html"><i class="fa fa-check"></i><b>7</b> Calculating Intermission Handoffs</a>
+<li class="chapter" data-level="7" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html"><i class="fa fa-check"></i><b>7</b> Post-Hoc Quality Assurance</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="handoff.html"><a href="handoff.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR stacks</a></li>
-<li class="chapter" data-level="7.2" data-path="handoff.html"><a href="handoff.html#define-handoff"><i class="fa fa-check"></i><b>7.2</b> Calculating handoffs</a>
+<li class="chapter" data-level="7.1" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR stack collation</a></li>
+<li class="chapter" data-level="7.2" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#post-hoc-filters"><i class="fa fa-check"></i><b>7.2</b> Post-hoc filters</a>
 <ul>
-<li class="chapter" data-level="7.2.1" data-path="handoff.html"><a href="handoff.html#corr7-handoff-coefficients"><i class="fa fa-check"></i><b>7.2.1</b> <code>corr7</code> handoff coefficients</a></li>
-<li class="chapter" data-level="7.2.2" data-path="handoff.html"><a href="handoff.html#corr8-handoff-coefficients"><i class="fa fa-check"></i><b>7.2.2</b> <code>corr8</code> handoff coefficients</a></li>
+<li class="chapter" data-level="7.2.1" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-4-qa-summary"><i class="fa fa-check"></i><b>7.2.1</b> Landsat 4 QA Summary</a></li>
+<li class="chapter" data-level="7.2.2" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-5-qa-summary"><i class="fa fa-check"></i><b>7.2.2</b> Landsat 5 QA Summary</a></li>
+<li class="chapter" data-level="7.2.3" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-7-qa-summary"><i class="fa fa-check"></i><b>7.2.3</b> Landsat 7 QA Summary</a></li>
+<li class="chapter" data-level="7.2.4" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-8-qa-summary"><i class="fa fa-check"></i><b>7.2.4</b> Landsat 8 QA Summary</a></li>
+<li class="chapter" data-level="7.2.5" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-9-qa-summary"><i class="fa fa-check"></i><b>7.2.5</b> Landsat 9 QA Summary</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>8</b> References</a></li>
+<li class="chapter" data-level="8" data-path="define-handoff.html"><a href="define-handoff.html"><i class="fa fa-check"></i><b>8</b> Calculating intermission handoffs</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-method"><i class="fa fa-check"></i><b>8.1</b> Roy method</a></li>
+<li class="chapter" data-level="8.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-method"><i class="fa fa-check"></i><b>8.2</b> Gardner method</a></li>
+<li class="chapter" data-level="8.3" data-path="define-handoff.html"><a href="define-handoff.html#implementing-roy-handoffs"><i class="fa fa-check"></i><b>8.3</b> Implementing Roy Handoffs</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.3.1</b> Roy Deming Correction Landsat 5 to Landsat 7</a></li>
+<li class="chapter" data-level="8.3.2" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.3.2</b> Roy Deming Correction Landsat 8 to Landsat 7</a></li>
+<li class="chapter" data-level="8.3.3" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.3.3</b> Roy Deming Correction Landsat 7 to Landsat 8</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Gardner Handoffs</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.4.1</b> Gardner Correction Landsat 5 to Landsat 7</a></li>
+<li class="chapter" data-level="8.4.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.4.2</b> Gardner Correction Landsat 8 to Landsat 7</a></li>
+<li class="chapter" data-level="8.4.3" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.4.3</b> Gardner Correction Landsat 7 to Landsat 8</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>9</b> References</a></li>
 </ul>
 
       </nav>
@@ -258,11 +286,11 @@ div.csl-indent {
 <h1 class="title">AquaSat v2: lakeSR and siteSR</h1>
 <h2 class="subtitle"><em>Compiled Satellite Surface Reflectance and Surface Temperature for Waterbodies in the United States and US Territories</em></h2>
 <p class="author"><em>ROSSyndicate</em></p>
-<p class="date"><em>2025-01-21</em></p>
+<p class="date"><em>2025-03-20</em></p>
 </div>
 <div id="introduction" class="section level1 hasAnchor" number="1">
 <h1><span class="header-section-number">1</span> Introduction<a href="index.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>This {bookdown} <span class="citation">(<a href="#ref-xie2016">Xie 2016</a>)</span> document explains the methodology we use in the acquisition and compilation of satellite surface reflectance and surface temperature data for the AquaSat v2 data suite. Specifically, this document describes data for all lakes greater than 1 hectare in the United States and US Territories (“lakeSR”) and sites associated with Water Quality Portal (“WQP”) data harmonized within the AquaMatch_harmonize_WQP data product (“siteSR_WQP”). We include the suffix “WQP” for siteSR to indicate the data originate from the WQP, allowing for future development of <em>in situ</em> data that may come from other sources. Generally speaking, siteSR refers to remote sensing data acquired at locations with <em>in situ</em> data and lakeSR refers to remote sensing data acquired at centrally-located points of waterbodies.</p>
+<p>This {bookdown} <span class="citation">(<a href="#ref-xie2016">Xie 2016</a>)</span> document explains the methodology we use in the acquisition and compilation of satellite surface reflectance and surface temperature data for the AquaSat v2 data suite. Specifically, this document describes data for all lakes greater than 1 hectare in the United States and US Territories (“lakeSR”) and sites associated with Water Quality Portal (“WQP”) data harmonized within the AquaMatch_harmonize_WQP data product (“siteSR_WQP”). We include the suffix “WQP” for siteSR to indicate the data originate from the WQP, allowing for future development of <em>in situ</em> data that may come from other sources. Generally speaking, siteSR refers to remote sensing data acquired at locations with <em>in situ</em> data and lakeSR refers to remote sensing data acquired at centrally-located points of waterbodies. Further, within this document “siteSR” refers the general workflow for acquiring remote sensing data at a location with sampling data and “siteSR_WQP” when there are steps that are specific to the WQP-derived locations.</p>
 <p>AquaSat v2 represents modular code and data infrastructure for:</p>
 <ol style="list-style-type: decimal">
 <li><p>harmonizing <em>in situ</em> data from the Water Quality Portal and providing an interoperability tiering structure to allow for easier downstream filtering (“AquaMatch_harmonize_WQP”)</p></li>
@@ -270,9 +298,13 @@ div.csl-indent {
 <li><p>pairing <em>in situ</em> data and remote sensing data for parameter-specific algorithm development (e.g., AquaMatch_WQP_LandsatC2)</p></li>
 </ol>
 <p>The goal of these data products is to facilitate assessment and monitoring of waterbodies within the United States and Territories using both <em>in situ</em> and remote sensing data.</p>
-<p>AquaSat v2 builds upon AquaSat <span class="citation">(<a href="#ref-ross2019">Ross et al. 2019</a>)</span> (referred to here as “AquaSat v1”) and LimnoSat-US <span class="citation">(<a href="#ref-limnosat">Topp et al., n.d.</a>)</span>. AquaSat v1 focused on pairing remote sensing data with <em>in situ</em> observations and measurements while LimnoSat-US acquired remote sensing for all waterbodies greater than 10 hectares across the Continental United States (CONUS) regardless of whether <em>in situ</em> measurements were available for that waterbody. In AquaSat v2, we bring these products together. For instance, lakeSR can define Landsat intermission handoffs to enable use of Landsat as a timeseries product, siteSR products can be used to create parameter-specific algorithms, and those algorithms can be applied to lakeSR to create a timeseries of water quality for waterbodies in the US and territories.</p>
+<p>AquaSat v2 builds upon AquaSat <span class="citation">(<a href="#ref-ross2019">Ross et al. 2019</a>)</span> (referred to here as “AquaSat v1”) and LimnoSat-US <span class="citation">(<a href="#ref-limnosat">Topp et al. 2020</a>)</span>. AquaSat v1 focused on pairing remote sensing data with <em>in situ</em> observations and measurements while LimnoSat-US acquired remote sensing for all waterbodies greater than 10 hectares across the Continental United States (CONUS) regardless of whether <em>in situ</em> measurements were available for that waterbody. In AquaSat v2, we bring these products together. For instance, lakeSR can define Landsat intermission handoffs to enable use of Landsat as a timeseries product, siteSR products can be used to create parameter-specific algorithms, and those algorithms can be applied to lakeSR to create a timeseries of water quality for waterbodies in the US and territories.</p>
 <p>AquaSat v2 code is built on the {targets} workflow management system for R <span class="citation">(<a href="#ref-landau2021">Landau 2021</a>)</span>. The {targets} architecture is based on lists of functions performed in a specific order, each function called a <em>target</em>. The primary benefit of {targets} workflows is that code is only run if a target, a target’s code, or a target’s dependencies have changed (or become “outdated” in {targets} speak).</p>
+<div id="note" class="section level2 hasAnchor" number="1.1">
+<h2><span class="header-section-number">1.1</span> Note<a href="index.html#note" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Images used in analyses courtesy of the United States Geological Survey. Any use of trade, firm, or product names is for descriptive purposes only and does not imply endorsement by the U.S. Government.</p>
 
+</div>
 </div>
 <h3> References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
@@ -283,7 +315,7 @@ Landau, William Michael. 2021. <span>“The Targets r Package: A Dynamic Make-Li
 Ross, Matthew R. V., Simon N. Topp, Alison P. Appling, Xiao Yang, Catherine Kuhn, David Butman, Marc Simard, and Tamlin M. Pavelsky. 2019. <span>“AquaSat: A Data Set to Enable Remote Sensing of Water Quality for Inland Waters.”</span> <em>Water Resources Research</em> 55 (11): 10012–25. <a href="https://doi.org/10.1029/2019WR024883">https://doi.org/10.1029/2019WR024883</a>.
 </div>
 <div id="ref-limnosat" class="csl-entry">
-Topp, Simon, Tamlin Pavelsky, Xiao Yang, John Gardner, and Matthew R. V. Ross. n.d. <span>“LimnoSat-US: A Remote Sensing Dataset for u.s. Lakes from 1984-2020.”</span> <a href="https://doi.org/10.5281/zenodo.4139695">https://doi.org/10.5281/zenodo.4139695</a>.
+Topp, Simon, Tamlin Pavelsky, Xiao Yang, John Gardner, and Matthew R. V. Ross. 2020. <span>“LimnoSat-US: A Remote Sensing Dataset for u.s. Lakes from 1984-2020.”</span> <a href="https://doi.org/10.5281/zenodo.4139695">https://doi.org/10.5281/zenodo.4139695</a>.
 </div>
 <div id="ref-xie2016" class="csl-entry">
 Xie, Yihui. 2016. <em>Bookdown: Authoring Books and Technical Documents with r Markdown</em>. Boca Raton, Florida: Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/bookdown">https://bookdown.org/yihui/bookdown</a>.
@@ -349,6 +381,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>
