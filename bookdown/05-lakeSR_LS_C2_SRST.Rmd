@@ -8,7 +8,7 @@ bibliography: references.bib
 # Landsat Collection 2 SRST Data Product {#LS-SRST-pull}
 
 The lakeSR data product is a set of tabular datasets, representing the Landsat
-surface reflectance (SR) and surface tempearture (ST) data summarized for the
+surface reflectance (SR) and surface temperarture (ST) data summarized for the
 point of inaccessibility (POI) location which is meant to represent pelagic
 conditions at a given waterbody (identified by its NHD unique identifier, see
 Section \@ref(locs-data-acq)). This data product contains "full stacks" of the
@@ -20,7 +20,7 @@ as described in \@ref(siteSR-locs).
 
 ## Changes from AquaSat v1 and LimnoSat-US
 
-While much of the general architecture from the precedent data products remained
+While much of the general architecture from the previous data products remained
 unchanged, in AquaSat v2 we have added a number of features to the remote
 sensing acquisition workflow, have increased efficiency of the data pull, and
 have made the acquired data more robust through additional masking. The bullets
@@ -36,7 +36,7 @@ below summarize the changes implemented in this update.
     buffer distance and included area is consistent per location if it is in the
     area of path-row overlap.
 
-![Cartoon example: Locations (and their buffers) are the blue circles and the
+![Simplified example: Locations (and their buffers) are the blue circles and the
 extent of the path-row is indicated by the large dark blue or orange boxes. In
 this example, location 1 would be extracted for both path-row 1 and 2, location
 2 only extracted for path-row 2, and location 3 only extracted for path-row
@@ -255,7 +255,7 @@ to see some of the masks in action.
     product is 7273 prior to application of scaling factors (0.0000075 after
     scaling), we know that the Level-2 Surface Reflectance product has been
     fine-tuned on terrestrial data and small over-corrections of surface
-    reflectance, especially over dark surfaces, is likely to happen. We
+    reflectance, especially over dark surfaces, are likely to happen. We
     explicitly allow for very small negative reflectance values to be sure we do
     not remove very deep, oligotrophic and/or high DOC water systems from our
     data set while implementing this QA filter.
@@ -266,7 +266,7 @@ to see some of the masks in action.
 -   `add_ir_glint_flag`: Adds a band where any near infrared or shortwave
     infrared value is greater than 0.1, but does not mask the pixel. This flag
     is meant to be a diagnostic for downstream users to make additional
-    qualititative assessment of sun glint affected data and is tallied with all
+    qualitative assessment of sun glint affected data and is tallied with all
     masks implemented.
 
 We track pixel-level instances of the use of the aerosol mask in Landsat 8/9,
@@ -277,9 +277,9 @@ to summarizing the data within the buffered area.
 
 ### Defining water area {#dswe-implementation}
 
-We use an adapted version Dynamic Surface Water Extent (DSWE) algorithm to
-define what pixels are water within the buffer of our specific locations. DSWE
-was defined in @jones2019 for Landsat Collection 1 and re-implemented for
+We use an adapted version of the Dynamic Surface Water Extent (DSWE) algorithm
+to define what pixels are water within the buffer of our specific locations.
+DSWE was defined in @jones2019 for Landsat Collection 1 and re-implemented for
 Collection 2 as a Level-3 data product in @usgeologicalsurvey2023. Differences
 between the Level-3 implementation and the on-the-fly calculation made within
 our workflow are as follows:
@@ -292,7 +292,7 @@ our workflow are as follows:
     Earth Engine using the MERIT DEM version 1.0.3 [@yamazaki2017] at an extent
     of 3000 meters surrounding a given point for analysis.
 
-    ![Screen shot of code used for implementation of hill shadow to determine
+    ![Screenshot of code used for implementation of hill shadow to determine
     masking procedures of the DSWE value.](images/hillshadow.png){width="600"}
 
     This is different from the implementation described in the Level 3 data
@@ -359,7 +359,7 @@ modeling purposes, though we do not have recommended uses at this time.
 Because GEE is a free service to those at academic or governmental institutions,
 there are limits to the total number of tasks being run co-currently on GEE's
 platform. For this reason, tasks are sent to GEE as path-row groups as soon as
-there are fewer than 10 tasks in the GEE tasks queue. Additionally, any pathrow
+there are fewer than 10 tasks in the GEE tasks queue. Additionally, any path-row
 containing more than 5,000 POI locations are sent as separate tasks in 5000
 location chunks. This is an additional step that is taken in addition to
 processing per path-row to avoid failed tasks. We have also implemented a status
@@ -369,7 +369,7 @@ you can not tell whether or not they have completed or failed. This stores a
 text file at the filepath
 `b_pull_Landsat_SRST_poi/out/GEE_task_errors_vRUN_DATE.csv` containing the names
 of the tasks that have failed. If no tasks have failed, no file will be present.
-Generally speaking failed tasks would indicate an error within the GEE
+Generally speaking, failed tasks would indicate an error within the GEE
 acquisition script, usually due to changes in the
 `b_pull_Landsat_SRST_poi/py/run_GEE_per_pathrow.py` script. We recommend
 checking the task status of the GEE run at

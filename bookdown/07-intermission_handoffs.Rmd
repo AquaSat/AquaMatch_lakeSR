@@ -44,11 +44,12 @@ described in @roy2016 ("Roy method") and an adapted version of that described in
 In AquaSat v2, we provide coefficients to standardize remote sensing values
 relative to Landsat 7 and Landsat 8. The Landsat 7 intermission handoffs create
 a continuous record of remote sensing from Landsat 4 through 9 relative to
-Landsat 7 since Landsat 4 and 5 and Landsat 8 and 9 can be treated as
+Landsat 7. This is because Landsat 4 and 5 and Landsat 8 and 9 can be treated as
 interchangeable due to the similarity in sensor payload and radiometric
 resolution. Data corrected to Landsat 8 relative values can only be applied to
 Landsat 7 due to lack of mission overlap between Landsat 8 and Landsat 5, so the
-resulting standardized data timeseries.
+resulting standardized data timeseries is shorter for any application of
+correction relative to Landsat 8.
 
 For the purposes of this document, we only present the handoff coefficients for
 DSWE1 (confident water) and do not investigate differences between the DSWE1 or
@@ -58,9 +59,9 @@ coefficients if using data from more than one sensor group (TM, ETM+, OLI).
 ## Roy method
 
 The Roy method for calculating intermission handoffs uses paired images at
-specific sites, where the reflectance data are obtained are from two missions
-(e.g. Landsat 7 and Landsat 8) separated by one day at a specific location
-within the overlapping paths in the WRS2 path-row framework:
+specific sites, where the reflectance data are obtained from two missions (e.g.
+Landsat 7 and Landsat 8) separated by one day at a specific location within the
+overlapping paths in the WRS2 path-row framework:
 
 ![An example of two overlapping WRS2 paths (grey area) separated by one day. Any
 location with data for both images (in the grey area) would be considered a
@@ -96,16 +97,16 @@ percentile values used to define the intermission handoff should be used with
 extreme caution.
 
 One additional consideration when using the Gardner method is, even when the
-number of observations are is high, if there is a difference between total
+number of observations is high, if there is a difference between total
 observations contributing to the quantile summaries, there may be systematic
 differences built into the coefficients. An example of possible systematic
 differences could be fewer observations from non-CONUS locations in Landsat 5
-due to data transmission errors. We did not investigate the differences in n
-listed in Table \@ref(tab:gardner-table) to determine what, if any, systematic
-differences are present between the two missions. We provide the Gardner method
-handoffs for continuity with the riverSR product for users who would like that
-interoperability. As with the Roy, et al. method, intercepts and slopes for all
-handoffs are available at the file path
+due to data transmission errors. We did not investigate the differences in
+number of images listed in Table \@ref(tab:gardner-table) to determine what, if
+any, systematic differences are present between the two missions. We provide the
+Gardner method handoffs for continuity with the riverSR product for users who
+would like that interoperability. As with the Roy, et al. method, intercepts and
+slopes for all handoffs are available at the file path
 `e_calculate_handoffs/out/collated_handoffs_v2025-02-12.csv` and figures for all
 handoffs are created when the pipeline is run.
 
