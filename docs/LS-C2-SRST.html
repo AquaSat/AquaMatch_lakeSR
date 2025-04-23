@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-20" />
+<meta name="date" content="2025-04-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -304,8 +304,8 @@ USGS</a>.</p>
 how much the data have been processed. Level 1 (top of atmosphere) is less
 processed than Level 2 (surface reflectance). lakeSR uses Level 2 data
 exclusively, as it has gone through a standard atmospheric correction process
-that attempts to standardize data handling through out the Landsat record - it
-is <em>derived</em> from Level 1 data. NASA has compiled <a href="https://www.earthdata.nasa.gov/learn/earth-observation-data-basics/data-processing-levels">a list of general data
+that attempts to standardize data handling throughout the Landsat record - it is
+<em>derived</em> from Level 1 data. NASA has compiled <a href="https://www.earthdata.nasa.gov/learn/earth-observation-data-basics/data-processing-levels">a list of general data
 processing levels and descriptions
 here</a>.</p>
 <p><em>Landsat stack</em>: this is the collated Landsat historical dataset at a specific
@@ -322,7 +322,7 @@ for the purpose of providing background information about the Landsat archive
 relevant to the creation and use of lakeSR.</em></p>
 <p>The Landsat archive of multispectral and thermal data in lakeSR is composed of
 Landsat missions 4 through 9 and spans more than 40 years.</p>
-<table style="width:98%;">
+<table style="width:97%;">
 <colgroup>
 <col width="24%" />
 <col width="24%" />
@@ -336,7 +336,8 @@ Sensor</th>
 <th align="center">Launch Date</th>
 <th align="center">End of Science
 Mission</th>
-<th align="center">Decommission Date</th>
+<th align="center">Decommission
+Date</th>
 </tr>
 </thead>
 <tbody>
@@ -411,11 +412,11 @@ the Landsat archive.</p>
 <p>The spatial resolution of the Level 1 data that the SR and ST products are
 derived from has not changed for optical bands over time (Aerosol, RGB, NIR,
 SWIR) but has varied over the historic record for thermal data:</p>
-<table style="width:71%;">
+<table style="width:75%;">
 <colgroup>
-<col width="23%" />
-<col width="23%" />
-<col width="23%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -447,11 +448,11 @@ SWIR) but has varied over the historic record for thermal data:</p>
 been resampled to 30m.</p>
 <p>Alongside the pixel resolution of the sensors is the radiometric resolution at
 which the data are stored. TM and ETM+ data are stored as 8-bit data products,
-OLI data are quantitized to 12 bits and Landsat 9 to 14 bits. This equates to
-256 shades per band for Landsat 4-7, 4,096 shades for Landsat 8 and 16,384
-shades for Landsat 9, where higher numbers allow for greater precision of
-measurement in a given band. All Collection 2 Level 2 Surface Reflectance and
-Surface Temperature data have been rescaled to 16 bits.</p>
+OLI data are quantized to 12 bits and Landsat 9 to 14 bits. This equates to 256
+shades per band for Landsat 4-7, 4,096 shades for Landsat 8 and 16,384 shades
+for Landsat 9, where higher numbers allow for greater precision of measurement
+in a given band. All Collection 2 Level 2 Surface Reflectance and Surface
+Temperature data have been rescaled to 16 bits.</p>
 </div>
 </div>
 <div id="surface-reflectance-product" class="section level2 hasAnchor" number="5.3">
@@ -521,7 +522,7 @@ of <code>MonitoringLocationTypeName</code>, the flags assigned from our NHD assi
 process, and the distance columns from that process to assess whether or not the
 temperature data is appropriate for a given site. Additional assessments may be
 necessary to assess whether it is appropriate to use the temperature data for
-discrete analysis of temperature trends/patterns. King, et al. (-<span class="citation">King, Bean, and Gohring (<a href="#ref-king">2024</a>)</span>) have
+discrete analysis of temperature trends/patterns. King, et al. <span class="citation">(<a href="#ref-king">2024</a>)</span> have
 noted that handoff coefficients should be used for the surface temperature
 product as well, see Section <a href="define-handoff.html#define-handoff">8</a> for details.</p>
 
@@ -577,42 +578,42 @@ Vermote, E., J. C. Roger, B. Franch, and Sergii Skakun. 2018. <span>“LaSRC (La
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
-"sharing": {
-"github": false,
-"facebook": true,
-"twitter": true,
-"linkedin": false,
-"weibo": false,
-"instapaper": false,
-"vk": false,
-"whatsapp": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
-},
-"fontsettings": {
-"theme": "white",
-"family": "sans",
-"size": 2
-},
-"edit": {
-"link": null,
-"text": null
-},
-"history": {
-"link": null,
-"text": null
-},
-"view": {
-"link": null,
-"text": null
-},
-"download": null,
-"search": {
-"engine": "fuse",
-"options": null
-},
-"toc": {
-"collapse": "subsection"
-}
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
 });
 });
 </script>

@@ -40,11 +40,10 @@ pipeline to assure a smooth run of the workflow.
 ## Google Earth Engine Setup
 
 If running the 'admin_update' configuration for either lakeSR or siteSR, you
-will need to have a GEE account @ref(create-account), the gcloud CLI installed
-and configured (@ref(gcloud)), create an Earth Engine Project
-(@ref(proj-setting)), have successful authenticated your account (@ref(auth)),
-and you will need to alter the configuration file (described in Section
-\@ref(proj-setting)).
+will need to have a GEE account, the gcloud CLI installed and configured, create
+an Earth Engine Project, have successful authenticated your account, and you
+will need to alter the configuration file. All of these tasks are described in
+the section below.
 
 ### Create a GEE account {#create-account}
 

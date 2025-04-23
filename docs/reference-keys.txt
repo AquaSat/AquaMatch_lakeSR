@@ -1,6 +1,5 @@
 fig:NHDPlusV2-HUC4
-fig:v1-WI-lakes
-fig:v2-WI-lakes
+fig:WI-lakes
 fig:siteSR-types
 fig:siteSR-filtered
 tab:roy-table

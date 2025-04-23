@@ -43,9 +43,11 @@ present.
 ```{r walk_package_installer}
 packages <- c("arrow",
               "bookdown",
+              "cowplot",
               "crew",
               "data.table",
               "deming",
+              "ggthemes",
               "googledrive",
               "kableExtra",
               "nhdplusTools",

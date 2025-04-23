@@ -194,7 +194,6 @@ if (config::get(config = general_config)$run_GEE) {
       name = b_send_yml_to_drive,
       command = export_single_target(
         target = b_yml_poi, 
-        target_name = "b_yml_poi",
         drive_path = a_check_Drive_targets_folder,
         google_email = lakeSR_config$google_email,
         date_stamp = b_yml_poi$run_date),

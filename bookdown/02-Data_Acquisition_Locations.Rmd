@@ -38,15 +38,25 @@ ts <- tar_timestamp(a_combined_poi)
 As noted in the Introduction (Section \@ref(introduction)), for the purposes of
 AquaSat v2, surface reflectance and surface temperature data are acquired at
 specific, centrally-located points within waterbodies (typically in pelagic
-locations of lakes, lakeSR) and at locations where there are *in situ* data
-(siteSR). The data acquired at locations where there are *in situ* data are
-meant to create location-specific algorithms using the AquaMatch database, which
-can then be applied to the data collected over the centrally-located point
-across all waterbodies in the lakeSR database. lakeSR does not acquire nor
-summarize data over the entire waterbody's surface, as it is computationally
-impractical for most large lakes, especially those that cross multiple satellite
-path-rows or tiles. For the lakeSR product, we summarize the Landsat data within
-a 120 meter radius of a defined location. For siteSR, we use a 200 meter buffer.
+locations of lakes, lakeSR) and at locations where there are in situ data
+(siteSR). The data acquired at locations where there are in situ data are meant
+to create location-specific algorithms using the AquaMatch database, which can
+then be applied to the data collected over the centrally-located point across
+all waterbodies in the lakeSR database. lakeSR does not acquire nor summarize
+data over the entire waterbody's surface, as it is computationally impractical
+for most large lakes, especially those that cross multiple satellite path-rows
+or tiles. For the lakeSR product, we summarize the Landsat data within a 120
+meter radius of a defined location. For siteSR, we use a 200 meter buffer.
+
+AquaSat products summarize data within a buffered area of unique locations
+primarily to reduce computation time versus aggregating the entire lake area and
+to reduce issues with lakes that lie within more than one WRS2 path-row which
+would require additional data handling steps at both the remote sensing and
+post-hoc filter steps to provide consistent data summaries. This may mean that
+each waterbody has differing proportions of the area represented in the data
+summaries. Users may wish to consider total surface area of waterbodies
+(provided in the output file "a_poi_with_flags.csv" via the column `areasqkm`)
+when analyzing the remote sensing data.
 
 ## Waterbodies Included in lakeSR {#waterbodies}
 
@@ -121,7 +131,7 @@ calculates a point in space and the radius of the circle used to define the POI.
 ### Technical Implementation of lakeSR
 
 The code for gathering NHD waterbodies and calculating their respective POIs is
-found in {targets} group *a_Calculate_Centers* which is located in the script
+found in {targets} group a_Calculate_Centers which is located in the script
 [a_Calculate_Centers.R](https://github.com/aquasat/lakeSR/blob/main/a_Calculate_Centers.R)
 at the root directory of the repository.
 
@@ -187,7 +197,9 @@ native thermal resolution (120, 60, 100 meters). These flags are binary:
 
 ```{r}
 # grab state of Wisconsin
-WI <- states(progress_bar = FALSE) %>% filter(STUSPS == "WI") %>% st_transform("EPSG:4326")
+WI <- states(progress_bar = FALSE) %>% 
+  filter(STUSPS == "WI") %>% 
+  st_transform("EPSG:4326")
 
 # grab all the pois and create a sf out of them
 poi_sf <- st_as_sf(a_poi_with_flags, 
@@ -226,30 +238,91 @@ WI_for_viz <- state_boundaries_wgs84 %>%
 
 The state of Wisconsin contains more than 15,000 freshwater lakes. LimnoSat-US
 contained just `r format(nrow(WI_HL_DP), big.mark = ",")` waterbodies within
-Wisconsin (Figure \@ref(fig:v1-WI-lakes)), whereas AquaSat v2 via the lakeSR
-product includes `r format(nrow(WI_poi), big.mark = ",")` (Figure
-\@ref(fig:v2-WI-lakes)) - accounting for a majority of the state's freshwater
-water bodies.
+Wisconsin, whereas AquaSat v2 via the lakeSR product includes
+`r format(nrow(WI_poi), big.mark = ",")` (Figure \@ref(fig:WI-lakes)) -
+accounting for a majority of the state's freshwater water bodies.
 
-```{r v1-WI-lakes, echo=F, fig.cap="Deepest point of Wisconsin lakes included in LimnoSat-US, defined by the Hydrolakes data product. Deepest point for each lake is indicated with a black dot."}
-tm_shape(WI_for_viz) +
-  tm_borders() +
-  tm_shape(WI_HL) +
-  tm_fill("lightblue") +
-  tm_borders() +
-  tm_shape(WI_HL_DP) +
-  tm_dots("black")
+```{r WI-lakes, echo=F, fig.cap="Deepest point of Wisconsin lakes included in LimnoSat-US defined by the Hydrolakes data product (left) and those included in AquaSat v2 via lakeSR defined by the NHDPlusV2 data product (right). Deepest point for each lake is indicated with a black dot, spatial histogram of density by longitude and latitude presented below the maps."}
 
-```
+# convert for ggplot
+coords_limno <- st_coordinates(WI_HL_DP)
+coords_limno_df <- as.data.frame(coords_limno)
+coords_as <- st_coordinates(WI_poi)
+coords_as_df <- as.data.frame(coords_as)
 
-```{r v2-WI-lakes, fig.cap="Point of inaccessibility for Wisconsin lakes included in AquaSat v2 via lakeSR, defined by the NHDPlusV2 data product. Point of inaccessibility for each lake is indicated with a black dot."}
-tm_shape(WI_for_viz) +
-  tm_borders() +
-  tm_shape(WI_wbd_poi) +
-  tm_fill("lightblue") +
-  tm_borders() +
-  tm_shape(WI_poi) +
-  tm_dots("black")
+# get max for histograms
+max_y_x <- max(
+  ggplot_build(ggplot(coords_limno_df, aes(x = X)) + geom_histogram())$data[[1]]$count,
+  ggplot_build(ggplot(coords_as_df, aes(x = X)) + geom_histogram())$data[[1]]$count
+)
+max_y_y <- max(
+  ggplot_build(ggplot(coords_limno_df, aes(x = Y)) + geom_histogram())$data[[1]]$count,
+  ggplot_build(ggplot(coords_as_df, aes(x = Y)) + geom_histogram())$data[[1]]$count
+)
+
+# make cowplot for limnosat
+hist_x_limno <- ggplot(coords_limno_df, aes(x = X)) +
+  geom_histogram(bins = 30, fill = "grey60") +
+  ylim(0, max_y_x) +
+  labs(x = NULL, y = NULL) +
+  theme_few()
+
+hist_y_limno <- ggplot(coords_limno_df, aes(x = Y)) +
+  geom_histogram(bins = 30, fill = "grey60") +
+  ylim(0, max_y_y) +
+  labs(x = NULL, y = NULL) +
+  theme_few()
+
+map_limno <- ggplot() +
+  geom_sf(data = WI_for_viz, fill = NA, color = "black") +
+  geom_sf(data = WI_HL, fill = "lightblue", color = "black") +
+  geom_point(data = coords_limno_df, 
+             aes(x = X, y = Y), 
+             color = "black", size = 0.5) +
+  coord_sf() +
+  theme_minimal() +
+  labs(x = NULL, y = NULL)
+
+# make cowplot for aquasat
+hist_x_as <- ggplot(coords_as_df, aes(x = X)) +
+  geom_histogram(bins = 30, fill = "grey60") +
+  ylim(0, max_y_x) +
+  labs(x = NULL, y = NULL) +
+  theme_few()
+
+hist_y_as <- ggplot(coords_as_df, aes(x = Y)) +
+  geom_histogram(bins = 30, fill = "grey60") +
+  ylim(0, max_y_y) +
+  labs(x = NULL, y = NULL) +
+  theme_few()
+
+map_as <- ggplot() +
+  geom_sf(data = WI_for_viz, fill = NA, color = "black") +
+  geom_sf(data = WI_wbd_poi, fill = "lightblue", color = "black") +
+  geom_point(data = coords_as_df, 
+             aes(x = X, y = Y), 
+             color = "black", 
+             size = 0.5) +
+  coord_sf() +
+  theme_minimal() +
+  labs(x = NULL, y = NULL)
+
+limno_stack <- plot_grid(
+  NULL, map_limno, hist_x_limno, hist_y_limno, 
+  ncol = 1, 
+  rel_heights = c(0.1, 1, 0.25, 0.25)
+)
+
+as_stack <- plot_grid(
+  NULL, map_as, hist_x_as, hist_y_as, 
+  ncol = 1,
+  rel_heights = c(0.1, 1, 0.25, 0.25)
+)
+
+plot_grid(
+  limno_stack, as_stack, nrow = 1, labels = c("LimnoSat", "AquaSat v2")
+)
+
 ```
 
 ## siteSR_WQP Acquisition Locations {#siteSR-locs}
@@ -257,7 +330,7 @@ tm_shape(WI_for_viz) +
 The AquaMatch_harmonize_WQP workflow outputs site metadata for all sites that
 are present after the harmonization procedure for each parameter. siteSR_WQP
 collates these sites, then reduces that collation to only distinct sites. Across
-chlorophyll-*a*, Secchi disc depth, and DOC, there are currently
+chlorophyll-a, Secchi disc depth, and DOC, there are currently
 `r format(nrow(p4_WQP_site_NHD_info), big.mark = ",")` distinct sites in the
 United States and Territories for which we create stacks.
 
@@ -291,7 +364,9 @@ presence of water. As long as a WQP monitoring location has at least one pixel
 with water at least 80% of the time during that 38 year period within a 200
 meter radius, we include it in the list of sites we acquire Landsat stacks for.
 After this assessment, `r format(nrow(p5_visible_sites), big.mark = ",")` sites
-were deemed to be visible by remote sensing (`r round(abs((nrow(p5_visible_sites)-nrow(p4_WQP_site_NHD_info))/nrow(p4_WQP_site_NHD_info)*100), 1)`% loss of sites).
+were deemed to be visible by remote sensing
+(`r round(abs((nrow(p5_visible_sites)-nrow(p4_WQP_site_NHD_info))/nrow(p4_WQP_site_NHD_info)*100), 1)`%
+loss of sites).
 
 ```{r siteSR-filtered, fig.cap="Water Quality Portal data location types present in siteSR_WQP after filtering for those that are deemed visible by remote sensing. Count of sites provided above bar, arranged by `MonitoringLocationTypeName`."}
 p5_visible_sites %>% 
@@ -329,8 +404,8 @@ assignment as follows:
 
 > 0: point inside NHD waterbody polygon
 >
-> 1: point within GEE buffer distance (default 200 meters for siteSR) of the
-> NHD waterbody
+> 1: point within GEE buffer distance (default 200 meters for siteSR) of the NHD
+> waterbody
 >
 > 2: point between GEE buffer distance and 500 meters of the NHD waterbody
 > polygon
@@ -347,8 +422,8 @@ permanent identifier for NHD Best Resolution), for all points with a flag value
 of 1 or 2, we provide the distance (in meters) to the nearest NHD waterbody of
 feature type 390 or 436. For waterbodies with a flag of 0, we provide distance
 to shore. We follow lakeSR's implementation of flags for shoreline proximity for
-these sites as well, but with the siteSR default site buffer of 200 meters instead of
-lakeSR's buffer of 120 meters.
+these sites as well, but with the siteSR default site buffer of 200 meters
+instead of lakeSR's buffer of 120 meters.
 
 Flowlines are assigned to sites with a MonitoringLocationTypeName that contains
 "lake", "reservoir", "stream", or "river". NHD flowlines are filtered to contain
@@ -358,8 +433,8 @@ as follows:
 
 > 0: point \<= 100 meters from nearest flowline
 >
-> 1: point between 100 meters and GEE buffer distance (default 200 meters for siteSR)
-> to nearest flowline
+> 1: point between 100 meters and GEE buffer distance (default 200 meters for
+> siteSR) to nearest flowline
 >
 > 2: point between GEE buffer distance and 500 meters from nearest flowline
 >
@@ -388,13 +463,14 @@ or thermal data summary.
 
 We provide these identifiers and additional metadata to help users make informed
 decisions about remote sensing data quality (specifically, related to edge/
-shoreline contamination) and NHD comid/permanent id attribution to individual sites.
+shoreline contamination) and NHD comid/permanent id attribution to individual
+sites.
 
 ### siteSR_WQP updates in AquaSat v2
 
 In our updated workflow, we acquire and provide the historical Landsat stacks
 for all sites collated from the harmonization pipeline, regardless of whether
-they are associated with a specific *in situ* observation. In the previous
-iteration, we only provided a matchup dataset for *in situ* data. Assigning
+they are associated with a specific in situ observation. In the previous
+iteration, we only provided a matchup dataset for in situ data. Assigning
 flowlines and waterbodies to all siteSR sites is also a feature introduced in
 AquaSat v2.

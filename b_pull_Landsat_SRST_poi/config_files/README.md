@@ -1,1 +1,0 @@
-config_poi_2025-01-23.yml: this config is for the most recent valid run, without sunglint masks implemented. Noting for posterity for now.

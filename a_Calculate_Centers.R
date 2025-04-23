@@ -169,7 +169,8 @@ if (config::get(config = general_config)$calculate_centers) {
         })
       },
       packages = "googledrive",
-      cue = tar_cue("always")
+      cue = tar_cue("always"),
+      deploy = "main"
     ),
     
     # send poi file to drive 

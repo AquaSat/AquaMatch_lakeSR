@@ -17,6 +17,11 @@ missions:
 -   Landsat 8 Operational Land Imager/Thermal Infrared Sensor (OLI/TIRS)
 -   Landsat 9 OLI/TIRS
 
+**WARNING: the Landsat Surface Reflectance and Surface Temperature products
+should not be used without applying a handoff coefficient to harmonize data
+between missions.** See Section \@ref(define-handoff) for details on this
+process.
+
 There will be additional satellite data incorporated into AquaSat v2 in the
 future.
 
@@ -116,7 +121,7 @@ profiles: "default" and "admin_update".
 
 -   "admin_update" is intended for use by ROSSyndicate members when updating
     lakeSR datasets and by by default creates publicly-stable versions of the
-    siteSR_WQP dataset in Google Drive, and the Drive file ids are stored in the
+    lakeSR dataset in Google Drive, and the Drive file ids are stored in the
     AquaMatch_lakeSR repository for external users. This configuration could
     also be used by others to re-run the pipeline and wish to make changes to
     the site location calculations ({targets} group -a-) or GEE implementation
@@ -126,19 +131,6 @@ profiles: "default" and "admin_update".
 
 Advanced users are welcome to adapt the pipeline to incorporate other masks or
 filters or to incorporate other quality assurance filters or handoff methods.
-**Note: the Landsat Surface Reflectance and Surface Temperature products should
-not be used without applying a handoff coefficient to harmonize data between
-missions if you are using data from multiple Landsat missions.** See Section
-\@ref(define-handoff) for details on this process.
-
-Proper configuration of `harmonize_repo_directory` is imperative as the
-siteSR_WQP workflow references files inside AquaMatch_harmonize_WQP file
-structure. If this is incorrectly set up, users will receive a message to
-communicate this. All repositories stored on the AquaSat v2 GitHub will contain
-files that link to versions of the data that the AquaSat v2 team has harmonized
-so that a local run is not necessitated. If the configuration setting for
-`update_bookdown` is set as TRUE, configuration of `siteSR_repo_directory` is
-also required, as the bookdown pulls information from siteSR to render.
 
 **b_pull_Landsat_SRST_poi/config_poi.yml**:
 
@@ -152,7 +144,10 @@ of the `_targets.R` file.
 
 **a_Calculate_Centers**:
 
-This {targets} list calculates "Pole of Inaccessibility" (POI)
+For all lakes, we aggregate remotely-sensed data via a central location with a
+buffer instead of the entire lake area to reduce processing time and the
+downstream impacts of lakes whose surface crosses WRS2 path-row boundaries. This
+{targets} list calculates "Pole of Inaccessibility" (POI)
 [@garcia-castellanos2007] for all non-intermittent lakes, ponds, and reservoirs
 greater than 1 hectare in surface area and intermittent lakes, ponds, and
 reservoirs greater than 4 hectares using the NHDPlusV2 polygons using the
@@ -342,10 +337,6 @@ profiles: "default" and "admin_update".
     thresholds ({targets} group -5-) or GEE implementation ({targets} group
     -6-).
 
-**Note: The Landsat Surface Reflectance product should not be used without
-applying a handoff coefficient if you are using data from multiple Landsat
-missions.** See Section \@ref(define-handoff) for details on this process.
-
 Proper configuration of `harmonize_repo_directory` is imperative as the
 siteSR_WQP workflow references files inside AquaMatch_harmonize_WQP file
 structure. If this is incorrectly set up, users will receive a message to
@@ -366,9 +357,9 @@ file, you will need to update the file name at line 9 of the
 **\_targets.R:**
 
 This initial group of targets checks the configuration settings in config.yml,
-checks for the harmonization and lakeSR pipelines, and checks for Google Drive
-folder architecture. This group also acquires target objects from the
-harmonization and lakeSR pipelines.
+checks for the harmonization pipeline and for proper Google Drive folder
+architecture. This group also acquires target objects from the harmonization
+pipeline.
 
 **4_compile_sites:**
 
