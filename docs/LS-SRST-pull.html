@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-03-20" />
+<meta name="date" content="2025-04-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -285,7 +285,7 @@ div.csl-indent {
 <div id="LS-SRST-pull" class="section level1 hasAnchor" number="6">
 <h1><span class="header-section-number">6</span> Landsat Collection 2 SRST Data Product<a href="LS-SRST-pull.html#LS-SRST-pull" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>The lakeSR data product is a set of tabular datasets, representing the Landsat
-surface reflectance (SR) and surface tempearture (ST) data summarized for the
+surface reflectance (SR) and surface temperarture (ST) data summarized for the
 point of inaccessibility (POI) location which is meant to represent pelagic
 conditions at a given waterbody (identified by its NHD unique identifier, see
 Section <a href="locs-data-acq.html#locs-data-acq">3</a>). This data product contains “full stacks” of the
@@ -295,7 +295,7 @@ from all Landsat missions that met our within-image QA criteria.</p>
 as described in <a href="locs-data-acq.html#siteSR-locs">3.2</a>.</p>
 <div id="changes-from-aquasat-v1-and-limnosat-us" class="section level2 hasAnchor" number="6.1">
 <h2><span class="header-section-number">6.1</span> Changes from AquaSat v1 and LimnoSat-US<a href="LS-SRST-pull.html#changes-from-aquasat-v1-and-limnosat-us" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>While much of the general architecture from the precedent data products remained
+<p>While much of the general architecture from the previous data products remained
 unchanged, in AquaSat v2 we have added a number of features to the remote
 sensing acquisition workflow, have increased efficiency of the data pull, and
 have made the acquired data more robust through additional masking. The bullets
@@ -311,8 +311,8 @@ buffer distance and included area is consistent per location if it is in the
 area of path-row overlap.</p></li>
 </ul>
 <div class="float">
-<img src="images/pathrow-ex.png" width="300" alt="Cartoon example: Locations (and their buffers) are the blue circles and the extent of the path-row is indicated by the large dark blue or orange boxes. In this example, location 1 would be extracted for both path-row 1 and 2, location 2 only extracted for path-row 2, and location 3 only extracted for path-row 1." />
-<div class="figcaption">Cartoon example: Locations (and their buffers) are the blue circles and the
+<img src="images/pathrow-ex.png" width="300" alt="Simplified example: Locations (and their buffers) are the blue circles and the extent of the path-row is indicated by the large dark blue or orange boxes. In this example, location 1 would be extracted for both path-row 1 and 2, location 2 only extracted for path-row 2, and location 3 only extracted for path-row 1." />
+<div class="figcaption">Simplified example: Locations (and their buffers) are the blue circles and the
 extent of the path-row is indicated by the large dark blue or orange boxes. In
 this example, location 1 would be extracted for both path-row 1 and 2, location
 2 only extracted for path-row 2, and location 3 only extracted for path-row
@@ -337,16 +337,16 @@ overlap would be extracted twice in two different WRS path-row extents. The
 code below is an example of this type of filtering that occurs as we run a
 path-row extraction, where we once clipped the stack to the AOI of the
 path-row.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="LS-SRST-pull.html#cb1-1" tabindex="-1"></a><span class="co"># separate the path-row into path and row values</span></span>
-<span id="cb1-2"><a href="LS-SRST-pull.html#cb1-2" tabindex="-1"></a>wrs_pathrow <span class="op">=</span> <span class="st">&quot;013031&quot;</span></span>
-<span id="cb1-3"><a href="LS-SRST-pull.html#cb1-3" tabindex="-1"></a>w_p <span class="op">=</span> <span class="bu">int</span>(<span class="bu">str</span>(wrs_pathrow)[:<span class="dv">3</span>])</span>
-<span id="cb1-4"><a href="LS-SRST-pull.html#cb1-4" tabindex="-1"></a>w_r <span class="op">=</span> <span class="bu">int</span>(<span class="bu">str</span>(wrs_pathrow)[<span class="op">-</span><span class="dv">3</span>:])</span>
-<span id="cb1-5"><a href="LS-SRST-pull.html#cb1-5" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="LS-SRST-pull.html#cb1-6" tabindex="-1"></a><span class="co"># filter the Landsat 7 Collection 2 Tier 1 Level 2 product for the path, row, and valid dates</span></span>
-<span id="cb1-7"><a href="LS-SRST-pull.html#cb1-7" tabindex="-1"></a>l7 <span class="op">=</span> (ee.ImageCollection(<span class="st">&quot;LANDSAT/LE07/C02/T1_L2&quot;</span>)</span>
-<span id="cb1-8"><a href="LS-SRST-pull.html#cb1-8" tabindex="-1"></a>  .<span class="bu">filter</span>(ee.Filter.eq(<span class="st">&quot;WRS_PATH&quot;</span>, w_p))</span>
-<span id="cb1-9"><a href="LS-SRST-pull.html#cb1-9" tabindex="-1"></a>  .<span class="bu">filter</span>(ee.Filter.eq(<span class="st">&quot;WRS_ROW&quot;</span>, w_r))</span>
-<span id="cb1-10"><a href="LS-SRST-pull.html#cb1-10" tabindex="-1"></a>  .filterDate(<span class="st">&#39;1999-05-28&#39;</span>, <span class="st">&#39;2019-12-31&#39;</span>))</span></code></pre></div></li>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="LS-SRST-pull.html#cb3-1" tabindex="-1"></a><span class="co"># separate the path-row into path and row values</span></span>
+<span id="cb3-2"><a href="LS-SRST-pull.html#cb3-2" tabindex="-1"></a>wrs_pathrow <span class="op">=</span> <span class="st">&quot;013031&quot;</span></span>
+<span id="cb3-3"><a href="LS-SRST-pull.html#cb3-3" tabindex="-1"></a>w_p <span class="op">=</span> <span class="bu">int</span>(<span class="bu">str</span>(wrs_pathrow)[:<span class="dv">3</span>])</span>
+<span id="cb3-4"><a href="LS-SRST-pull.html#cb3-4" tabindex="-1"></a>w_r <span class="op">=</span> <span class="bu">int</span>(<span class="bu">str</span>(wrs_pathrow)[<span class="op">-</span><span class="dv">3</span>:])</span>
+<span id="cb3-5"><a href="LS-SRST-pull.html#cb3-5" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="LS-SRST-pull.html#cb3-6" tabindex="-1"></a><span class="co"># filter the Landsat 7 Collection 2 Tier 1 Level 2 product for the path, row, and valid dates</span></span>
+<span id="cb3-7"><a href="LS-SRST-pull.html#cb3-7" tabindex="-1"></a>l7 <span class="op">=</span> (ee.ImageCollection(<span class="st">&quot;LANDSAT/LE07/C02/T1_L2&quot;</span>)</span>
+<span id="cb3-8"><a href="LS-SRST-pull.html#cb3-8" tabindex="-1"></a>  .<span class="bu">filter</span>(ee.Filter.eq(<span class="st">&quot;WRS_PATH&quot;</span>, w_p))</span>
+<span id="cb3-9"><a href="LS-SRST-pull.html#cb3-9" tabindex="-1"></a>  .<span class="bu">filter</span>(ee.Filter.eq(<span class="st">&quot;WRS_ROW&quot;</span>, w_r))</span>
+<span id="cb3-10"><a href="LS-SRST-pull.html#cb3-10" tabindex="-1"></a>  .filterDate(<span class="st">&#39;1999-05-28&#39;</span>, <span class="st">&#39;2019-12-31&#39;</span>))</span></code></pre></div></li>
 <li><p>filtering for valid mission dates at Landsat stack step. As seen in the code
 chunk above, we also filter for the valid mission dates as detailed in
 Section <a href="LS-C2-SRST.html#valid-dates">5.2</a> - in the previous version this was completed
@@ -354,21 +354,21 @@ after the Landsat stack was acquired.</p></li>
 <li><p>implementation of Collection 2 updates, specifically scaling changes and
 updated QA band conventions. The updated scaling factor function is as
 follows as directed by the <span class="citation">US Geological Survey (<a href="#ref-usgs-ls47user">2021</a>)</span> and <span class="citation">US Geological Survey (<a href="#ref-usgs-ls89user">2024</a>)</span> documents.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="LS-SRST-pull.html#cb2-1" tabindex="-1"></a><span class="kw">def</span> apply_scale_factors(image):</span>
-<span id="cb2-2"><a href="LS-SRST-pull.html#cb2-2" tabindex="-1"></a>  <span class="co">&quot;&quot;&quot; Applies scaling factors for Landsat Collection 2 surface reflectance </span></span>
-<span id="cb2-3"><a href="LS-SRST-pull.html#cb2-3" tabindex="-1"></a><span class="co">  and surface temperature products</span></span>
-<span id="cb2-4"><a href="LS-SRST-pull.html#cb2-4" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="LS-SRST-pull.html#cb2-5" tabindex="-1"></a><span class="co">  Args:</span></span>
-<span id="cb2-6"><a href="LS-SRST-pull.html#cb2-6" tabindex="-1"></a><span class="co">      image: one ee.Image of an ee.ImageCollection</span></span>
-<span id="cb2-7"><a href="LS-SRST-pull.html#cb2-7" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="LS-SRST-pull.html#cb2-8" tabindex="-1"></a><span class="co">  Returns:</span></span>
-<span id="cb2-9"><a href="LS-SRST-pull.html#cb2-9" tabindex="-1"></a><span class="co">      ee.Image with band values overwritten by scaling factors</span></span>
-<span id="cb2-10"><a href="LS-SRST-pull.html#cb2-10" tabindex="-1"></a><span class="co">  &quot;&quot;&quot;</span></span>
-<span id="cb2-11"><a href="LS-SRST-pull.html#cb2-11" tabindex="-1"></a>  opticalBands <span class="op">=</span> image.select(<span class="st">&#39;SR_B.&#39;</span>).multiply(<span class="fl">0.0000275</span>).add(<span class="op">-</span><span class="fl">0.2</span>)</span>
-<span id="cb2-12"><a href="LS-SRST-pull.html#cb2-12" tabindex="-1"></a>  thermalBands <span class="op">=</span> image.select(<span class="st">&#39;ST_B.*&#39;</span>).multiply(<span class="fl">0.00341802</span>).add(<span class="fl">149.0</span>)</span>
-<span id="cb2-13"><a href="LS-SRST-pull.html#cb2-13" tabindex="-1"></a>  <span class="cf">return</span> (image</span>
-<span id="cb2-14"><a href="LS-SRST-pull.html#cb2-14" tabindex="-1"></a>    .addBands(opticalBands, <span class="va">None</span>, <span class="va">True</span>)</span>
-<span id="cb2-15"><a href="LS-SRST-pull.html#cb2-15" tabindex="-1"></a>    .addBands(thermalBands, <span class="va">None</span>, <span class="va">True</span>))</span></code></pre></div></li>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="LS-SRST-pull.html#cb4-1" tabindex="-1"></a><span class="kw">def</span> apply_scale_factors(image):</span>
+<span id="cb4-2"><a href="LS-SRST-pull.html#cb4-2" tabindex="-1"></a>  <span class="co">&quot;&quot;&quot; Applies scaling factors for Landsat Collection 2 surface reflectance </span></span>
+<span id="cb4-3"><a href="LS-SRST-pull.html#cb4-3" tabindex="-1"></a><span class="co">  and surface temperature products</span></span>
+<span id="cb4-4"><a href="LS-SRST-pull.html#cb4-4" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="LS-SRST-pull.html#cb4-5" tabindex="-1"></a><span class="co">  Args:</span></span>
+<span id="cb4-6"><a href="LS-SRST-pull.html#cb4-6" tabindex="-1"></a><span class="co">      image: one ee.Image of an ee.ImageCollection</span></span>
+<span id="cb4-7"><a href="LS-SRST-pull.html#cb4-7" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="LS-SRST-pull.html#cb4-8" tabindex="-1"></a><span class="co">  Returns:</span></span>
+<span id="cb4-9"><a href="LS-SRST-pull.html#cb4-9" tabindex="-1"></a><span class="co">      ee.Image with band values overwritten by scaling factors</span></span>
+<span id="cb4-10"><a href="LS-SRST-pull.html#cb4-10" tabindex="-1"></a><span class="co">  &quot;&quot;&quot;</span></span>
+<span id="cb4-11"><a href="LS-SRST-pull.html#cb4-11" tabindex="-1"></a>  opticalBands <span class="op">=</span> image.select(<span class="st">&#39;SR_B.&#39;</span>).multiply(<span class="fl">0.0000275</span>).add(<span class="op">-</span><span class="fl">0.2</span>)</span>
+<span id="cb4-12"><a href="LS-SRST-pull.html#cb4-12" tabindex="-1"></a>  thermalBands <span class="op">=</span> image.select(<span class="st">&#39;ST_B.*&#39;</span>).multiply(<span class="fl">0.00341802</span>).add(<span class="fl">149.0</span>)</span>
+<span id="cb4-13"><a href="LS-SRST-pull.html#cb4-13" tabindex="-1"></a>  <span class="cf">return</span> (image</span>
+<span id="cb4-14"><a href="LS-SRST-pull.html#cb4-14" tabindex="-1"></a>    .addBands(opticalBands, <span class="va">None</span>, <span class="va">True</span>)</span>
+<span id="cb4-15"><a href="LS-SRST-pull.html#cb4-15" tabindex="-1"></a>    .addBands(thermalBands, <span class="va">None</span>, <span class="va">True</span>))</span></code></pre></div></li>
 <li><p>masking changes. Many updates were made to assure high quality data through
 the use of updated masking procedures. The following masks were added in
 this workflow and are detailed below in Section <a href="LS-SRST-pull.html#masking-functions">6.3.1</a>:
@@ -502,7 +502,7 @@ product. While the stated minimum value of the ‘valid range’ for the SR
 product is 7273 prior to application of scaling factors (0.0000075 after
 scaling), we know that the Level-2 Surface Reflectance product has been
 fine-tuned on terrestrial data and small over-corrections of surface
-reflectance, especially over dark surfaces, is likely to happen. We
+reflectance, especially over dark surfaces, are likely to happen. We
 explicitly allow for very small negative reflectance values to be sure we do
 not remove very deep, oligotrophic and/or high DOC water systems from our
 data set while implementing this QA filter.</p></li>
@@ -511,7 +511,7 @@ indicating likely sun glint artifacts.</p></li>
 <li><p><code>add_ir_glint_flag</code>: Adds a band where any near infrared or shortwave
 infrared value is greater than 0.1, but does not mask the pixel. This flag
 is meant to be a diagnostic for downstream users to make additional
-qualititative assessment of sun glint affected data and is tallied with all
+qualitative assessment of sun glint affected data and is tallied with all
 masks implemented.</p></li>
 </ul>
 <p>We track pixel-level instances of the use of the aerosol mask in Landsat 8/9,
@@ -522,9 +522,9 @@ to summarizing the data within the buffered area.</p>
 </div>
 <div id="dswe-implementation" class="section level3 hasAnchor" number="6.3.2">
 <h3><span class="header-section-number">6.3.2</span> Defining water area<a href="LS-SRST-pull.html#dswe-implementation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>We use an adapted version Dynamic Surface Water Extent (DSWE) algorithm to
-define what pixels are water within the buffer of our specific locations. DSWE
-was defined in <span class="citation">Jones (<a href="#ref-jones2019">2019</a>)</span> for Landsat Collection 1 and re-implemented for
+<p>We use an adapted version of the Dynamic Surface Water Extent (DSWE) algorithm
+to define what pixels are water within the buffer of our specific locations.
+DSWE was defined in <span class="citation">Jones (<a href="#ref-jones2019">2019</a>)</span> for Landsat Collection 1 and re-implemented for
 Collection 2 as a Level-3 data product in <span class="citation">US Geological Survey (<a href="#ref-usgeologicalsurvey2023">2023a</a>)</span>. Differences
 between the Level-3 implementation and the on-the-fly calculation made within
 our workflow are as follows:</p>
@@ -536,8 +536,8 @@ function below) as defined by the ee.Terrain.hillShadow function in Google
 Earth Engine using the MERIT DEM version 1.0.3 <span class="citation">(<a href="#ref-yamazaki2017">Yamazaki et al. 2017</a>)</span> at an extent
 of 3000 meters surrounding a given point for analysis.</p>
 <div class="float">
-<img src="images/hillshadow.png" width="600" alt="Screen shot of code used for implementation of hill shadow to determine masking procedures of the DSWE value." />
-<div class="figcaption">Screen shot of code used for implementation of hill shadow to determine
+<img src="images/hillshadow.png" width="600" alt="Screenshot of code used for implementation of hill shadow to determine masking procedures of the DSWE value." />
+<div class="figcaption">Screenshot of code used for implementation of hill shadow to determine
 masking procedures of the DSWE value.</div>
 </div>
 <p>This is different from the implementation described in the Level 3 data
@@ -601,7 +601,7 @@ modeling purposes, though we do not have recommended uses at this time.</p>
 <p>Because GEE is a free service to those at academic or governmental institutions,
 there are limits to the total number of tasks being run co-currently on GEE’s
 platform. For this reason, tasks are sent to GEE as path-row groups as soon as
-there are fewer than 10 tasks in the GEE tasks queue. Additionally, any pathrow
+there are fewer than 10 tasks in the GEE tasks queue. Additionally, any path-row
 containing more than 5,000 POI locations are sent as separate tasks in 5000
 location chunks. This is an additional step that is taken in addition to
 processing per path-row to avoid failed tasks. We have also implemented a status
@@ -611,7 +611,7 @@ you can not tell whether or not they have completed or failed. This stores a
 text file at the filepath
 <code>b_pull_Landsat_SRST_poi/out/GEE_task_errors_vRUN_DATE.csv</code> containing the names
 of the tasks that have failed. If no tasks have failed, no file will be present.
-Generally speaking failed tasks would indicate an error within the GEE
+Generally speaking, failed tasks would indicate an error within the GEE
 acquisition script, usually due to changes in the
 <code>b_pull_Landsat_SRST_poi/py/run_GEE_per_pathrow.py</code> script. We recommend
 checking the task status of the GEE run at
@@ -665,42 +665,42 @@ Yamazaki, Dai, Daiki Ikeshima, Ryunosuke Tawatari, Tomohiro Yamaguchi, Fiachra O
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
-"sharing": {
-"github": false,
-"facebook": true,
-"twitter": true,
-"linkedin": false,
-"weibo": false,
-"instapaper": false,
-"vk": false,
-"whatsapp": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
-},
-"fontsettings": {
-"theme": "white",
-"family": "sans",
-"size": 2
-},
-"edit": {
-"link": null,
-"text": null
-},
-"history": {
-"link": null,
-"text": null
-},
-"view": {
-"link": null,
-"text": null
-},
-"download": null,
-"search": {
-"engine": "fuse",
-"options": null
-},
-"toc": {
-"collapse": "subsection"
-}
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
 });
 });
 </script>

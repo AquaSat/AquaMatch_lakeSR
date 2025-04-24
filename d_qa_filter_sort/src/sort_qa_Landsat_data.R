@@ -68,7 +68,7 @@ sort_qa_Landsat_data <- function(qa_files,
                                       version_id, 
                                       ".csv"))
       
-      # write that feather file in the out folder
+      # write that csv file in the out folder
       write_csv(data, save_to_fpn)
       
       return(save_to_fpn)
@@ -105,7 +105,7 @@ sort_qa_Landsat_data <- function(qa_files,
                                       version_id, 
                                       ".csv"))
       
-      # write that feather file in the out folder
+      # write that csv file in the out folder
       write_csv(data, save_to_fpn)
       
       return(save_to_fpn)

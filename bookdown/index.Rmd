@@ -43,4 +43,4 @@ AquaSat v2 code is built on the {targets} workflow management system for R [@lan
 
 ## Note
 
-Images used in analyses courtesy of the United States Geological Survey. Any use of trade, firm, or product names is for descriptive purposes only and does not imply endorsement by the U.S. Government.
+Landsat remote sensing images used in analyses courtesy of the United States Geological Survey. Any use of trade, firm, or product names is for descriptive purposes only and does not imply endorsement by the U.S. Government.

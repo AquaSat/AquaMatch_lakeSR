@@ -80,9 +80,9 @@ remote sensing data as much as possible.
 
 -   if the median temperature is below freezing (`med_SurfaceTemp` \< 273.15 °
     K), the row is dropped. This is our best attempt at removing data during any
-    freezing period and also is an attempt at detecting clouds which can impact
-    the thermal estimates. In particular, cirrus clouds can go unnoticed in
-    cloud detection algorithms used that inform our masking procedures.
+    freezing period and also is an attempt at detecting clouds, which can impact
+    the thermal estimates. In particular, cirrus clouds can go unnoticed in the
+    cloud detection algorithms that inform our masking procedures.
 
 -   if the median temperature is greater than or equal to 40°C (313.15 °K) the
     row is dropped. This maximum was defined based on the maximum value included
@@ -110,31 +110,31 @@ DSWE1a data.
 
 ### Landsat 4 QA Summary
 
-![Summary of rows retained during siteSR Landsat 9's quality filtering for DSWE1
+![Summary of rows retained during lakeSR Landsat 4's quality filtering for DSWE1
 (confident water) remote sensing
-summaries.](images/siteSR/LT04_DSWE1_drop_summary.png){#fig:site-ls9-dswe1-drop}
+summaries.](images/lakeSR/LT04_DSWE1_drop_summary.png){#fig:site-ls9-dswe1-drop}
 
-![Summary of rows retained during siteSR Landsat 9's quality filtering for DSWE1
+![Summary of rows retained during siteSR Landsat 4's quality filtering for DSWE1
 (confident water) remote sensing
 summaries.](images/siteSR/LT04_DSWE1_drop_summary.png)
 
 ### Landsat 5 QA Summary
 
-![Summary of rows retained during siteSR Landsat 9's quality filtering for DSWE1
+![Summary of rows retained during lakeSR Landsat 5's quality filtering for DSWE1
 (confident water) remote sensing
-summaries.](images/siteSR/LT05_DSWE1_drop_summary.png)
+summaries.](images/lakeSR/LT05_DSWE1_drop_summary.png)
 
-![Summary of rows retained during siteSR Landsat 9's quality filtering for DSWE1
+![Summary of rows retained during siteSR Landsat 5's quality filtering for DSWE1
 (confident water) remote sensing
 summaries.](images/siteSR/LT05_DSWE1_drop_summary.png)
 
 ### Landsat 7 QA Summary
 
-![Summary of rows retained during siteSR Landsat 9's quality filtering for DSWE1
+![Summary of rows retained during lakeSR Landsat 7's quality filtering for DSWE1
 (confident water) remote sensing
-summaries.](images/siteSR/LE07_DSWE1_drop_summary.png)
+summaries.](images/lakeSR/LE07_DSWE1_drop_summary.png)
 
-![Summary of rows retained during siteSR Landsat 9's quality filtering for DSWE1
+![Summary of rows retained during siteSR Landsat 7's quality filtering for DSWE1
 (confident water) remote sensing
 summaries.](images/siteSR/LE07_DSWE1_drop_summary.png)
 
@@ -154,6 +154,6 @@ summaries.](images/siteSR/LC08_DSWE1_drop_summary.png){#fig:site-ls8-dswe1-drop}
 (confident water) remote sensing
 summaries.](images/lakeSR/LC09_DSWE1_drop_summary.png){#fig:lake-ls9-dswe1-drop}
 
-![Summary of rows retained during siteeSR quality filtering for Landsat 9 DSWE1
+![Summary of rows retained during siteSR quality filtering for Landsat 9 DSWE1
 (confident water) remote sensing
 summaries.](images/siteSR/LC09_DSWE1_drop_summary.png)

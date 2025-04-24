@@ -20,7 +20,7 @@
 #' @returns 
 #' The contents of the folder indicated in the `drive_path` argument.
 #' 
-export_single_target <- function(target, drive_path, stable, google_email,
+export_single_target <- function(target, drive_path, google_email,
                                  date_stamp = NULL, file_type = ".rds"){
   
   # file type

@@ -17,6 +17,11 @@ missions:
 -   Landsat 8 Operational Land Imager/Thermal Infrared Sensor (OLI/TIRS)
 -   Landsat 9 OLI/TIRS
 
+**WARNING: the Landsat Surface Reflectance and Surface Temperature products
+should not be used without applying a handoff coefficient to harmonize data
+between missions.** See Section \@ref(define-handoff) for details on this
+process.
+
 There will be additional satellite data incorporated into AquaSat v2 in the
 future.
 
@@ -27,60 +32,122 @@ groups of targets that perform specific tasks, listed below with a brief summary
 about what task(s) each group completes. This particular workflow incorporates
 both R and Python programming languages to complete these tasks.
 
+The lakeSR folder structure is as follows:
+
+```         
+|-- AquaMatch_lakeSR
+    |-- README.md
+    |-- run_targets.Rmd
+    |-- config.yml
+    |-- _targets.R
+    |-- a_Calculate_Centers.R
+    |-- a_Calculate_Centers
+        |-- src
+            |-- calculate_bestres_centers.R
+            |-- calculate_centers_HUC4.R
+    |-- b_pull_Landsat_SRST_poi.R
+    |-- b_pull_Landsat_SRST_poi
+        |-- config_files
+            |-- config_poi.yml
+        |-- in
+            |-- WRS2_descending.shp
+        |-- py
+            |-- check_for_failed_tasks.py
+            |-- poi_wait_for_completion.py
+            |-- run_GEE_per_pathrow.py
+        |-- src
+            |-- check_if_fully_within_pr.R
+            |-- format_yml.R
+            |-- getWRS_pathrow_poi.R
+            |-- reformat_locations.R
+            |-- run_GEE_per_pathrow.R
+    |-- c_collate_Landsat_data.R
+    |-- c_collate_Landsat_data
+        |-- src
+            |-- collate_csvs_from_drive.R
+            |-- download_csvs_from_drive.R
+    |-- d_qa_filter_sort.R
+    |-- d_qa_filter_sort
+        |-- src
+            |-- prep_LS_metadata_for_export.R
+            |-- qa_and_document_LS.R
+            |-- sort_qa_Landast_data.R
+    |-- e_calculate_handoffs.R
+    |-- e_calculate_handoffs
+        |-- src
+            |-- calc_quantiles.R
+            |-- calculate_gardner_handoff.R
+            |-- calculate_roy_handoff.R
+            |-- get_matches.R
+            |-- get_quantile_values.R
+    |-- y_siteSR_targets.R
+    |-- z_render_bookdown.R
+    |-- python
+        |-- pySetup.R
+    |-- src
+        |-- export_single_file.R
+        |-- export_single_target.R
+        |-- retrieve_data.R
+        |-- retrieve_target.R
+    |-- bookdown
+        |-- index.Rmd
+        |-- 01-Background.Rmd
+        |-- 02-Data_Acquisition_Locations.Rmd
+        |-- 03-Acquisition_Software_Settings.Rmd
+        |-- 04-Landsat_C2_SRST.Rmd
+        |-- 05-lakeSR_LS_C2_SRST.Rmd
+        |-- 06-post_hoc_qa.Rmd
+        |-- 07-intermission_handoffs.Rmd
+        |-- z-Refs.Rmd
+        |-- refs.bib
+        |-- _bookdown.yml
+        |-- _output.yml
+```
+
 ### Configuration Files
 
 **config.yml:**
 
-lakeSR relies on this configuration file to run specific profiles that
+lakeSR relies on this general configuration file to run specific profiles that
 determine what operations are being run. The file contains two configuration
 profiles: "default" and "admin_update".
 
 -   "default" uses publicly-posted stable versions of datasets from
     AquaMatch_harmonize_WQP and is intended for those who wish to modify choices
-    made after Landsat stacks are acquired (e.g. baseline quality assurance filters
-    {targets} group -d- and calculation of handoff coefficients group -e-). By 
-    default, the bookdown is not rendered in this option, as changes to the pipeline
-    may require non-automated changes to the text of the bookdown. 
+    made after Landsat stacks are acquired (e.g. baseline quality assurance
+    filters {targets} group -d- and calculation of handoff coefficients group
+    -e-). By default, the bookdown is not rendered in this option, as changes to
+    the pipeline may require non-automated changes to the text of the bookdown.
 
 -   "admin_update" is intended for use by ROSSyndicate members when updating
-    siteSR datasets and create publicly-stable versions of the siteSR_WQP to be
-    stored in the AquaMatch_siteSR_WQP repository. This configuration could also
-    be used by others to re-run the pipeline and wish to make changes to the 
-    site location calculations ({targets} group -a-) or GEE implementation 
-    ({targets} group -b-) and collation ({targets} group -c-). By 
-    default, the bookdown is rendered in this option, but keep in mind not all 
-    changes implemented are not automatically reflected in the bookdown. 
+    lakeSR datasets and by by default creates publicly-stable versions of the
+    lakeSR dataset in Google Drive, and the Drive file ids are stored in the
+    AquaMatch_lakeSR repository for external users. This configuration could
+    also be used by others to re-run the pipeline and wish to make changes to
+    the site location calculations ({targets} group -a-) or GEE implementation
+    ({targets} group -b-) and collation ({targets} group -c-). By default, the
+    bookdown is rendered in this option, but keep in mind not all changes
+    implemented are not automatically reflected in the bookdown.
 
-Advanced users are welcome to adapt the pipeline to incorporate other masks or 
-filters or to incorporate other quality assurance filters or handoff
-methods. **Note: the Landsat Surface Reflectance and Surface Temperature products should not be used without
-applying a handoff coefficient to harmonize data between missions if you are using data from multiple Landsat
-missions.** See Section \@ref(define-handoff) for details on this process.
+Advanced users are welcome to adapt the pipeline to incorporate other masks or
+filters or to incorporate other quality assurance filters or handoff methods.
 
-Proper configuration of `harmonize_repo_directory`
-is imperative as the siteSR_WQP workflow references files inside
-AquaMatch_harmonize_WQP file structure. If this is
-incorrectly set up, users will receive a message to communicate this. All
-repositories stored on the AquaSat v2 GitHub will contain files that link to
-versions of the data that the AquaSat v2 team has harmonized so that a local run
-is not necessitated. If the configuration setting for `update_bookdown` is set 
-as TRUE, configuration of `siteSR_repo_directory` is also required, as the bookdown
-pulls information from siteSR to render. 
-
-**gee_config.yml**:
+**b_pull_Landsat_SRST_poi/config_poi.yml**:
 
 This configuration file defines parameters of the GEE pull. This configuration
 can be customized. To create a different configuration of the GEE pull, fill out
-the yaml file at the file path `b_pull_Landast_SRST_poi/gee_config.yml`. If you 
-change the name of this file, you will need to update the file name at line 32 
+the yaml file at the file path `b_pull_Landast_SRST_poi/config_poi.yml`. If you
+change the name of this file, you will need to update the file name at line 32
 of the `_targets.R` file.
-
 
 ### {targets} groups
 
 **a_Calculate_Centers**:
 
-This {targets} list calculates "Pole of Inaccessibility" (POI)
+For all lakes, we aggregate remotely-sensed data via a central location with a
+buffer instead of the entire lake area to reduce processing time and the
+downstream impacts of lakes whose surface crosses WRS2 path-row boundaries. This
+{targets} list calculates "Pole of Inaccessibility" (POI)
 [@garcia-castellanos2007] for all non-intermittent lakes, ponds, and reservoirs
 greater than 1 hectare in surface area and intermittent lakes, ponds, and
 reservoirs greater than 4 hectares using the NHDPlusV2 polygons using the
@@ -91,11 +158,11 @@ waterbodies, and the `poi()` function in the {polylabelr} package
 See Section \@ref(locs-data-acq) for additional background and detailed
 methodology.
 
-This group is either run completely or pulled from exisiting files based on lakeSR 
-general configuration file using the boolean `calculate_centers` setting. If set
-to `FALSE` a version date must be provided in the `centers_version` setting. 
-Additional guidance is provided in the README and general configuration file of
-the lakeSR repository.
+This group is either run completely or pulled from existing files based on
+lakeSR general configuration file using the boolean `calculate_centers` setting.
+If set to `FALSE` a version date must be provided in the `centers_version`
+setting. Additional guidance is provided in the README and general configuration
+file of the lakeSR repository.
 
 **b_pull_Landsat_SRST_poi**:
 
@@ -107,23 +174,22 @@ Google Earth Engine (GEE) API. In this group, we use the most conservative LS4-7
 pixel filters, as we are applying these settings across such a large continuum
 of time and space. This group ends with a branched target that sends tasks to
 Google Earth engine by mapping over WRS2 path rows that intersect with the
-points created in the `a_Calculate_Centers` group. 
+points created in the `a_Calculate_Centers` group.
 
-**Note**: this group of
-targets takes a very long time, running 2 minutes - 1 hour per path-row
-branch in `b_eeRun_poi`. There are just under 800 path rows executed in this
-target. Anecdotally speaking, processing time is often defined by the number of
-queued tasks globally, so weekends and nights are often periods of quicker
-processing than weekday during business hours. As written for data publication, 
-run time is 7-10 days.
+**Note**: this group of targets takes a very long time, running 2 minutes - 1
+hour per path-row branch in `b_eeRun_poi`. There are just under 800 path rows
+executed in this target. Anecdotally speaking, processing time is often defined
+by the number of queued tasks globally, so weekends and nights are often periods
+of quicker processing than weekday during business hours. As written for data
+publication, run time is 7-10 days.
 
 See Section \@ref(software-settings) for details on software used in this
 workflow, Section \@ref(LS-C2-SRST) for additional background on Landsat data,
 and Section \@ref(LS-SRST-pull) for detailed methodology of the Landsat pull.
 
-This group is either run completely or pulled from exisiting files based on lakeSR 
-general configuration file using the boolean `run_GEE` setting. If set
-to `FALSE` a version date must be provided in the `collated_version` setting. 
+This group is either run completely or pulled from existing files based on
+lakeSR general configuration file using the boolean `run_GEE` setting. If set to
+`FALSE` a version date must be provided in the `collated_version` setting.
 Additional guidance is provided in the README and general configuration file of
 the lakeSR repository.
 
@@ -134,51 +200,46 @@ orchestrated in the {targets} group `b_pull_Landsat_SRST_poi` and creates
 publicly-available files for downstream use, storing a dataframe of Drive ids in
 a .csv in the `c_collate_Landsat_data/out/` folder.
 
-This group is either run completely or pulled from exisiting files based on lakeSR 
-general configuration file using the boolean `run_GEE` setting. If set
-to `FALSE` a version date must be provided in the `collated_version` setting. 
+This group is either run completely or pulled from existing files based on
+lakeSR general configuration file using the boolean `run_GEE` setting. If set to
+`FALSE` a version date must be provided in the `collated_version` setting.
 Additional guidance is provided in the README and general configuration file of
 the lakeSR repository.
-
 
 **d_qa_filter_sort:**
 
 This {targets} list applies some rudimentary QA to the Landsat stacks and saves
 them as sorted files locally. LS 4/9 are complete .csv files, LS 578 are broken
-up by HUC2 for memory and space considerations. If `update_and_share` is set to TRUE, the workflow
-will send dated, publicly available files to Google Drive and save Drive file 
-information in the `d_qa_filter_sort/out/` folder. If set to FALSE, no files
-will be sent to Drive.
+up by HUC2 for memory and space considerations. If `update_and_share` is set to
+TRUE, the workflow will send dated, publicly available files to Google Drive and
+save Drive file information in the `d_qa_filter_sort/out/` folder. If set to
+FALSE, no files will be sent to Drive.
 
-See Section \@ref(post-hoc-qa) for detailed methodology of this portion of the 
+See Section \@ref(post-hoc-qa) for detailed methodology of this portion of the
 workflow.
-
 
 **e_caclculate_handoffs:**
 
-This {targets} group creates "matched" data for two different 'intermission 
-handoff' methods that standardize the SR values relative to LS7
-and to LS8. Handoffs are visualized and are saved as tables for use downstream in
-this group. Corrections are calculated for all neighboring missions, even if not explicitly
-used downstream (e.g. LS 4/5 and LS 8/9).
+This {targets} group creates "matched" data for two different "intermission
+handoff" methods that standardize the SR values relative to LS7 and to LS8.
+Handoffs are visualized and are saved as tables for use downstream in this
+group. Corrections are calculated for all neighboring missions, even if not
+explicitly used downstream (e.g. LS 4/5 and LS 8/9).
 
-See Section \@ref(define-handoff) for detailed methodology of this portion of the 
-workflow.
-
+See Section \@ref(define-handoff) for detailed methodology of this portion of
+the workflow.
 
 **y_siteSR_targets:**
 
-This {targets} group pulls information from the siteSR workflow to use in the 
-Bookdown. If the configuration setting `update_bookown` is set to FALSE, this 
+This {targets} group pulls information from the siteSR workflow to use in the
+bookdown. If the configuration setting `update_bookown` is set to FALSE, this
 list will be empty.
-
 
 **z_render_bookdown:**
 
-This {targets} group tracks chapters of the bookdown for changes and renders
-the bookdown. If the configuration setting `update_bookown` is set to FALSE, this 
+This {targets} group tracks chapters of the bookdown for changes and renders the
+bookdown. If the configuration setting `update_bookown` is set to FALSE, this
 list will be empty.
-
 
 ## siteSR_WQP Code Architecture
 
@@ -187,11 +248,71 @@ the output of
 [AquaMatch_harmonize_WQP](https://github.com/AquaSat/AquaMatch_harmonize_WQP).
 AquaMatch_harmonize_WQP provides harmonized *in situ* data from the Water
 Quality Portal for pairing remote sensing data acquired at the sites of *in
-situ* data collection with *in situ* measurements. This workflow picks up where AquaMatch_harmonize_WQP ends, retrieving the WQP sites at which there are historical *in situ* data. lakeSR provides calculated Landsat intermission handoff coefficients
-for interoperability between sensors (see Section \@ref(define-handoff)).
-In order to run the siteSR_WQP workflow, you must have a cloned version of
-AquaMatch_harmonize_WQP codebase on your local computer.
+situ* data collection with *in situ* measurements. This workflow picks up where
+AquaMatch_harmonize_WQP ends, retrieving the WQP sites at which there are
+historical *in situ* data. lakeSR provides calculated Landsat intermission
+handoff coefficients for interoperability between sensors (see Section
+\@ref(define-handoff)). In order to run the siteSR_WQP workflow, you must have a
+cloned version of AquaMatch_harmonize_WQP codebase on your local computer.
 Section \@ref(setup-description) covers details about this requirement.
+
+The siteSR folder structure is as follows:
+
+```         
+|-- AquaMatch_siteSR_WQP
+    |-- README.md
+    |-- run_targets.Rmd
+    |-- _targets.R
+    |-- config.yml
+    |-- gee_config.yml
+    |-- 4_compile_sites.R
+    |-- 4_compile_sites
+        |-- src
+            |-- add_HUC8_to_sites.R
+            |-- add_NHD_flowline_to_sites.R
+            |-- add_NHD_waterbody_to_sites.R
+            |-- harmonize_crs.R
+    |-- 5_determine_RS_visibility.R
+    |-- 5_determine_RS_visibility
+        |-- py
+            |-- run_pekel_per_pathrow.py
+            |-- wait_for_completion.py
+        |-- in
+            |-- WRS2_descending.shp
+        |-- src
+            |-- check_for_containment.R
+            |-- download_csvs_from_drive.R
+            |-- format_yml.R
+            |-- get_WRS_pathrows.R
+            |-- grab_locs.R
+            |-- run_pekel_per_pathrow.R
+    |-- 6_siteSR_stack.R
+    |-- 6_siteSR_stack
+        |-- py
+            |-- check_for_failed_tasks.py
+            |-- run_siteSR_per_pathrow.py
+            |-- siteSR_wait_for_completion.py
+        |-- src
+            |-- check_if_fully_within_pr.R
+            |-- collate_csvs_from_drive.R
+            |-- download_csvs_from_drive.R
+            |-- run_stieSR_per_pathrow.R
+    |-- 7_qa_stack.R
+    |-- 7_qa_stack
+        |-- src
+            |-- prep_Landsat_for_export.R
+            |-- qa_and_document_LS.R
+    |-- src
+        |-- export_single_file.R
+        |-- export_single_target.R
+        |-- get_file_ids.R
+        |-- retrieve_data.R
+        |-- retrieve_target.R
+    |-- python
+        |-- pySetup.R
+    
+    
+```
 
 ### Configuration Files {#setup-description}
 
@@ -199,81 +320,78 @@ Section \@ref(setup-description) covers details about this requirement.
 
 siteSR_WQP relies on this configuration file to run specific profiles that
 determine what operations are being run. The file provides two configuration
-profiles: "default" and  "admin_update".
+profiles: "default" and "admin_update".
 
--   "default" runs the pipeline using archived versions of
-    datasets made with specific {targets} groups within this workflow. In this
-    setting, {targets} groups -4- (collating locations from WQP), -5- (determining
-    remote sensing visibility), and -6- (pulling the Landsat record from GEE) are 
-    not run, but rather archived files are pulled in to reduce run time.  
+-   "default" runs the pipeline using archived versions of datasets made with
+    specific {targets} groups within this workflow. In this setting, {targets}
+    groups -4- (collating locations from WQP), -5- (determining remote sensing
+    visibility), and -6- (pulling the Landsat record from GEE) are not run, but
+    rather archived files are pulled in to reduce run time.
 
 -   "admin_update" is intended for use by ROSSyndicate members when updating
-    siteSR datasets and create publicly-stable versions of the siteSR_WQP to be
-    stored in the AquaMatch_siteSR_WQP repository. This configuration could also
-    be used by others to re-run the pipeline and wish to make changes to the 
-    site location collation ({targets} group -4-), remote sensing visibility 
-    thresholds ({targets} group -5-) or GEE implementation 
-    ({targets} group -6-).
+    siteSR datasets and by default creates publicly-stable versions of the
+    siteSR_WQP dataset in Google Drive, and the Drive file ids are stored in the
+    AquaMatch_siteSR_WQP repository for external users. This configuration could
+    also be used by others to re-run the pipeline and wish to make changes to
+    the site location collation ({targets} group -4-), remote sensing visibility
+    thresholds ({targets} group -5-) or GEE implementation ({targets} group
+    -6-).
 
-**Note: The Landsat Surface Reflectance product should not be used without
-applying a handoff coefficient if you are using data from multiple Landsat
-missions.** See Section \@ref(define-handoff) for details on this process.
-
-Proper configuration of `harmonize_repo_directory` 
-is imperative as the siteSR_WQP workflow references files inside
-AquaMatch_harmonize_WQP file structure. If this is
-incorrectly set up, users will receive a message to communicate this. All
-repositories stored on the AquaSat v2 GitHub will contain files that link to
-versions of the data that the AquaSat v2 team has harmonized so that a local run
-is not necessitated. 
+Proper configuration of `harmonize_repo_directory` is imperative as the
+siteSR_WQP workflow references files inside AquaMatch_harmonize_WQP file
+structure. If this is incorrectly set up, users will receive a message to
+communicate this. All repositories stored on the AquaSat v2 GitHub will contain
+files that link to versions of the data that the AquaSat v2 team has harmonized
+so that a local run is not necessitated.
 
 **gee_config.yml**:
 
 This configuration file defines parameters of the GEE pull. This configuration
 can be customized. To create a different configuration of the GEE pull, fill out
 the yaml file at the file path `gee_config.yml`. If you change the name of this
-file, you will need to update the file name at line 9 of the 
+file, you will need to update the file name at line 9 of the
 `5_determine_RS_visibility.R` script.
-
 
 ### {targets} Groups
 
 **\_targets.R:**
 
-This initial group of targets checks the configuration settings in config.yml, 
-checks for the harmonization and lakeSR pipelines, and checks for Google Drive 
-folder architecture. This group also acquires target objects from the 
-harmonization and lakeSR pipelines.
+This initial group of targets checks the configuration settings in config.yml,
+checks for the harmonization pipeline and for proper Google Drive folder
+architecture. This group also acquires target objects from the harmonization
+pipeline.
 
 **4_compile_sites:**
 
-This {targets} group collates the sites from the harmonization pipeline, 
-creating a list of locations to acquire remote sensing data. All locations are 
-associated with a HUC8 if one is not listed in the metadata for the site from 
-the WQP, then the unique HUC4s are used to associate points with waterbodies 
-and flowlines of the NHDPlusV2 (CONUS) or NHD Best Resolution (non-CONUS HUCs) 
+This {targets} group collates the sites from the harmonization pipeline,
+creating a list of locations to acquire remote sensing data. All locations are
+associated with a HUC8 if one is not listed in the metadata for the site from
+the WQP, then the unique HUC4s are used to associate points with waterbodies and
+flowlines of the NHDPlusV2 (CONUS) or NHD Best Resolution (non-CONUS HUCs)
 files.
 
 **5_determine_RS_visibility:**
 
 The resulting list of *in situ* locations are used to assess remote-sensing
-visibility in this {targets} group. Sites are assessed for visibility using the 
-JRC Global Surface Water [@pekel2016] which is based on the historical Landsat 
-record. This {targets} group takes a number of hours to run, if the configuration 
-of `run_pekel` is set to TRUE. If the configuration is set to FALSE, run time 
-will be dependent on your internet connection (to access the previously-created 
-files) and the number of cores available to run the workflow.
+visibility in this {targets} group. Sites are assessed for visibility using the
+JRC Global Surface Water [@pekel2016] which is based on the historical Landsat
+record. This {targets} group takes a number of hours to run, if the
+configuration of `run_pekel` is set to TRUE. If the configuration is set to
+FALSE, run time will be dependent on your internet connection (to access the
+previously-created files) and the number of cores available to run the workflow.
 
 **6_siteSR_stack:**
 
-This group of {targets} acquires Landsat Collection 2 SRST stacks for sites 
+This group of {targets} acquires Landsat Collection 2 SRST stacks for sites
 determined to be visible in the previous {targets} group. Data are collated in
-this step. This {targets} group takes about three days to run, if the 
-configuration `run_GEE` is set to TRUE. If the configuration is set to FALSE, 
-run time will be dependent on your internet connection (to access the 
+this step. This {targets} group takes about three days to run, if the
+configuration `run_GEE` is set to TRUE. If the configuration is set to FALSE,
+run time will be dependent on your internet connection (to access the
 previously-created files) and the number of cores available to run the workflow.
 
 **7_siteSR_qa:**
 
-Collated Landsat data are filtered for quality based on broadly applicable 
-thresholds and exported from the pipeline for data archiving.
+Collated Landsat data are filtered for quality based on broadly applicable
+thresholds and exported from the pipeline for data archiving. The resulting data
+are archived in Google Drive and the Drive file ids area stored in this
+repository for external access.
