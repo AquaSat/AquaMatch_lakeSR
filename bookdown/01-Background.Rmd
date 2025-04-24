@@ -232,7 +232,7 @@ the workflow.
 **y_siteSR_targets:**
 
 This {targets} group pulls information from the siteSR workflow to use in the
-Bookdown. If the configuration setting `update_bookown` is set to FALSE, this
+bookdown. If the configuration setting `update_bookown` is set to FALSE, this
 list will be empty.
 
 **z_render_bookdown:**
