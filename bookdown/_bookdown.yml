@@ -7,5 +7,6 @@ rmd_files: ["index.Rmd",
 "05-lakeSR_LS_C2_SRST.Rmd",
 "06-post_hoc_qa.Rmd",
 "07-intermission_handoffs.Rmd",
+"08-AquaMatch_RemoteSensing_Limitations.Rmd", 
 "z-Refs.Rmd"]
 output_dir: "../docs"

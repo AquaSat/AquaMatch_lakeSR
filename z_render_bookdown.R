@@ -21,6 +21,8 @@ if (config::get(config = general_config)$update_bookdown) {
              command = "bookdown/06-post_hoc_qa.Rmd"),
     tar_file(name = handoffs,
              command = "bookdown/07-intermission_handoffs.Rmd"),
+    tar_file(name = limitations,
+             command = "bookdown/08-AquaMatch_RemoteSensing_Limitations.Rmd"),
     tar_file(name = refs,
              command = "bookdown/z-Refs.Rmd"),
     
@@ -132,13 +134,14 @@ if (config::get(config = general_config)$update_bookdown) {
                  srst_pull
                  post_hoc_qa
                  handoffs
+                 limitations
                  refs
                  render_book(input = "bookdown/",
                              params = list(
                                poi = a_poi_with_flags,
                                locs_run_date = lakeSR_config$collated_version,
-                               sites = p4_WQP_site_NHD_info,
-                               visible_sites = p5_visible_sites,
+                               sites = a_sites_with_NHD_info,
+                               visible_sites = b_visible_sites,
                                LS5_for57 = e_LS5_forLS57corr_quantiles,
                                LS7_for57 = e_LS7_forLS57corr_quantiles,
                                LS7_for78 = e_LS7_forLS78corr_quantiles,
