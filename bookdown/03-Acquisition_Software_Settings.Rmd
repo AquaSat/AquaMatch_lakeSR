@@ -7,8 +7,8 @@ bibliography: references.bib
 
 # Satellite Data Acquisition Software and Settings {#software-settings}
 
-Currently, all satellite data in AquaSat v2 are obtained using the Python API
-for Google Earth Engine [GEE, @gorelick2023]. While the orchestration of data
+Currently, all satellite data in AquaMatch are obtained using the Python API for
+Google Earth Engine [GEE, @gorelick2023]. While the orchestration of data
 acquisition is performed by the {targets} workflow, all code directly related to
 GEE data acquisition is written in Python. If you are running the 'default'
 configuration for lakeSR or siteSR the following directions are not applicable.
@@ -17,7 +17,7 @@ configuration for lakeSR or siteSR the following directions are not applicable.
 
 RStudio [@positteam2023] is an IDE that, alongside the {reticulate} package
 [@ushey2023], facilitates integration of R and Python code within the same
-environment. In AquaSat v2, we use [a single R
+environment. In AquaMatch, we use [a single R
 script](https://github.com/AquaSat/lakeSR/blob/main/python/pySetup.R) to set up
 a {reticulate} Conda environment that is invoked at the beginning of a {targets}
 run to be sure that our Python code runs consistently.
@@ -65,11 +65,11 @@ up gcloud.
 
 ### GEE project setting {#proj-setting}
 
-AquaSat v2 is run in a specific GEE project associated with our authenticated
+AquaMatch is run in a specific GEE project associated with our authenticated
 Google account. If you wish to re-run this code as written, you will not have
 proper access because the code refers to our specific GEE project. You will need
 to update the config yaml (in lakeSR:
-`b_pull_Landsat_SRST_poi/config_files/config_poi.yml`, in siteSR_WQP:
+`b_pull_Landsat_SRST_poi/config_files/config_poi.yml`, in siteSR:
 `gee_config.yml`) with your Google credentials and GEE project in order to run
 the pipeline locally. If you are new to GEE, go to
 [code.earthengine.google.com](https://code.earthengine.google.com) and enter the

@@ -24,16 +24,18 @@ data.
 
 *Data Tier*: a data tier for Landsat refers to data quality and processing.
 lakeSR uses Tier 1 data exclusively which conform to the highest level of data
-quality. To learn more about Landsat tiers, see [this video from the
+quality as defined by the geometric and radiometric quality, which indicates how
+much uncertainty is present in the pixel/scene location. To learn more about
+Landsat tiers, see [this video from the
 USGS](https://www.usgs.gov/media/videos/landsat-collections-what-are-tiers).
 
 *Data Processing Level (Level)*: a data processing level for Landsat refers to
 how much the data have been processed. Level 1 (top of atmosphere) is less
 processed than Level 2 (surface reflectance). lakeSR uses Level 2 data
-exclusively, as it has gone through a standard atmospheric correction process
-that attempts to standardize data handling throughout the Landsat record - it is
-*derived* from Level 1 data. NASA has compiled [a list of general data
-processing levels and descriptions
+exclusively, as it has gone through standard atmospheric correction processes
+(see Section \@ref(atm-corr)) that attempts to standardize data handling
+throughout the Landsat record - it is *derived* from Level 1 data. NASA has
+compiled [a list of general data processing levels and descriptions
 here](https://www.earthdata.nasa.gov/learn/earth-observation-data-basics/data-processing-levels).
 
 *Landsat stack*: this is the collated Landsat historical dataset at a specific
@@ -41,7 +43,10 @@ location.
 
 *Matchup*: a pair of observations, one from an *in situ* source, one from a
 remote sensing source. Matchups are often defined by a time window relative to
-the time of the *in situ* measurement, both before and after.
+the time of the *in situ* measurement, both before and after, as well as a
+spatial extent. *In situ* spatial extent is considered discrete, and the remote
+sensing extent is an aggregated value from a buffered area around that discrete
+*in situ* location.
 
 ## Background Information {#valid-dates}
 
@@ -53,33 +58,241 @@ relevant to the creation and use of lakeSR.*
 The Landsat archive of multispectral and thermal data in lakeSR is composed of
 Landsat missions 4 through 9 and spans more than 40 years.
 
-+------------------+------------------+------------------+------------------+
-| Mission and      | Launch Date      | End of Science   | Decommission     |
-| Sensor           |                  | Mission          | Date             |
-+==================+:================:+:================:+:================:+
-| Landsat 4 TM     | 1982-07-16       | 1993-12-14       | 2001-06-15       |
-| [@eros-45]       |                  |                  |                  |
-+------------------+------------------+------------------+------------------+
-| Landsat 5 TM     | 1984-03-01       | 2011-11-18       | 2013-06-05       |
-| [@eros-45]       |                  |                  |                  |
-+------------------+------------------+------------------+------------------+
-| Landsat 7 ETM+   | 1999-04-15       | 2022-04-06       | N/A              |
-| [@eros-7]        |                  |                  |                  |
-+------------------+------------------+------------------+------------------+
-| Landsat 8        | 2013-02-11       | N/A              | N/A              |
-| OLI/TIRS         |                  |                  |                  |
-| [@eros-89]       |                  |                  |                  |
-+------------------+------------------+------------------+------------------+
-| Landsat 9        | 2021-09-27       | N/A              | N/A              |
-| OLI-2/TIRS-2     |                  |                  |                  |
-| [@eros-89]       |                  |                  |                  |
-+------------------+------------------+------------------+------------------+
++------------------+------------------+------------------+------------------+---+
+| Mission and      | Launch Date      | End of Science   | Decommission     | D |
+| Sensor           |                  | Mission          | Date             | a |
+|                  |                  |                  |                  | t |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | R |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | g |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | I |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | c |
+|                  |                  |                  |                  | l |
+|                  |                  |                  |                  | u |
+|                  |                  |                  |                  | d |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | d |
+|                  |                  |                  |                  | i |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | A |
+|                  |                  |                  |                  | q |
+|                  |                  |                  |                  | u |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | M |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | t |
+|                  |                  |                  |                  | c |
+|                  |                  |                  |                  | h |
++==================+:================:+:================:+:================:+:=:+
+| Landsat 4 TM     | 1982-07-16       | 1993-12-14       | 2001-06-15       | * |
+| [@eros-45]       |                  |                  |                  | L |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | u |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | c |
+|                  |                  |                  |                  | h |
+|                  |                  |                  |                  | d |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | t |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | * |
+|                  |                  |                  |                  | t |
+|                  |                  |                  |                  | h |
+|                  |                  |                  |                  | r |
+|                  |                  |                  |                  | o |
+|                  |                  |                  |                  | u |
+|                  |                  |                  |                  | g |
+|                  |                  |                  |                  | h |
+|                  |                  |                  |                  | * |
+|                  |                  |                  |                  | E |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | d |
+|                  |                  |                  |                  | o |
+|                  |                  |                  |                  | f |
+|                  |                  |                  |                  | S |
+|                  |                  |                  |                  | c |
+|                  |                  |                  |                  | i |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | c |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | M |
+|                  |                  |                  |                  | i |
+|                  |                  |                  |                  | s |
+|                  |                  |                  |                  | s |
+|                  |                  |                  |                  | i |
+|                  |                  |                  |                  | o |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | * |
++------------------+------------------+------------------+------------------+---+
+| Landsat 5 TM     | 1984-03-01       | 2011-11-18       | 2013-06-05       | * |
+| [@eros-45]       |                  |                  |                  | L |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | u |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | c |
+|                  |                  |                  |                  | h |
+|                  |                  |                  |                  | d |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | t |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | * |
+|                  |                  |                  |                  | t |
+|                  |                  |                  |                  | h |
+|                  |                  |                  |                  | r |
+|                  |                  |                  |                  | o |
+|                  |                  |                  |                  | u |
+|                  |                  |                  |                  | g |
+|                  |                  |                  |                  | h |
+|                  |                  |                  |                  | * |
+|                  |                  |                  |                  | E |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | d |
+|                  |                  |                  |                  | o |
+|                  |                  |                  |                  | f |
+|                  |                  |                  |                  | S |
+|                  |                  |                  |                  | c |
+|                  |                  |                  |                  | i |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | c |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | M |
+|                  |                  |                  |                  | i |
+|                  |                  |                  |                  | s |
+|                  |                  |                  |                  | s |
+|                  |                  |                  |                  | i |
+|                  |                  |                  |                  | o |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | * |
++------------------+------------------+------------------+------------------+---+
+| Landsat 7 ETM+   | 1999-04-15       | 2022-04-06       | 2025-06-04       | 1 |
+| [@eros-7]        |                  |                  |                  | 9 |
+|                  |                  |                  |                  | 9 |
+|                  |                  |                  |                  | 9 |
+|                  |                  |                  |                  | - |
+|                  |                  |                  |                  | 0 |
+|                  |                  |                  |                  | 5 |
+|                  |                  |                  |                  | - |
+|                  |                  |                  |                  | 2 |
+|                  |                  |                  |                  | 8 |
+|                  |                  |                  |                  |   |
+|                  |                  |                  |                  | - |
+|                  |                  |                  |                  | 2 |
+|                  |                  |                  |                  | 0 |
+|                  |                  |                  |                  | 1 |
+|                  |                  |                  |                  | 9 |
+|                  |                  |                  |                  | - |
+|                  |                  |                  |                  | 1 |
+|                  |                  |                  |                  | 2 |
+|                  |                  |                  |                  | - |
+|                  |                  |                  |                  | 3 |
+|                  |                  |                  |                  | 1 |
++------------------+------------------+------------------+------------------+---+
+| Landsat 8        | 2013-02-11       | N/A              | N/A              | L |
+| OLI/TIRS         |                  |                  |                  | a |
+| [@eros-89]       |                  |                  |                  | u |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | c |
+|                  |                  |                  |                  | h |
+|                  |                  |                  |                  | d |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | t |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | t |
+|                  |                  |                  |                  | h |
+|                  |                  |                  |                  | r |
+|                  |                  |                  |                  | o |
+|                  |                  |                  |                  | u |
+|                  |                  |                  |                  | g |
+|                  |                  |                  |                  | h |
+|                  |                  |                  |                  | m |
+|                  |                  |                  |                  | o |
+|                  |                  |                  |                  | s |
+|                  |                  |                  |                  | t |
+|                  |                  |                  |                  | r |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | c |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | t |
+|                  |                  |                  |                  | i |
+|                  |                  |                  |                  | m |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | g |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | v |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | i |
+|                  |                  |                  |                  | l |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | b |
+|                  |                  |                  |                  | l |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | i |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | G |
+|                  |                  |                  |                  | E |
+|                  |                  |                  |                  | E |
++------------------+------------------+------------------+------------------+---+
+| Landsat 9        | 2021-09-27       | N/A              | N/A              | L |
+| OLI-2/TIRS-2     |                  |                  |                  | a |
+| [@eros-89]       |                  |                  |                  | u |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | c |
+|                  |                  |                  |                  | h |
+|                  |                  |                  |                  | d |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | t |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | t |
+|                  |                  |                  |                  | h |
+|                  |                  |                  |                  | r |
+|                  |                  |                  |                  | o |
+|                  |                  |                  |                  | u |
+|                  |                  |                  |                  | g |
+|                  |                  |                  |                  | h |
+|                  |                  |                  |                  | m |
+|                  |                  |                  |                  | o |
+|                  |                  |                  |                  | s |
+|                  |                  |                  |                  | t |
+|                  |                  |                  |                  | r |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | c |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | t |
+|                  |                  |                  |                  | i |
+|                  |                  |                  |                  | m |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | g |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | v |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | i |
+|                  |                  |                  |                  | l |
+|                  |                  |                  |                  | a |
+|                  |                  |                  |                  | b |
+|                  |                  |                  |                  | l |
+|                  |                  |                  |                  | e |
+|                  |                  |                  |                  | i |
+|                  |                  |                  |                  | n |
+|                  |                  |                  |                  | G |
+|                  |                  |                  |                  | E |
+|                  |                  |                  |                  | E |
++------------------+------------------+------------------+------------------+---+
 
 The image record for Landsat 4 is not consistent nor robust due to a data
 transmitter failure early in service, however our pipeline acquires data as
 available. Landsat 6 did not achieve orbit.
 
-For the purposes of AquaSat v2, we truncate the data record for Landsat 4 and 5
+For the purposes of AquaMatch, we truncate the data record for Landsat 4 and 5
 at the end of the Science Mission of the satellite. No corrections were made for
 the Landsat 7 scanline error that began on May 31, 2003, data were collected as
 available despite the scanline error since the data are still of acceptable
@@ -91,16 +304,46 @@ that had growing uncertainties over time as the drift increased [@qiu2021]. Qui
 the start of the growing season in 2020, but because their analysis was of NDVI,
 we conservatively truncate the data at the end of 2019.
 
-### Spectral Response
+### Band Value Ranges
 
 While the nominal bands for each of the missions within the archive are
-relatively consistent (with the addition of an Aerosol band beginning Landsat
-8), the precise spectral response for each nominal band shifted beginning with
-Landsat 8 OLI/TIRS. The image below visualizes the spectral response throughout
-the Landsat archive.
+relatively consistent (with the addition of an Aerosol band beginning Landsat 8
+OLI/TIRS), the precise band range captured by the Landsat instruments for each
+nominal band shifted beginning with Landsat 8 OLI/TIRS. The image below
+visualizes how band ranges have shifted throughout the Landsat archive.
 
 ![Image credit: L. Rocchio and J. Barsi; NASA.
-(<https://landsat.gsfc.nasa.gov/article/the-intervening-atmosphere-tracing-the-provenance-of-a-favorite-landsat-infographic/>)](images/Landsat-SpectralBands.png)
+(<https://landsat.gsfc.nasa.gov/article/the-intervening-atmosphere-tracing-the-provenance-of-a-favorite-landsat-infographic/>).
+Satellite missions here are signified by their sensor name: TM = Landsat 4/5,
+ETM+ = Landsat 7, OLI/TIRS = Landsat 8, and OLI-2/TIRS-2 = Landsat
+9.](images/Landsat-SpectralBands.png)
+
+As depicted in the above figure, band designations have changed over time. The
+AquaMatch workflow automatically renames the band designation from a number
+(e.g. B1, B2, B3) to an assigned name (e.g. Blue, Green, Red, Landsat 4-7, but
+Aerosol, Blue, Green for Landsat 8/9) within the Google Earth Engine script and
+prior to exporting data for inclusion in this workflow. The table below denotes
+how these designations have been applied in AquaMatch.
+
+| Band Label/Value | Landsat 4-7 Name | Landsat 8/9 Name |
+|----|----|----|
+| B1 | Blue | Aerosol |
+| B2 | Green | Blue |
+| B3 | Red | Green |
+| B4 | Near Infrared "NIR" | Red |
+| B5 | Shortwave Infrared 1 "SWIR1" | Near Infrared "NIR" |
+| B6 | Thermal Band | Shortwave Infrared 1 "SWIR1" |
+| B7 | Shortwave Infrared 2 "SWIR2" | Shortwave Infrared 2 "SWIR2" |
+| B8 | Panchromatic band (not available for Landsat 4, not included in AquaMatch) | Panchromatic (not included in AquaMatch) |
+| B9 | N/A | Cirrus (not included in AquaMatch |
+| B10 | N/A | Thermal Band 1 |
+| B11 | N/A | Thermal Band 2 (not included in AquaMatch) |
+
+: Band number and band designation across the Landsat archive. The panchromatic
+band is not part of the Level 2 Surface Reflectance Product, and is therefore
+not included in AquaMatch. Additionally, the cirrus band in Landsat 8/9 is not
+processed to the Surface Reflectance product, but rather used to define QA band
+(also not included in AquaMatch).
 
 ### Sensor Resolution {#sensor-resolution}
 
@@ -108,17 +351,17 @@ The spatial resolution of the Level 1 data that the SR and ST products are
 derived from has not changed for optical bands over time (Aerosol, RGB, NIR,
 SWIR) but has varied over the historic record for thermal data:
 
-+-----------------+-----------------+-----------------+
-| Sensors         | Optical Bands   | Thermal Bands   |
-+:===============:+:===============:+:===============:+
-| TM              | 30              | 120             |
-+-----------------+-----------------+-----------------+
-| ETM+            | 30              | 60              |
-+-----------------+-----------------+-----------------+
-| OLI/TIRS        | 30              | 100             |
-|                 |                 |                 |
-| OLI-2/TIRS-2    |                 |                 |
-+-----------------+-----------------+-----------------+
++-------------------+-------------------+-------------------+
+| Sensors           | Optical Bands     | Thermal Bands     |
++:=================:+:=================:+:=================:+
+| TM                | 30                | 120               |
++-------------------+-------------------+-------------------+
+| ETM+              | 30                | 60                |
++-------------------+-------------------+-------------------+
+| OLI/TIRS          | 30                | 100               |
+|                   |                   |                   |
+| OLI-2/TIRS-2      |                   |                   |
++-------------------+-------------------+-------------------+
 
 All Collection 2 Level 2 Surface Reflectance and Surface Temperature data have
 been resampled to 30m.
@@ -126,10 +369,11 @@ been resampled to 30m.
 Alongside the pixel resolution of the sensors is the radiometric resolution at
 which the data are stored. TM and ETM+ data are stored as 8-bit data products,
 OLI data are quantized to 12 bits and Landsat 9 to 14 bits. This equates to 256
-shades per band for Landsat 4-7, 4,096 shades for Landsat 8 and 16,384 shades
-for Landsat 9, where higher numbers allow for greater precision of measurement
-in a given band. All Collection 2 Level 2 Surface Reflectance and Surface
-Temperature data have been rescaled to 16 bits.
+shades per band for Landsat 4-7 (2^8^), 4,096 shades for Landsat 8 (2^12^) and
+16,384 shades for Landsat 9 (2^14^), where higher numbers allow for greater
+precision of measurement in a given band. All Collection 2 Level 2 Surface
+Reflectance and Surface Temperature data have been rescaled and stored as
+unsigned 16 bit values (range for SR and ST bands are are 0-65535, or 2^16^).
 
 ## Surface Reflectance Product
 
@@ -152,7 +396,7 @@ time. The USGS EROS describes the SR product as follows:
 > the \<76 degrees Solar Zenith Angle constraint and include the required
 > auxiliary data inputs to generate a scientifically viable product.*
 
-### SR Atmospheric Processing
+### SR Atmospheric Processing {#atm-corr}
 
 The SR product for Landsat 4-7 is calculated using the Land Ecosystem
 Disturbance Adaptive Processing System (LEDAPS) [@schmidt2013] and Landsat 8 and

@@ -23,7 +23,10 @@ additional nearby water sources that are within the site buffers.
   - e.g. point near dam could obtain both surface water in waterbody as well
   as surface water of river
   - use the site file and NHD-related flags to determine if this is a consideration
-  for the data you are using
+  for the data you are using (see section XXXXX)
+  
+3) Surface Temperature is processed alongside SR, which may result in mixed pixel
+values being incorporated within the summary statistics provided in AquaMatch (See section XXXXX)
   
 3) some qualities of contaminated sr pixels can go unnoticed and unfiltered within
 this dataset.

@@ -502,11 +502,13 @@ siteSR, we do not investigate what, if any, impacts multiple waterbodies,
 flowlines, or combinations thereof have on the validity of the reflectance data
 or thermal data summary.
 
-Site information, NHD attribution, and associated flags are stored in the file
-\`\`. We provide these identifiers and additional metadata about the sites to
-help users make informed decisions about remote sensing data quality
-(specifically, related to edge/ shoreline contamination) and NHD comid/permanent
-id attribution to individual sites.
+Site information, NHD attribution, and associated flags described here are
+stored in the file \`\`. We provide these identifiers and additional metadata
+about the sites to help users make informed decisions about remote sensing data
+quality (specifically, related to edge/shoreline contamination) and NHD
+comid/permanent id attribution to individual sites and any available flags to
+assess uncertainty to those assignments or the buffered area relative to the
+site.
 
 ### siteSR updates in AquaMatch
 
