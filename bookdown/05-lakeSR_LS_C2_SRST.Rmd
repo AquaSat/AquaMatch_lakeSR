@@ -9,11 +9,12 @@ bibliography: references.bib
 
 The lakeSR data product is a set of tabular datasets, representing the Landsat
 surface reflectance (SR) and surface temperarture (ST) data summarized for the
-point of inaccessibility (POI) location which is meant to represent pelagic
-conditions at a given waterbody (identified by its NHD unique identifier, see
-Section \@ref(locs-data-acq)). This data product contains "full stacks" of the
-Landsat Collection 2 record - that is, all summarized Landsat data available
-from all Landsat missions that met our within-image QA criteria.
+point of inaccessibility (POI) location which is meant to represent conditions
+at a given waterbody at a location far from shore (identified by its NHD unique
+identifier, see Section \@ref(locs-data-acq)). This data product contains "full
+stacks" of the Landsat Collection 2 record - that is, all summarized Landsat
+data available within Google Earth Engine (ending 2024-12-31) from all Landsat
+missions that met our within-image QA criteria.
 
 The siteSR data product is similar, but is acquired at unique sampling locations
 as described in \@ref(siteSR-locs).
@@ -21,10 +22,12 @@ as described in \@ref(siteSR-locs).
 ## Changes from AquaSat v1 and LimnoSat-US
 
 While much of the general architecture from the previous data products remained
-unchanged, in AquaSat v2 we have added a number of features to the remote
-sensing acquisition workflow, have increased efficiency of the data pull, and
-have made the acquired data more robust through additional masking. The bullets
-below summarize the changes implemented in this update.
+unchanged, in AquaMatch we have added a number of features to the remote sensing
+acquisition workflow, have increased efficiency of the data pull, and have made
+the acquired data more robust through additional masking. The bullets below
+summarize the changes implemented in this update. Code below is pulled from the
+Python scripts that acquire the Landsat data from Google Earth Engine. Software
+settings are listed in Section \@ref(software-settings).
 
 -   using yaml file for configuration of the workflow. This allows for greater
     flexibility in data acquisition including the use of custom configurations
@@ -57,11 +60,14 @@ this example, location 1 would be extracted for both path-row 1 and 2, location
     to the explicit path-row to eliminate duplicate acquisitions. In the
     previous products, duplicate location/path-row data were acquired because
     the extracted Landsat stack was not limited to the explicit WRS path-row
-    that the point was in. This meant that locations that were in a path-row
-    overlap would be extracted twice in two different WRS path-row extents. The
-    code below is an example of this type of filtering that occurs as we run a
-    path-row extraction, where we once clipped the stack to the AOI of the
-    path-row.
+    that the point and buffer were in. This meant that locations that were in a
+    path-row overlap would be extracted twice in two different WRS path-row
+    extents. The code below is an example of this type of filtering that occurs
+    per mission as we run a path-row extraction, where we once clipped the stack
+    to the AOI of the path-row instead of filtering for the path-row itself.
+    Example below is from code at line 1850 in the file
+    `b_pull_Landsat_SRST_poi/py/run_GEE_per_pathrow.py` within the lakeSR
+    repository.
 
     ```{python}
     #| eval: false
@@ -86,7 +92,9 @@ this example, location 1 would be extracted for both path-row 1 and 2, location
 
 -   implementation of Collection 2 updates, specifically scaling changes and
     updated QA band conventions. The updated scaling factor function is as
-    follows as directed by the @usgs-ls47user and @usgs-ls89user documents.
+    follows as directed by the @usgs-ls47user and @usgs-ls89user documents. Code
+    below from the file `b_pull_Landsat_SRST_poi/py/run_GEE_per_pathrow.py` in
+    the lakeSR repository.
 
     ```{python}
     #| eval: false
@@ -111,16 +119,13 @@ this example, location 1 would be extracted for both path-row 1 and 2, location
     ```
 
 -   masking changes. Many updates were made to assure high quality data through
-    the use of updated masking procedures. The following masks were added in
-    this workflow and are detailed below in Section \@ref(masking-functions):
-    `apply_fill_mask_457`, `apply_fill_mask_89`, `add_realistic_mask_457`,
-    `add_realistic_mask_89`, `add_opac_mask` (Landsat 4, 5, 7 only),
-    `add_sr_aero_mask` (Landsat 8, 9 only). The cloud mask was also updated to
-    include all sources of contamination (including cloud shadow and dilated
-    clouds) in addition to clouds, snow, and ice. The proportion of pixels
-    within the location buffer that were masked out due to clouds is now tracked
-    as `prop_clouds` as an additional method of QA handling downstream of the
-    GEE extraction.
+    the use of updated masking procedures. The masks are detailed below in
+    Section \@ref(masking-functions). The cloud mask was also updated to include
+    all sources of contamination (including cloud shadow and dilated clouds) in
+    addition to clouds, snow, and ice. The proportion of pixels within the
+    location buffer that were masked out due to clouds is now tracked as
+    `prop_clouds` as an additional method of QA handling downstream of the GEE
+    extraction.
 
 -   DSWE-like implementation for water detection. We have moved from using the
     JRC Global Surface Water Mapping Layers @pekel2016 to using a modified
@@ -129,28 +134,37 @@ this example, location 1 would be extracted for both path-row 1 and 2, location
     [@usgeologicalsurvey2023]. See Section \@ref(dswe-implementation) for
     details.
 
--   removing no-data acquisitions before GEE export. In the AquaSat v2 update,
-    we remove any rows from the summarized GEE product before export. This adds
-    efficiency to the pull by removing those rows before export, which is a
+-   removing no-data acquisitions before GEE export. In AquaMatch, we remove any
+    rows from the summarized GEE product containing no data before export. This
+    adds efficiency to the pull by removing those rows before export, which is a
     source of added time in the GEE bottleneck.
 
--   checking for failed tasks. We added a sanity check for failed tasks, since
-    task status is not conveyed from GEE.
+-   checking for failed tasks in GEE. For AquaMatch, a failed task would
+    indicate that a path-row acquisition had an error and was not completed
+    within GEE. If a task fails (e.g. has an error when running), the task will
+    be documented within the workflow in the file
+    b_pull_Landsat_SRST_poi/out/GEE_failed_tasks_vRUN_DATE.txt, where “RUN_DATE”
+    is the date noted in the GEE_config.yml file. While this rarely occurs,
+    without checking the task history in GEE a user would not know if there were
+    path-row acquisitions that failed.
 
 ## Overview of Acquisition Steps
 
 The workflow for data acquisition from GEE for lakeSR and siteSR is as follows:
 
-1.  read in and format the yaml configuration file for the GEE run
+1.  read in and format the yaml configuration file
+    (`b_pull_Landsat_SRST_poi/config_files/config_poi.yml` for lakeSR or
+    `gee_config.yml` for siteSR) for the GEE run
 
-2.  reformat the locations file for the GEE run using the configuration file
+2.  reformat the locations file declared within the configuration file for the
+    GEE run
 
-3.  determine the WRS-2 path-rows that intersect with the locations file
+3.  determine the WRS-2 path-rows that intersect with the locations contained
+    within the locations file
 
-4.  filter the locations for those that are completely contained by the WRS-2
-    path-row when the automated buffer is added, add the WRS-2 path-rows to the
-    reformatted locations, and save distinct location files by path-row for
-    easier processing in Python
+4.  filter the locations (with their buffer that is declared in the
+    configuration file applied) for those that are completely contained by WRS-2
+    path-rows
 
 5.  iteratively run the GEE script per WRS-2 path-row
 
@@ -161,8 +175,8 @@ The workflow for data acquisition from GEE for lakeSR and siteSR is as follows:
 
 ### Creating a Custom Configuration File {#custom-config}
 
-lakeSR (and siteSR) can be modified to be run by a user by setting up a new
-config file and altering the {targets} workflow to point to that config file. To
+lakeSR and siteSR can be modified to be run by a user by setting up a new config
+file and altering the {targets} workflow to point to that config file. To
 configure a new run of this workflow, fill out the yaml file at the file path
 `b_pull_Landsat_SRST_poi/config_files/config.yml` for lakeSR and
 `gee_config.yml` for siteSR. To run the pipeline with this custom configuration,

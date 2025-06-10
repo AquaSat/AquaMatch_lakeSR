@@ -367,13 +367,18 @@ All Collection 2 Level 2 Surface Reflectance and Surface Temperature data have
 been resampled to 30m.
 
 Alongside the pixel resolution of the sensors is the radiometric resolution at
-which the data are stored. TM and ETM+ data are stored as 8-bit data products,
-OLI data are quantized to 12 bits and Landsat 9 to 14 bits. This equates to 256
-shades per band for Landsat 4-7 (2^8^), 4,096 shades for Landsat 8 (2^12^) and
-16,384 shades for Landsat 9 (2^14^), where higher numbers allow for greater
-precision of measurement in a given band. All Collection 2 Level 2 Surface
-Reflectance and Surface Temperature data have been rescaled and stored as
-unsigned 16 bit values (range for SR and ST bands are are 0-65535, or 2^16^).
+which the data are stored. TM and ETM+ data are stored as 8-bit data products
+[@usgs_c2_l1_tm, @usgs_c2_l1_etm], OLI data are quantized to 12 bits [@usgs_oli]
+and Landsat 9 to 14 bits [@usgs_oli2]. This equates to 256 shades per band for
+Landsat 4-7 (2^8^), 4,096 shades for Landsat 8 (2^12^) and 16,384 shades for
+Landsat 9 (2^14^), where higher numbers allow for greater precision of
+measurement in a given band. All Collection 2 Level 2 Surface Reflectance and
+Surface Temperature data have been rescaled and stored as unsigned 16 bit values
+(range for SR and ST bands are are 65536 shades, or 2^16^). Since Collection 2
+rescaling to a higher number of bits creates false precision across all
+satellites, we truncate the surface reflectance values to three significant
+digits for Landsat 4 - 7, four digits for Landsat 8, and five digits for Landsat
+9.
 
 ## Surface Reflectance Product
 
@@ -426,14 +431,14 @@ product between sensors. Like with the surface reflectance product, we calculate
 between-mission handoffs for the TM/ETM/TIRS products in Section
 \@ref(define-handoff).
 
-It is important to note that the thermal band resolution is coarser than the
-optical bands in all Landsat missions (see Section \@ref(sensor-resolution)). At
-this time we do not account for mixed thermal pixel boundaries due to the
-difference in pixel resolution between optical and thermal sensors in lakeSR or
-siteSR outside of the flags described in Section \@ref(lakeSR-shoreline) and
-Section \@ref(fl-wb-assignment). Additional data handling may be necessary to
-use these data as precise estimates of water surface temperature given these
-constraints.
+It is important to note that the thermal band spatial resolution is coarser than
+the optical bands in all Landsat missions (see Section
+\@ref(sensor-resolution)). At this time we do not account for mixed thermal
+pixel boundaries due to the difference in pixel resolution between optical and
+thermal sensors in lakeSR or siteSR outside of the flags described in Section
+\@ref(lakeSR-shoreline) and Section \@ref(fl-wb-assignment). Additional data
+handling may be necessary to use these data as precise estimates of water
+surface temperature given these constraints.
 
 We do provide surface temperature summary statistics in the siteSR product as
 well, and users should approach the data with caution when a WQP monitoring site
@@ -445,6 +450,6 @@ of `MonitoringLocationTypeName`, the flags assigned from our NHD assignment
 process, and the distance columns from that process to assess whether or not the
 temperature data is appropriate for a given site. Additional assessments may be
 necessary to assess whether it is appropriate to use the temperature data for
-discrete analysis of temperature trends/patterns. King, et al. [-@king] have
-noted that handoff coefficients should be used for the surface temperature
-product as well, see Section \@ref(define-handoff) for details.
+discrete analysis of temperature trends/patterns. @king2024 noted that handoff
+coefficients should be used for the surface temperature product as well, see
+Section \@ref(define-handoff) for details.

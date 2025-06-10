@@ -28,10 +28,11 @@ def csv_to_eeFeat(df, proj, chunk, chunk_size):
   range_max = min(chunk_size * (chunk + 1), len(df)) + range_min
   for i in range(range_min, range_max):
     try:
-      x,y = df.Longitude[i],df.Latitude[i]
-      latlong =[x,y]
-      loc_properties = {'system:index':str(df.id[i]), 'id':str(df.id[i])}
-      g=ee.Geometry.Point(latlong, proj) 
+      row = df.iloc[i]
+      x, y = row['Longitude'], row['Latitude']
+      latlong = [x, y]
+      loc_properties = {'system:index': str(row['id']), 'id': str(row['id'])}
+      g = ee.Geometry.Point(latlong, proj)
       feature = ee.Feature(g, loc_properties)
       features.append(feature)
     except KeyError as e:

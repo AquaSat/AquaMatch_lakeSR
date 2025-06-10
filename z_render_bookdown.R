@@ -21,8 +21,6 @@ if (config::get(config = general_config)$update_bookdown) {
              command = "bookdown/06-post_hoc_qa.Rmd"),
     tar_file(name = handoffs,
              command = "bookdown/07-intermission_handoffs.Rmd"),
-    tar_file(name = limitations,
-             command = "bookdown/08-AquaMatch_RemoteSensing_Limitations.Rmd"),
     tar_file(name = refs,
              command = "bookdown/z-Refs.Rmd"),
     
@@ -134,7 +132,6 @@ if (config::get(config = general_config)$update_bookdown) {
                  srst_pull
                  post_hoc_qa
                  handoffs
-                 limitations
                  refs
                  render_book(input = "bookdown/",
                              params = list(
