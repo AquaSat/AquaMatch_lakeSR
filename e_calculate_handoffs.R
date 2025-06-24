@@ -38,13 +38,14 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS4_forLS45corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
-                                  version_id = d_version_identifier,
+                                  version_id = d_qa_version_identifier,
                                   mission_id = "LT04",
+                                  location_info = a_poi_with_flags,
                                   dswe = c_dswe_types,
                                   start_date = ymd("1984-05-01"), 
                                   end_date = ymd("1993-08-01"),
                                   for_corr = "LS5",
-                                  record_length_prop = 0.4, # no data here until between 0.5-0.6
+                                  record_length_prop = 0.4, # no data here unless < 0.5-0.6
                                   bands = c("med_Red", "med_Green", "med_Blue", 
                                             "med_Nir", "med_Swir1", "med_Swir2",
                                             "med_SurfaceTemp")),
@@ -56,8 +57,9 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS5_forLS45corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
-                                  version_id = d_version_identifier,
+                                  version_id = d_qa_version_identifier,
                                   mission_id = "LT05",
+                                  location_info = a_poi_with_flags,
                                   dswe = c_dswe_types,
                                   start_date = ymd("1984-05-01"), 
                                   end_date = ymd("1993-08-01"),
@@ -74,8 +76,9 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS5_forLS57corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
-                                  version_id = d_version_identifier,
+                                  version_id = d_qa_version_identifier,
                                   mission_id = "LT05",
+                                  location_info = a_poi_with_flags,
                                   dswe = c_dswe_types,
                                   start_date = ymd("1999-04-15"), 
                                   end_date = ymd("2013-06-05"),
@@ -92,8 +95,9 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS7_forLS57corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
-                                  version_id = d_version_identifier,
+                                  version_id = d_qa_version_identifier,
                                   mission_id = "LE07",
+                                  location_info = a_poi_with_flags,
                                   dswe = c_dswe_types,
                                   start_date = ymd("1999-04-15"), 
                                   end_date = ymd("2013-06-05"),
@@ -110,8 +114,9 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS7_forLS78corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
-                                  version_id = d_version_identifier,
+                                  version_id = d_qa_version_identifier,
                                   mission_id = "LE07",
+                                  location_info = a_poi_with_flags,
                                   dswe = c_dswe_types,
                                   start_date = ymd("2013-02-11"), 
                                   end_date = ymd("2022-04-16"),
@@ -128,8 +133,9 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS8_forLS78corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
-                                  version_id = d_version_identifier,
+                                  version_id = d_qa_version_identifier,
                                   mission_id = "LC08",
+                                  location_info = a_poi_with_flags,
                                   dswe = c_dswe_types,
                                   start_date = ymd("2013-02-11"), 
                                   end_date = ymd("2022-04-16"),
@@ -146,8 +152,9 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS8_forLS89corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
-                                  version_id = d_version_identifier,
+                                  version_id = d_qa_version_identifier,
                                   mission_id = "LC08",
+                                  location_info = a_poi_with_flags,
                                   dswe = c_dswe_types,
                                   start_date = ymd("2021-09-27"), 
                                   end_date = ymd("2024-12-31"),
@@ -164,8 +171,9 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS9_forLS89corr_quantiles,
     command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
-                                  version_id = d_version_identifier,
+                                  version_id = d_qa_version_identifier,
                                   mission_id = "LC09",
+                                  location_info = a_poi_with_flags,
                                   dswe = c_dswe_types,
                                   start_date = ymd("2021-09-27"), 
                                   end_date = ymd("2024-12-31"),
@@ -219,7 +227,7 @@ e_calculate_handoffs <- list(
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
-                  dswe = "DSWE1", version = d_version_identifier,
+                  dswe = "DSWE1", version = d_qa_version_identifier,
                   early_LS_mission = "LT04", late_LS_mission = "LT05",
                   early_path_prefix = e_path_prefix_table$early_prefix, 
                   late_path_prefix =  e_path_prefix_table$late_prefix)
@@ -234,7 +242,9 @@ e_calculate_handoffs <- list(
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
-                  dswe = "DSWE1", version = d_version_identifier,
+                  dswe = "DSWE1", 
+                  gee_version = d_gee_version_identifier,
+                  qa_version = d_qa_version_identifier,
                   early_LS_mission = "LT05", late_LS_mission = "LE07",
                   early_path_prefix = e_path_prefix_table$early_prefix, 
                   late_path_prefix =  e_path_prefix_table$late_prefix)
@@ -249,7 +259,9 @@ e_calculate_handoffs <- list(
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
-                  dswe = "DSWE1", version = d_version_identifier,
+                  dswe = "DSWE1", 
+                  gee_version = d_gee_version_identifier,
+                  qa_version = d_qa_version_identifier,
                   early_LS_mission = "LE07", late_LS_mission = "LC08",
                   early_path_prefix = e_path_prefix_table$early_prefix, 
                   late_path_prefix =  e_path_prefix_table$late_prefix)
@@ -264,7 +276,9 @@ e_calculate_handoffs <- list(
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
-                  dswe = "DSWE1", version = d_version_identifier,
+                  dswe = "DSWE1", 
+                  gee_version = d_gee_version_identifier,
+                  qa_version = d_qa_version_identifier,
                   early_LS_mission = "LC08", late_LS_mission = "LC09",
                   early_path_prefix = e_path_prefix_table$early_prefix, 
                   late_path_prefix =  e_path_prefix_table$late_prefix)
@@ -280,7 +294,9 @@ e_calculate_handoffs <- list(
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
-                  dswe = "DSWE1a", version = d_version_identifier,
+                  dswe = "DSWE1a", 
+                  gee_version = d_gee_version_identifier,
+                  qa_version = d_qa_version_identifier,
                   early_LS_mission = "LT04", late_LS_mission = "LT05",
                   early_path_prefix = e_path_prefix_table$early_prefix, 
                   late_path_prefix = e_path_prefix_table$late_prefix)
@@ -295,7 +311,9 @@ e_calculate_handoffs <- list(
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
-                  dswe = "DSWE1a", version = d_version_identifier,
+                  dswe = "DSWE1a", 
+                  gee_version = d_gee_version_identifier,
+                  qa_version = d_qa_version_identifier,
                   early_LS_mission = "LT05", late_LS_mission = "LE07",
                   early_path_prefix = e_path_prefix_table$early_prefix, 
                   late_path_prefix = e_path_prefix_table$late_prefix)
@@ -310,7 +328,9 @@ e_calculate_handoffs <- list(
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
-                  dswe = "DSWE1a", version = d_version_identifier,
+                  dswe = "DSWE1a", 
+                  gee_version = d_gee_version_identifier,
+                  qa_version = d_qa_version_identifier,
                   early_LS_mission = "LE07", late_LS_mission = "LC08",
                   early_path_prefix = e_path_prefix_table$early_prefix, 
                   late_path_prefix =  e_path_prefix_table$late_prefix)
@@ -325,7 +345,9 @@ e_calculate_handoffs <- list(
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
-                  dswe = "DSWE1a", version = d_version_identifier,
+                  dswe = "DSWE1a", 
+                  gee_version = d_gee_version_identifier,
+                  qa_version = d_qa_version_identifier,
                   early_LS_mission = "LC08", late_LS_mission = "LC09",
                   early_path_prefix = e_path_prefix_table$early_prefix, 
                   late_path_prefix =  e_path_prefix_table$late_prefix)
@@ -396,6 +418,7 @@ e_calculate_handoffs <- list(
     command = calculate_roy_handoff(matched_data = e_LS57_DSWE1_matches, 
                                     mission_from = "LS5",
                                     mission_to = "LS7",
+                                    location_info = a_poi_with_flags,
                                     invert_mission_match = FALSE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1"),
@@ -408,6 +431,7 @@ e_calculate_handoffs <- list(
     command = calculate_roy_handoff(matched_data = e_LS78_DSWE1_matches, 
                                     mission_from = "LS8",
                                     mission_to = "LS7",
+                                    location_info = a_poi_with_flags,
                                     invert_mission_match = TRUE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1"),
@@ -420,6 +444,7 @@ e_calculate_handoffs <- list(
     command = calculate_roy_handoff(matched_data = e_LS78_DSWE1_matches, 
                                     mission_from = "LS7",
                                     mission_to = "LS8",
+                                    location_info = a_poi_with_flags,
                                     invert_mission_match = FALSE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1"),
@@ -432,6 +457,7 @@ e_calculate_handoffs <- list(
     command = calculate_roy_handoff(matched_data = e_LS89_DSWE1_matches, 
                                     mission_from = "LS9",
                                     mission_to = "LS8",
+                                    location_info = a_poi_with_flags,
                                     invert_mission_match = TRUE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1"),
@@ -444,6 +470,7 @@ e_calculate_handoffs <- list(
     command = calculate_roy_handoff(matched_data = e_LS57_DSWE1a_matches, 
                                     mission_from = "LS5",
                                     mission_to = "LS7",
+                                    location_info = a_poi_with_flags,
                                     invert_mission_match = FALSE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1a"),
@@ -456,6 +483,7 @@ e_calculate_handoffs <- list(
     command = calculate_roy_handoff(matched_data = e_LS78_DSWE1a_matches, 
                                     mission_from = "LS8",
                                     mission_to = "LS7",
+                                    location_info = a_poi_with_flags,
                                     invert_mission_match = TRUE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1a"),
@@ -468,6 +496,7 @@ e_calculate_handoffs <- list(
     command = calculate_roy_handoff(matched_data = e_LS78_DSWE1a_matches, 
                                     mission_from = "LS7",
                                     mission_to = "LS8",
+                                    location_info = a_poi_with_flags,
                                     invert_mission_match = FALSE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1a"),
@@ -480,6 +509,7 @@ e_calculate_handoffs <- list(
     command = calculate_roy_handoff(matched_data = e_LS89_DSWE1a_matches,
                                     mission_from = "LS9",
                                     mission_to = "LS8",
+                                    location_info = a_poi_with_flags,
                                     invert_mission_match = TRUE,
                                     bands = e_bands_for_correction,
                                     DSWE = "DSWE1a"),

@@ -34,7 +34,7 @@ d_qa_filter_sort <- list(
   # get the appropriate version date to filter files, just in case there is more
   # than one version
   tar_target(
-    name = d_version_identifier,
+    name = d_gee_version_identifier,
     command = {
       if (lakeSR_config$run_GEE) {
         b_yml_poi$run_date 
@@ -42,6 +42,12 @@ d_qa_filter_sort <- list(
         lakeSR_config$collated_version 
       }
     }
+  ),
+  
+  # get the appropriate date for the qa/filtered files
+  tar_target(
+    name = d_qa_version_identifier,
+    command = lakeSR_config$qa_version
   ),
   
   
@@ -60,7 +66,7 @@ d_qa_filter_sort <- list(
   # track metadata files, we'll use those in the filtering process
   tar_target(
     name = d_metadata_files,
-    command = list.files(file.path("c_collate_Landsat_data/mid/", d_version_identifier), 
+    command = list.files(file.path("c_collate_Landsat_data/mid/", d_gee_version_identifier), 
                          full.names = TRUE) %>% 
       .[grepl("metadata", .)]
   ),
@@ -73,7 +79,8 @@ d_qa_filter_sort <- list(
       qa_and_document_LS(mission_info = d_mission_identifiers, 
                          dswe = c_dswe_types, 
                          metadata_files = d_metadata_files,
-                         collated_files = c_collated_files)
+                         collated_files = c_collated_files,
+                         qa_identifier = d_qa_version_identifier)
     },
     packages = c("arrow", "data.table", "tidyverse", "ggrepel", "viridis", "stringi"),
     pattern = cross(d_mission_identifiers, c_dswe_types),
@@ -86,13 +93,12 @@ d_qa_filter_sort <- list(
     command = {
       d_qa_Landsat_files
       list.files("d_qa_filter_sort/qa/", full.names = TRUE) %>% 
-        .[grepl(d_version_identifier, .)]
+        .[grepl(paste0("filtered_", d_qa_version_identifier), .)]
     }
   ),
   
   
   # collate qa'd data and sort as needed ------------------------------------
-  
   
   # here, we collate small datasets (Landsat 4/9) into a single .csv file, and 
   # collate larger datasets (Landsat 5-7-8) into multiple .csv's, sorted by HUC2.
@@ -107,7 +113,7 @@ d_qa_filter_sort <- list(
   tar_target(
     name = d_Landsat4_collated_data,
     command = sort_qa_Landsat_data(qa_files = d_qa_Landsat_file_paths, 
-                                   version_id = d_version_identifier,
+                                   qa_identifier = d_qa_version_identifier,
                                    mission_info = d_mission_identifiers %>% 
                                      filter(mission_names == "Landsat 4"),
                                    dswe = c_dswe_types),
@@ -119,7 +125,7 @@ d_qa_filter_sort <- list(
   tar_target(
     name = d_collated_Landsat5_by_huc2,
     command = sort_qa_Landsat_data(qa_files = d_qa_Landsat_file_paths,
-                                   version_id = d_version_identifier,
+                                   qa_identifier = d_qa_version_identifier,
                                    mission_info = d_mission_identifiers %>% 
                                      filter(mission_names == "Landsat 5"), 
                                    dswe = c_dswe_types, 
@@ -132,7 +138,7 @@ d_qa_filter_sort <- list(
   tar_target(
     name = d_collated_Landsat7_by_huc2,
     command = sort_qa_Landsat_data(qa_files = d_qa_Landsat_file_paths,
-                                   version_id = d_version_identifier,
+                                   qa_identifier = d_qa_version_identifier,
                                    mission_info = d_mission_identifiers %>% 
                                      filter(mission_names == "Landsat 7"), 
                                    dswe = c_dswe_types, 
@@ -145,7 +151,7 @@ d_qa_filter_sort <- list(
   tar_target(
     name = d_collated_Landsat8_by_huc2,
     command = sort_qa_Landsat_data(qa_files = d_qa_Landsat_file_paths,
-                                   version_id = d_version_identifier,
+                                   qa_identifier = d_qa_version_identifier,
                                    mission_info = d_mission_identifiers %>% 
                                      filter(mission_names == "Landsat 8"), 
                                    dswe = c_dswe_types, 
@@ -159,7 +165,7 @@ d_qa_filter_sort <- list(
   tar_target(
     name = d_Landsat9_collated_data,
     command = sort_qa_Landsat_data(qa_files = d_qa_Landsat_file_paths, 
-                                   version_id = d_version_identifier,
+                                   qa_identifier = d_qa_version_identifier,
                                    mission_info = d_mission_identifiers %>% 
                                      filter(mission_names == "Landsat 9"),
                                    dswe = c_dswe_types),
@@ -172,6 +178,7 @@ d_qa_filter_sort <- list(
     name = d_Landsat_metadata_formatted,
     command = prep_LS_metadata_for_export(file = d_metadata_files, 
                                           file_type = "csv", 
+                                          qa_identifier = d_qa_version_identifier,
                                           out_path = "d_qa_filter_sort/sort/"),
     pattern = map(d_metadata_files), 
     packages = c("data.table", "tidyverse", "arrow", "stringi")
@@ -217,18 +224,18 @@ if (config::get(config = general_config)$update_and_share) {
           drive_auth(lakeSR_config$google_email)
           if (lakeSR_config$parent_Drive_folder != "") {
             version_path <- paste0(lakeSR_config$parent_Drive_folder,
-                                   paste0("QA_sorted_v", d_version_identifier, "/"))
+                                   paste0("QA_sorted_v", d_qa_version_identifier, "/"))
           } else {
-            version_path <- paste0("QA_sorted_v", d_version_identifier, "/")
+            version_path <- paste0("QA_sorted_v", d_qa_version_identifier, "/")
           }
           drive_ls(version_path)
         }, error = function(e) {
           # if there is an error, check both the 'collated_raw' folder and the 'version'
           # folder
           if (lakeSR_config$parent_Drive_folder != "") {
-            drive_mkdir(path = lakeSR_config$parent_Drive_folder, name = paste0("QA_sorted_v", d_version_identifier))
+            drive_mkdir(path = lakeSR_config$parent_Drive_folder, name = paste0("QA_sorted_v", d_qa_version_identifier))
           } else {
-            drive_mkdir(name = paste0("QA_sorted_v", d_version_identifier))
+            drive_mkdir(name = paste0("QA_sorted_v", d_qa_version_identifier))
           }
         })
         return(version_path)
@@ -255,7 +262,7 @@ if (config::get(config = general_config)$update_and_share) {
           select(name, id)
         write_csv(drive_ids,
                   paste0("d_qa_filteR_sort/out/Landsat_sorted_files_drive_ids_v",
-                         d_version_identifier,
+                         d_qa_version_identifier,
                          ".csv"))
         drive_ids
       },

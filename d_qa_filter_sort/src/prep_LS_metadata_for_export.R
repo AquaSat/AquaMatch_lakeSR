@@ -7,11 +7,13 @@
 #' @param file file path to feather file to be updated and prepared for export.
 #' File name must include `metadata`.
 #' @param file_type output file type (either "csv" or "feather")
+#' @param qa_identifier date string formatted yyyy-mm-dd used to version the 
+#' qa process. This is set in the general configuration yaml under `qa_version`
 #' @param out_path Directory where updated files should be saved. 
 #' 
 #' @returns full relative file path of saved file.
 #' 
-prep_LS_metadata_for_export <- function(file, file_type, out_path) {
+prep_LS_metadata_for_export <- function(file, file_type, qa_identifier, out_path) {
   
   # make sure file type is accepted
   if (!file_type %in% c("csv", "feather")) {
@@ -64,13 +66,17 @@ prep_LS_metadata_for_export <- function(file, file_type, out_path) {
   
   if (file_type == "csv") {
     full_file_path <- file.path(out_path,
-                                paste0(str_replace(fn, ".feather", "_export.csv")))
+                                paste0(str_replace(fn, 
+                                                   ".feather", 
+                                                   paste0("_export_", qa_identifier, ".csv"))))
     write_csv(data,
               full_file_path)
   }
   if (file_type == "feather") {
     full_file_path <- file.path(out_path,
-                                paste0(str_replace(fn, ".feather", "_export.feather")))
+                                paste0(str_replace(fn, 
+                                                   ".feather", 
+                                                   paste0("_export_", qa_identifier, ".feather"))))
     write_feather(data,
                   full_file_path,
                   compression = "lz4")

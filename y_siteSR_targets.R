@@ -26,21 +26,21 @@ if (config::get(config = general_config)$update_bookdown) {
     ), 
     
     tar_file_read(
-      name = p4_harmonized_sites_Drive_id,
+      name = a_sites_Drive_id,
       command = file.path(config_siteSR_directory, 
-                          "4_compile_sites/out/harmonized_sites_drive_id.csv"),
+                          "a_compile_sites/out/all_site_locations_drive_id.csv"),
       read = read_csv(!!.x),
       cue = tar_cue("always")
     ),
     
     tar_target(
-      name = p4_harmonized_sites,
+      name = a_all_site_locations,
       command = {
         # filter for most recent id
-        most_recent <- p4_harmonized_sites_Drive_id %>% 
+        most_recent <- a_sites_Drive_id %>% 
           arrange(desc(name)) %>% 
           slice(1)
-        retrieve_target(target = "p4_harmonized_sites",
+        retrieve_target(target = "a_all_site_locations",
                         id_df = most_recent, 
                         local_folder = "y_siteSR_targets/out/", 
                         google_email = lakeSR_config$google_email,
@@ -51,20 +51,20 @@ if (config::get(config = general_config)$update_bookdown) {
     ),
     
     tar_file_read(
-      name = p4_collated_sites_Drive_id,
+      name = a_sites_with_NHD_drive_id,
       command = file.path(config_siteSR_directory, 
-                          "4_compile_sites/out/collated_sites_drive_id.csv"),
+                          "a_compile_sites/out/sites_with_NHD_drive_id.csv"),
       read = read_csv(!!.x),
       cue = tar_cue("always")
     ),
     
     tar_target(
-      name = p4_WQP_site_NHD_info,
+      name = a_sites_with_NHD_info,
       command = {
-        most_recent <- p4_collated_sites_Drive_id %>% 
+        most_recent <- a_sites_with_NHD_drive_id %>% 
           arrange(desc(name)) %>% 
           slice(1)
-        retrieve_target(target = "p4_WQP_site_NHD_info",
+        retrieve_target(target = "a_sites_with_NHD_info",
                         id_df = most_recent, 
                         local_folder = "y_siteSR_targets/out/", 
                         google_email = lakeSR_config$google_email,
@@ -77,20 +77,20 @@ if (config::get(config = general_config)$update_bookdown) {
     
     # load visible sites
     tar_file_read(
-      name = p5_visible_site_Drive_id,
+      name = b_visible_site_Drive_id,
       command = file.path(config_siteSR_directory, 
-                          "5_determine_RS_visibility/out/visible_site_id.csv"),
+                          "b_determine_RS_visibility/out/visible_site_id.csv"),
       read = read_csv(!!.x),
       cue = tar_cue("always")
     ),
     
     tar_target(
-      name = p5_visible_sites,
+      name = b_visible_sites,
       command = {
-        most_recent <- p5_visible_site_Drive_id %>% 
+        most_recent <- b_visible_site_Drive_id %>% 
           arrange(desc(name)) %>% 
           slice(1)
-        retrieve_target(target = "p5_visible_sites",
+        retrieve_target(target = "b_visible_sites",
                         id_df = most_recent, 
                         local_folder = "y_siteSR_targets/out/", 
                         google_email = lakeSR_config$google_email,
@@ -99,7 +99,6 @@ if (config::get(config = general_config)$update_bookdown) {
       },
       packages = c("tidyverse", "googledrive")
     )
-    
     
   )
   

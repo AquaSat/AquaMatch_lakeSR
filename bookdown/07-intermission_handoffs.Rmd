@@ -32,16 +32,16 @@ e_LS8_forLS78corr_quantiles <- e_LS8_forLS78corr_quantiles %>%
 
 It is necessary to standardize band values between Landsat missions in order to
 create a robust timeseries. @maciel2023 notes the issues in using the Landsat
-Surface Reflectance product as a timeseries without careful handling of data
-between missions. @king notes that this type of standardization is necessary for
-the thermal band, as well. This standardization process attempts to address
-changes in sensor spectral response and atmospheric correction procedures. For
-the purposes of AquaSat v2, we call this standardization process "intermission
-handoffs". We implement two versions of intermission handoffs: the method
-described in @roy2016 ("Roy method") and an adapted version of that described in
-@gardner2021 ("Gardner method").
+Surface Reflectance product for aquatic systems as a timeseries without careful
+handling of data between missions. @king notes that this type of standardization
+is necessary for the thermal band, as well. This standardization process
+attempts to address changes in sensor spectral response and atmospheric
+correction procedures. For the purposes of AquaMatch, we call this
+standardization process "intermission handoffs". We implement two versions of
+intermission handoffs: the method described in @roy2016 ("Roy method") and an
+adapted version of that described in @gardner2021 ("Gardner method").
 
-In AquaSat v2, we provide coefficients to standardize remote sensing values
+In AquaMatch, we provide coefficients to standardize remote sensing values
 relative to Landsat 7 and Landsat 8. The Landsat 7 intermission handoffs create
 a continuous record of remote sensing from Landsat 4 through 9 relative to
 Landsat 7. This is because Landsat 4 and 5 and Landsat 8 and 9 can be treated as
@@ -69,18 +69,19 @@ paired data point to define the Roy method intermission
 handoffs.](images/path_overlap_roy.png)
 
 While @roy2016 implemented this method on a pixel-by-pixel basis, we implement
-using the median band value per site. This is used in place of the explicit
-filters described in the Roy method (saturated pixels, cloudy/snowy pixels, and
-pixels with value changes greater than the changes in atmospheric correction),
-as we have implemented masks and QA filters to reduce these sources of error.
-Handoff coefficients are defined by the ordinary least squares (OLS) regression
-line or the Deming regression (MLE, assuming equal and constant error in both x
-and y variables). Because Deming regression is computationally intensive, the
-regression line is defined by a random sample of 10,000 matches. For the
-purposes of this documentation, we only include figures and tables for the
-Deming regression (minimum likelihood estimation method) and DSWE1. Intercepts
-and slopes for all handoffs are available at the file path
-`e_calculate_handoffs/out/collated_handoffs_v2025-02-12.csv` and figures for all
+using the median band value per site where we have collected data in lakeSR,
+available in the lakeSR remote sensing data summary files. This is used in place
+of the explicit filters described in the Roy method (saturated pixels,
+cloudy/snowy pixels, and pixels with value changes greater than the changes in
+atmospheric correction), as we have implemented masks and QA filters to reduce
+these sources of error. Handoff coefficients are defined by the ordinary least
+squares (OLS) regression line or the Deming regression (MLE, assuming equal and
+constant error in both x and y variables). Because Deming regression is
+computationally intensive, the regression line is defined by a random sample of
+10,000 matches. For the purposes of this documentation, we only include figures
+and tables for the Deming regression (minimum likelihood estimation method) and
+DSWE1. Intercepts and slopes for all handoffs are available at the file path
+`e_calculate_handoffs/out/collated_handoffs_xDATEx.csv` and figures for all
 handoffs are created when the pipeline is run.
 
 ## Gardner method
@@ -107,7 +108,7 @@ any, systematic differences are present between the two missions. We provide the
 Gardner method handoffs for continuity with the riverSR product for users who
 would like that interoperability. As with the Roy, et al. method, intercepts and
 slopes for all handoffs are available at the file path
-`e_calculate_handoffs/out/collated_handoffs_v2025-02-12.csv` and figures for all
+`e_calculate_handoffs/out/collated_handoffs_xDATEx.csv` and figures for all
 handoffs are created when the pipeline is run.
 
 ## Implementing Roy Handoffs

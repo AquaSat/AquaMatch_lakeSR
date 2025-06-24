@@ -149,7 +149,7 @@ if (config::get(config = general_config)$update_bookdown) {
                              ))
                },
                packages = c("tidyverse", "bookdown", "sf", "tigris", "nhdplusTools", 
-                            "tmap", "googledrive", "feather", "kableExtra", "cowplot",
+                            "tmap", "googledrive", "arrow", "kableExtra", "cowplot",
                             "ggthemes"),
                deployment = "main")
   )

@@ -24,6 +24,8 @@
 #' filtering. Default: 0.1
 #' @param document_drops Boolean, whether to generate a summary of dropped 
 #' records and save it as a plot. Default: TRUE
+#' @param qa_identifier date string formatted yyyy-mm-dd used to version the 
+#' qa process. This is set in the general configuration yaml under `qa_version`
 #' @param out_path Directory where filtered files should be saved. Will be 
 #' created if it doesn't exist. Default: `d_qa_filter_sort/qa/`
 #' 
@@ -40,6 +42,7 @@ qa_and_document_LS <- function(mission_info,
                                thermal_maximum = 313.15,
                                ir_threshold = 0.1,
                                document_drops = TRUE,
+                               qa_identifier,
                                out_path = "d_qa_filter_sort/qa/"
                                
 ) {
@@ -61,7 +64,7 @@ qa_and_document_LS <- function(mission_info,
     .[grepl(mission_info$mission_id, .)] %>% 
     .[grepl(paste0("_", dswe, "_"), .)]
   
-
+  
   # make sure there are files that exist with those filters
   if (length(mission_files > 0)) {
     
@@ -91,7 +94,7 @@ qa_and_document_LS <- function(mission_info,
                     data <- read_feather(fp) 
                     setDT(data)
                     data[, sat_id := stri_replace_last_regex(`system:index`, "_\\d{4}_\\d+$", "")]
-
+                    
                     all_data <- nrow(data)
                     # note, this workflow iteratively overwrites the 'data' 
                     # object to save memory.
@@ -107,24 +110,40 @@ qa_and_document_LS <- function(mission_info,
                       filter({{pCount_column}} >= min_no_pix)
                     valid_thresh <- nrow(data)
                     
-                    # filter thermal for > 273.15 (above freezing)
-                    data <- data %>% #glint_thresh %>% 
-                      filter(med_SurfaceTemp > thermal_threshold)
-                    temp_thresh <- nrow(data)
-                    
-                    # filter thermal for < 213.15 (below 40 deg C)
-                    data <- data %>% #glint_thresh %>% 
-                      filter(med_SurfaceTemp < thermal_maximum)
-                    temp_max <- nrow(data)
-                    
                     # filter for nir/swir thresholds
                     data <- data %>% 
                       filter(med_Nir < ir_threshold | (med_Swir1 < ir_threshold & med_Swir2 < ir_threshold))
                     ir_glint_thresh <- nrow(data)
                     
+                    # flag thermal < 273.15 (below freezing), recode only temp
+                    ## flag_temp_min: 0 = valid data, 1 = no data available, 
+                    ##                2 = recoded for below temp threshold
+                    data <- data %>% 
+                      mutate(flag_temp_min = case_when(is.na(med_SurfaceTemp) ~ 1,
+                                                       med_SurfaceTemp < thermal_threshold ~ 2,
+                                                       .default = 0),
+                             med_SurfaceTemp = if_else(med_SurfaceTemp < thermal_threshold,
+                                                       NA_real_, 
+                                                       med_SurfaceTemp))
+                    
+                    # flag thermal > 213.15 (above 40 deg C), recode only temp
+                    ## flag_temp_max: 0 = valid data, 1 = no data available, 
+                    ##                2 = recoded for above temp threshold
+                    data <- data %>% 
+                      mutate(flag_temp_max = case_when(is.na(med_SurfaceTemp) ~ 1,
+                                                       med_SurfaceTemp > thermal_maximum ~ 2,
+                                                       .default = 0),
+                             med_SurfaceTemp = if_else(med_SurfaceTemp > thermal_maximum,
+                                                       NA_real_, 
+                                                       med_SurfaceTemp))
+                    
                     # make a new file name using fp from mission_files
                     out_fn <- last(unlist(str_split(fp, '/')))
-                    out_fn <- str_replace(out_fn, ".feather", "_filtered.feather")
+                    out_fn <- str_replace(out_fn, 
+                                          ".feather",
+                                          paste0("_filtered_", 
+                                                 qa_identifier, 
+                                                 ".feather"))
                     
                     write_feather(data, 
                                   file.path(out_path, out_fn),
@@ -134,8 +153,6 @@ qa_and_document_LS <- function(mission_info,
                     tibble(all_data = all_data,
                            image_qual = image_qual,
                            valid_thresh = valid_thresh,
-                           temp_thresh = temp_thresh,
-                           temp_max = temp_max,
                            ir_glint_thresh = ir_glint_thresh) %>% 
                       pivot_longer(cols = all_data:ir_glint_thresh) 
                     
@@ -154,16 +171,12 @@ qa_and_document_LS <- function(mission_info,
       drop_reason <- tibble(all_data = "unfiltered Landsat data",
                             image_qual = "filtered for optical image quality >= 8",
                             valid_thresh = sprintf("minimum number of pixels threshold (%s) met", min_no_pix),
-                            temp_thresh = sprintf("thermal band threshold (%s °K) met", thermal_threshold),
-                            temp_max = sprintf("below thermal band maximum (%s °K)", thermal_maximum),
                             ir_glint_thresh = sprintf("NIR/SWIR threshold (%s) met", ir_threshold)) %>% 
         pivot_longer(cols = all_data:ir_glint_thresh,
                      values_to = "reason") 
       
       drops <- full_join(row_summary, drop_reason) %>% 
         mutate(name = factor(name, levels = c("ir_glint_thresh",
-                                              "temp_max",
-                                              "temp_thresh",
                                               "valid_thresh",
                                               "image_qual",
                                               "all_data")),

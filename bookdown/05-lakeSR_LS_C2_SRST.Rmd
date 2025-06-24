@@ -53,7 +53,7 @@ this example, location 1 would be extracted for both path-row 1 and 2, location
     in 2021, and has been added to the data product.
 
 -   Landsat Collection 2 offers a Surface Temperature product derived from the
-    thermal band. In AquaSat v2, we include data from this band. See Section
+    thermal band. In AquaMatch, we include data from this band. See Section
     \@ref(st-product) for additional considerations in use of these data.
 
 -   sending tasks to GEE explicitly per path-row and limiting the Landsat stack
@@ -166,7 +166,9 @@ The workflow for data acquisition from GEE for lakeSR and siteSR is as follows:
     configuration file applied) for those that are completely contained by WRS-2
     path-rows
 
-5.  iteratively run the GEE script per WRS-2 path-row
+5.  iteratively run the GEE script (`run_GEE_per_pathrow.py`) per WRS-2 path-row
+    to extract remote sensing data from Google Earth Engine for the locations
+    contained in that pathrow
 
 6.  check to see that all tasks are complete in GEE before moving to next step
 
@@ -219,7 +221,8 @@ available for select scenes for [Landsat
 4/5/7](https://ee-aquamatch.projects.earthengine.app/view/asv2landsat57interactivemask)
 and [Landsat
 8/9](https://ee-aquamatch.projects.earthengine.app/view/asv2landsat89interactivemask)
-to see some of the masks in action.
+to see some of the masks in action. In the descriptions below, "optical band" is
+used to describe any non-thermal band.
 
 -   `apply_rad_mask`: Masks out all pixels that are radiometrically saturated in
     any optical band using the QA_RADSAT QA band. The Landsat User Guides
@@ -331,31 +334,34 @@ pixel based on the thresholds described in @usgeologicalsurvey2023 table 2.2 and
 Within the scope of lakeSR and siteSR, we tabulate pixels that are a DSWE value
 of 1 (DSWE1) for high confidence open water, or what we call DSWE1a - high
 confidence open water OR the pixel meets a threshold that may indicate there is
-surface-level algae. The algae mask is defined as when a pixel has a DSWE value
-greater than 1 and the green band scaled value is greater than 0.05 and the red
-band scaled value is less than 0.04. These values are based on optical
-properties intended to mimic the spectral response of chlorophyll *a* as
-described by @burket2023. This is an experimental mask, so we export both DSWE1
-and DSWE1a summaries within lakeSR. We have found some omission error within
-DSWE1 for visible floating scum within river systems and this additional mask
-captures many of those pixels without adding unnecessary uncertainty. Users of
-the lakeSR and siteSR data products can choose to use the DSWE1a product if
-applicable to their research, however, this threshold was defined in the
-Illinois and Ohio Rivers and may not be applicable in all environments.
+surface-level algae. Like the QA masks, the DSWE implementation occurs in the
+Python script `run_GEE_per_pathrow.py`. The algae mask is defined as when a
+pixel has a DSWE value greater than 1 and the green band scaled value is greater
+than 0.05 and the red band scaled value is less than 0.04. These values are
+based on optical properties intended to mimic the spectral response of
+chlorophyll *a* as described by @burket2023. This is an experimental mask, so we
+export both DSWE1 and DSWE1a summaries within lakeSR. We have found some
+omission error within DSWE1 for visible floating scum within river systems and
+this additional mask captures many of those pixels without adding unnecessary
+uncertainty. Users of the lakeSR and siteSR data products can choose to use the
+DSWE1a product if applicable to their research, however, this threshold was
+defined in the Illinois and Ohio Rivers and may not be applicable in all
+environments.
 
 ## Additional diagnostic data columns
 
 During the masking and flagging step of the workflow, we tally pixels that met
-certain criteria for use as diagnostic tools. This includes tallying of varying
-DSWE types (greater than 0 – water of some kind with any confidence, 1 high
-confidence water, 1a high confidence water with positive algal mask, 3 high
-confidence vegetated water) within the buffered area. These tallies are of any
-pixel that meets the DSWE category and met the hillshade, cloud,
-opacity/aerosol, realistic, and glint thresholds. The number of pixels that were
-high opacity/high aerosol, overly negative values, and likely sun glint were
-also tallied within the buffer. These tallies are of the entire buffer area and
-no additional masks are incorporated into the tallies (e.g. the sun glint mask
-and infrared mask may also indicate high reflectance from shoreline vegetation
+certain criteria for use as diagnostic tools, which are stored in the same file
+as the summary remote sensing data. This includes tallying of varying DSWE types
+(greater than 0 – water of some kind with any confidence, 1 high confidence
+water, 1a high confidence water with positive algal mask, 3 high confidence
+vegetated water) within the buffered area. These tallies are of any pixel that
+meets the DSWE category and met the hillshade, cloud, opacity/aerosol,
+realistic, and glint thresholds. The number of pixels that were high
+opacity/high aerosol, overly negative values, and likely sun glint were also
+tallied within the buffer. These tallies are of the entire buffer area and no
+additional masks are incorporated into the tallies (e.g. the sun glint mask and
+infrared mask may also indicate high reflectance from shoreline vegetation
 within the buffered area). Counts of pixels were tallied per band to indicate
 the number of pixels that were below zero, below the threshold for realistic
 values, or above the glint threshold. These tallies were completed in
@@ -376,17 +382,21 @@ platform. For this reason, tasks are sent to GEE as path-row groups as soon as
 there are fewer than 10 tasks in the GEE tasks queue. Additionally, any path-row
 containing more than 5,000 POI locations are sent as separate tasks in 5000
 location chunks. This is an additional step that is taken in addition to
-processing per path-row to avoid failed tasks. We have also implemented a status
-check for tasks sent to GEE to determine if any have failed (target
-`b_check_for_failed_tasks`), as once the tasks are sent from the RStudio IDE,
-you can not tell whether or not they have completed or failed. This stores a
-text file at the filepath
+processing per path-row to avoid failed tasks. This management is orchestrated
+within the `run_GEE_per_pathrow.py` script and through integration with
+{targets} which runs this script per WRS-2 pathrow.
+
+We have also implemented a status check for tasks sent to GEE to determine if
+any have failed (Python script `check_for_failed_tasks.py`), as once the tasks
+are sent from the RStudio IDE, you can not tell whether or not they have
+completed or failed without (a) manually looking at the tasks list or (b)
+programatically checking the task list. This stores a text file at the filepath
 `b_pull_Landsat_SRST_poi/out/GEE_task_errors_vRUN_DATE.csv` containing the names
 of the tasks that have failed. If no tasks have failed, no file will be present.
 Generally speaking, failed tasks would indicate an error within the GEE
 acquisition script, usually due to changes in the
 `b_pull_Landsat_SRST_poi/py/run_GEE_per_pathrow.py` script. We recommend
 checking the task status of the GEE run at
-<https://code.earthengine.google.com/tasks> after any changes to that file,
-which will indicate if tasks are failing without waiting for the total
-completion of the GEE target.
+<https://code.earthengine.google.com/tasks> after any changes to they GEE
+functions file, which will indicate if tasks are failing due to code error
+without waiting for the total completion of the GEE target.

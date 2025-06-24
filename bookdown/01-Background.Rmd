@@ -105,6 +105,41 @@ The lakeSR folder structure is as follows:
         |-- _output.yml
 ```
 
+### lakeSR Output Files
+
+This workflow creates a number of files (where `xDATEx` is a placeholder for the
+version date identifier):
+
+-   locations file (`a_poi_with_flags_xDATEx.csv`) containing all sites within
+    the lakeSR dataset, defined by the National Hydrography Dataset. This file
+    also contains column that link the location (Latitude/Longitude) to NHD
+    waterbody features, and flags meant to aid in data interpretation. See
+    Section \@ref(waterbodies) for more information about this file.
+
+-   remote sensing data file(s) for sites (e.g.
+    `lakeSR_Landast8_DSWE1_xDATEx.feather`,
+    `lakeSR_HUC2_18_collated_sites_Landsat7_DSWE1_xDATEx.csv`) which contain the
+    lakeSR identifier (can be matched with the locations file), numerical
+    summaries of remote sensing data for each site and satellite image, as well
+    as columns containing summarized information about pixels that have been
+    masked in the Google Earth Engine QAQC and filtering process. See sections
+    \@ref(LS-C2-SRST), \@ref(LS-C2-pull), and \@ref(post-hoc-qa) for additional
+    details.
+
+-   remote sensing scene-level metadata file(s) (e.g.
+    `lakeSR_collated_metadata_LS89_xDATEx_export.csv`,
+    `lakeSR_collated_metadata_LS457_xDATEx_export.csv`) which contain a subset
+    of columns of the scene-level metadata for each Landsat image within the
+    lakeSR remote sensing data file. This can be joined to the remote sensing
+    data using the `sat_id` column. While we reduce the number of columns from
+    the upstream data during the remote sensing data file collation, we do not
+    process the metadata information further nor have suggested uses but rather
+    encourage users to use this metadata file for further data interpretation.
+
+-   intermission handoff file(s) (e.g. `collated_handoffs_xDATEx.csv`) which
+    contains coefficients for aligning data across multiple Landsat missions for
+    timeseries analysis. See Section \@ref(define-handoff) for details.
+
 ### Configuration Files
 
 **config.yml:**
@@ -154,7 +189,7 @@ greater than 1 hectare in surface area and intermittent lakes, ponds, and
 reservoirs greater than 4 hectares using the NHDPlusV2 polygons using the
 {nhdplusTools} package [@blodgett2023], NHD Best Resolution files for non-CONUS
 waterbodies, and the `poi()` function in the {polylabelr} package
-[@larsson2020].
+[@larsson2024].
 
 See Section \@ref(locs-data-acq) for additional background and detailed
 methodology.
@@ -244,8 +279,8 @@ list will be empty.
 
 ## siteSR Code Architecture
 
-[siteSR code](https://github.com/AquaSat/AquaMatch_siteSR_WQP) retrieves WQP
-sites using `dataRetrieval::whatWQPsites()`, NWIS sites using
+[siteSR code](https://github.com/AquaSat/AquaMatch_siteSR) retrieves WQP sites
+using `dataRetrieval::whatWQPsites()`, NWIS sites using
 `dataRetrieval::whatNWISsites()`, and any remaining WQP sites at which there are
 historical *in situ* data from the [AquaMatch harmonization
 pipeline](https://github.com/AquaSat/AquaMatch_harmonize_WQP). lakeSR provides
@@ -309,6 +344,40 @@ The siteSR folder structure is as follows:
     
     
 ```
+
+### siteSR Output Files
+
+This workflow creates a number of files (where `xDATEx` is a placeholder for the
+version date identifier):
+
+-   locations file (`collated_WQP_NWIS_sites_with_NHD_info_xDATEx.csv`)
+    containing all sites from the WQP and NWIS at the time of running the
+    pipeline, as well as any additional sites from the AquaMatch pipeline (for
+    Secchi disc depth, chlorophyll *a*, dissolved organic carbon, and total
+    suspended solids) that were not present in the WQP site pull. This file also
+    contains column attributing a HUC8, NHD features (waterbodies and/or
+    flowlines), and flags meant to aid in data interpretation. See Section
+    \@ref(siteSR-locs) for more information about this file.
+
+-   remote sensing data file(s) for sites (e.g.
+    `siteSR_collated_sites_DSWE1_xDATEx.feather`,
+    `siteSR_collated_sites_LT04_DSWE1_xDATEx_export.csv`) which contain the
+    siteSR identifier (can be matched with the locations file), numerical
+    summaries of remote sensing data for each site and satellite image, as well
+    as columns containing summarized information about pixels that have been
+    masked in the Google Earth Engine QAQC and filtering process. See sections
+    \@ref(LS-C2-SRST), \@ref(LS-C2-pull), and \@ref(post-hoc-qa) for additional
+    details.
+
+-   remote sensing scene-level metadata file(s) (e.g.
+    `siteSR_collated_metadata_LS89_xDATEx_export.csv`,
+    `siteSR_collated_metadata_LS457_xDATEx_export.csv`) which contain a subset
+    of columns of the scene-level metadata for each Landsat image within the
+    siteSR remote sensing data file. This can be joined to the remote sensing
+    data using the `sat_id` column. While we reduce the number of columns from
+    the upstream data during the remote sensing data file collation, we do not
+    process the metadata information further nor have suggested uses but rather
+    encourage users to use this metadata file for further data interpretation.
 
 ### Configuration Files {#setup-description}
 

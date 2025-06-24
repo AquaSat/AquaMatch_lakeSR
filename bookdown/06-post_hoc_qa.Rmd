@@ -43,12 +43,6 @@ designed to reduce data corruption due to file size in the upload/download
 process to Google Drive, where the collated files are stored for posterity and
 to add functionality to this workflow. The Google Drive ids can be found at the
 folder path `c_collate_Landsat_data/out/` and can be accessed without special
-were collated into large compressed .feather files per DSWE type (DSWE1 and
-DSWE1a), per Landsat mission, and per path prefix. The path prefix subset is
-designed to reduce data corruption due to file size in the upload/download
-process to Google Drive, where the collated files are stored for posterity and
-to add functionality to this workflow. The Google Drive ids can be found at the
-folder path `c_collate_Landsat_data/out/` and can be accessed without special
 permissions by downstream users. Many of these files are quite large (on the
 order of many GBs) and are very difficult to handle outside of a programming or
 database environment. We provide these files for advanced users who wish to make
@@ -65,11 +59,11 @@ still result in erroneous or misleading SR values. To address this we implement
 post-hoc filters that are applied to the stack to reduce uncertainty in the
 remote sensing data as much as possible.
 
--   image quality (acquired from scene-level metadata files) must be \>= 8. In
-    Landsat 4, 5, and 7 this value is stored in the metadata column
-    `IMAGE_QUALITY`, in Landsat 8 and 9, this value originates from the column
-    `IMAGE_QUALITY_OLI`. These columns indicate the overall quality of the image
-    on a scale of 0 (worst) to 9 (best).
+-   image quality (from scene-level metadata files) must be \>= 8. In Landsat 4,
+    5, and 7 this value is stored in the metadata column `IMAGE_QUALITY`, in
+    Landsat 8 and 9, this value originates from the column `IMAGE_QUALITY_OLI`.
+    These columns indicate the overall quality of the image on a scale of 0
+    (worst) to 9 (best).
 
 -   total count of pixels (`pCount_dswe1` or `pCount_dswe1a`) contributing to
     summary values must be ≥ 8. This is a slight change from AquaSat v1 which
@@ -77,17 +71,6 @@ remote sensing data as much as possible.
     AquaSat v1) we believe allows for a slightly more conservative QA filter via
     the reduction of required pixels for inclusion in the lakeSR and siteSR
     datasets.
-
--   if the median temperature is below freezing (`med_SurfaceTemp` \< 273.15 °
-    K), the row is dropped. This is our best attempt at removing data during any
-    freezing period and also is an attempt at detecting clouds, which can impact
-    the thermal estimates. In particular, cirrus clouds can go unnoticed in the
-    cloud detection algorithms that inform our masking procedures.
-
--   if the median temperature is greater than or equal to 40°C (313.15 °K) the
-    row is dropped. This maximum was defined based on the maximum value included
-    @willard2021 composed of *in situ* measurements and remote sensing
-    estimates.
 
 -   either NIR surface reflectance or SWIR1 and SWIR2 surface reflectance must
     be \< 0.1, this is to remove any extracted samples where sun glint has
@@ -107,6 +90,30 @@ show how many rows of data were dropped through this QA process. For the
 purposes of this documentation, we show summaries for DSWE1 data only, but
 running the pipeline locally results in graphical summaries for both DSWE1 and
 DSWE1a data.
+
+We also added use flags in the remote sensing summary file indicating when the
+thermal data were outside of specific minimum and maximum thresholds:
+
+-   if the median temperature is below freezing (`med_SurfaceTemp` \< 273.15 °
+    K), the row is flagged `flag_temp_min` as 1 (otherwise 0). This is our best
+    attempt at identifying data during any freezing period and also is an
+    attempt at detecting clouds, which can impact the thermal estimates. In
+    particular, cirrus clouds can go unnoticed in the cloud detection algorithms
+    that inform our masking procedures.
+
+-   if the median temperature is greater than or equal to 40°C (313.15 °K) the
+    row is flagged `flag_temp_max` as 1 (otherwise 0). This maximum was defined
+    based on the maximum value included @willard2021 composed of *in situ*
+    measurements and remote sensing estimates.
+
+When thermal data are outside of these ranges (and the flag column is 1) we
+suggest removing the thermal data from your analysis. While the thermal data and
+optical data are processed separately, when either `flag_temp_min` or
+`flag_temp_max` is 1, users should consider whether the optical data is
+appropriate to use in your analysis or whether there may be contamination of
+some kind that could impact the validity optical data. For instance, if your
+site is far from shore and the `flag_temp_min` is 1, it is possible there is
+either unidentified ice or unidentified cloud contamination.
 
 ### Landsat 4 QA Summary
 

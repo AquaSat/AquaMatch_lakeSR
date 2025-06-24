@@ -58,8 +58,8 @@ would require additional data handling steps at both the remote sensing and
 post-hoc filter steps to provide consistent data summaries. This may mean that
 each waterbody has differing proportions of the area represented in the data
 summaries. Users may wish to consider total surface area of waterbodies
-(provided in the output file "a_poi_with_flags.csv" via the column `areasqkm`)
-when analyzing the remote sensing data.
+(provided in the output file `a_poi_with_flags_xDATEx.csv` via the column
+`areasqkm`) when analyzing the remote sensing data.
 
 ## Waterbodies Included in lakeSR {#waterbodies}
 
@@ -87,10 +87,12 @@ the NHD file. If the [feature type
 (FType)](https://www.usgs.gov/ngp-standards-and-specifications/national-hydrography-dataset-nhd-data-dictionary-feature-domains)
 of the waterbody belonged to an intermittent category (39001, 39005, 39006,
 43614) the threshold for inclusion was increased to 0.04 km^2^ (4 hectares) to
-reduce processing time when extracting data from Google Earth Engine. This
-filtering resulted in `r format(nrow(a_poi_with_flags), big.mark = ",")`
-waterbodies included in our dataset, including
-`r format(nrow(nonCONUS), big.mark = ",")` non-CONUS waterbodies. This is a
+reduce processing time when extracting data from Google Earth Engine assuming
+that intermittent waterbodies smaller than 4 hectares would not normally be
+"visible" in remote sensing (see Section \@ref(rs-vis)). This filtering resulted
+in `r format(nrow(a_poi_with_flags), big.mark = ",")` waterbodies included in
+our dataset, including `r format(nrow(nonCONUS), big.mark = ",")` non-CONUS
+waterbodies. This is a
 `r format(round((nrow(a_poi_with_flags)-56792)*100/56792, 0), big.mark = ",")`
 percent increase over the 56,792 lakes included in the original AquaSat product.
 
@@ -383,10 +385,10 @@ a_all_site_locations %>%
 
 For siteSR, we will acquire Landsat stacks for all sites deemed "visible" by
 remote sensing (see Section \@ref(rs-vis) for further information). Note that
-this is different from lakeSR, where we only acquire data for lakes, reservoirs,
-and ponds according to the NHD. This was a functional choice, as most canal
-sites will not be RS-visible and estuary extents are limited in the NHD (and
-when present the technique to determine the POI may not be appropriate).
+this is different from lakeSR, where we only acquire data for lakes, reservoirs
+and pond according to the NHD. This was a functional choice, as most canal sites
+will not be RS-visible and estuary extents are limited in the NHD (and when
+present the technique to determine the POI may not be appropriate).
 
 ### Assessing for remote sensing visibility {#rs-vis}
 
@@ -439,9 +441,9 @@ Map best resolution files [e.g. @usgs-nhd-ak] for sites outside of CONUS by
 HUC4. For all sites with a `MonitoringLocationTypeName` that contains the words
 "lake" or "reservoir", we assign NHD ids to each point for the waterbody it is
 contained by or the waterbody it is closest to. NHD waterbody file has been
-filtered to only contain Lake, Ponds, and Reservoirs (NHD feature types 390 and
-436) when performing this task. We flag (`flag_wb`) the results of this
-assignment as follows:
+filtered to only contain Lake, Ponds, Reservoirs, and Estuaries (NHD feature
+types 390, 436, 493) when performing this task. We flag (`flag_wb`) the results
+of this assignment as follows:
 
 > 0: point inside NHD waterbody polygon
 >
@@ -455,16 +457,16 @@ assignment as follows:
 > NHD waterbody polygon)
 >
 > 4: point does not have HUC8 assignment or MonitoringLocationTypeName does not
-> contain "lake" or "reservoir". No waterbody is assigned.
+> contain "lake", "reservoir", or "estuary". No waterbody is assigned.
 
 For all points with a flag value of 0 or 1 we provide the NHD identifier for the
 polygon the monitoring location is associated with (comid for NHDPlusV2 and
 permanent identifier for NHD Best Resolution), for all points with a flag value
 of 1 or 2, we provide the distance (in meters) to the nearest NHD waterbody of
-feature type 390 or 436. For waterbodies with a flag of 0, we provide distance
-to shore. We follow lakeSR's implementation of flags for shoreline proximity for
-these sites as well, but with the siteSR default site buffer of 200 meters
-instead of lakeSR's buffer of 120 meters.
+feature type 390, 436, or 493. For waterbodies with a flag of 0, we provide
+distance to shore. We follow lakeSR's implementation of flags for shoreline
+proximity for these sites as well, but with the siteSR default site buffer of
+200 meters instead of lakeSR's buffer of 120 meters.
 
 Flowlines are assigned to sites with a MonitoringLocationTypeName that contains
 "lake", "reservoir", "stream", or "river". NHD flowlines are filtered to contain
@@ -503,12 +505,12 @@ flowlines, or combinations thereof have on the validity of the reflectance data
 or thermal data summary.
 
 Site information, NHD attribution, and associated flags described here are
-stored in the file \`\`. We provide these identifiers and additional metadata
-about the sites to help users make informed decisions about remote sensing data
-quality (specifically, related to edge/shoreline contamination) and NHD
-comid/permanent id attribution to individual sites and any available flags to
-assess uncertainty to those assignments or the buffered area relative to the
-site.
+stored in the file `collated_WQP_NWIS_sites_with_NHD_info.csv`. We provide these
+identifiers and additional metadata about the sites to help users make informed
+decisions about remote sensing data quality (specifically, related to
+edge/shoreline contamination) and NHD comid/permanent id attribution to
+individual sites and any available flags to assess uncertainty to those
+assignments or the buffered area relative to the site.
 
 ### siteSR updates in AquaMatch
 
