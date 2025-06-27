@@ -58,62 +58,13 @@ relevant to the creation and use of lakeSR.*
 The Landsat archive of multispectral and thermal data in lakeSR is composed of
 Landsat missions 4 through 9 and spans more than 40 years.
 
-+--------------+-------------+--------------+--------------+--------------+
-| Mission and  | Launch Date | End of       | Decommission | D a t e R a  |
-| Sensor       |             | Science      | Date         | n g e I n c  |
-|              |             | Mission      |              | l u d e d i  |
-|              |             |              |              | n A q u a M  |
-|              |             |              |              | a t c h      |
-+==============+:===========:+:============:+:============:+:============:+
-| Landsat 4 TM | 1982-07-16  | 1993-12-14   | 2001-06-15   | -   L a u n  |
-| [@eros-45]   |             |              |              |     c h d a  |
-|              |             |              |              |     t e      |
-|              |             |              |              | -   t h r o  |
-|              |             |              |              |     u g h    |
-|              |             |              |              | -   E n d o  |
-|              |             |              |              |     f S c i  |
-|              |             |              |              |     e n c e  |
-|              |             |              |              |     M i s s  |
-|              |             |              |              |     i o n    |
-|              |             |              |              | -            |
-+--------------+-------------+--------------+--------------+--------------+
-| Landsat 5 TM | 1984-03-01  | 2011-11-18   | 2013-06-05   | -   L a u n  |
-| [@eros-45]   |             |              |              |     c h d a  |
-|              |             |              |              |     t e      |
-|              |             |              |              | -   t h r o  |
-|              |             |              |              |     u g h    |
-|              |             |              |              | -   E n d o  |
-|              |             |              |              |     f S c i  |
-|              |             |              |              |     e n c e  |
-|              |             |              |              |     M i s s  |
-|              |             |              |              |     i o n    |
-|              |             |              |              | -            |
-+--------------+-------------+--------------+--------------+--------------+
-| Landsat 7    | 1999-04-15  | 2022-04-06   | 2025-06-04   | 1 9 9 9 - 0  |
-| ETM+         |             |              |              | 5 - 2 8      |
-| [@eros-7]    |             |              |              |              |
-|              |             |              |              | -   2 0 1 9  |
-|              |             |              |              | -   1 2      |
-|              |             |              |              | -   3 1      |
-+--------------+-------------+--------------+--------------+--------------+
-| Landsat 8    | 2013-02-11  | N/A          | N/A          | L a u n c h  |
-| OLI/TIRS     |             |              |              | d a t e t h  |
-| [@eros-89]   |             |              |              | r o u g h m  |
-|              |             |              |              | o s t r e c  |
-|              |             |              |              | e n t i m a  |
-|              |             |              |              | g e a v a i  |
-|              |             |              |              | l a b l e i  |
-|              |             |              |              | n G E E      |
-+--------------+-------------+--------------+--------------+--------------+
-| Landsat 9    | 2021-09-27  | N/A          | N/A          | L a u n c h  |
-| OLI-2/TIRS-2 |             |              |              | d a t e t h  |
-| [@eros-89]   |             |              |              | r o u g h m  |
-|              |             |              |              | o s t r e c  |
-|              |             |              |              | e n t i m a  |
-|              |             |              |              | g e a v a i  |
-|              |             |              |              | l a b l e i  |
-|              |             |              |              | n G E E      |
-+--------------+-------------+--------------+--------------+--------------+
+| Mission and Sensor | Launch Date | End of Science Mission | Decommission Date | Date Range Included in AquaMatch |
+|----|:--:|:--:|:--:|----|
+| Landsat 4 TM [@eroscenter] | 1982-07-16 | 1993-12-14 | 2001-06-15 | Launch Date through End of Science Mission |
+| Landsat 5 TM [@eroscenter] | 1984-03-01 | 2011-11-18 | 2013-06-05 | Launch Date through End of Science Mission |
+| Landsat 7 ETM+ [@eros1999] | 1999-04-15 | 2022-04-06 | 2025-06-04 | 1999-05-28 through 2019-12-31 |
+| Landsat 8 OLI/TIRS [@eros2013] | 2013-02-11 | N/A | N/A | Launch Date through 2024-12-31 |
+| Landsat 9 OLI-2/TIRS-2 [@eros2013] | 2021-09-27 | N/A | N/A | Launch Date through 2024-12-31 |
 
 The image record for Landsat 4 is not consistent nor robust due to a data
 transmitter failure early in service, however our pipeline acquires data as
@@ -195,17 +146,17 @@ been resampled to 30m.
 
 Alongside the pixel resolution of the sensors is the radiometric resolution at
 which the data are stored. TM and ETM+ data are stored as 8-bit data products
-[@usgs_c2_l1_tm, @usgs_c2_l1_etm], OLI data are quantized to 12 bits [@usgs_oli]
-and Landsat 9 to 14 bits [@usgs_oli2]. This equates to 256 shades per band for
-Landsat 4-7 (2^8^), 4,096 shades for Landsat 8 (2^12^) and 16,384 shades for
-Landsat 9 (2^14^), where higher numbers allow for greater precision of
-measurement in a given band. All Collection 2 Level 2 Surface Reflectance and
-Surface Temperature data have been rescaled and stored as unsigned 16 bit values
-(range for SR and ST bands are are 65536 shades, or 2^16^). Since Collection 2
-rescaling to a higher number of bits creates false precision across all
-satellites, we truncate the surface reflectance values to three significant
-digits for Landsat 4 - 7, four digits for Landsat 8, and five digits for Landsat
-9.
+[@usgeologicalsurvey2020 , @usgeologicalsurvey2020a], OLI data are quantized to
+12 bits [@usgeologicalsurvey2019] and Landsat 9 to 14 bits
+[@usgeologicalsurvey2022]. This equates to 256 shades per band for Landsat 4-7
+(2^8^), 4,096 shades for Landsat 8 (2^12^) and 16,384 shades for Landsat 9
+(2^14^), where higher numbers allow for greater precision of measurement in a
+given band. All Collection 2 Level 2 Surface Reflectance and Surface Temperature
+data have been rescaled and stored as unsigned 16 bit values (range for SR and
+ST bands are are 65536 shades, or 2^16^). Since Collection 2 rescaling to a
+higher number of bits creates false precision across all satellites, we truncate
+the surface reflectance values to three significant digits for Landsat 4 - 7,
+four digits for Landsat 8, and five digits for Landsat 9.
 
 ## Surface Reflectance Product
 
@@ -233,7 +184,7 @@ time. The USGS EROS describes the SR product as follows:
 The SR product for Landsat 4-7 is calculated using the Land Ecosystem
 Disturbance Adaptive Processing System (LEDAPS) [@schmidt2013] and Landsat 8 and
 9 SR data are calculated using the Land Surface Reflectance Code (LaSRC)
-algorithm [@vermote2018]. The two algorithms are functionally different, but the
+algorithm [@vermote2016]. The two algorithms are functionally different, but the
 outcome is the same: a consistently-processed surface reflectance product that
 is available worldwide. See the table under section heading ['Differences in
 Surface Reflectance Processing Algorithms' on the USGS Landsat C2
@@ -250,8 +201,8 @@ background information about the Landsat archive relevant to the creation and
 use of lakeSR and siteSR products.*
 
 The Landsat Collection 2 Surface Temperature (ST) product is calculated using a
-single-channel algorithm [@cook2014a; @cook2014b] to convert the thermal band
-data to temperature estimates in degrees Kelvin. While these data are considered
+single-channel algorithm [@cook2014] to convert the thermal band data to
+temperature estimates in degrees Kelvin. While these data are considered
 interoperable over space and time with few differences in the ST algorithm
 product within Collection 2, there do appear to be slight differences in the ST
 product between sensors. Like with the surface reflectance product, we calculate
@@ -277,6 +228,6 @@ of `MonitoringLocationTypeName`, the flags assigned from our NHD assignment
 process, and the distance columns from that process to assess whether or not the
 temperature data is appropriate for a given site. Additional assessments may be
 necessary to assess whether it is appropriate to use the temperature data for
-discrete analysis of temperature trends/patterns. @king2024 noted that handoff
+discrete analysis of temperature trends/patterns. @king noted that handoff
 coefficients should be used for the surface temperature product as well, see
 Section \@ref(define-handoff) for details.

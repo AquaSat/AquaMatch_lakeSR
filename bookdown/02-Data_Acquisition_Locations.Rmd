@@ -65,8 +65,8 @@ summaries. Users may wish to consider total surface area of waterbodies
 
 For lakeSR, we use the NHDPlusV2 dataset for lakes within the conterminous US
 and US Territories using the {nhdplusTools} R package [@blodgett2023] and the
-NHD Best Resolution [e.g. @usgs-nhd-ak] data through The National Map. Two
-versions are used because NHDPlusV2 waterbodies are not available outside of
+NHD Best Resolution [e.g. @usgeologicalsurvey] data through The National Map.
+Two versions are used because NHDPlusV2 waterbodies are not available outside of
 CONUS. The NHD Best Resolution data are of slightly higher resolution relative
 to NHDPlusV2 and are complete and available for all states and territories
 outside CONUS. All waterbody polygons were downloaded and processed on
@@ -129,7 +129,7 @@ used widely to describe the arctic pole of inaccessibility, that is the point in
 the northern arctic circle that is the furthest from land, but has also been
 used to describe the geographic center of landmasses [@garcia-castellanos2007].
 For lakeSR, we use POI to determine the point in a waterbody that is furthest
-from the shoreline using the `polylabelr::poi()` function [@larsson2020], which
+from the shoreline using the `polylabelr::poi()` function [@larsson2024], which
 calculates a point in space and the radius of the circle used to define the POI.
 
 The `poi()` function can sometimes attribute a POI to a location other than the
@@ -149,7 +149,7 @@ found in {targets} group a_Calculate_Centers which is located in the script
 at the root directory of the repository.
 
 The processing begins by acquiring the polygons of all US states and territories
-using the {tigris} package [@walker2023]. These polygons are used to acquire a
+using the {tigris} package [@walker2025]. These polygons are used to acquire a
 list HUC4s that intersect with each municipal boundary using the
 `nhdplusTools::get_huc()` function, which are then reduced to distinct HUC4's
 and transformed into a vector of HUC4s. HUC4s are then split into CONUS (HUC4 \<
@@ -211,7 +211,7 @@ native thermal resolution (120, 60, 100 meters). These flags are binary:
 
 ### Case Study: Wisconsin Waterbodies
 
-```{r}
+```{r WI-code}
 # grab state of Wisconsin
 WI <- states(progress_bar = FALSE) %>% 
   filter(STUSPS == "WI") %>% 
@@ -346,13 +346,13 @@ plot_grid(
 The acquisition locations within siteSR are defined using the {dataRetrieval}
 package functions `whatWQPsites()` and `whatNWISsites()`. All sites were
 filtered for those that represent surface water. These sites were supplemented
-by those for which we have harmonzied parameter data from the AquaMatch
+by those for which we have harmonized parameter data from the AquaMatch
 parameter harmonization pipeline but that did not appear in the `whatWQPsites()`
 query, due to the dynamic nature of the WQP. The siteSR pipeline collates these
 sites, then reduces that collation to only distinct sites defined by
 organization identifier, monitoring location identifier, WGS84 latitude and
 WGS84 longitude. Across the WQP, NWIS, and the harmonization pipeline, there are
-currently `r format(nrow(a_allsite_locations), big.mark = ",")` distinct sites
+currently `r format(nrow(a_sites_with_NHD_info), big.mark = ",")` distinct sites
 in the United States and Territories for which we create "stacks" of remote
 sensing data. A "stack" refers to all the remote sensing data available during a
 time period of interest at a single site.
@@ -362,21 +362,21 @@ the purposes of siteSR, we do not subset the sites by these types, but they are
 helpful for understanding the type of data included in siteSR.
 
 ```{r siteSR-types-WQP, fig.cap="Water Quality Portal data location types present in siteSR. Unique WQP monitoring location count above bar, divided by `MonitoringLocationTypeName`."}
-a_all_site_locations %>% 
-  filter(source %in% c("WQP", "AM")) %>% 
+a_sites_with_NHD_info %>% 
+  filter(source == "WQP") %>% 
   ggplot(., aes(x = MonitoringLocationTypeName)) +
   geom_bar() +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  geom_text(aes(label = ..count..), stat = "count", vjust = -0.5, colour = "black", size = 3)
+  geom_text(aes(label = after_stat(count)), stat = "count", vjust = -0.5, colour = "black", size = 3)
 ```
 
 Similarly, every site in the NWIS database has a `type_cd` associated with it.
 
-```{r siteSR-types-NWIS, fig.cap="National Water Information System data location types present in siteSR. Unique NWIS monitoring location count above bar, divided by site type."}
-a_all_site_locations %>% 
-  filter(source %in% c("NWIS")) %>% 
-  ggplot(., aes(x = MonitoringLocationTypeName)) +
+```{r siteSR-types-NWIS, fig.cap="National Water Information System data location types present in siteSR. Unique NWIS monitoring location count above bar, divided by site type.", eval=FALSE}
+a_sites_with_NHD_info %>% 
+  filter(source == "NWIS") %>% 
+  ggplot(., aes(x = type_cd)) +
   geom_bar() +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
@@ -405,15 +405,15 @@ whether the presence of water within the AquaMatch buffer is associated with a
 singular waterbody or flowline feature from the NHD. See Section
 \@ref(fl-wb-assignment) for details on attribution of a site to NHD feature and
 the associated assumptions. After this assessment,
-`r format(nrow(p5_visible_sites), big.mark = ",")` sites were deemed to be
+`r format(nrow(b_visible_sites), big.mark = ",")` sites were deemed to be
 visible by remote sensing
-(`r round(abs((nrow(p5_visible_sites)-nrow(p4_WQP_site_NHD_info))/nrow(p4_WQP_site_NHD_info)*100), 1)`%
+(`r round(abs((nrow(b_visible_sites)-nrow(a_sites_with_NHD_info))/nrow(a_sites_with_NHD_info)*100), 1)`%
 loss of sites).
 
 ```{r siteSR-filtered, fig.cap="Water Quality Portal data location types present in siteSR after filtering for those that are deemed visible by remote sensing. Count of sites provided above bar, arranged by `MonitoringLocationTypeName`."}
-p5_visible_sites %>% 
+b_visible_sites %>% 
   rename(siteSR_id = id) %>% 
-  left_join(., p4_WQP_site_NHD_info) %>% 
+  left_join(., a_sites_with_NHD_info) %>% 
   ggplot(., aes(x = MonitoringLocationTypeName)) +
   geom_bar() +
   theme_bw() +
@@ -425,10 +425,10 @@ p5_visible_sites %>%
 
 For each WQP monitoring location, we attempt to assign HUC8's wherever they are
 missing from the `HUCEightDigitCode` column output from the WQP (n =
-`r p4_WQP_site_NHD_info %>% filter(flag_HUC8 != 0) %>% nrow(.)`). To do this we
+`r a_sites_with_NHD_info %>% filter(flag_HUC8 != 0) %>% nrow(.)`). To do this we
 use the `get_huc()` function from {nhdplusTools} [@blodgett2023] package in R.
 After HUC8 assignment is finished only
-`r p4_WQP_site_NHD_info %>% filter(flag_HUC8 == 2) %>% nrow(.)` sites remained
+`r a_sites_with_NHD_info %>% filter(flag_HUC8 == 2) %>% nrow(.)` sites remained
 without a HUC8 assignment. All of these sites were coastal sites outside of the
 extent of NHD boundaries. These sites remain in siteSR, but will have no NHD
 attribution information. In siteSR, the `flag_HUC8` column indicates whether
@@ -437,13 +437,13 @@ this HUC8 was assigned within the WQP (value of 0), assigned in this process
 
 Using the HUC8 information to iterate, we then can use {nhdplusTools} to assign
 waterbodies and flowlines to sites within the CONUS and data from The National
-Map best resolution files [e.g. @usgs-nhd-ak] for sites outside of CONUS by
-HUC4. For all sites with a `MonitoringLocationTypeName` that contains the words
-"lake" or "reservoir", we assign NHD ids to each point for the waterbody it is
-contained by or the waterbody it is closest to. NHD waterbody file has been
-filtered to only contain Lake, Ponds, Reservoirs, and Estuaries (NHD feature
-types 390, 436, 493) when performing this task. We flag (`flag_wb`) the results
-of this assignment as follows:
+Map best resolution files [e.g. @usgeologicalsurvey] for sites outside of CONUS
+by HUC4. For all sites with a `MonitoringLocationTypeName` that contains the
+words "lake" or "reservoir", we assign NHD ids to each point for the waterbody
+it is contained by or the waterbody it is closest to. NHD waterbody file has
+been filtered to only contain Lake, Ponds, Reservoirs, and Estuaries (NHD
+feature types 390, 436, 493) when performing this task. We flag (`flag_wb`) the
+results of this assignment as follows:
 
 > 0: point inside NHD waterbody polygon
 >

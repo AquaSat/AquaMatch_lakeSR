@@ -92,9 +92,10 @@ this example, location 1 would be extracted for both path-row 1 and 2, location
 
 -   implementation of Collection 2 updates, specifically scaling changes and
     updated QA band conventions. The updated scaling factor function is as
-    follows as directed by the @usgs-ls47user and @usgs-ls89user documents. Code
-    below from the file `b_pull_Landsat_SRST_poi/py/run_GEE_per_pathrow.py` in
-    the lakeSR repository.
+    follows as directed by the @usgeologicalsurvey2021 and
+    @usgeologicalsurvey2024 documents. Code below from the file
+    `b_pull_Landsat_SRST_poi/py/run_GEE_per_pathrow.py` in the lakeSR
+    repository.
 
     ```{python}
     #| eval: false
@@ -226,9 +227,10 @@ used to describe any non-thermal band.
 
 -   `apply_rad_mask`: Masks out all pixels that are radiometrically saturated in
     any optical band using the QA_RADSAT QA band. The Landsat User Guides
-    [@usgs-ls47user; @usgs-ls89user] note that radiometrically saturated data
-    are "unusable". Saturated bands happen infrequently in Landsat 8 and 9, but
-    we still apply this mask to all Landsat mission data for continuity.
+    [@usgeologicalsurvey2021; @usgeologicalsurvey2024] note that radiometrically
+    saturated data are "unusable". Saturated bands happen infrequently in
+    Landsat 8 and 9, but we still apply this mask to all Landsat mission data
+    for continuity.
 
 -   `add_cf_mask`: Adds a mask band for any pixels obstructed by clouds and
     snow/ice using the CLOUD_QA band. This is a general QA band that describes
@@ -236,7 +238,7 @@ used to describe any non-thermal band.
     procedure. We have elected to only include pixels that do not contain
     clouds, cloud shadows, dispersed clouds, or snow/ice as defined by this
     band. In particular, we follow the suggestions in the product User Guide
-    [@usgs-ls47user; @usgs-ls89user]
+    [@usgeologicalsurvey2021; @usgeologicalsurvey2024]
 
     > Users are advised to engage the QA “Dilated Cloud” (bit 1) AND “Cloud”
     > (bit 3) OFF condition to correctly identify clear pixels over water.
@@ -245,15 +247,15 @@ used to describe any non-thermal band.
     have 'medium' or 'high' aerosol QA flags from the SR_QA_AEROSOL band.
     Because water is particularly difficult to assess from space, we are more
     aggressive in this mask than suggested by the Landsat 8 and 9 User Guide
-    [@usgs-ls89user] which states: "Note that pixels classified as high aerosol
-    content are not recommended for use."
+    [@usgeologicalsurvey2024] which states: "Note that pixels classified as high
+    aerosol content are not recommended for use."
 
 -   `add_opac_mask`: Adds a mask band to remove pixels where atmospheric opacity
     is greater than 0.3 in Landsat 4, 5, and 7 using the SR_ATMOS_OPACITY band.
     For similar reasons as a more aggressive aerosol mask in Landsat 8 & 9, we
     use this mask in addition to the cloud mask (`apply_cf_mask`). The Landsat
-    4-7 User Guide [@usgs-ls47user] states the following about the atmospheric
-    opacity values:
+    4-7 User Guide [@usgeologicalsurvey2021] states the following about the
+    atmospheric opacity values:
 
     > A general interpretation of atmospheric opacity is that values less than
     > 0.1 are clear, 0.1-0.3 are average, and values greater than 0.3 indicate
@@ -348,7 +350,7 @@ DSWE1a product if applicable to their research, however, this threshold was
 defined in the Illinois and Ohio Rivers and may not be applicable in all
 environments.
 
-## Additional diagnostic data columns
+## Additional diagnostic data columns {#diagnostic-columns}
 
 During the masking and flagging step of the workflow, we tally pixels that met
 certain criteria for use as diagnostic tools, which are stored in the same file

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>8 Calculating intermission handoffs | AquaSat v2: lakeSR and siteSR</title>
   <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
-  <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
 
   <meta property="og:title" content="8 Calculating intermission handoffs | AquaSat v2: lakeSR and siteSR" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-04-24" />
+<meta name="date" content="2025-06-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -163,47 +163,52 @@ div.csl-indent {
 <ul class="summary">
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#note"><i class="fa fa-check"></i><b>1.1</b> Note</a></li>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#repository-links-for-the-aquamatch-suite"><i class="fa fa-check"></i><b>1.1</b> Repository Links for the AquaMatch Suite</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#note"><i class="fa fa-check"></i><b>1.2</b> Note</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#disclaimer"><i class="fa fa-check"></i><b>1.3</b> Disclaimer</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>2</b> Background</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#lakesr-code-architecture"><i class="fa fa-check"></i><b>2.1</b> lakeSR Code Architecture</a>
 <ul>
-<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#configuration-files"><i class="fa fa-check"></i><b>2.1.1</b> Configuration Files</a></li>
-<li class="chapter" data-level="2.1.2" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.2</b> {targets} groups</a></li>
+<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#lakesr-output-files"><i class="fa fa-check"></i><b>2.1.1</b> lakeSR Output Files</a></li>
+<li class="chapter" data-level="2.1.2" data-path="background.html"><a href="background.html#configuration-files"><i class="fa fa-check"></i><b>2.1.2</b> Configuration Files</a></li>
+<li class="chapter" data-level="2.1.3" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.3</b> {targets} groups</a></li>
 </ul></li>
-<li class="chapter" data-level="2.2" data-path="background.html"><a href="background.html#sitesr_wqp-code-architecture"><i class="fa fa-check"></i><b>2.2</b> siteSR_WQP Code Architecture</a>
+<li class="chapter" data-level="2.2" data-path="background.html"><a href="background.html#sitesr-code-architecture"><i class="fa fa-check"></i><b>2.2</b> siteSR Code Architecture</a>
 <ul>
-<li class="chapter" data-level="2.2.1" data-path="background.html"><a href="background.html#setup-description"><i class="fa fa-check"></i><b>2.2.1</b> Configuration Files</a></li>
-<li class="chapter" data-level="2.2.2" data-path="background.html"><a href="background.html#targets-groups-1"><i class="fa fa-check"></i><b>2.2.2</b> {targets} Groups</a></li>
+<li class="chapter" data-level="2.2.1" data-path="background.html"><a href="background.html#sitesr-output-files"><i class="fa fa-check"></i><b>2.2.1</b> siteSR Output Files</a></li>
+<li class="chapter" data-level="2.2.2" data-path="background.html"><a href="background.html#setup-description"><i class="fa fa-check"></i><b>2.2.2</b> Configuration Files</a></li>
+<li class="chapter" data-level="2.2.3" data-path="background.html"><a href="background.html#targets-groups-1"><i class="fa fa-check"></i><b>2.2.3</b> {targets} Groups</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>3</b> Locations of Data Acquisition</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#waterbodies"><i class="fa fa-check"></i><b>3.1</b> Waterbodies Included in lakeSR</a>
 <ul>
-<li class="chapter" data-level="3.1.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.1.1</b> Updates in AquaSat v2</a></li>
+<li class="chapter" data-level="3.1.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#updates-in-aquamatch"><i class="fa fa-check"></i><b>3.1.1</b> Updates in AquaMatch</a></li>
 <li class="chapter" data-level="3.1.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#poi"><i class="fa fa-check"></i><b>3.1.2</b> Pole of Inaccessibility</a></li>
 <li class="chapter" data-level="3.1.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation-of-lakesr"><i class="fa fa-check"></i><b>3.1.3</b> Technical Implementation of lakeSR</a></li>
 <li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#lakeSR-shoreline"><i class="fa fa-check"></i><b>3.1.4</b> Flagging shoreline proximity</a></li>
 <li class="chapter" data-level="3.1.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR_WQP Acquisition Locations</a>
+<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR Acquisition Locations</a>
 <ul>
-<li class="chapter" data-level="3.2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#rs-vis"><i class="fa fa-check"></i><b>3.2.1</b> Assessing for RS visibility</a></li>
+<li class="chapter" data-level="3.2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#rs-vis"><i class="fa fa-check"></i><b>3.2.1</b> Assessing for remote sensing visibility</a></li>
 <li class="chapter" data-level="3.2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#fl-wb-assignment"><i class="fa fa-check"></i><b>3.2.2</b> Assignment of NHD flowline and waterbodies</a></li>
-<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr_wqp-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR_WQP updates in AquaSat v2</a></li>
+<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr-updates-in-aquamatch"><i class="fa fa-check"></i><b>3.2.3</b> siteSR updates in AquaMatch</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>4</b> Satellite Data Acquisition Software and Settings</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="software-settings.html"><a href="software-settings.html#reticulate-conda-environment"><i class="fa fa-check"></i><b>4.1</b> {reticulate} Conda Environment</a></li>
-<li class="chapter" data-level="4.2" data-path="software-settings.html"><a href="software-settings.html#google-earth-engine-setup"><i class="fa fa-check"></i><b>4.2</b> Google Earth Engine Setup</a>
+<li class="chapter" data-level="4.1" data-path="software-settings.html"><a href="software-settings.html#r-environment-and-package-information"><i class="fa fa-check"></i><b>4.1</b> R Environment and Package Information</a></li>
+<li class="chapter" data-level="4.2" data-path="software-settings.html"><a href="software-settings.html#reticulate-conda-environment"><i class="fa fa-check"></i><b>4.2</b> {reticulate} Conda Environment</a></li>
+<li class="chapter" data-level="4.3" data-path="software-settings.html"><a href="software-settings.html#google-earth-engine-setup"><i class="fa fa-check"></i><b>4.3</b> Google Earth Engine Setup</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
-<li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
-<li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#proj-setting"><i class="fa fa-check"></i><b>4.2.3</b> GEE project setting</a></li>
-<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#auth"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
+<li class="chapter" data-level="4.3.1" data-path="software-settings.html"><a href="software-settings.html#create-account"><i class="fa fa-check"></i><b>4.3.1</b> Create a GEE account</a></li>
+<li class="chapter" data-level="4.3.2" data-path="software-settings.html"><a href="software-settings.html#gcloud"><i class="fa fa-check"></i><b>4.3.2</b> gcloud CLI</a></li>
+<li class="chapter" data-level="4.3.3" data-path="software-settings.html"><a href="software-settings.html#proj-setting"><i class="fa fa-check"></i><b>4.3.3</b> GEE project setting</a></li>
+<li class="chapter" data-level="4.3.4" data-path="software-settings.html"><a href="software-settings.html#auth"><i class="fa fa-check"></i><b>4.3.4</b> GEE Authentication</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
@@ -211,12 +216,12 @@ div.csl-indent {
 <li class="chapter" data-level="5.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#initialisms-and-landsat-jargon"><i class="fa fa-check"></i><b>5.1</b> Initialisms and Landsat Jargon</a></li>
 <li class="chapter" data-level="5.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#valid-dates"><i class="fa fa-check"></i><b>5.2</b> Background Information</a>
 <ul>
-<li class="chapter" data-level="5.2.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#spectral-response"><i class="fa fa-check"></i><b>5.2.1</b> Spectral Response</a></li>
+<li class="chapter" data-level="5.2.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#band-value-ranges"><i class="fa fa-check"></i><b>5.2.1</b> Band Value Ranges</a></li>
 <li class="chapter" data-level="5.2.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#sensor-resolution"><i class="fa fa-check"></i><b>5.2.2</b> Sensor Resolution</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#surface-reflectance-product"><i class="fa fa-check"></i><b>5.3</b> Surface Reflectance Product</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#sr-atmospheric-processing"><i class="fa fa-check"></i><b>5.3.1</b> SR Atmospheric Processing</a></li>
+<li class="chapter" data-level="5.3.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#atm-corr"><i class="fa fa-check"></i><b>5.3.1</b> SR Atmospheric Processing</a></li>
 </ul></li>
 <li class="chapter" data-level="5.4" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#st-product"><i class="fa fa-check"></i><b>5.4</b> Surface Temperature</a></li>
 </ul></li>
@@ -232,7 +237,7 @@ div.csl-indent {
 <li class="chapter" data-level="6.3.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#masking-functions"><i class="fa fa-check"></i><b>6.3.1</b> Custom Earth Engine Masking Functions</a></li>
 <li class="chapter" data-level="6.3.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#dswe-implementation"><i class="fa fa-check"></i><b>6.3.2</b> Defining water area</a></li>
 </ul></li>
-<li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#additional-diagnostic-data-columns"><i class="fa fa-check"></i><b>6.4</b> Additional diagnostic data columns</a></li>
+<li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#diagnostic-columns"><i class="fa fa-check"></i><b>6.4</b> Additional diagnostic data columns</a></li>
 <li class="chapter" data-level="6.5" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.5</b> Payload handling</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html"><i class="fa fa-check"></i><b>7</b> Post-Hoc Quality Assurance</a>
@@ -240,28 +245,30 @@ div.csl-indent {
 <li class="chapter" data-level="7.1" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR stack collation</a></li>
 <li class="chapter" data-level="7.2" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#post-hoc-filters"><i class="fa fa-check"></i><b>7.2</b> Post-hoc filters</a>
 <ul>
-<li class="chapter" data-level="7.2.1" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-4-qa-summary"><i class="fa fa-check"></i><b>7.2.1</b> Landsat 4 QA Summary</a></li>
-<li class="chapter" data-level="7.2.2" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-5-qa-summary"><i class="fa fa-check"></i><b>7.2.2</b> Landsat 5 QA Summary</a></li>
-<li class="chapter" data-level="7.2.3" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-7-qa-summary"><i class="fa fa-check"></i><b>7.2.3</b> Landsat 7 QA Summary</a></li>
-<li class="chapter" data-level="7.2.4" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-8-qa-summary"><i class="fa fa-check"></i><b>7.2.4</b> Landsat 8 QA Summary</a></li>
-<li class="chapter" data-level="7.2.5" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-9-qa-summary"><i class="fa fa-check"></i><b>7.2.5</b> Landsat 9 QA Summary</a></li>
+<li class="chapter" data-level="7.2.1" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#data-truncation"><i class="fa fa-check"></i><b>7.2.1</b> Data Truncation</a></li>
+<li class="chapter" data-level="7.2.2" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-4-qa-summary"><i class="fa fa-check"></i><b>7.2.2</b> Landsat 4 QA Summary</a></li>
+<li class="chapter" data-level="7.2.3" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-5-qa-summary"><i class="fa fa-check"></i><b>7.2.3</b> Landsat 5 QA Summary</a></li>
+<li class="chapter" data-level="7.2.4" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-7-qa-summary"><i class="fa fa-check"></i><b>7.2.4</b> Landsat 7 QA Summary</a></li>
+<li class="chapter" data-level="7.2.5" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-8-qa-summary"><i class="fa fa-check"></i><b>7.2.5</b> Landsat 8 QA Summary</a></li>
+<li class="chapter" data-level="7.2.6" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-9-qa-summary"><i class="fa fa-check"></i><b>7.2.6</b> Landsat 9 QA Summary</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="define-handoff.html"><a href="define-handoff.html"><i class="fa fa-check"></i><b>8</b> Calculating intermission handoffs</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-method"><i class="fa fa-check"></i><b>8.1</b> Roy method</a></li>
-<li class="chapter" data-level="8.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-method"><i class="fa fa-check"></i><b>8.2</b> Gardner method</a></li>
-<li class="chapter" data-level="8.3" data-path="define-handoff.html"><a href="define-handoff.html#implementing-roy-handoffs"><i class="fa fa-check"></i><b>8.3</b> Implementing Roy Handoffs</a>
+<li class="chapter" data-level="8.1" data-path="define-handoff.html"><a href="define-handoff.html#additional-filtering-applied"><i class="fa fa-check"></i><b>8.1</b> Additional filtering applied</a></li>
+<li class="chapter" data-level="8.2" data-path="define-handoff.html"><a href="define-handoff.html#roy-method"><i class="fa fa-check"></i><b>8.2</b> Roy method</a></li>
+<li class="chapter" data-level="8.3" data-path="define-handoff.html"><a href="define-handoff.html#gardner-method"><i class="fa fa-check"></i><b>8.3</b> Gardner method</a></li>
+<li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-roy-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Roy Handoffs</a>
 <ul>
-<li class="chapter" data-level="8.3.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.3.1</b> Roy Deming Correction Landsat 5 to Landsat 7</a></li>
-<li class="chapter" data-level="8.3.2" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.3.2</b> Roy Deming Correction Landsat 8 to Landsat 7</a></li>
-<li class="chapter" data-level="8.3.3" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.3.3</b> Roy Deming Correction Landsat 7 to Landsat 8</a></li>
+<li class="chapter" data-level="8.4.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.4.1</b> Roy Deming Correction Landsat 5 to Landsat 7</a></li>
+<li class="chapter" data-level="8.4.2" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.4.2</b> Roy Deming Correction Landsat 8 to Landsat 7</a></li>
+<li class="chapter" data-level="8.4.3" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.4.3</b> Roy Deming Correction Landsat 7 to Landsat 8</a></li>
 </ul></li>
-<li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Gardner Handoffs</a>
+<li class="chapter" data-level="8.5" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.5</b> Implementing Gardner Handoffs</a>
 <ul>
-<li class="chapter" data-level="8.4.1" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.4.1</b> Gardner Correction Landsat 5 to Landsat 7</a></li>
-<li class="chapter" data-level="8.4.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.4.2</b> Gardner Correction Landsat 8 to Landsat 7</a></li>
-<li class="chapter" data-level="8.4.3" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.4.3</b> Gardner Correction Landsat 7 to Landsat 8</a></li>
+<li class="chapter" data-level="8.5.1" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.5.1</b> Gardner Correction Landsat 5 to Landsat 7</a></li>
+<li class="chapter" data-level="8.5.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.5.2</b> Gardner Correction Landsat 8 to Landsat 7</a></li>
+<li class="chapter" data-level="8.5.3" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.5.3</b> Gardner Correction Landsat 7 to Landsat 8</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>9</b> References</a></li>
@@ -285,16 +292,16 @@ div.csl-indent {
 <div id="define-handoff" class="section level1 hasAnchor" number="8">
 <h1><span class="header-section-number">8</span> Calculating intermission handoffs<a href="define-handoff.html#define-handoff" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>It is necessary to standardize band values between Landsat missions in order to
-create a robust timeseries. <span class="citation">Maciel et al. (<a href="#ref-maciel2023">2023</a>)</span> notes the issues in using the Landsat
-Surface Reflectance product as a timeseries without careful handling of data
-between missions. <span class="citation">King, Bean, and Gohring (<a href="#ref-king">2024</a>)</span> notes that this type of standardization is necessary for
-the thermal band, as well. This standardization process attempts to address
-changes in sensor spectral response and atmospheric correction procedures. For
-the purposes of AquaSat v2, we call this standardization process “intermission
-handoffs”. We implement two versions of intermission handoffs: the method
-described in <span class="citation">Roy et al. (<a href="#ref-roy2016">2016</a>)</span> (“Roy method”) and an adapted version of that described in
-<span class="citation">Gardner et al. (<a href="#ref-gardner2021">2021</a>)</span> (“Gardner method”).</p>
-<p>In AquaSat v2, we provide coefficients to standardize remote sensing values
+create a robust timeseries. <span class="citation">Maciel et al. (2023)</span> notes the issues in using the Landsat
+Surface Reflectance product for aquatic systems as a timeseries without careful
+handling of data between missions. <span class="citation">King et al. (2024)</span> notes that this type of standardization
+is necessary for the thermal band, as well. This standardization process
+attempts to address changes in sensor spectral response and atmospheric
+correction procedures. For the purposes of AquaMatch, we call this
+standardization process “intermission handoffs”. We implement two versions of
+intermission handoffs: the method described in <span class="citation">Roy et al. (2016)</span> (“Roy method”) and an
+adapted version of that described in <span class="citation">Gardner et al. (2021)</span> (“Gardner method”).</p>
+<p>In AquaMatch, we provide coefficients to standardize remote sensing values
 relative to Landsat 7 and Landsat 8. The Landsat 7 intermission handoffs create
 a continuous record of remote sensing from Landsat 4 through 9 relative to
 Landsat 7. This is because Landsat 4 and 5 and Landsat 8 and 9 can be treated as
@@ -307,8 +314,28 @@ correction relative to Landsat 8.</p>
 DSWE1 (confident water) and do not investigate differences between the DSWE1 or
 DSWE1a coefficients, though we provide both. Users should use these handoff
 coefficients if using data from more than one sensor group (TM, ETM+, OLI).</p>
-<div id="roy-method" class="section level2 hasAnchor" number="8.1">
-<h2><span class="header-section-number">8.1</span> Roy method<a href="define-handoff.html#roy-method" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="additional-filtering-applied" class="section level2 hasAnchor" number="8.1">
+<h2><span class="header-section-number">8.1</span> Additional filtering applied<a href="define-handoff.html#additional-filtering-applied" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>For the purposes of creating these handoff coefficients, we use flags created
+when the locations were defined (see Section <a href="locs-data-acq.html#lakeSR-shoreline">3.1.4</a> and some of
+the flags created in the GEE workflow (see Section <a href="LS-SRST-pull.html#diagnostic-columns">6.4</a>) to
+reduce impacts of errant data. There are endless filters that can be applied
+prior to calculating the handoff coefficients, but for the purposes of this
+document and data product, we are somewhat conservative in filtering the data.</p>
+<p>For optical bands, we removed data from sites where the <code>flag_optical_shoreline</code>
+was 1 for this analysis (indicating that there is a possiblity that the buffer
+area includes mixed pixels). While we do use the DSWE-like algorithms to only
+include confident water pixels, this is an effort to reduce impacts of
+near-shore contamination in this process. Similarly, we removed the thermal band
+data when the <code>flag_thermal_...</code> was 1 (where the <code>...</code> represents the column
+appropriate for the given mission, see Section <span class="citation">(<strong>ref?</strong>)</span>(lakeSR-shoreline)). For
+thermal data, we also removed data from this process when there was any detected
+cloud in the buffered area of the point (<code>prop_clouds</code> column). The thermal
+sensor values can be dramatically impacted by clouds and we wanted to take a
+step to reduce that carrying through this analysis.</p>
+</div>
+<div id="roy-method" class="section level2 hasAnchor" number="8.2">
+<h2><span class="header-section-number">8.2</span> Roy method<a href="define-handoff.html#roy-method" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The Roy method for calculating intermission handoffs uses paired images at
 specific sites, where the reflectance data are obtained from two missions (e.g.
 Landsat 7 and Landsat 8) separated by one day at a specific location within the
@@ -320,23 +347,24 @@ location with data for both images (in the grey area) would be considered a
 paired data point to define the Roy method intermission
 handoffs.</div>
 </div>
-<p>While <span class="citation">Roy et al. (<a href="#ref-roy2016">2016</a>)</span> implemented this method on a pixel-by-pixel basis, we implement
-using the median band value per site. This is used in place of the explicit
-filters described in the Roy method (saturated pixels, cloudy/snowy pixels, and
-pixels with value changes greater than the changes in atmospheric correction),
-as we have implemented masks and QA filters to reduce these sources of error.
-Handoff coefficients are defined by the ordinary least squares (OLS) regression
-line or the Deming regression (MLE, assuming equal and constant error in both x
-and y variables). Because Deming regression is computationally intensive, the
-regression line is defined by a random sample of 10,000 matches. For the
-purposes of this documentation, we only include figures and tables for the
-Deming regression (minimum likelihood estimation method) and DSWE1. Intercepts
-and slopes for all handoffs are available at the file path
-<code>e_calculate_handoffs/out/collated_handoffs_v2025-02-12.csv</code> and figures for all
+<p>While <span class="citation">Roy et al. (2016)</span> implemented this method on a pixel-by-pixel basis, we implement
+using the median band value per site where we have collected data in lakeSR,
+available in the lakeSR remote sensing data summary files. This is used in place
+of the explicit filters described in the Roy method (saturated pixels,
+cloudy/snowy pixels, and pixels with value changes greater than the changes in
+atmospheric correction), as we have implemented masks and QA filters to reduce
+these sources of error. Handoff coefficients are defined by the ordinary least
+squares (OLS) regression line or the Deming regression (MLE, assuming equal and
+constant error in both x and y variables). Because Deming regression is
+computationally intensive, the regression line is defined by a random sample of
+10,000 matches. For the purposes of this documentation, we only include figures
+and tables for the Deming regression (minimum likelihood estimation method) and
+DSWE1. Intercepts and slopes for all handoffs are available at the file path
+<code>e_calculate_handoffs/out/collated_handoffs_xDATEx.csv</code> and figures for all
 handoffs are created when the pipeline is run.</p>
 </div>
-<div id="gardner-method" class="section level2 hasAnchor" number="8.2">
-<h2><span class="header-section-number">8.2</span> Gardner method<a href="define-handoff.html#gardner-method" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="gardner-method" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> Gardner method<a href="define-handoff.html#gardner-method" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Gardner method intermission handoffs are defined by the data obtained in the
 overlapping period of time between two adjacent-in-time missions. These data are
 filtered to sites that have at least one data point per year for at least 75% of
@@ -358,11 +386,11 @@ any, systematic differences are present between the two missions. We provide the
 Gardner method handoffs for continuity with the riverSR product for users who
 would like that interoperability. As with the Roy, et al. method, intercepts and
 slopes for all handoffs are available at the file path
-<code>e_calculate_handoffs/out/collated_handoffs_v2025-02-12.csv</code> and figures for all
+<code>e_calculate_handoffs/out/collated_handoffs_xDATEx.csv</code> and figures for all
 handoffs are created when the pipeline is run.</p>
 </div>
-<div id="implementing-roy-handoffs" class="section level2 hasAnchor" number="8.3">
-<h2><span class="header-section-number">8.3</span> Implementing Roy Handoffs<a href="define-handoff.html#implementing-roy-handoffs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="implementing-roy-handoffs" class="section level2 hasAnchor" number="8.4">
+<h2><span class="header-section-number">8.4</span> Implementing Roy Handoffs<a href="define-handoff.html#implementing-roy-handoffs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Table <a href="define-handoff.html#tab:roy-table">8.1</a> describes the number of matches contributing to the
 intermission handoffs using the Roy method. We also include figures of the
 OLS/MLE relationships and the residuals for the MLE corrections in addition to a
@@ -380,12 +408,12 @@ table of the coefficients for each DSWE1 MLE handoff.</p>
 <tr class="odd">
 <td align="left">Landsat 5</td>
 <td align="left">Landsat 7</td>
-<td align="left">4,797,414</td>
+<td align="left">4,950,640</td>
 </tr>
 <tr class="even">
 <td align="left">Landsat 7</td>
 <td align="left">Landsat 8</td>
-<td align="left">1,452,723</td>
+<td align="left">1,528,745</td>
 </tr>
 </tbody>
 </table>
@@ -451,10 +479,10 @@ LS5
 LS7
 </td>
 <td style="text-align:center;width: auto; ">
-0.001
+0.002
 </td>
 <td style="text-align:center;width: auto; ">
-0.988
+0.983
 </td>
 <td style="text-align:center;width: auto; ">
 -0.010
@@ -468,10 +496,10 @@ LS7
 med_Green
 </td>
 <td style="text-align:center;width: auto; ">
-0.003
+0.005
 </td>
 <td style="text-align:center;width: auto; ">
-1.024
+1.011
 </td>
 <td style="text-align:center;width: auto; ">
 -0.005
@@ -485,10 +513,10 @@ med_Green
 med_Red
 </td>
 <td style="text-align:center;width: auto; ">
-0.005
+0.006
 </td>
 <td style="text-align:center;width: auto; ">
-0.977
+0.963
 </td>
 <td style="text-align:center;width: auto; ">
 -0.009
@@ -502,10 +530,10 @@ med_Red
 med_Nir
 </td>
 <td style="text-align:center;width: auto; ">
-0.002
+0.003
 </td>
 <td style="text-align:center;width: auto; ">
-0.987
+0.986
 </td>
 <td style="text-align:center;width: auto; ">
 -0.010
@@ -519,10 +547,10 @@ med_Nir
 med_SurfaceTemp
 </td>
 <td style="text-align:center;width: auto; ">
--8.709
+-7.866
 </td>
 <td style="text-align:center;width: auto; ">
-1.032
+1.029
 </td>
 <td style="text-align:center;width: auto; ">
 273.151
@@ -539,16 +567,16 @@ med_Blue
 LS8
 </td>
 <td style="text-align:center;width: auto; ">
--0.011
+-0.012
 </td>
 <td style="text-align:center;width: auto; ">
-0.816
+0.790
 </td>
 <td style="text-align:center;width: auto; ">
 -0.008
 </td>
 <td style="text-align:center;width: auto; ">
-0.198
+0.200
 </td>
 </tr>
 <tr>
@@ -556,10 +584,10 @@ LS8
 med_Green
 </td>
 <td style="text-align:center;width: auto; ">
--0.009
+-0.010
 </td>
 <td style="text-align:center;width: auto; ">
-0.989
+0.975
 </td>
 <td style="text-align:center;width: auto; ">
 -0.006
@@ -573,10 +601,10 @@ med_Green
 med_Red
 </td>
 <td style="text-align:center;width: auto; ">
--0.009
+-0.010
 </td>
 <td style="text-align:center;width: auto; ">
-0.973
+0.965
 </td>
 <td style="text-align:center;width: auto; ">
 -0.008
@@ -590,10 +618,10 @@ med_Red
 med_Nir
 </td>
 <td style="text-align:center;width: auto; ">
--0.012
+-0.013
 </td>
 <td style="text-align:center;width: auto; ">
-0.923
+0.917
 </td>
 <td style="text-align:center;width: auto; ">
 -0.010
@@ -607,16 +635,16 @@ med_Nir
 med_SurfaceTemp
 </td>
 <td style="text-align:center;width: auto; ">
--14.506
+-21.745
 </td>
 <td style="text-align:center;width: auto; ">
-1.055
+1.080
 </td>
 <td style="text-align:center;width: auto; ">
 273.151
 </td>
 <td style="text-align:center;width: auto; ">
-313.113
+313.034
 </td>
 </tr>
 <tr>
@@ -630,10 +658,10 @@ DSWE1a
 LS5
 </td>
 <td style="text-align:center;width: auto; ">
-0.001
+0.002
 </td>
 <td style="text-align:center;width: auto; ">
-1.006
+0.976
 </td>
 <td style="text-align:center;width: auto; ">
 -0.010
@@ -647,10 +675,10 @@ LS5
 med_Green
 </td>
 <td style="text-align:center;width: auto; ">
-0.003
+0.005
 </td>
 <td style="text-align:center;width: auto; ">
-1.028
+1.007
 </td>
 <td style="text-align:center;width: auto; ">
 -0.005
@@ -667,7 +695,7 @@ med_Red
 0.005
 </td>
 <td style="text-align:center;width: auto; ">
-0.984
+0.968
 </td>
 <td style="text-align:center;width: auto; ">
 -0.009
@@ -684,7 +712,7 @@ med_Nir
 0.002
 </td>
 <td style="text-align:center;width: auto; ">
-1.002
+1.016
 </td>
 <td style="text-align:center;width: auto; ">
 -0.010
@@ -698,7 +726,7 @@ med_Nir
 med_SurfaceTemp
 </td>
 <td style="text-align:center;width: auto; ">
--9.582
+-9.473
 </td>
 <td style="text-align:center;width: auto; ">
 1.035
@@ -718,16 +746,16 @@ med_Blue
 LS8
 </td>
 <td style="text-align:center;width: auto; ">
--0.011
+-0.012
 </td>
 <td style="text-align:center;width: auto; ">
-0.814
+0.801
 </td>
 <td style="text-align:center;width: auto; ">
 -0.008
 </td>
 <td style="text-align:center;width: auto; ">
-0.198
+0.200
 </td>
 </tr>
 <tr>
@@ -735,10 +763,10 @@ LS8
 med_Green
 </td>
 <td style="text-align:center;width: auto; ">
--0.009
+-0.010
 </td>
 <td style="text-align:center;width: auto; ">
-0.992
+0.969
 </td>
 <td style="text-align:center;width: auto; ">
 -0.006
@@ -752,10 +780,10 @@ med_Green
 med_Red
 </td>
 <td style="text-align:center;width: auto; ">
--0.009
+-0.010
 </td>
 <td style="text-align:center;width: auto; ">
-0.977
+0.957
 </td>
 <td style="text-align:center;width: auto; ">
 -0.008
@@ -772,7 +800,7 @@ med_Nir
 -0.014
 </td>
 <td style="text-align:center;width: auto; ">
-0.972
+0.947
 </td>
 <td style="text-align:center;width: auto; ">
 -0.010
@@ -786,16 +814,16 @@ med_Nir
 med_SurfaceTemp
 </td>
 <td style="text-align:center;width: auto; ">
--13.665
+-21.418
 </td>
 <td style="text-align:center;width: auto; ">
-1.052
+1.079
 </td>
 <td style="text-align:center;width: auto; ">
 273.151
 </td>
 <td style="text-align:center;width: auto; ">
-313.113
+313.034
 </td>
 </tr>
 </tbody>
@@ -863,16 +891,16 @@ LS7
 LS8
 </td>
 <td style="text-align:center;width: auto; ">
-0.014
+0.015
 </td>
 <td style="text-align:center;width: auto; ">
-1.225
+1.266
 </td>
 <td style="text-align:center;width: auto; ">
 -0.009
 </td>
 <td style="text-align:center;width: auto; ">
-0.188
+0.195
 </td>
 </tr>
 <tr>
@@ -880,10 +908,10 @@ LS8
 med_Green
 </td>
 <td style="text-align:center;width: auto; ">
-0.009
+0.011
 </td>
 <td style="text-align:center;width: auto; ">
-1.011
+1.026
 </td>
 <td style="text-align:center;width: auto; ">
 -0.001
@@ -897,10 +925,10 @@ med_Green
 med_Red
 </td>
 <td style="text-align:center;width: auto; ">
-0.009
+0.011
 </td>
 <td style="text-align:center;width: auto; ">
-1.028
+1.036
 </td>
 <td style="text-align:center;width: auto; ">
 -0.010
@@ -914,10 +942,10 @@ med_Red
 med_Nir
 </td>
 <td style="text-align:center;width: auto; ">
-0.013
+0.014
 </td>
 <td style="text-align:center;width: auto; ">
-1.084
+1.091
 </td>
 <td style="text-align:center;width: auto; ">
 -0.010
@@ -931,16 +959,16 @@ med_Nir
 med_SurfaceTemp
 </td>
 <td style="text-align:center;width: auto; ">
-13.742
+20.132
 </td>
 <td style="text-align:center;width: auto; ">
-0.948
+0.926
 </td>
 <td style="text-align:center;width: auto; ">
 273.151
 </td>
 <td style="text-align:center;width: auto; ">
-313.149
+313.041
 </td>
 </tr>
 <tr>
@@ -951,16 +979,16 @@ med_Blue
 DSWE1a
 </td>
 <td style="text-align:center;width: auto; ">
-0.014
+0.015
 </td>
 <td style="text-align:center;width: auto; ">
-1.228
+1.249
 </td>
 <td style="text-align:center;width: auto; ">
 -0.010
 </td>
 <td style="text-align:center;width: auto; ">
-0.188
+0.195
 </td>
 </tr>
 <tr>
@@ -968,10 +996,10 @@ DSWE1a
 med_Green
 </td>
 <td style="text-align:center;width: auto; ">
-0.009
+0.010
 </td>
 <td style="text-align:center;width: auto; ">
-1.008
+1.032
 </td>
 <td style="text-align:center;width: auto; ">
 -0.001
@@ -988,7 +1016,7 @@ med_Red
 0.010
 </td>
 <td style="text-align:center;width: auto; ">
-1.023
+1.045
 </td>
 <td style="text-align:center;width: auto; ">
 -0.010
@@ -1002,10 +1030,10 @@ med_Red
 med_Nir
 </td>
 <td style="text-align:center;width: auto; ">
-0.015
+0.014
 </td>
 <td style="text-align:center;width: auto; ">
-1.028
+1.056
 </td>
 <td style="text-align:center;width: auto; ">
 -0.010
@@ -1019,16 +1047,16 @@ med_Nir
 med_SurfaceTemp
 </td>
 <td style="text-align:center;width: auto; ">
-12.980
+19.847
 </td>
 <td style="text-align:center;width: auto; ">
-0.950
+0.927
 </td>
 <td style="text-align:center;width: auto; ">
 273.151
 </td>
 <td style="text-align:center;width: auto; ">
-313.149
+313.091
 </td>
 </tr>
 </tbody>
@@ -1050,14 +1078,14 @@ handoffs to the filtered lakeSR and siteSR data.</p>
 <summary>
 Roy Deming Handoff and Residual Figures
 </summary>
-<div id="roy-deming-correction-landsat-5-to-landsat-7" class="section level3 hasAnchor" number="8.3.1">
-<h3><span class="header-section-number">8.3.1</span> Roy Deming Correction Landsat 5 to Landsat 7<a href="define-handoff.html#roy-deming-correction-landsat-5-to-landsat-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="roy-deming-correction-landsat-5-to-landsat-7" class="section level3 hasAnchor" number="8.4.1">
+<h3><span class="header-section-number">8.4.1</span> Roy Deming Correction Landsat 5 to Landsat 7<a href="define-handoff.html#roy-deming-correction-landsat-5-to-landsat-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For each of the handoff figures below, the blue line is the Deming (MLE)
-regression, the red line is the OLS regression line, and the grey dashed line is
-the 1:1 line. Coefficients for the Deming regression are provided in Table
-<a href="define-handoff.html#tab:roy-coeff-dem-corr7">8.2</a>. Color of dots represents the density of points
-in at a given x, y location. In the residual plots, the grey dashed line is a 0
-intercept, 0 slope line visual aide.</p>
+regression, the red dotted line is the OLS regression line, and the grey dashed
+line is the 1:1 line. Coefficients for the Deming regression are provided in
+Table <a href="define-handoff.html#tab:roy-coeff-dem-corr7">8.2</a>. Color of dots represents the density of
+points in at a given x, y location. In the residual plots, the grey dashed line
+is a 0 intercept, 0 slope line visual aide.</p>
 <p><img src="images/roy/handoffs/med_Blue_LS5_to_LS7_DSWE1_roy_handoff.jpg" width="600" /></p>
 <p><img src="images/roy/residuals/med_Blue_LS5_to_LS7_DSWE1_roy_deming_residuals.jpg" width="600" /></p>
 <p><img src="images/roy/handoffs/med_Green_LS5_to_LS7_DSWE1_roy_handoff.jpg" width="600" /></p>
@@ -1069,9 +1097,9 @@ intercept, 0 slope line visual aide.</p>
 <p><img src="images/roy/handoffs/med_SurfaceTemp_LS5_to_LS7_DSWE1_roy_handoff.jpg" width="600" /></p>
 <p><img src="images/roy/residuals/med_SurfaceTemp_LS5_to_LS7_DSWE1_roy_deming_residuals.jpg" width="600" /></p>
 </div>
-<div id="roy-deming-correction-landsat-8-to-landsat-7" class="section level3 hasAnchor" number="8.3.2">
-<h3><span class="header-section-number">8.3.2</span> Roy Deming Correction Landsat 8 to Landsat 7<a href="define-handoff.html#roy-deming-correction-landsat-8-to-landsat-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>For each of the handoff figures below, the blue line is the Deming (MLE)
+<div id="roy-deming-correction-landsat-8-to-landsat-7" class="section level3 hasAnchor" number="8.4.2">
+<h3><span class="header-section-number">8.4.2</span> Roy Deming Correction Landsat 8 to Landsat 7<a href="define-handoff.html#roy-deming-correction-landsat-8-to-landsat-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For each of the handoff figures below, the blue solid line is the Deming (MLE)
 regression, the red line is the OLS regression line, and the grey dashed line is
 the 1:1 line. Coefficients for the Deming regression are provided in Table
 <a href="define-handoff.html#tab:roy-coeff-dem-corr7">8.2</a>. Color of dots represents the density of points
@@ -1088,14 +1116,14 @@ intercept, 0 slope line visual aide.</p>
 <p><img src="images/roy/handoffs/med_SurfaceTemp_LS8_to_LS7_DSWE1_roy_handoff.jpg" width="600" /></p>
 <p><img src="images/roy/residuals/med_SurfaceTemp_LS8_to_LS7_DSWE1_roy_deming_residuals.jpg" width="600" /></p>
 </div>
-<div id="roy-deming-correction-landsat-7-to-landsat-8" class="section level3 hasAnchor" number="8.3.3">
-<h3><span class="header-section-number">8.3.3</span> Roy Deming Correction Landsat 7 to Landsat 8<a href="define-handoff.html#roy-deming-correction-landsat-7-to-landsat-8" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>For each of the handoff figures below, the blue line is the Deming (MLE)
-regression, the red line is the OLS regression line, and the grey dashed line is
-the 1:1 line. Coefficients for the Deming regression are provided in Table
-<a href="define-handoff.html#tab:roy-coeff-dem-corr8">8.3</a>. Color of dots represents the density of points
-in at a given x, y location. In the residual plots, the grey dashed line is a 0
-intercept, 0 slope line visual aide.</p>
+<div id="roy-deming-correction-landsat-7-to-landsat-8" class="section level3 hasAnchor" number="8.4.3">
+<h3><span class="header-section-number">8.4.3</span> Roy Deming Correction Landsat 7 to Landsat 8<a href="define-handoff.html#roy-deming-correction-landsat-7-to-landsat-8" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For each of the handoff figures below, the blue solid line is the Deming (MLE)
+regression, the red dotted line is the OLS regression line, and the grey dashed
+line is the 1:1 line. Coefficients for the Deming regression are provided in
+Table <a href="define-handoff.html#tab:roy-coeff-dem-corr8">8.3</a>. Color of dots represents the density of
+points in at a given x, y location. In the residual plots, the grey dashed line
+is a 0 intercept, 0 slope line visual aide.</p>
 <p><img src="images/roy/handoffs/med_Blue_LS7_to_LS8_DSWE1_roy_handoff.jpg" width="600" /></p>
 <p><img src="images/roy/residuals/med_Blue_LS7_to_LS8_DSWE1_roy_deming_residuals.jpg" width="600" /></p>
 <p><img src="images/roy/handoffs/med_Green_LS7_to_LS8_DSWE1_roy_handoff.jpg" width="600" /></p>
@@ -1109,10 +1137,10 @@ intercept, 0 slope line visual aide.</p>
 </details>
 </div>
 </div>
-<div id="implementing-gardner-handoffs" class="section level2 hasAnchor" number="8.4">
-<h2><span class="header-section-number">8.4</span> Implementing Gardner Handoffs<a href="define-handoff.html#implementing-gardner-handoffs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="implementing-gardner-handoffs" class="section level2 hasAnchor" number="8.5">
+<h2><span class="header-section-number">8.5</span> Implementing Gardner Handoffs<a href="define-handoff.html#implementing-gardner-handoffs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <table>
-<caption><span id="tab:gardner-table">Table 8.4: </span>Summary of Landsat mission data for handoffs calculated by the Gardner method for DSWE1.</caption>
+<caption><span id="tab:gardner-table">Table 8.4: </span>Summary of Landsat mission data for optical handoffs calculated by the Gardner method for DSWE1.</caption>
 <colgroup>
 <col width="10%" />
 <col width="9%" />
@@ -1140,8 +1168,8 @@ intercept, 0 slope line visual aide.</p>
 <td align="left">Landsat 7</td>
 <td align="left">1999-04-15</td>
 <td align="left">2013-02-11</td>
-<td align="left">12,960,758</td>
-<td align="left">22,264,740</td>
+<td align="left">2,227,103</td>
+<td align="left">12,046,282</td>
 </tr>
 <tr class="even">
 <td align="left">Landsat 7</td>
@@ -1149,8 +1177,8 @@ intercept, 0 slope line visual aide.</p>
 <td align="left">Landsat 7, Landsat8</td>
 <td align="left">2013-02-11</td>
 <td align="left">2022-04-16</td>
-<td align="left">9,404,486</td>
-<td align="left">6,247,956</td>
+<td align="left">5,447,717</td>
+<td align="left">3,397,037</td>
 </tr>
 </tbody>
 </table>
@@ -1222,16 +1250,16 @@ LS7
 0.005
 </td>
 <td style="text-align:center;width: auto; ">
-0.587
+0.631
 </td>
 <td style="text-align:center;width: auto; ">
-5.435
+5.116
 </td>
 <td style="text-align:center;width: auto; ">
-0.012
+0.011
 </td>
 <td style="text-align:center;">
-0.099
+0.114
 </td>
 </tr>
 <tr>
@@ -1239,19 +1267,19 @@ LS7
 med_Green
 </td>
 <td style="text-align:center;width: auto; ">
-0.002
+0.006
 </td>
 <td style="text-align:center;width: auto; ">
-0.702
+0.509
 </td>
 <td style="text-align:center;width: auto; ">
-2.055
+3.095
 </td>
 <td style="text-align:center;width: auto; ">
-0.014
+0.013
 </td>
 <td style="text-align:center;">
-0.144
+0.151
 </td>
 </tr>
 <tr>
@@ -1259,19 +1287,19 @@ med_Green
 med_Red
 </td>
 <td style="text-align:center;width: auto; ">
--0.002
+0.001
 </td>
 <td style="text-align:center;width: auto; ">
-0.865
+0.789
 </td>
 <td style="text-align:center;width: auto; ">
-0.853
+1.135
 </td>
 <td style="text-align:center;width: auto; ">
-0.009
+0.007
 </td>
 <td style="text-align:center;">
-0.154
+0.151
 </td>
 </tr>
 <tr>
@@ -1279,19 +1307,19 @@ med_Red
 med_Nir
 </td>
 <td style="text-align:center;width: auto; ">
--0.003
+-0.002
 </td>
 <td style="text-align:center;width: auto; ">
-0.988
+0.922
 </td>
 <td style="text-align:center;width: auto; ">
--0.477
+-0.405
 </td>
 <td style="text-align:center;width: auto; ">
-0.012
+0.011
 </td>
 <td style="text-align:center;">
-0.130
+0.122
 </td>
 </tr>
 <tr>
@@ -1299,19 +1327,19 @@ med_Nir
 med_SurfaceTemp
 </td>
 <td style="text-align:center;width: auto; ">
-761.086
+-161.491
 </td>
 <td style="text-align:center;width: auto; ">
--4.171
+2.443
 </td>
 <td style="text-align:center;width: auto; ">
-0.009
+-0.003
 </td>
 <td style="text-align:center;width: auto; ">
-274.185
+270.000
 </td>
 <td style="text-align:center;">
-309.394
+310.000
 </td>
 </tr>
 <tr>
@@ -1322,19 +1350,19 @@ med_Blue
 LS8
 </td>
 <td style="text-align:center;width: auto; ">
-0.011
+0.012
 </td>
 <td style="text-align:center;width: auto; ">
-1.071
+1.102
 </td>
 <td style="text-align:center;width: auto; ">
--1.175
+-1.089
 </td>
 <td style="text-align:center;width: auto; ">
-0.000
+-0.001
 </td>
 <td style="text-align:center;">
-0.108
+0.121
 </td>
 </tr>
 <tr>
@@ -1342,19 +1370,19 @@ LS8
 med_Green
 </td>
 <td style="text-align:center;width: auto; ">
-0.007
+0.009
 </td>
 <td style="text-align:center;width: auto; ">
-0.830
+0.756
 </td>
 <td style="text-align:center;width: auto; ">
-0.461
+0.657
 </td>
 <td style="text-align:center;width: auto; ">
-0.006
+0.005
 </td>
 <td style="text-align:center;">
-0.150
+0.158
 </td>
 </tr>
 <tr>
@@ -1362,19 +1390,19 @@ med_Green
 med_Red
 </td>
 <td style="text-align:center;width: auto; ">
-0.007
+0.009
 </td>
 <td style="text-align:center;width: auto; ">
-0.874
+0.806
 </td>
 <td style="text-align:center;width: auto; ">
-0.426
+0.585
 </td>
 <td style="text-align:center;width: auto; ">
 -0.002
 </td>
 <td style="text-align:center;">
-0.146
+0.144
 </td>
 </tr>
 <tr>
@@ -1382,19 +1410,19 @@ med_Red
 med_Nir
 </td>
 <td style="text-align:center;width: auto; ">
-0.013
+0.014
 </td>
 <td style="text-align:center;width: auto; ">
-0.765
+0.769
 </td>
 <td style="text-align:center;width: auto; ">
-1.334
+1.641
 </td>
 <td style="text-align:center;width: auto; ">
--0.003
+-0.004
 </td>
 <td style="text-align:center;">
-0.110
+0.094
 </td>
 </tr>
 <tr>
@@ -1402,19 +1430,19 @@ med_Nir
 med_SurfaceTemp
 </td>
 <td style="text-align:center;width: auto; ">
-476.288
+-539.824
 </td>
 <td style="text-align:center;width: auto; ">
--2.143
+4.930
 </td>
 <td style="text-align:center;width: auto; ">
-0.005
+-0.007
 </td>
 <td style="text-align:center;width: auto; ">
-273.797
+270.000
 </td>
 <td style="text-align:center;">
-309.994
+300.000
 </td>
 </tr>
 <tr>
@@ -1431,16 +1459,16 @@ LS5
 0.005
 </td>
 <td style="text-align:center;width: auto; ">
-0.595
+0.638
 </td>
 <td style="text-align:center;width: auto; ">
-5.379
+5.060
 </td>
 <td style="text-align:center;width: auto; ">
-0.012
+0.011
 </td>
 <td style="text-align:center;">
-0.099
+0.114
 </td>
 </tr>
 <tr>
@@ -1448,19 +1476,19 @@ LS5
 med_Green
 </td>
 <td style="text-align:center;width: auto; ">
-0.001
+0.006
 </td>
 <td style="text-align:center;width: auto; ">
-0.711
+0.511
 </td>
 <td style="text-align:center;width: auto; ">
-2.005
+3.101
 </td>
 <td style="text-align:center;width: auto; ">
-0.014
+0.013
 </td>
 <td style="text-align:center;">
-0.144
+0.151
 </td>
 </tr>
 <tr>
@@ -1468,19 +1496,19 @@ med_Green
 med_Red
 </td>
 <td style="text-align:center;width: auto; ">
--0.002
+0.001
 </td>
 <td style="text-align:center;width: auto; ">
-0.872
+0.793
 </td>
 <td style="text-align:center;width: auto; ">
-0.815
+1.112
 </td>
 <td style="text-align:center;width: auto; ">
-0.009
+0.007
 </td>
 <td style="text-align:center;">
-0.154
+0.151
 </td>
 </tr>
 <tr>
@@ -1488,19 +1516,19 @@ med_Red
 med_Nir
 </td>
 <td style="text-align:center;width: auto; ">
--0.003
+-0.002
 </td>
 <td style="text-align:center;width: auto; ">
-0.985
+0.935
 </td>
 <td style="text-align:center;width: auto; ">
--0.427
+-0.595
 </td>
 <td style="text-align:center;width: auto; ">
-0.012
+0.011
 </td>
 <td style="text-align:center;">
-0.132
+0.125
 </td>
 </tr>
 <tr>
@@ -1508,19 +1536,19 @@ med_Nir
 med_SurfaceTemp
 </td>
 <td style="text-align:center;width: auto; ">
-772.233
+-133.420
 </td>
 <td style="text-align:center;width: auto; ">
--4.248
+2.236
 </td>
 <td style="text-align:center;width: auto; ">
-0.009
+-0.003
 </td>
 <td style="text-align:center;width: auto; ">
-274.192
+270.000
 </td>
 <td style="text-align:center;">
-309.421
+310.000
 </td>
 </tr>
 <tr>
@@ -1531,19 +1559,19 @@ med_Blue
 LS8
 </td>
 <td style="text-align:center;width: auto; ">
-0.011
+0.012
 </td>
 <td style="text-align:center;width: auto; ">
-1.088
+1.111
 </td>
 <td style="text-align:center;width: auto; ">
--1.269
+-1.130
 </td>
 <td style="text-align:center;width: auto; ">
-0.000
+-0.001
 </td>
 <td style="text-align:center;">
-0.107
+0.121
 </td>
 </tr>
 <tr>
@@ -1551,19 +1579,19 @@ LS8
 med_Green
 </td>
 <td style="text-align:center;width: auto; ">
-0.006
+0.009
 </td>
 <td style="text-align:center;width: auto; ">
-0.822
+0.741
 </td>
 <td style="text-align:center;width: auto; ">
-0.590
+0.797
 </td>
 <td style="text-align:center;width: auto; ">
-0.006
+0.005
 </td>
 <td style="text-align:center;">
-0.150
+0.158
 </td>
 </tr>
 <tr>
@@ -1571,19 +1599,19 @@ med_Green
 med_Red
 </td>
 <td style="text-align:center;width: auto; ">
-0.006
+0.009
 </td>
 <td style="text-align:center;width: auto; ">
-0.892
+0.816
 </td>
 <td style="text-align:center;width: auto; ">
-0.353
+0.542
 </td>
 <td style="text-align:center;width: auto; ">
 -0.002
 </td>
 <td style="text-align:center;">
-0.146
+0.143
 </td>
 </tr>
 <tr>
@@ -1591,19 +1619,19 @@ med_Red
 med_Nir
 </td>
 <td style="text-align:center;width: auto; ">
-0.013
+0.014
 </td>
 <td style="text-align:center;width: auto; ">
-0.783
+0.826
 </td>
 <td style="text-align:center;width: auto; ">
-0.181
+-0.293
 </td>
 <td style="text-align:center;width: auto; ">
--0.003
+-0.004
 </td>
 <td style="text-align:center;">
-0.126
+0.113
 </td>
 </tr>
 <tr>
@@ -1611,19 +1639,19 @@ med_Nir
 med_SurfaceTemp
 </td>
 <td style="text-align:center;width: auto; ">
-517.563
+-539.824
 </td>
 <td style="text-align:center;width: auto; ">
--2.427
+4.930
 </td>
 <td style="text-align:center;width: auto; ">
-0.006
+-0.007
 </td>
 <td style="text-align:center;width: auto; ">
-273.812
+270.000
 </td>
 <td style="text-align:center;">
-310.071
+300.000
 </td>
 </tr>
 </tbody>
@@ -1694,19 +1722,19 @@ LS7
 LS8
 </td>
 <td style="text-align:center;width: auto; ">
--0.010
+-0.011
 </td>
 <td style="text-align:center;width: auto; ">
-0.901
+0.875
 </td>
 <td style="text-align:center;width: auto; ">
-1.208
+1.024
 </td>
 <td style="text-align:center;width: auto; ">
-0.011
+0.010
 </td>
 <td style="text-align:center;">
-0.118
+0.136
 </td>
 </tr>
 <tr>
@@ -1714,19 +1742,19 @@ LS8
 med_Green
 </td>
 <td style="text-align:center;width: auto; ">
--0.008
+-0.012
 </td>
 <td style="text-align:center;width: auto; ">
-1.205
+1.327
 </td>
 <td style="text-align:center;width: auto; ">
--0.641
+-1.101
 </td>
 <td style="text-align:center;width: auto; ">
 0.011
 </td>
 <td style="text-align:center;">
-0.142
+0.150
 </td>
 </tr>
 <tr>
@@ -1734,19 +1762,19 @@ med_Green
 med_Red
 </td>
 <td style="text-align:center;width: auto; ">
--0.008
+-0.011
 </td>
 <td style="text-align:center;width: auto; ">
-1.146
+1.250
 </td>
 <td style="text-align:center;width: auto; ">
--0.524
+-0.897
 </td>
 <td style="text-align:center;width: auto; ">
 0.006
 </td>
 <td style="text-align:center;">
-0.145
+0.141
 </td>
 </tr>
 <tr>
@@ -1754,19 +1782,19 @@ med_Red
 med_Nir
 </td>
 <td style="text-align:center;width: auto; ">
--0.017
+-0.018
 </td>
 <td style="text-align:center;width: auto; ">
-1.332
+1.333
 </td>
 <td style="text-align:center;width: auto; ">
--1.925
+-2.238
 </td>
 <td style="text-align:center;width: auto; ">
-0.009
+0.008
 </td>
 <td style="text-align:center;">
-0.110
+0.098
 </td>
 </tr>
 <tr>
@@ -1774,19 +1802,19 @@ med_Nir
 med_SurfaceTemp
 </td>
 <td style="text-align:center;width: auto; ">
--748.220
+-229.698
 </td>
 <td style="text-align:center;width: auto; ">
-6.032
+2.724
 </td>
 <td style="text-align:center;width: auto; ">
--0.008
+-0.003
 </td>
 <td style="text-align:center;width: auto; ">
-273.689
+270.000
 </td>
 <td style="text-align:center;">
-306.366
+300.000
 </td>
 </tr>
 <tr>
@@ -1797,19 +1825,19 @@ med_Blue
 DSWE1a
 </td>
 <td style="text-align:center;width: auto; ">
--0.010
+-0.011
 </td>
 <td style="text-align:center;width: auto; ">
-0.884
+0.868
 </td>
 <td style="text-align:center;width: auto; ">
-1.276
+1.043
 </td>
 <td style="text-align:center;width: auto; ">
-0.011
+0.010
 </td>
 <td style="text-align:center;">
-0.118
+0.136
 </td>
 </tr>
 <tr>
@@ -1817,19 +1845,19 @@ DSWE1a
 med_Green
 </td>
 <td style="text-align:center;width: auto; ">
--0.008
+-0.012
 </td>
 <td style="text-align:center;width: auto; ">
-1.214
+1.347
 </td>
 <td style="text-align:center;width: auto; ">
--0.794
+-1.285
 </td>
 <td style="text-align:center;width: auto; ">
 0.011
 </td>
 <td style="text-align:center;">
-0.142
+0.150
 </td>
 </tr>
 <tr>
@@ -1837,19 +1865,19 @@ med_Green
 med_Red
 </td>
 <td style="text-align:center;width: auto; ">
--0.007
+-0.011
 </td>
 <td style="text-align:center;width: auto; ">
-1.121
+1.235
 </td>
 <td style="text-align:center;width: auto; ">
--0.411
+-0.819
 </td>
 <td style="text-align:center;width: auto; ">
 0.006
 </td>
 <td style="text-align:center;">
-0.145
+0.140
 </td>
 </tr>
 <tr>
@@ -1860,16 +1888,16 @@ med_Nir
 -0.017
 </td>
 <td style="text-align:center;width: auto; ">
-1.286
+1.209
 </td>
 <td style="text-align:center;width: auto; ">
--0.363
+0.383
 </td>
 <td style="text-align:center;width: auto; ">
-0.009
+0.008
 </td>
 <td style="text-align:center;">
-0.112
+0.099
 </td>
 </tr>
 <tr>
@@ -1877,19 +1905,19 @@ med_Nir
 med_SurfaceTemp
 </td>
 <td style="text-align:center;width: auto; ">
--805.413
+-229.698
 </td>
 <td style="text-align:center;width: auto; ">
-6.431
+2.724
 </td>
 <td style="text-align:center;width: auto; ">
--0.009
+-0.003
 </td>
 <td style="text-align:center;width: auto; ">
-273.693
+270.000
 </td>
 <td style="text-align:center;">
-306.420
+300.000
 </td>
 </tr>
 </tbody>
@@ -1912,8 +1940,8 @@ the filtered lakeSR and siteSR data.</p>
 <summary>
 Gardner Handoff and Residual Figures relative to Landsat 7
 </summary>
-<div id="gardner-correction-landsat-5-to-landsat-7" class="section level3 hasAnchor" number="8.4.1">
-<h3><span class="header-section-number">8.4.1</span> Gardner Correction Landsat 5 to Landsat 7<a href="define-handoff.html#gardner-correction-landsat-5-to-landsat-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="gardner-correction-landsat-5-to-landsat-7" class="section level3 hasAnchor" number="8.5.1">
+<h3><span class="header-section-number">8.5.1</span> Gardner Correction Landsat 5 to Landsat 7<a href="define-handoff.html#gardner-correction-landsat-5-to-landsat-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For each of the handoff figures below, the red line is the second order
 polynomial regression and the grey dashed line is the 1:1 line. Coefficients for
 the second order polynomial regression are provided in Table
@@ -1931,8 +1959,8 @@ intercept, 0 slope line visual aide.</p>
 <p><img src="images/gardner/handoffs/med_SurfaceTemp_LS5_to_LS7_DSWE1_gard_handoff.jpg" width="600" /></p>
 <p><img src="images/gardner/residuals/med_SurfaceTemp_LS5_to_LS7_DSWE1_gard_residuals.jpg" width="600" /></p>
 </div>
-<div id="gardner-correction-landsat-8-to-landsat-7" class="section level3 hasAnchor" number="8.4.2">
-<h3><span class="header-section-number">8.4.2</span> Gardner Correction Landsat 8 to Landsat 7<a href="define-handoff.html#gardner-correction-landsat-8-to-landsat-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="gardner-correction-landsat-8-to-landsat-7" class="section level3 hasAnchor" number="8.5.2">
+<h3><span class="header-section-number">8.5.2</span> Gardner Correction Landsat 8 to Landsat 7<a href="define-handoff.html#gardner-correction-landsat-8-to-landsat-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For each of the handoff figures below, the red line is the second order
 polynomial regression and the grey dashed line is the 1:1 line. Coefficients for
 the second order polynomial regression are provided in Table
@@ -1950,8 +1978,8 @@ intercept, 0 slope line visual aide.</p>
 <p><img src="images/gardner/handoffs/med_SurfaceTemp_LS8_to_LS7_DSWE1_gard_handoff.jpg" width="600" /></p>
 <p><img src="images/gardner/residuals/med_SurfaceTemp_LS8_to_LS7_DSWE1_gard_residuals.jpg" width="600" /></p>
 </div>
-<div id="gardner-correction-landsat-7-to-landsat-8" class="section level3 hasAnchor" number="8.4.3">
-<h3><span class="header-section-number">8.4.3</span> Gardner Correction Landsat 7 to Landsat 8<a href="define-handoff.html#gardner-correction-landsat-7-to-landsat-8" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="gardner-correction-landsat-7-to-landsat-8" class="section level3 hasAnchor" number="8.5.3">
+<h3><span class="header-section-number">8.5.3</span> Gardner Correction Landsat 7 to Landsat 8<a href="define-handoff.html#gardner-correction-landsat-7-to-landsat-8" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For each of the handoff figures below, the red line is the second order
 polynomial regression and the grey dashed line is the 1:1 line. Coefficients for
 the second order polynomial regression are provided in Table
@@ -1971,21 +1999,6 @@ intercept, 0 slope line visual aide.</p>
 </details>
 
 </div>
-</div>
-</div>
-<h3> References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
-<div id="ref-gardner2021" class="csl-entry">
-Gardner, John R., Xiao Yang, Simon N. Topp, Matthew R. V. Ross, Elizabeth H. Altenau, and Tamlin M. Pavelsky. 2021. <span>“The Color of Rivers.”</span> <em>Geophysical Research Letters</em> 48 (1): e2020GL088946. <a href="https://doi.org/10.1029/2020GL088946">https://doi.org/10.1029/2020GL088946</a>.
-</div>
-<div id="ref-king" class="csl-entry">
-King, Tyler V., Robert A. Bean, and Evan J. Gohring. 2024. <span>“Remote Sensing and in-Situ Data to Support Chlorophyll-a Mapping in Blue Mesa Reservoir from Sentinel-2 Imagery | U.S. Geological Survey.”</span> <a href="https://doi.org/10.5066/P9XULQAS">https://doi.org/10.5066/P9XULQAS</a>.
-</div>
-<div id="ref-maciel2023" class="csl-entry">
-Maciel, Daniel Andrade, Nima Pahlevan, Claudio Clemente Faria Barbosa, Evlyn Márcia Leão de Moraes de Novo, Rejane Souza Paulino, Vitor Souza Martins, Eric Vermote, and Christopher J. Crawford. 2023. <span>“Validity of the Landsat Surface Reflectance Archive for Aquatic Science: Implications for Cloud-Based Analysis.”</span> <em>Limnology and Oceanography Letters</em> 8 (6). <a href="https://doi.org/10.1002/lol2.10344">https://doi.org/10.1002/lol2.10344</a>.
-</div>
-<div id="ref-roy2016" class="csl-entry">
-Roy, D. P., V. Kovalskyy, H. K. Zhang, E. F. Vermote, L. Yan, S. S. Kumar, and A. Egorov. 2016. <span>“Characterization of Landsat-7 to Landsat-8 Reflective Wavelength and Normalized Difference Vegetation Index Continuity.”</span> <em>Remote Sensing of Environment</em>, Landsat 8 science results, 185 (November): 57–70. <a href="https://doi.org/10.1016/j.rse.2015.12.024">https://doi.org/10.1016/j.rse.2015.12.024</a>.
 </div>
 </div>
             </section>

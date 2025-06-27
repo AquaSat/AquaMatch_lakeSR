@@ -13,22 +13,29 @@ params:
   coefficients: NA
 ---
 
+# Calculating intermission handoffs {#define-handoff}
+
 ```{r, echo = F}
 library(kableExtra)
 library(tidyverse)
 
-# filter for DSWE1 only
-e_LS5_forLS57corr_quantiles <- e_LS5_forLS57corr_quantiles %>% 
-  filter(dswe == "DSWE1")
-e_LS7_forLS78corr_quantiles <- e_LS7_forLS78corr_quantiles %>% 
-  filter(dswe == "DSWE1")
-e_LS7_forLS57corr_quantiles <- e_LS7_forLS57corr_quantiles %>% 
-  filter(dswe == "DSWE1")
-e_LS8_forLS78corr_quantiles <- e_LS8_forLS78corr_quantiles %>% 
-  filter(dswe == "DSWE1")
-```
+# filter for DSWE1 optical only, these are lists, so have to get the name of the list we need for each
+names_LS5_57 <- names(e_LS5_forLS57corr_quantiles)
+optical_LS5_57 <- names_LS5_57 %>% .[grepl("optical", .)] %>% .[endsWith(., "DSWE1")]
+LS5_forLS57_optical <- e_LS5_forLS57corr_quantiles[[optical_LS5_57]]
 
-# Calculating intermission handoffs {#define-handoff}
+names_LS7_78 <- names(e_LS7_forLS78corr_quantiles)
+optical_LS7_78 <- names_LS7_78 %>% .[grepl("optical", .)] %>% .[endsWith(., "DSWE1")]
+LS7_forLS78_optical <- e_LS7_forLS78corr_quantiles[[optical_LS7_78]]
+
+names_LS7_57 <- names(e_LS7_forLS57corr_quantiles)
+optical_LS7_57 <- names_LS7_57 %>% .[grepl("optical", .)] %>% .[endsWith(., "DSWE1")]
+LS7_forLS57_optical <- e_LS7_forLS57corr_quantiles[[optical_LS7_57]]
+
+names_LS8_78 <- names(e_LS8_forLS78corr_quantiles)
+optical_LS8_78 <- names_LS8_78 %>% .[grepl("optical", .)] %>% .[endsWith(., "DSWE1")]
+LS8_forLS78_optical <- e_LS8_forLS78corr_quantiles[[optical_LS8_78]]
+```
 
 It is necessary to standardize band values between Landsat missions in order to
 create a robust timeseries. @maciel2023 notes the issues in using the Landsat
@@ -55,6 +62,27 @@ For the purposes of this document, we only present the handoff coefficients for
 DSWE1 (confident water) and do not investigate differences between the DSWE1 or
 DSWE1a coefficients, though we provide both. Users should use these handoff
 coefficients if using data from more than one sensor group (TM, ETM+, OLI).
+
+## Additional filtering applied
+
+For the purposes of creating these handoff coefficients, we use flags created
+when the locations were defined (see Section \@ref(lakeSR-shoreline) and some of
+the flags created in the GEE workflow (see Section \@ref(diagnostic-columns)) to
+reduce impacts of errant data. There are endless filters that can be applied
+prior to calculating the handoff coefficients, but for the purposes of this
+document and data product, we are somewhat conservative in filtering the data.
+
+For optical bands, we removed data from sites where the `flag_optical_shoreline`
+was 1 for this analysis (indicating that there is a possiblity that the buffer
+area includes mixed pixels). While we do use the DSWE-like algorithms to only
+include confident water pixels, this is an effort to reduce impacts of
+near-shore contamination in this process. Similarly, we removed the thermal band
+data when the `flag_thermal_...` was 1 (where the `...` represents the column
+appropriate for the given mission, see Section @ref(lakeSR-shoreline)). For
+thermal data, we also removed data from this process when there was any detected
+cloud in the buffered area of the point (`prop_clouds` column). The thermal
+sensor values can be dramatically impacted by clouds and we wanted to take a
+step to reduce that carrying through this analysis.
 
 ## Roy method
 
@@ -202,11 +230,11 @@ handoffs to the filtered lakeSR and siteSR data.
 ### Roy Deming Correction Landsat 5 to Landsat 7
 
 For each of the handoff figures below, the blue line is the Deming (MLE)
-regression, the red line is the OLS regression line, and the grey dashed line is
-the 1:1 line. Coefficients for the Deming regression are provided in Table
-\@ref(tab:roy-coeff-dem-corr7). Color of dots represents the density of points
-in at a given x, y location. In the residual plots, the grey dashed line is a 0
-intercept, 0 slope line visual aide.
+regression, the red dotted line is the OLS regression line, and the grey dashed
+line is the 1:1 line. Coefficients for the Deming regression are provided in
+Table \@ref(tab:roy-coeff-dem-corr7). Color of dots represents the density of
+points in at a given x, y location. In the residual plots, the grey dashed line
+is a 0 intercept, 0 slope line visual aide.
 
 ![](images/roy/handoffs/med_Blue_LS5_to_LS7_DSWE1_roy_handoff.jpg){width="600"}
 
@@ -230,7 +258,7 @@ intercept, 0 slope line visual aide.
 
 ### Roy Deming Correction Landsat 8 to Landsat 7
 
-For each of the handoff figures below, the blue line is the Deming (MLE)
+For each of the handoff figures below, the blue solid line is the Deming (MLE)
 regression, the red line is the OLS regression line, and the grey dashed line is
 the 1:1 line. Coefficients for the Deming regression are provided in Table
 \@ref(tab:roy-coeff-dem-corr7). Color of dots represents the density of points
@@ -259,12 +287,12 @@ intercept, 0 slope line visual aide.
 
 ### Roy Deming Correction Landsat 7 to Landsat 8
 
-For each of the handoff figures below, the blue line is the Deming (MLE)
-regression, the red line is the OLS regression line, and the grey dashed line is
-the 1:1 line. Coefficients for the Deming regression are provided in Table
-\@ref(tab:roy-coeff-dem-corr8). Color of dots represents the density of points
-in at a given x, y location. In the residual plots, the grey dashed line is a 0
-intercept, 0 slope line visual aide.
+For each of the handoff figures below, the blue solid line is the Deming (MLE)
+regression, the red dotted line is the OLS regression line, and the grey dashed
+line is the 1:1 line. Coefficients for the Deming regression are provided in
+Table \@ref(tab:roy-coeff-dem-corr8). Color of dots represents the density of
+points in at a given x, y location. In the residual plots, the grey dashed line
+is a 0 intercept, 0 slope line visual aide.
 
 ![](images/roy/handoffs/med_Blue_LS7_to_LS8_DSWE1_roy_handoff.jpg){width="600"}
 
@@ -296,12 +324,12 @@ gardner_handoff_table <- tibble("Early mission" = c("Landsat 5", "Landsat 7"),
                                 "Correction to" = c("Landsat 7", "Landsat 7, Landsat8"),
                                 "Overlap Start" = c("1999-04-15", "2013-02-11"),
                                 "Overlap End" = c("2013-02-11", "2022-04-16"),
-                                "n Observations from Early Mission" = c(format(e_LS5_forLS57corr_quantiles$n_rows[1], big.mark = ","), 
-                                                                format(e_LS7_forLS78corr_quantiles$n_rows[1], big.mark = ",")),
-                                "n Observations from Late Mission" = c(format(e_LS7_forLS57corr_quantiles$n_rows[1], big.mark = ","), 
-                                                               format(e_LS8_forLS78corr_quantiles$n_rows[1], big.mark = ",")))
+                                "n Observations from Early Mission" = c(format(LS5_forLS57_optical$n_rows[1], big.mark = ","), 
+                                                                format(LS7_forLS78_optical$n_rows[1], big.mark = ",")),
+                                "n Observations from Late Mission" = c(format(LS7_forLS57_optical$n_rows[1], big.mark = ","), 
+                                                               format(LS8_forLS78_optical$n_rows[1], big.mark = ",")))
 
-knitr::kable(gardner_handoff_table, caption = "Summary of Landsat mission data for handoffs calculated by the Gardner method for DSWE1.")
+knitr::kable(gardner_handoff_table, caption = "Summary of Landsat mission data for optical handoffs calculated by the Gardner method for DSWE1.")
 ```
 
 ```{r gard-coeff-corr7, echo = F}

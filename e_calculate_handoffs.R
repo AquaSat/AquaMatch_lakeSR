@@ -227,7 +227,9 @@ e_calculate_handoffs <- list(
     command = {
       d_qa_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
-                  dswe = "DSWE1", version = d_qa_version_identifier,
+                  dswe = "DSWE1", 
+                  gee_version = d_gee_version_identifier,
+                  qa_version = d_qa_version_identifier,
                   early_LS_mission = "LT04", late_LS_mission = "LT05",
                   early_path_prefix = e_path_prefix_table$early_prefix, 
                   late_path_prefix =  e_path_prefix_table$late_prefix)

@@ -123,8 +123,8 @@ version date identifier):
     summaries of remote sensing data for each site and satellite image, as well
     as columns containing summarized information about pixels that have been
     masked in the Google Earth Engine QAQC and filtering process. See sections
-    \@ref(LS-C2-SRST), \@ref(LS-C2-pull), and \@ref(post-hoc-qa) for additional
-    details.
+    \@ref(LS-C2-SRST), \@ref(LS-SRST-pull), and \@ref(post-hoc-qa) for
+    additional details.
 
 -   remote sensing scene-level metadata file(s) (e.g.
     `lakeSR_collated_metadata_LS89_xDATEx_export.csv`,
@@ -183,13 +183,12 @@ of the `_targets.R` file.
 For all lakes, we aggregate remotely-sensed data via a central location with a
 buffer instead of the entire lake area to reduce processing time and the
 downstream impacts of lakes whose surface crosses WRS2 path-row boundaries. This
-{targets} list calculates "Pole of Inaccessibility" (POI)
-[@garcia-castellanos2007] for all non-intermittent lakes, ponds, and reservoirs
-greater than 1 hectare in surface area and intermittent lakes, ponds, and
-reservoirs greater than 4 hectares using the NHDPlusV2 polygons using the
-{nhdplusTools} package [@blodgett2023], NHD Best Resolution files for non-CONUS
-waterbodies, and the `poi()` function in the {polylabelr} package
-[@larsson2024].
+{targets} list calculates "Pole of Inaccessibility" (POI) [e.g. @stefansson1920]
+for all non-intermittent lakes, ponds, and reservoirs greater than 1 hectare in
+surface area and intermittent lakes, ponds, and reservoirs greater than 4
+hectares using the NHDPlusV2 polygons using the {nhdplusTools} package
+[@blodgett2023], NHD Best Resolution files for non-CONUS waterbodies, and the
+`poi()` function in the {polylabelr} package [@larsson2024].
 
 See Section \@ref(locs-data-acq) for additional background and detailed
 methodology.
@@ -366,8 +365,8 @@ version date identifier):
     summaries of remote sensing data for each site and satellite image, as well
     as columns containing summarized information about pixels that have been
     masked in the Google Earth Engine QAQC and filtering process. See sections
-    \@ref(LS-C2-SRST), \@ref(LS-C2-pull), and \@ref(post-hoc-qa) for additional
-    details.
+    \@ref(LS-C2-SRST), \@ref(LS-SRST-pull), and \@ref(post-hoc-qa) for
+    additional details.
 
 -   remote sensing scene-level metadata file(s) (e.g.
     `siteSR_collated_metadata_LS89_xDATEx_export.csv`,

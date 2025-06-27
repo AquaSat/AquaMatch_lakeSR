@@ -60,6 +60,8 @@ packages <- c("arrow",
               "targets",
               "tidyverse",
               "tigris",
+              "tmap",
+              "USA.state.boundaries",
               "viridis",
               "yaml")
 

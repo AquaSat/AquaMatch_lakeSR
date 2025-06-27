@@ -107,18 +107,18 @@ get_quantile_values <- function(qa_files, mission_id, version_id, location_info,
     if (length(thermal_band) > 0) {
       
       # define the column to assess visibility
-      thermal_flag <- if_else(mission_id %in% c("LT04", "LT05"), 
-                              "flag_thermal_TM_shoreline",
-                              if_else(mission_id == "LE07", 
-                                      "flag_thermal_ETM_shoreline",
-                                      if_else(mission_id %in% c("LC08", "LC09"),
-                                              "flag_thermal_TIRS_shoreline",
-                                              NA_character_)))
-      # filter sites for no flag in thermal band
+      thermal_flag <- switch(EXPR = mission_id, 
+                             LT04 = "flag_thermal_TM_shoreline",
+                             LT05 = "flag_thermal_TM_shoreline",
+                             LE07 = "flag_thermal_ETM_shoreline",
+                             LC08 = "flag_thermal_TIRS_shoreline",
+                             LC09 = "flag_thermal_TIRS_shoreline")
+      
+      # filter sites for no flag in thermal band, no clouds in buffered area
       thermal_no_shore <- filter(sites, !!sym(thermal_flag) == 0)
       filtered_thermal_data <- data %>% 
-        filter(lakeSR_id %in% thermal_no_shore$lakeSR_id) %>% 
-        filter(!is.na(med_SurfaceTemp))
+        filter(lakeSR_id %in% thermal_no_shore$lakeSR_id,
+               !is.na(med_SurfaceTemp), prop_clouds == 0)
       
       # get ids that have more than 10yrs of data
       ids_thermal <- filtered_thermal_data[, .(n_years = uniqueN(year(date))), by = .(lakeSR_id)][n_years >= record_length]

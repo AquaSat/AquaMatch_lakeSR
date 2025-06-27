@@ -60,7 +60,7 @@ sort_qa_Landsat_data <- function(qa_files,
       
       #make a file path name
       save_to_fpn <- file.path("d_qa_filter_sort/sort/",
-                               paste0("HUC2_",
+                               paste0("lakeSR_HUC2_",
                                       HUC2,
                                       "_", 
                                       str_replace(mission_info$mission_names, " ", ""),
@@ -101,7 +101,8 @@ sort_qa_Landsat_data <- function(qa_files,
       
       #make a file path name
       save_to_fpn <- file.path("d_qa_filter_sort/sort/",
-                               paste0(str_replace(mission_info$mission_names, " ", ""),
+                               paste0("lakeSR_",
+                                      str_replace(mission_info$mission_names, " ", ""),
                                       "_", 
                                       dswe,
                                       "_v",

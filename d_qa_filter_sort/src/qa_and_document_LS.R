@@ -43,9 +43,7 @@ qa_and_document_LS <- function(mission_info,
                                ir_threshold = 0.1,
                                document_drops = TRUE,
                                qa_identifier,
-                               out_path = "d_qa_filter_sort/qa/"
-                               
-) {
+                               out_path = "d_qa_filter_sort/qa/") {
   
   # check DSWE arguments:
   if (!dswe %in% c("DSWE1", "DSWE1a", "DSWE3")) {
@@ -63,7 +61,6 @@ qa_and_document_LS <- function(mission_info,
   mission_files <- collated_files %>% 
     .[grepl(mission_info$mission_id, .)] %>% 
     .[grepl(paste0("_", dswe, "_"), .)]
-  
   
   # make sure there are files that exist with those filters
   if (length(mission_files > 0)) {
@@ -136,6 +133,15 @@ qa_and_document_LS <- function(mission_info,
                              med_SurfaceTemp = if_else(med_SurfaceTemp > thermal_maximum,
                                                        NA_real_, 
                                                        med_SurfaceTemp))
+                    
+                    # round to sig digits for optical and thermal
+                    cols_to_round <- names(data) %>% 
+                      .[startsWith(., "med") | startsWith(., "mean") | startsWith(., "sd")] %>% 
+                      .[!grepl("SurfaceTemp", .)]
+                    data[,(cols_to_round) := round(.SD, 3), .SDcols = cols_to_round]
+                    thermal_cols <- names(data) %>% 
+                      .[grepl("SurfaceTemp", .)]
+                    data[,(thermal_cols) := round(.SD, 2), .SDcols = thermal_cols]
                     
                     # make a new file name using fp from mission_files
                     out_fn <- last(unlist(str_split(fp, '/')))

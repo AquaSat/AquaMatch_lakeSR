@@ -87,8 +87,8 @@ if (config::get(config = general_config)$update_bookdown) {
         source_dir <- "e_calculate_handoffs/roy/"
         handoff_dir <- "bookdown/images/roy/handoffs/"
         resid_dir <- "bookdown/images/roy/residuals/"
-        dir.create(handoff_dir, recursive = T)
-        dir.create(resid_dir, recursive = T)
+        dir.create(handoff_dir, recursive = T, showWarnings = FALSE)
+        dir.create(resid_dir, recursive = T, showWarnings = FALSE)
         # Get list of files to copy
         handoff_to_copy <- list.files(source_dir, full.names = TRUE) %>% 
           .[grepl("DSWE1_", .)] %>% 

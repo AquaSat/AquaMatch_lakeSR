@@ -23,26 +23,25 @@ calculate_roy_handoff <- function(matched_data,
          # apply data filtering based on optical/thermal flags
          if (band == "med_SurfaceTemp") {
            # define the column to assess visibility
-           thermal_flag_from <- if_else(mission_from %in% c("LS4", "LS5"), 
-                                        "flag_thermal_TM_shoreline",
-                                        if_else(mission_from == "LS7", 
-                                                "flag_thermal_ETM_shoreline",
-                                                if_else(mission_from %in% c("LS8", "LS9"),
-                                                        "flag_thermal_TIRS_shoreline",
-                                                        NA_character_)))
-           thermal_flag_to <- if_else(mission_to %in% c("LS4", "LS5"), 
-                                      "flag_thermal_TM_shoreline",
-                                      if_else(mission_from == "LS7", 
-                                              "flag_thermal_ETM_shoreline",
-                                              if_else(mission_from %in% c("LS8", "LS9"),
-                                                      "flag_thermal_TIRS_shoreline",
-                                                      NA_character_)))
+           thermal_flag_from <- switch(EXPR = mission_from, 
+                                       LS4 = "flag_thermal_TM_shoreline",
+                                       LS5 = "flag_thermal_TM_shoreline",
+                                       LS7 = "flag_thermal_ETM_shoreline",
+                                       LS8 = "flag_thermal_TIRS_shoreline",
+                                       LS9 = "flag_thermal_TIRS_shoreline")
+           thermal_flag_to <- switch(EXPR = mission_to, 
+                                     LS4 = "flag_thermal_TM_shoreline",
+                                     LS5 = "flag_thermal_TM_shoreline",
+                                     LS7 = "flag_thermal_ETM_shoreline",
+                                     LS8 = "flag_thermal_TIRS_shoreline",
+                                     LS9 = "flag_thermal_TIRS_shoreline")
            
            # filter sites for no flag in thermal band
            thermal_no_shore <- filter(sites, !!sym(thermal_flag_from) == 0 & !!sym(thermal_flag_to) == 0)
            filtered_matched_data <- matched_data %>% 
-             filter(lakeSR_id %in% thermal_no_shore$lakeSR_id) %>% 
-             filter(!is.na(med_SurfaceTemp))
+             filter(lakeSR_id %in% thermal_no_shore$lakeSR_id,
+                    !is.na(med_SurfaceTemp) & !is.na(i.med_SurfaceTemp),
+                    prop_clouds == 0 & i.prop_clouds == 0)
          } else {
            # grab sites most certainly without shoreline contamination for optical bands
            optical_no_shore <- sites %>% 
@@ -83,7 +82,7 @@ calculate_roy_handoff <- function(matched_data,
            scale_fill_viridis_c(name = "Density", alpha = 0.5) + 
            geom_abline(intercept = 0, slope = 1, color = "grey", lty = 2) + 
            geom_abline(intercept = roy_dem$coefficients[1], slope = roy_dem$coefficients[2], color = "blue") +
-           geom_smooth(aes(x = x, y = y), method = "lm", se = FALSE, color = "red") +
+           geom_smooth(aes(x = x, y = y), method = "lm", se = FALSE, color = "red", lty = 3) +
            coord_fixed(ratio = 1,
                        xlim = c(min(x, y), max(x, y)),
                        ylim = c(min(x, y), max(x, y))) +

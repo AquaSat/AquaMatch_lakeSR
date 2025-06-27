@@ -8,10 +8,11 @@ bibliography: references.bib
 # Satellite Data Acquisition Software and Settings {#software-settings}
 
 Currently, all satellite data in AquaMatch are obtained using the Python API for
-Google Earth Engine [GEE, @gorelick2023]. While the orchestration of data
-acquisition is performed by the {targets} workflow, all code directly related to
-GEE data acquisition is written in Python. If you are running the 'default'
-configuration for lakeSR or siteSR the following directions are not applicable.
+Google Earth Engine [GEE, @gorelick2017, @gorelick2023]. While the orchestration
+of data acquisition is performed by the {targets} workflow, all code directly
+related to GEE data acquisition is written in Python. If you are running the
+'default' configuration for lakeSR or siteSR the following directions are not
+applicable.
 
 ## R Environment and Package Information
 
@@ -21,31 +22,32 @@ completed using R version 4.5.0 [@rcoreteam2025] in R Studio 2025.05.0
 [@positteam2023] . The table below lists the packages used across the lakeSR and
 siteSR workflow, versions used, and the associated citation.
 
-| R Package    | version  | citation                   |
-|--------------|:--------:|----------------------------|
-| arrow        | 20.0.0.2 | @richardson2025            |
-| bookdown     |   0.43   | @xie2016, @xie2025         |
-| config       |  0.3.2   | @allaire2023               |
-| cowplot      |  1.1.3   | @wilke2024                 |
-| crew         |  1.1.2   | @landau2025                |
-| data.table   |  1.17.4  | @barrett2025               |
-| deming       |  1.4-1   | @therneau2024              |
-| ggrepel      |  0.9.6   | @slowikowski2024           |
-| ggthemes     |  5.1.0   | @arnold2024                |
-| googledrive  |  2.1.1   | @mcgowan2023               |
-| kableExtra   |  1.4.0   | @zhu2024                   |
-| nhdplusTools |  0.6.2   | @blodgett2023              |
-| polylabelr   |  0.3.0   | @larsson2024               |
-| reticulate   |  1.42.0  | @ushey2025                 |
-| rmapshaper   |  0.5.0   | @teucher2023               |
-| sf           |  1.0-21  | @pebesma2018, @pebesma2023 |
-| tarchetypes  |  0.13.1  | @landau2021b               |
-| targets      |  1.11.3  | @landau2021                |
-| tidyverse    |  2.0.0   | @wickham2019               |
-| tigris       |  2.2.1   | @walker2025                |
-| viridis      |  0.6.5   | @garnier2024               |
-| xml2         |  1.3.8   | @wickham2025               |
-| yaml         |  2.3.10  | @garbett2024               |
+| R Package            | version  | citation                   |
+|----------------------|:--------:|----------------------------|
+| arrow                | 20.0.0.2 | @richardson2025            |
+| bookdown             |   0.43   | @xie2016; @xie2025         |
+| config               |  0.3.2   | @allaire2023               |
+| cowplot              |  1.1.3   | @wilke2024                 |
+| crew                 |  1.1.2   | @landau2025                |
+| data.table           |  1.17.4  | @barrett2025               |
+| deming               |  1.4-1   | @therneau2024              |
+| ggrepel              |  0.9.6   | @slowikowski2024           |
+| ggthemes             |  5.1.0   | @arnold2024                |
+| googledrive          |  2.1.1   | @mcgowan2023               |
+| kableExtra           |  1.4.0   | @zhu2024                   |
+| nhdplusTools         |  0.6.2   | @blodgett2023              |
+| polylabelr           |  0.3.0   | @larsson2024               |
+| reticulate           |  1.42.0  | @ushey2025                 |
+| rmapshaper           |  0.5.0   | @teucher2023               |
+| sf                   |  1.0-21  | @pebesma2018; @pebesma2023 |
+| tarchetypes          |  0.13.1  | @landau2021a               |
+| targets              |  1.11.3  | @landau2021                |
+| tidyverse            |  2.0.0   | @wickham2019               |
+| tigris               |  2.2.1   | @walker2025                |
+| USA.state.boundaries |  1.0.1   | @embry                     |
+| viridis              |  0.6.5   | @garnier2024               |
+| xml2                 |  1.3.8   | @wickham2025               |
+| yaml                 |  2.3.10  | @garbett2024               |
 
 ## {reticulate} Conda Environment
 
