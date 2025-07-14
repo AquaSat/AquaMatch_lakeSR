@@ -25,6 +25,13 @@ process.
 There will be additional satellite data incorporated into AquaMatch in the
 future.
 
+For *in situ* parameter matching, AquaMatch_siteSR currently includes sites from
+the Water Quality Portal (WQP), the National Water Information System (NWIS),
+and any sites present in the AquaMatch_harmonize pipeline not available via WQP
+at the time of site collation. At the time of collation, the AquaMatch_harmonize
+pipeline contained data for Secchi disc depth (SDD), chlorophyll *a* (chla),
+dissolved organic carbon (DOC), and total suspended solids (TSS).
+
 ## lakeSR Code Architecture
 
 [lakeSR code](https://github.com/AquaSat/AquaMatch_lakeSR) is broken down into
@@ -98,7 +105,6 @@ The lakeSR folder structure is as follows:
         |-- 05-lakeSR_LS_C2_SRST.Rmd
         |-- 06-post_hoc_qa.Rmd
         |-- 07-intermission_handoffs.Rmd
-        |-- 08-AquaMatch_RemoteSensing_Limitations.Rmd
         |-- z-Refs.Rmd
         |-- refs.bib
         |-- _bookdown.yml
@@ -110,11 +116,13 @@ The lakeSR folder structure is as follows:
 This workflow creates a number of files (where `xDATEx` is a placeholder for the
 version date identifier):
 
--   locations file (`a_poi_with_flags_xDATEx.csv`) containing all sites within
-    the lakeSR dataset, defined by the National Hydrography Dataset. This file
-    also contains column that link the location (Latitude/Longitude) to NHD
+-   locations file (`lakesR_poi_with_flags_xDATEx.csv`) containing all sites
+    within the lakeSR dataset, defined by the National Hydrography Dataset. This
+    file also contains column that link the location (Latitude/Longitude) to NHD
     waterbody features, and flags meant to aid in data interpretation. See
-    Section \@ref(waterbodies) for more information about this file.
+    Section \@ref(waterbodies) for more information about this file. This file
+    is the same content as the {targets} object `a_poi_with_flags`, which can be
+    loaded into the R studio environment using `tar_load(a_poi_with_flags)`.
 
 -   remote sensing data file(s) for sites (e.g.
     `lakeSR_Landast8_DSWE1_xDATEx.feather`,
@@ -349,14 +357,17 @@ The siteSR folder structure is as follows:
 This workflow creates a number of files (where `xDATEx` is a placeholder for the
 version date identifier):
 
--   locations file (`collated_WQP_NWIS_sites_with_NHD_info_xDATEx.csv`)
+-   locations file (`lakeSR_collated_WQP_NWIS_sites_with_NHD_info_xDATEx.csv`)
     containing all sites from the WQP and NWIS at the time of running the
     pipeline, as well as any additional sites from the AquaMatch pipeline (for
     Secchi disc depth, chlorophyll *a*, dissolved organic carbon, and total
     suspended solids) that were not present in the WQP site pull. This file also
     contains column attributing a HUC8, NHD features (waterbodies and/or
     flowlines), and flags meant to aid in data interpretation. See Section
-    \@ref(siteSR-locs) for more information about this file.
+    \@ref(siteSR-locs) for more information about this file. This file is the
+    same content as the {targets} object `a_sites_with_NHD_info`, which can be
+    loaded into the R studio environment using
+    `tar_load(a_sites_with_NHD_info)`.
 
 -   remote sensing data file(s) for sites (e.g.
     `siteSR_collated_sites_DSWE1_xDATEx.feather`,
@@ -402,10 +413,7 @@ profiles: "default" and "admin_update".
     thresholds ({targets} group -b-) or GEE implementation ({targets} group
     -c-).
 
-Proper configuration of `harmonize_repo_directory` is imperative as the siteSR
-workflow references files inside AquaMatch_harmonize_WQP file structure. If this
-is incorrectly set up, users will receive a message to communicate this. All
-repositories stored on the AquaMatch GitHub will contain files that link to
+All repositories stored on the AquaMatch GitHub will contain files that link to
 versions of the data that the AquaMatch team has harmonized so that a local run
 is not necessitated.
 
@@ -422,18 +430,18 @@ file, you will need to update the file name at line 9 of the
 **\_targets.R:**
 
 This initial group of targets checks the configuration settings in config.yml,
-checks for the harmonization pipeline and for proper Google Drive folder
-architecture. This group also acquires target objects from the harmonization
-pipeline.
+and checks for proper Google Drive folder architecture.
 
 **a_compile_sites:**
 
 This {targets} group collates the sites from the WQP, NWIS, and the AquaMatch
 harmonization pipeline, creating a list of locations to acquire remote sensing
-data. All locations are associated with a HUC8 if one is not listed in the
-metadata for the site from the WQP, then the unique HUC4s are used to associate
-points with waterbodies and flowlines of the NHDPlusV2 (CONUS) or NHD Best
-Resolution (non-CONUS HUCs) files where HUC8.
+data. All locations are associated with a HUC8, regardless if one is not listed
+in the metadata for the site from the WQP, then we associate points with
+waterbodies and flowlines of the NHDPlusV2 (CONUS) or NHD Best Resolution
+(non-CONUS HUCs) files where HUC8s were able to be assigned. This is a very time
+consuming group of functions and can take multiple days to run if
+`compile_locations` in the config file is set to TRUE.
 
 **b_determine_RS_visibility:**
 
@@ -449,7 +457,7 @@ previously-created files) and the number of cores available to run the workflow.
 
 This group of {targets} acquires Landsat Collection 2 SRST stacks for sites
 determined to be visible in the previous {targets} group. Data are collated in
-this step. This {targets} group takes about three days to run, if the
+this step. This {targets} group takes about one week to run, if the
 configuration `run_GEE` is set to TRUE. If the configuration is set to FALSE,
 run time will be dependent on your internet connection (to access the
 previously-created files) and the number of cores available to run the workflow.

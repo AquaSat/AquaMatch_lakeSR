@@ -37,7 +37,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS4_forLS45corr_quantiles,
-    command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
+    command = get_quantile_values(qa_files = d_all_sorted_Landsat_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LT04",
                                   location_info = a_poi_with_flags,
@@ -50,13 +50,14 @@ e_calculate_handoffs <- list(
                                             "med_Nir", "med_Swir1", "med_Swir2",
                                             "med_SurfaceTemp")),
     pattern = map(c_dswe_types), 
-    packages = c("data.table", "tidyverse", "arrow"), 
+    packages = c("data.table", "dplyr", "purrr", "readr", "stringr",
+                 "arrow", "lubridate", "rlang"), 
     deployment = "main" # these are still too large for multicore!
   ),
   
   tar_target(
     name = e_LS5_forLS45corr_quantiles,
-    command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
+    command = get_quantile_values(qa_files = d_all_sorted_Landsat_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LT05",
                                   location_info = a_poi_with_flags,
@@ -75,7 +76,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS5_forLS57corr_quantiles,
-    command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
+    command = get_quantile_values(qa_files = d_all_sorted_Landsat_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LT05",
                                   location_info = a_poi_with_flags,
@@ -94,7 +95,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS7_forLS57corr_quantiles,
-    command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
+    command = get_quantile_values(qa_files = d_all_sorted_Landsat_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LE07",
                                   location_info = a_poi_with_flags,
@@ -113,7 +114,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS7_forLS78corr_quantiles,
-    command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
+    command = get_quantile_values(qa_files = d_all_sorted_Landsat_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LE07",
                                   location_info = a_poi_with_flags,
@@ -132,7 +133,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS8_forLS78corr_quantiles,
-    command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
+    command = get_quantile_values(qa_files = d_all_sorted_Landsat_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LC08",
                                   location_info = a_poi_with_flags,
@@ -151,7 +152,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS8_forLS89corr_quantiles,
-    command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
+    command = get_quantile_values(qa_files = d_all_sorted_Landsat_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LC08",
                                   location_info = a_poi_with_flags,
@@ -170,7 +171,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS9_forLS89corr_quantiles,
-    command = get_quantile_values(qa_files = d_qa_Landsat_file_paths,
+    command = get_quantile_values(qa_files = d_all_sorted_Landsat_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LC09",
                                   location_info = a_poi_with_flags,
@@ -225,7 +226,7 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS45_DSWE1_matches,
     command = {
-      d_qa_Landsat_files
+      d_all_sorted_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1", 
                   gee_version = d_gee_version_identifier,
@@ -242,7 +243,7 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS57_DSWE1_matches,
     command = {
-      d_qa_Landsat_files
+      d_all_sorted_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1", 
                   gee_version = d_gee_version_identifier,
@@ -259,7 +260,7 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS78_DSWE1_matches,
     command = {
-      d_qa_Landsat_files
+      d_all_sorted_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1", 
                   gee_version = d_gee_version_identifier,
@@ -276,7 +277,7 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS89_DSWE1_matches,
     command = {
-      d_qa_Landsat_files
+      d_all_sorted_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1", 
                   gee_version = d_gee_version_identifier,
@@ -294,7 +295,7 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS45_DSWE1a_matches,
     command = {
-      d_qa_Landsat_files
+      d_all_sorted_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1a", 
                   gee_version = d_gee_version_identifier,
@@ -311,7 +312,7 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS57_DSWE1a_matches,
     command = {
-      d_qa_Landsat_files
+      d_all_sorted_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1a", 
                   gee_version = d_gee_version_identifier,
@@ -328,7 +329,7 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS78_DSWE1a_matches,
     command = {
-      d_qa_Landsat_files
+      d_all_sorted_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1a", 
                   gee_version = d_gee_version_identifier,
@@ -345,7 +346,7 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS89_DSWE1a_matches,
     command = {
-      d_qa_Landsat_files
+      d_all_sorted_Landsat_files
       get_matches(dir = "d_qa_filter_sort/qa/", 
                   dswe = "DSWE1a", 
                   gee_version = d_gee_version_identifier,

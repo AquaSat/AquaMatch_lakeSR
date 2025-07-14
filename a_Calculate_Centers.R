@@ -126,11 +126,12 @@ if (config::get(config = general_config)$calculate_centers) {
     # 100 m from shoreline, indicating possible shoreline mixed pixels.
     tar_target(
       name = a_poi_with_flags,
-      command = a_combined_poi %>% 
+      command = {
+        poi_with_flags <- a_combined_poi %>% 
         mutate(flag_optical_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 30,
                                                 1,  # possible shoreline contamination
                                                 0), # no expected shoreline contamination
-               flag_thermal_TM_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 120,
+               flag_thermal_MSS_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 120,
                                                    1, # possible shoreline contamination
                                                    0), # no expected shoreline contamination
                flag_thermal_ETM_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 60,
@@ -139,6 +140,12 @@ if (config::get(config = general_config)$calculate_centers) {
                flag_thermal_TIRS_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 100,
                                                      1, # possible shoreline contamination
                                                      0)) # no expected shoreline contamination
+        write_csv(poi_with_flags,
+                  paste0("a_Calculate_Centers/out/lakeSR_poi_with_flags_", 
+                         lakeSR_config$centers_version, 
+                         ".csv"))
+        poi_with_flags
+      }
     ),
     
     # check for drive folder if set to export
@@ -176,12 +183,14 @@ if (config::get(config = general_config)$calculate_centers) {
     # send poi file to drive 
     tar_target(
       name = a_send_combined_poi_to_drive,
-      command = export_single_target(
-        target = a_poi_with_flags, 
-        drive_path = a_check_Drive_targets_folder,
-        google_email = lakeSR_config$google_email,
-        date_stamp = lakeSR_config$centers_version,
-        file_type = ".csv"),
+      command = {
+        export_single_target(
+          target = a_poi_with_flags, 
+          drive_path = a_check_Drive_targets_folder,
+          google_email = lakeSR_config$google_email,
+          date_stamp = lakeSR_config$centers_version,
+          file_type = ".csv")
+      },
       packages = c("tidyverse", "googledrive")
     ),
     

@@ -7,15 +7,17 @@ default:
   centers_version: "2025-02-12" # yyyy-mm-dd of version, must be a date listed in the 
   # suffix of the files documented wihtin the 
   # a_Calculate_Centers/out/combined_poi_drive_ids.csv file
-  run_GEE: FALSE # the GEE acquisition will not be run, and previously-collated
+  run_GEE: FALSE # boolean, the GEE acquisition will not be run, and previously-collated
   # data will be used
   collated_version: "2025-02-12" # yyyy-mm-dd of version, must be a date listed in the 
   # suffix of the .csv files stored in c_collate_Landsat_data/out/
   parent_Drive_folder: "~/lakeSR_Landsat_C2/" # optional. character string, parent folder 
   # location to store files on Google Drive. Can also be "" if no parent folder desired.
   # Only used if calculate_centers, run_gee, and/or update_and_share set to TRUE.
-  update_and_share: TRUE # boolean, indication of whether the compiled qa'd files
-  # and handoffs should be shared to Drive
+  update_and_share: TRUE # boolean, indication of whether the qa steps should be 
+  # re-run and updated to Drive. If TRUE, qa steps will be run locally and .csv
+  # and feather files will be created and sent to drive. If FALSE, the previously-
+  # created/shared files with the `qa_version` below will be used in the pipeline.
   qa_version: "2025-06-04" # yyyy-mm-dd of filtered/qa'd files to filter by if 
   # update_and_share is FALSE, otherwise, the NEW version date you are creating.
   update_bookdown: TRUE # boolean, if the bookdown will be re-rendered
