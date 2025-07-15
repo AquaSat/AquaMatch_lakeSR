@@ -28,10 +28,10 @@ export_single_file <- function(file_path,
   
   # check to see if path exists, if it doesn't, create it
   with_drive_quiet({
-    return <- drive_get(path = drive_path)
-    # if the return has no rows, the folder path doesn't exist, and we need to
-    # create it.
-    if (nrow(return) == 0) {
+    tryCatch({
+      return <- drive_get(path = drive_path)
+    },
+    error = function(e) {
       folders <- unlist(str_split(drive_path, "/"))
       folders <- folders[nchar(folders)>1]
       walk(
@@ -45,9 +45,9 @@ export_single_file <- function(file_path,
                         path = str_replace(drive_path, paste0("^(([^/]*/){", p, "}).*"), "\\1")) # one parent folder path
           }
         })
-    }
+    })
   })
-    
+  
   # send to Google Drive
   out_file <- drive_put(media = file_path,
                         # The folder on Google Drive
