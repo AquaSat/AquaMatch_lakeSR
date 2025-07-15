@@ -43,11 +43,15 @@ present.
 ```{r walk_package_installer}
 packages <- c("arrow",
               "bookdown",
+              "cowplot",
               "crew",
               "data.table",
+              "deming",
+              "ggrepel",
+              "ggthemes",
               "googledrive",
+              "kableExtra",
               "nhdplusTools",
-              "parallel",
               "polylabelr",
               "reticulate",
               "rmapshaper",
@@ -56,6 +60,9 @@ packages <- c("arrow",
               "targets",
               "tidyverse",
               "tigris",
+              "tmap",
+              "USA.state.boundaries",
+              "viridis",
               "yaml")
 
 # note we use base-r lapply and not map since tidy is not loaded (and possibly

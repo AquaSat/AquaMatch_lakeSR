@@ -28,10 +28,11 @@ def csv_to_eeFeat(df, proj, chunk, chunk_size):
   range_max = min(chunk_size * (chunk + 1), len(df)) + range_min
   for i in range(range_min, range_max):
     try:
-      x,y = df.Longitude[i],df.Latitude[i]
-      latlong =[x,y]
-      loc_properties = {'system:index':str(df.id[i]), 'id':str(df.id[i])}
-      g=ee.Geometry.Point(latlong, proj) 
+      row = df.iloc[i]
+      x, y = row['Longitude'], row['Latitude']
+      latlong = [x, y]
+      loc_properties = {'system:index': str(row['id']), 'id': str(row['id'])}
+      g = ee.Geometry.Point(latlong, proj)
       feature = ee.Feature(g, loc_properties)
       features.append(feature)
     except KeyError as e:
@@ -634,7 +635,7 @@ def ref_pull_457_DSWE1(image, feat):
   swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
   swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
 
-  # create masks for each band for = >0.2
+  # create masks for each band for >=0.2
   blue_glint = image.select('Blue').gte(0.2).rename('blue_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
   green_glint = image.select('Green').gte(0.2).rename('green_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
   red_glint = image.select('Red').gte(0.2).rename('red_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1)).selfMask()
@@ -841,7 +842,7 @@ def ref_pull_457_DSWE1a(image, feat):
   swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
   swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
   
-  # create masks for each band for = >0.2
+  # create masks for each band for >=0.2
   blue_glint = image.select('Blue').gte(0.2).rename('blue_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
   green_glint = image.select('Green').gte(0.2).rename('green_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
   red_glint = image.select('Red').gte(0.2).rename('red_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
@@ -1044,7 +1045,7 @@ def ref_pull_457_DSWE3(image, feat):
   swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
   swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
 
-  # create masks for each band for = >0.2
+  # create masks for each band for >=0.2
   blue_glint = image.select('Blue').gte(0.2).rename('blue_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
   green_glint = image.select('Green').gte(0.2).rename('green_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
   red_glint = image.select('Red').gte(0.2).rename('red_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(opac.eq(1)).updateMask(d.eq(3)).selfMask()
@@ -1247,7 +1248,7 @@ def ref_pull_89_DSWE1(image, feat):
   swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
   swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
 
-  # create masks for each band for = >0.2
+  # create masks for each band for >=0.2
   blue_glint = image.select('Blue').gte(0.2).rename('blue_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
   green_glint = image.select('Green').gte(0.2).rename('green_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
   red_glint = image.select('Red').gte(0.2).rename('red_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1)).selfMask()
@@ -1453,7 +1454,7 @@ def ref_pull_89_DSWE1a(image, feat):
   swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
   swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
   
-  # create masks for each band for = >0.2
+  # create masks for each band for >=0.2
   blue_glint = image.select('Blue').gte(0.2).rename('blue_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
   green_glint = image.select('Green').gte(0.2).rename('green_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
   red_glint = image.select('Red').gte(0.2).rename('red_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(1).Or(alg.eq(1))).selfMask()
@@ -1653,7 +1654,7 @@ def ref_pull_89_DSWE3(image, feat):
   swir2_zero = image.select('Swir2').lt(0).rename('swir2_zero').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
   swir2_thresh = image.select('Swir2').lt(-0.01).rename('swir2_thresh').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
   
-  # create masks for each band for = >0.2
+  # create masks for each band for >=0.2
   blue_glint = image.select('Blue').gte(0.2).rename('blue_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
   green_glint = image.select('Green').gte(0.2).rename('green_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
   red_glint = image.select('Red').gte(0.2).rename('red_glint').updateMask(hs.eq(1)).updateMask(clouds.eq(0)).updateMask(aero.eq(1)).updateMask(d.eq(3)).selfMask()
