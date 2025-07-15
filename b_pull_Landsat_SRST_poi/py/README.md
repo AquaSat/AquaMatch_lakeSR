@@ -1,1 +1,0 @@
-run_GEE_per_pathrow_2025-01-23.py: this script is the most recent valid run, without sunglint masks implemented. Noting for posterity for now.
