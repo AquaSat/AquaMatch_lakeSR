@@ -100,6 +100,7 @@ if (config::get(config = general_config)$update_bookdown) {
       packages = c("tidyverse", "googledrive")
     )
     
+    
   )
   
 } else { # return an empty -y- list

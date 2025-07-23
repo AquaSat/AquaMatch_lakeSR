@@ -45,7 +45,7 @@ config_list <- list(
     command = config::get(config = general_config),
     cue = tar_cue("always")
   )
-
+  
 )
 
 # Source targets groups: ---------------------------------------
@@ -54,10 +54,11 @@ tar_source(files = c(
   "a_Calculate_Centers.R",
   "b_pull_Landsat_SRST_poi.R",
   "c_collate_Landsat_data.R",
-  "d_qa_filter_calc_handoff.R",
+  "d_qa_filter_sort.R",
+  "e_calculate_handoffs.R",
   "y_siteSR_targets.R",
   "z_render_bookdown.R"
-  )
+)
 )
 
 # Collate targets groups: ---------------------------------------
@@ -67,7 +68,8 @@ list(
   a_Calculate_Centers_list,
   b_pull_Landsat_SRST_poi_list,
   c_collate_Landsat_data,
-  d_qa_filter_calc_handoff,
+  d_qa_filter_sort,
+  e_calculate_handoffs,
   y_siteSR_list,
   z_render_bookdown
 )

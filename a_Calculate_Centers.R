@@ -188,14 +188,12 @@ if (config::get(config = general_config)$calculate_centers) {
     # send poi file to drive 
     tar_target(
       name = a_send_combined_poi_to_drive,
-      command = {
-        export_single_target(
-          target = a_poi_with_flags, 
-          drive_path = a_check_Drive_targets_folder,
-          google_email = lakeSR_config$google_email,
-          date_stamp = lakeSR_config$centers_version,
-          file_type = ".csv")
-      },
+      command = export_single_target(
+        target = a_poi_with_flags, 
+        drive_path = a_check_Drive_targets_folder,
+        google_email = lakeSR_config$google_email,
+        date_stamp = lakeSR_config$centers_version,
+        file_type = ".csv"),
       packages = c("tidyverse", "googledrive")
     ),
     

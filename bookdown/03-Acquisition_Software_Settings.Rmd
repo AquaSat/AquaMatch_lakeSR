@@ -8,9 +8,10 @@ bibliography: references.bib
 # Satellite Data Acquisition Software and Settings {#software-settings}
 
 Currently, all satellite data in AquaSat v2 are obtained using the Python API
-for Google Earth Engine (GEE) [@gorelick2017]. While the orchestration of data
+for Google Earth Engine [GEE, @gorelick2023]. While the orchestration of data
 acquisition is performed by the {targets} workflow, all code directly related to
-GEE data acquisition is written in Python.
+GEE data acquisition is written in Python. If you are running the 'default'
+configuration for lakeSR or siteSR the following directions are not applicable.
 
 ## {reticulate} Conda Environment
 
@@ -22,7 +23,7 @@ a {reticulate} Conda environment that is invoked at the beginning of a {targets}
 run to be sure that our Python code runs consistently.
 
 | Software/Python Module | version | citation |
-|----|:--:|----|
+|---------------------------|:-------------------------:|---------------------------|
 | Python | 3.10.13 | Python Software Foundation, [www.python.org](www.python.org) |
 | earthengine-api | 1.4.0 | @gorelick2023 |
 | pandas | 2.0.3 | @thepandasdevelopmentteam2023 |
@@ -38,11 +39,11 @@ pipeline to assure a smooth run of the workflow.
 
 ## Google Earth Engine Setup
 
-In order to run any GEE-related targets, you will need to have a Google Earth
-Engine account (see \@ref(create-account)), a Google Earth Engine Cloud Project
-(described in \@ref(proj-setting)) , gcloud CLI set up on your computer (see
-\@ref(gcloud)), and you will need to alter the configuration file (described in
-\@ref(proj-setting)).
+If running the 'admin_update' configuration for either lakeSR or siteSR, you
+will need to have a GEE account, the gcloud CLI installed and configured, create
+an Earth Engine Project, have successful authenticated your account, and you
+will need to alter the configuration file. All of these tasks are described in
+the section below.
 
 ### Create a GEE account {#create-account}
 
@@ -77,12 +78,12 @@ project name listed in the top right hand corner of your screen:
 ![Header of code.earthengine.google.com with current Earth Engine project
 highlighted in the red box to the right.](images/code_ee_proj.png)
 
-Alternatively, you can create an GEE project for this task in the dropdown menu
+Alternatively, you can create a GEE project for this task in the dropdown menu
 accessed by clicking on the icon to the right of the highlighted box in the
 figure above. This workflow will not run without specifying an Earth Engine
 Project that is managed by the Google Account you authenticate this run with.
 
-### GEE Authentication
+### GEE Authentication {#auth}
 
 Once `gcloud` is installed and initialized, the configuration file is properly
 set up, and the Conda environment is set up, you can authenticate your GEE

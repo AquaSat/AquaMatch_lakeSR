@@ -9,9 +9,9 @@ bibliography: references.bib
 
 ## Initialisms and Landsat Jargon
 
-*SR*: surface reflectance
+*SR*: surface reflectance product
 
-*ST*: surface temperature
+*ST*: surface temperature product
 
 *Collection 2 (C2)*: The second version of the Landsat record - the transition
 to C2 began in 2020. There were extensive changes to the data storage and
@@ -31,8 +31,8 @@ USGS](https://www.usgs.gov/media/videos/landsat-collections-what-are-tiers).
 how much the data have been processed. Level 1 (top of atmosphere) is less
 processed than Level 2 (surface reflectance). lakeSR uses Level 2 data
 exclusively, as it has gone through a standard atmospheric correction process
-that attempts to standardize data handling through out the Landsat record - it
-is *derived* from Level 1 data. NASA has compiled [a list of general data
+that attempts to standardize data handling throughout the Landsat record - it is
+*derived* from Level 1 data. NASA has compiled [a list of general data
 processing levels and descriptions
 here](https://www.earthdata.nasa.gov/learn/earth-observation-data-basics/data-processing-levels).
 
@@ -53,13 +53,27 @@ relevant to the creation and use of lakeSR.*
 The Landsat archive of multispectral and thermal data in lakeSR is composed of
 Landsat missions 4 through 9 and spans more than 40 years.
 
-| Mission and Sensor | Launch Date | End of Science Mission | Decommission Date |
-|----|:--:|:--:|:--:|
-| Landsat 4 TM [@eros-45] | 1982-07-16 | 1993-12-14 | 2001-06-15 |
-| Landsat 5 TM [@eros-45] | 1984-03-01 | 2011-11-18 | 2013-06-05 |
-| Landsat 7 ETM+ [@eros-7] | 1999-04-15 | 2022-04-06 | N/A |
-| Landsat 8 OLI/TIRS [@eros-89] | 2013-02-11 | N/A | N/A |
-| Landsat 9 OLI-2/TIRS-2 [@eros-89] | 2021-09-27 | N/A | N/A |
++------------------+------------------+------------------+------------------+
+| Mission and      | Launch Date      | End of Science   | Decommission     |
+| Sensor           |                  | Mission          | Date             |
++==================+:================:+:================:+:================:+
+| Landsat 4 TM     | 1982-07-16       | 1993-12-14       | 2001-06-15       |
+| [@eros-45]       |                  |                  |                  |
++------------------+------------------+------------------+------------------+
+| Landsat 5 TM     | 1984-03-01       | 2011-11-18       | 2013-06-05       |
+| [@eros-45]       |                  |                  |                  |
++------------------+------------------+------------------+------------------+
+| Landsat 7 ETM+   | 1999-04-15       | 2022-04-06       | N/A              |
+| [@eros-7]        |                  |                  |                  |
++------------------+------------------+------------------+------------------+
+| Landsat 8        | 2013-02-11       | N/A              | N/A              |
+| OLI/TIRS         |                  |                  |                  |
+| [@eros-89]       |                  |                  |                  |
++------------------+------------------+------------------+------------------+
+| Landsat 9        | 2021-09-27       | N/A              | N/A              |
+| OLI-2/TIRS-2     |                  |                  |                  |
+| [@eros-89]       |                  |                  |                  |
++------------------+------------------+------------------+------------------+
 
 The image record for Landsat 4 is not consistent nor robust due to a data
 transmitter failure early in service, however our pipeline acquires data as
@@ -71,8 +85,8 @@ the Landsat 7 scanline error that began on May 31, 2003, data were collected as
 available despite the scanline error since the data are still of acceptable
 quality [per the USGS](https://www.usgs.gov/faqs/what-landsat-7-etm-slc-data).
 Additionally, Landsat 7 began to experience orbital drift beginning in 2017,
-resulting in top-of-atmosphere (and therefore also surface reflectance) that had
-growing uncertainties over time as the drift increased [@qiu2021]. Qui
+resulting in top-of-atmosphere (and therefore also surface reflectance) values
+that had growing uncertainties over time as the drift increased [@qiu2021]. Qui
 [-@qiu2021] suggests that data are not robust enough for trend analysis after
 the start of the growing season in 2020, but because their analysis was of NDVI,
 we conservatively truncate the data at the end of 2019.
@@ -94,28 +108,28 @@ The spatial resolution of the Level 1 data that the SR and ST products are
 derived from has not changed for optical bands over time (Aerosol, RGB, NIR,
 SWIR) but has varied over the historic record for thermal data:
 
-+--------------+---------------+---------------+
-| Sensors      | Optical Bands | Thermal Bands |
-+:============:+:=============:+:=============:+
-| TM           | 30            | 120           |
-+--------------+---------------+---------------+
-| ETM+         | 30            | 60            |
-+--------------+---------------+---------------+
-| OLI/TIRS     | 30            | 100           |
-|              |               |               |
-| OLI-2/TIRS-2 |               |               |
-+--------------+---------------+---------------+
++-----------------+-----------------+-----------------+
+| Sensors         | Optical Bands   | Thermal Bands   |
++:===============:+:===============:+:===============:+
+| TM              | 30              | 120             |
++-----------------+-----------------+-----------------+
+| ETM+            | 30              | 60              |
++-----------------+-----------------+-----------------+
+| OLI/TIRS        | 30              | 100             |
+|                 |                 |                 |
+| OLI-2/TIRS-2    |                 |                 |
++-----------------+-----------------+-----------------+
 
 All Collection 2 Level 2 Surface Reflectance and Surface Temperature data have
 been resampled to 30m.
 
 Alongside the pixel resolution of the sensors is the radiometric resolution at
 which the data are stored. TM and ETM+ data are stored as 8-bit data products,
-OLI data are quantitized to 12 bits and Landsat 9 to 14 bits. This equates to
-256 shades per band for Landsat 4-7, 4,096 shades for Landsat 8 and 16,384
-shades for Landsat 9, where higher numbers allow for greater precision of
-measurement in a given band. All Collection 2 Level 2 Surface Reflectance and
-Surface Temperature data have been rescaled to 16 bits.
+OLI data are quantized to 12 bits and Landsat 9 to 14 bits. This equates to 256
+shades per band for Landsat 4-7, 4,096 shades for Landsat 8 and 16,384 shades
+for Landsat 9, where higher numbers allow for greater precision of measurement
+in a given band. All Collection 2 Level 2 Surface Reflectance and Surface
+Temperature data have been rescaled to 16 bits.
 
 ## Surface Reflectance Product
 
@@ -124,7 +138,7 @@ Collection 2 Surface
 Reflectance](https://www.usgs.gov/landsat-missions/landsat-surface-reflectance)
 product page and has been summarized here for the purpose of providing
 background information about the Landsat archive relevant to the creation and
-use of lakeSR.*
+use of lakeSR and siteSR products.*
 
 The Landsat C2 SR product is a Level 2 data product that has been
 atmospherically corrected from the Level 1 Top of Atmosphere product using a
@@ -141,7 +155,7 @@ time. The USGS EROS describes the SR product as follows:
 ### SR Atmospheric Processing
 
 The SR product for Landsat 4-7 is calculated using the Land Ecosystem
-Distrubance Adaptive Procesing System (LEDAPS) [@schmidt2013] and Landsat 8 and
+Disturbance Adaptive Processing System (LEDAPS) [@schmidt2013] and Landsat 8 and
 9 SR data are calculated using the Land Surface Reflectance Code (LaSRC)
 algorithm [@vermote2018]. The two algorithms are functionally different, but the
 outcome is the same: a consistently-processed surface reflectance product that
@@ -157,37 +171,36 @@ Collection 2 Surface
 Temperature](https://www.usgs.gov/landsat-missions/landsat-collection-2-surface-temperature)
 product page and has been summarized here for the purpose of providing
 background information about the Landsat archive relevant to the creation and
-use of lakeSR.*
+use of lakeSR and siteSR products.*
 
 The Landsat Collection 2 Surface Temperature (ST) product is calculated using a
 single-channel algorithm [@cook2014a; @cook2014b] to convert the thermal band
-data to temperature estimates in degrees Kelvin. These data are considered
+data to temperature estimates in degrees Kelvin. While these data are considered
 interoperable over space and time with few differences in the ST algorithm
-product within Collection 2, with the acknowledgement of the
-previously-documented spectral and radiometric resolution differences.
+product within Collection 2, there do appear to be slight differences in the ST
+product between sensors. Like with the surface reflectance product, we calculate
+between-mission handoffs for the TM/ETM/TIRS products in Section
+\@ref(define-handoff).
 
 It is important to note that the thermal band resolution is coarser than the
 optical bands in all Landsat missions (see Section \@ref(sensor-resolution)). At
 this time we do not account for mixed thermal pixel boundaries due to the
 difference in pixel resolution between optical and thermal sensors in lakeSR or
-siteSR, however the median value of the POI in lakeSR should be a reasonable
-estimate and without contamination as long as the reported distance to shore is
-at least 100 meters greater than the 120 meter buffer around the POI to account
-for the resolution differences. Note that reservoirs and lakes with fluctuating
-water levels may require more careful considerations. While we provide summary
-statistics of these data for comparative and QAQC purposes, additional data
-handling may be necessary to use these data as precise estimates of water
-surface temperature. @herrick2023 provides an example of ST product debiasing.
+siteSR outside of the flags described in Section \@ref(lakeSR-shoreline) and
+Section \@ref(fl-wb-assignment). Additional data handling may be necessary to
+use these data as precise estimates of water surface temperature given these
+constraints.
 
 We do provide surface temperature summary statistics in the siteSR product as
 well, and users should approach the data with caution when a WQP monitoring site
 is near to a shoreline. While we do not have explicit guidance for the use of
 the surface temperature estimates for siteSR, we do provide some characteristics
 of sites and their relationships to NHD flowlines and waterbodies (see Section
-\@ref(fl-wb-assignment) for a description of these additional descriptors).
-Users could use a combination of `MonitoringLocationTypeName`, the flags
-assigned from our NHD assignment process, and the distance columns from that
-process to assess whether or not the temperature data is appropriate for a given
-site. Additional assessments (e.g. distance to shore) may be necessary to assess
-whether it is appropriate to use the temperature data for discrete analysis of
-temperature trends/patterns.
+\@ref(fl-wb-assignment) additional descriptors). Users could use a combination
+of `MonitoringLocationTypeName`, the flags assigned from our NHD assignment
+process, and the distance columns from that process to assess whether or not the
+temperature data is appropriate for a given site. Additional assessments may be
+necessary to assess whether it is appropriate to use the temperature data for
+discrete analysis of temperature trends/patterns. King, et al. [-@king] have
+noted that handoff coefficients should be used for the surface temperature
+product as well, see Section \@ref(define-handoff) for details.

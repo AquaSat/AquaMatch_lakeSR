@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>5 Landsat Collection 2 SRST | AquaSat v2: lakeSR and siteSR</title>
   <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
-  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
 
   <meta property="og:title" content="5 Landsat Collection 2 SRST | AquaSat v2: lakeSR and siteSR" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-01-21" />
+<meta name="date" content="2025-04-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,6 +52,8 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -159,12 +161,16 @@ div.csl-indent {
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#note"><i class="fa fa-check"></i><b>1.1</b> Note</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>2</b> Background</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#lakesr-code-architecture"><i class="fa fa-check"></i><b>2.1</b> lakeSR Code Architecture</a>
 <ul>
-<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.1</b> {targets} groups</a></li>
+<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#configuration-files"><i class="fa fa-check"></i><b>2.1.1</b> Configuration Files</a></li>
+<li class="chapter" data-level="2.1.2" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.2</b> {targets} groups</a></li>
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="background.html"><a href="background.html#sitesr_wqp-code-architecture"><i class="fa fa-check"></i><b>2.2</b> siteSR_WQP Code Architecture</a>
 <ul>
@@ -179,13 +185,14 @@ div.csl-indent {
 <li class="chapter" data-level="3.1.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.1.1</b> Updates in AquaSat v2</a></li>
 <li class="chapter" data-level="3.1.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#poi"><i class="fa fa-check"></i><b>3.1.2</b> Pole of Inaccessibility</a></li>
 <li class="chapter" data-level="3.1.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#technical-implementation-of-lakesr"><i class="fa fa-check"></i><b>3.1.3</b> Technical Implementation of lakeSR</a></li>
-<li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.4</b> Case Study: Wisconsin Waterbodies</a></li>
+<li class="chapter" data-level="3.1.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#lakeSR-shoreline"><i class="fa fa-check"></i><b>3.1.4</b> Flagging shoreline proximity</a></li>
+<li class="chapter" data-level="3.1.5" data-path="locs-data-acq.html"><a href="locs-data-acq.html#case-study-wisconsin-waterbodies"><i class="fa fa-check"></i><b>3.1.5</b> Case Study: Wisconsin Waterbodies</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR Acquisition Locations</a>
+<li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR_WQP Acquisition Locations</a>
 <ul>
 <li class="chapter" data-level="3.2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#rs-vis"><i class="fa fa-check"></i><b>3.2.1</b> Assessing for RS visibility</a></li>
 <li class="chapter" data-level="3.2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#fl-wb-assignment"><i class="fa fa-check"></i><b>3.2.2</b> Assignment of NHD flowline and waterbodies</a></li>
-<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR updates in AquaSat v2</a></li>
+<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr_wqp-updates-in-aquasat-v2"><i class="fa fa-check"></i><b>3.2.3</b> siteSR_WQP updates in AquaSat v2</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>4</b> Satellite Data Acquisition Software and Settings</a>
@@ -196,7 +203,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.2.1" data-path="software-settings.html"><a href="software-settings.html#create-account"><i class="fa fa-check"></i><b>4.2.1</b> Create a GEE account</a></li>
 <li class="chapter" data-level="4.2.2" data-path="software-settings.html"><a href="software-settings.html#gcloud"><i class="fa fa-check"></i><b>4.2.2</b> gcloud CLI</a></li>
 <li class="chapter" data-level="4.2.3" data-path="software-settings.html"><a href="software-settings.html#proj-setting"><i class="fa fa-check"></i><b>4.2.3</b> GEE project setting</a></li>
-<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#gee-authentication"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
+<li class="chapter" data-level="4.2.4" data-path="software-settings.html"><a href="software-settings.html#auth"><i class="fa fa-check"></i><b>4.2.4</b> GEE Authentication</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
@@ -225,18 +232,39 @@ div.csl-indent {
 <li class="chapter" data-level="6.3.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#masking-functions"><i class="fa fa-check"></i><b>6.3.1</b> Custom Earth Engine Masking Functions</a></li>
 <li class="chapter" data-level="6.3.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#dswe-implementation"><i class="fa fa-check"></i><b>6.3.2</b> Defining water area</a></li>
 </ul></li>
-<li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.4</b> Payload handling</a></li>
+<li class="chapter" data-level="6.4" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#additional-diagnostic-data-columns"><i class="fa fa-check"></i><b>6.4</b> Additional diagnostic data columns</a></li>
+<li class="chapter" data-level="6.5" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#payload-handling"><i class="fa fa-check"></i><b>6.5</b> Payload handling</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="handoff.html"><a href="handoff.html"><i class="fa fa-check"></i><b>7</b> Calculating Intermission Handoffs</a>
+<li class="chapter" data-level="7" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html"><i class="fa fa-check"></i><b>7</b> Post-Hoc Quality Assurance</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="handoff.html"><a href="handoff.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR stacks</a></li>
-<li class="chapter" data-level="7.2" data-path="handoff.html"><a href="handoff.html#define-handoff"><i class="fa fa-check"></i><b>7.2</b> Calculating handoffs</a>
+<li class="chapter" data-level="7.1" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR stack collation</a></li>
+<li class="chapter" data-level="7.2" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#post-hoc-filters"><i class="fa fa-check"></i><b>7.2</b> Post-hoc filters</a>
 <ul>
-<li class="chapter" data-level="7.2.1" data-path="handoff.html"><a href="handoff.html#corr7-handoff-coefficients"><i class="fa fa-check"></i><b>7.2.1</b> <code>corr7</code> handoff coefficients</a></li>
-<li class="chapter" data-level="7.2.2" data-path="handoff.html"><a href="handoff.html#corr8-handoff-coefficients"><i class="fa fa-check"></i><b>7.2.2</b> <code>corr8</code> handoff coefficients</a></li>
+<li class="chapter" data-level="7.2.1" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-4-qa-summary"><i class="fa fa-check"></i><b>7.2.1</b> Landsat 4 QA Summary</a></li>
+<li class="chapter" data-level="7.2.2" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-5-qa-summary"><i class="fa fa-check"></i><b>7.2.2</b> Landsat 5 QA Summary</a></li>
+<li class="chapter" data-level="7.2.3" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-7-qa-summary"><i class="fa fa-check"></i><b>7.2.3</b> Landsat 7 QA Summary</a></li>
+<li class="chapter" data-level="7.2.4" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-8-qa-summary"><i class="fa fa-check"></i><b>7.2.4</b> Landsat 8 QA Summary</a></li>
+<li class="chapter" data-level="7.2.5" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#landsat-9-qa-summary"><i class="fa fa-check"></i><b>7.2.5</b> Landsat 9 QA Summary</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>8</b> References</a></li>
+<li class="chapter" data-level="8" data-path="define-handoff.html"><a href="define-handoff.html"><i class="fa fa-check"></i><b>8</b> Calculating intermission handoffs</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-method"><i class="fa fa-check"></i><b>8.1</b> Roy method</a></li>
+<li class="chapter" data-level="8.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-method"><i class="fa fa-check"></i><b>8.2</b> Gardner method</a></li>
+<li class="chapter" data-level="8.3" data-path="define-handoff.html"><a href="define-handoff.html#implementing-roy-handoffs"><i class="fa fa-check"></i><b>8.3</b> Implementing Roy Handoffs</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.3.1</b> Roy Deming Correction Landsat 5 to Landsat 7</a></li>
+<li class="chapter" data-level="8.3.2" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.3.2</b> Roy Deming Correction Landsat 8 to Landsat 7</a></li>
+<li class="chapter" data-level="8.3.3" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.3.3</b> Roy Deming Correction Landsat 7 to Landsat 8</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Gardner Handoffs</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.4.1</b> Gardner Correction Landsat 5 to Landsat 7</a></li>
+<li class="chapter" data-level="8.4.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.4.2</b> Gardner Correction Landsat 8 to Landsat 7</a></li>
+<li class="chapter" data-level="8.4.3" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.4.3</b> Gardner Correction Landsat 7 to Landsat 8</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>9</b> References</a></li>
 </ul>
 
       </nav>
@@ -258,8 +286,8 @@ div.csl-indent {
 <h1><span class="header-section-number">5</span> Landsat Collection 2 SRST<a href="LS-C2-SRST.html#LS-C2-SRST" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="initialisms-and-landsat-jargon" class="section level2 hasAnchor" number="5.1">
 <h2><span class="header-section-number">5.1</span> Initialisms and Landsat Jargon<a href="LS-C2-SRST.html#initialisms-and-landsat-jargon" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><em>SR</em>: surface reflectance</p>
-<p><em>ST</em>: surface temperature</p>
+<p><em>SR</em>: surface reflectance product</p>
+<p><em>ST</em>: surface temperature product</p>
 <p><em>Collection 2 (C2)</em>: The second version of the Landsat record - the transition
 to C2 began in 2020. There were extensive changes to the data storage and
 metadata when moving from Collection 1 to C2. An overview of the differences is
@@ -276,8 +304,8 @@ USGS</a>.</p>
 how much the data have been processed. Level 1 (top of atmosphere) is less
 processed than Level 2 (surface reflectance). lakeSR uses Level 2 data
 exclusively, as it has gone through a standard atmospheric correction process
-that attempts to standardize data handling through out the Landsat record - it
-is <em>derived</em> from Level 1 data. NASA has compiled <a href="https://www.earthdata.nasa.gov/learn/earth-observation-data-basics/data-processing-levels">a list of general data
+that attempts to standardize data handling throughout the Landsat record - it is
+<em>derived</em> from Level 1 data. NASA has compiled <a href="https://www.earthdata.nasa.gov/learn/earth-observation-data-basics/data-processing-levels">a list of general data
 processing levels and descriptions
 here</a>.</p>
 <p><em>Landsat stack</em>: this is the collated Landsat historical dataset at a specific
@@ -294,48 +322,58 @@ for the purpose of providing background information about the Landsat archive
 relevant to the creation and use of lakeSR.</em></p>
 <p>The Landsat archive of multispectral and thermal data in lakeSR is composed of
 Landsat missions 4 through 9 and spans more than 40 years.</p>
-<table>
+<table style="width:97%;">
 <colgroup>
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
+<col width="24%" />
+<col width="24%" />
+<col width="24%" />
+<col width="24%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th>Mission and Sensor</th>
+<th>Mission and
+Sensor</th>
 <th align="center">Launch Date</th>
-<th align="center">End of Science Mission</th>
-<th align="center">Decommission Date</th>
+<th align="center">End of Science
+Mission</th>
+<th align="center">Decommission
+Date</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Landsat 4 TM <span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
+<td>Landsat 4 TM
+<span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
 <td align="center">1982-07-16</td>
 <td align="center">1993-12-14</td>
 <td align="center">2001-06-15</td>
 </tr>
 <tr class="even">
-<td>Landsat 5 TM <span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
+<td>Landsat 5 TM
+<span class="citation">(<a href="#ref-eros-45">EROS Center 2020a</a>)</span></td>
 <td align="center">1984-03-01</td>
 <td align="center">2011-11-18</td>
 <td align="center">2013-06-05</td>
 </tr>
 <tr class="odd">
-<td>Landsat 7 ETM+ <span class="citation">(<a href="#ref-eros-7">EROS Center 2020b</a>)</span></td>
+<td>Landsat 7 ETM+
+<span class="citation">(<a href="#ref-eros-7">EROS Center 2020b</a>)</span></td>
 <td align="center">1999-04-15</td>
 <td align="center">2022-04-06</td>
 <td align="center">N/A</td>
 </tr>
 <tr class="even">
-<td>Landsat 8 OLI/TIRS <span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
+<td>Landsat 8
+OLI/TIRS
+<span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
 <td align="center">2013-02-11</td>
 <td align="center">N/A</td>
 <td align="center">N/A</td>
 </tr>
 <tr class="odd">
-<td>Landsat 9 OLI-2/TIRS-2 <span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
+<td>Landsat 9
+OLI-2/TIRS-2
+<span class="citation">(<a href="#ref-eros-89">EROS Center 2020c</a>)</span></td>
 <td align="center">2021-09-27</td>
 <td align="center">N/A</td>
 <td align="center">N/A</td>
@@ -351,8 +389,8 @@ the Landsat 7 scanline error that began on May 31, 2003, data were collected as
 available despite the scanline error since the data are still of acceptable
 quality <a href="https://www.usgs.gov/faqs/what-landsat-7-etm-slc-data">per the USGS</a>.
 Additionally, Landsat 7 began to experience orbital drift beginning in 2017,
-resulting in top-of-atmosphere (and therefore also surface reflectance) that had
-growing uncertainties over time as the drift increased <span class="citation">(<a href="#ref-qiu2021">Qiu et al. 2021</a>)</span>. Qui
+resulting in top-of-atmosphere (and therefore also surface reflectance) values
+that had growing uncertainties over time as the drift increased <span class="citation">(<a href="#ref-qiu2021">Qiu et al. 2021</a>)</span>. Qui
 <span class="citation">(<a href="#ref-qiu2021">2021</a>)</span> suggests that data are not robust enough for trend analysis after
 the start of the growing season in 2020, but because their analysis was of NDVI,
 we conservatively truncate the data at the end of 2019.</p>
@@ -374,11 +412,11 @@ the Landsat archive.</p>
 <p>The spatial resolution of the Level 1 data that the SR and ST products are
 derived from has not changed for optical bands over time (Aerosol, RGB, NIR,
 SWIR) but has varied over the historic record for thermal data:</p>
-<table style="width:65%;">
+<table style="width:75%;">
 <colgroup>
-<col width="20%" />
-<col width="22%" />
-<col width="22%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -410,11 +448,11 @@ SWIR) but has varied over the historic record for thermal data:</p>
 been resampled to 30m.</p>
 <p>Alongside the pixel resolution of the sensors is the radiometric resolution at
 which the data are stored. TM and ETM+ data are stored as 8-bit data products,
-OLI data are quantitized to 12 bits and Landsat 9 to 14 bits. This equates to
-256 shades per band for Landsat 4-7, 4,096 shades for Landsat 8 and 16,384
-shades for Landsat 9, where higher numbers allow for greater precision of
-measurement in a given band. All Collection 2 Level 2 Surface Reflectance and
-Surface Temperature data have been rescaled to 16 bits.</p>
+OLI data are quantized to 12 bits and Landsat 9 to 14 bits. This equates to 256
+shades per band for Landsat 4-7, 4,096 shades for Landsat 8 and 16,384 shades
+for Landsat 9, where higher numbers allow for greater precision of measurement
+in a given band. All Collection 2 Level 2 Surface Reflectance and Surface
+Temperature data have been rescaled to 16 bits.</p>
 </div>
 </div>
 <div id="surface-reflectance-product" class="section level2 hasAnchor" number="5.3">
@@ -424,7 +462,7 @@ Collection 2 Surface
 Reflectance</a>
 product page and has been summarized here for the purpose of providing
 background information about the Landsat archive relevant to the creation and
-use of lakeSR.</em></p>
+use of lakeSR and siteSR products.</em></p>
 <p>The Landsat C2 SR product is a Level 2 data product that has been
 atmospherically corrected from the Level 1 Top of Atmosphere product using a
 myriad of inputs to create a reasonably consistent data product across space and
@@ -440,7 +478,7 @@ auxiliary data inputs to generate a scientifically viable product.</em></p>
 <div id="sr-atmospheric-processing" class="section level3 hasAnchor" number="5.3.1">
 <h3><span class="header-section-number">5.3.1</span> SR Atmospheric Processing<a href="LS-C2-SRST.html#sr-atmospheric-processing" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The SR product for Landsat 4-7 is calculated using the Land Ecosystem
-Distrubance Adaptive Procesing System (LEDAPS) <span class="citation">(<a href="#ref-schmidt2013">Schmidt et al. 2013</a>)</span> and Landsat 8 and
+Disturbance Adaptive Processing System (LEDAPS) <span class="citation">(<a href="#ref-schmidt2013">Schmidt et al. 2013</a>)</span> and Landsat 8 and
 9 SR data are calculated using the Land Surface Reflectance Code (LaSRC)
 algorithm <span class="citation">(<a href="#ref-vermote2018">Vermote et al. 2018</a>)</span>. The two algorithms are functionally different, but the
 outcome is the same: a consistently-processed surface reflectance product that
@@ -457,37 +495,36 @@ Collection 2 Surface
 Temperature</a>
 product page and has been summarized here for the purpose of providing
 background information about the Landsat archive relevant to the creation and
-use of lakeSR.</em></p>
+use of lakeSR and siteSR products.</em></p>
 <p>The Landsat Collection 2 Surface Temperature (ST) product is calculated using a
 single-channel algorithm <span class="citation">(<a href="#ref-cook2014a">M. J. Cook 2014</a>; <a href="#ref-cook2014b">M. Cook et al. 2014</a>)</span> to convert the thermal band
-data to temperature estimates in degrees Kelvin. These data are considered
+data to temperature estimates in degrees Kelvin. While these data are considered
 interoperable over space and time with few differences in the ST algorithm
-product within Collection 2, with the acknowledgement of the
-previously-documented spectral and radiometric resolution differences.</p>
+product within Collection 2, there do appear to be slight differences in the ST
+product between sensors. Like with the surface reflectance product, we calculate
+between-mission handoffs for the TM/ETM/TIRS products in Section
+<a href="define-handoff.html#define-handoff">8</a>.</p>
 <p>It is important to note that the thermal band resolution is coarser than the
 optical bands in all Landsat missions (see Section <a href="LS-C2-SRST.html#sensor-resolution">5.2.2</a>). At
 this time we do not account for mixed thermal pixel boundaries due to the
 difference in pixel resolution between optical and thermal sensors in lakeSR or
-siteSR, however the median value of the POI in lakeSR should be a reasonable
-estimate and without contamination as long as the reported distance to shore is
-at least 100 meters greater than the 120 meter buffer around the POI to account
-for the resolution differences. Note that reservoirs and lakes with fluctuating
-water levels may require more careful considerations. While we provide summary
-statistics of these data for comparative and QAQC purposes, additional data
-handling may be necessary to use these data as precise estimates of water
-surface temperature. <span class="citation">Herrick et al. (<a href="#ref-herrick2023">2023</a>)</span> provides an example of ST product debiasing.</p>
+siteSR outside of the flags described in Section <a href="locs-data-acq.html#lakeSR-shoreline">3.1.4</a> and
+Section <a href="locs-data-acq.html#fl-wb-assignment">3.2.2</a>. Additional data handling may be necessary to
+use these data as precise estimates of water surface temperature given these
+constraints.</p>
 <p>We do provide surface temperature summary statistics in the siteSR product as
 well, and users should approach the data with caution when a WQP monitoring site
 is near to a shoreline. While we do not have explicit guidance for the use of
 the surface temperature estimates for siteSR, we do provide some characteristics
 of sites and their relationships to NHD flowlines and waterbodies (see Section
-<a href="locs-data-acq.html#fl-wb-assignment">3.2.2</a> for a description of these additional descriptors).
-Users could use a combination of <code>MonitoringLocationTypeName</code>, the flags
-assigned from our NHD assignment process, and the distance columns from that
-process to assess whether or not the temperature data is appropriate for a given
-site. Additional assessments (e.g. distance to shore) may be necessary to assess
-whether it is appropriate to use the temperature data for discrete analysis of
-temperature trends/patterns.</p>
+<a href="locs-data-acq.html#fl-wb-assignment">3.2.2</a> additional descriptors). Users could use a combination
+of <code>MonitoringLocationTypeName</code>, the flags assigned from our NHD assignment
+process, and the distance columns from that process to assess whether or not the
+temperature data is appropriate for a given site. Additional assessments may be
+necessary to assess whether it is appropriate to use the temperature data for
+discrete analysis of temperature trends/patterns. King, et al. <span class="citation">(<a href="#ref-king">2024</a>)</span> have
+noted that handoff coefficients should be used for the surface temperature
+product as well, see Section <a href="define-handoff.html#define-handoff">8</a> for details.</p>
 
 </div>
 </div>
@@ -508,8 +545,8 @@ EROS Center. 2020a. <span>“USGS EROS Archive - Landsat Archives - Landsat 4-5 
 <div id="ref-eros-89" class="csl-entry">
 ———. 2020c. <span>“USGS EROS Archive - Landsat Archives - Landsat 8-9 OLI/TIRS Collection 2 Level-2 Science Products.”</span> <a href="https://doi.org/doi.org/10.5066/P9OGBGM6">https://doi.org/doi.org/10.5066/P9OGBGM6</a>.
 </div>
-<div id="ref-herrick2023" class="csl-entry">
-Herrick, C., B. G. Steele, J. A. Brentrup, K. L. Cottingham, M. J. Ducey, D. A. Lutz, M. W. Palace, M. C. Thompson, J. V. Trout-Haney, and K. C. Weathers. 2023. <span>“lakeCoSTR: A Tool to Facilitate Use of Landsat Collection 2 to Estimate Lake Surface Water Temperatures.”</span> <em>Ecosphere</em> 14 (1): e4357. <a href="https://doi.org/10.1002/ecs2.4357">https://doi.org/10.1002/ecs2.4357</a>.
+<div id="ref-king" class="csl-entry">
+King, Tyler V., Robert A. Bean, and Evan J. Gohring. 2024. <span>“Remote Sensing and in-Situ Data to Support Chlorophyll-a Mapping in Blue Mesa Reservoir from Sentinel-2 Imagery | U.S. Geological Survey.”</span> <a href="https://doi.org/10.5066/P9XULQAS">https://doi.org/10.5066/P9XULQAS</a>.
 </div>
 <div id="ref-qiu2021" class="csl-entry">
 Qiu, Shirley, Zhe Zhu, Rong Shang, and Christopher J. Crawford. 2021. <span>“Can Landsat 7 Preserve Its Science Capability with a Drifting Orbit?”</span> <em>Science of Remote Sensing</em> 4. <a href="https://doi.org/10.1016/j.srs.2021.100026">https://doi.org/10.1016/j.srs.2021.100026</a>.
@@ -541,46 +578,60 @@ Vermote, E., J. C. Roger, B. Franch, and Sergii Skakun. 2018. <span>“LaSRC (La
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
-"sharing": {
-"github": false,
-"facebook": true,
-"twitter": true,
-"linkedin": false,
-"weibo": false,
-"instapaper": false,
-"vk": false,
-"whatsapp": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
-},
-"fontsettings": {
-"theme": "white",
-"family": "sans",
-"size": 2
-},
-"edit": {
-"link": null,
-"text": null
-},
-"history": {
-"link": null,
-"text": null
-},
-"view": {
-"link": null,
-"text": null
-},
-"download": null,
-"search": {
-"engine": "fuse",
-"options": null
-},
-"toc": {
-"collapse": "subsection"
-}
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
 });
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>
