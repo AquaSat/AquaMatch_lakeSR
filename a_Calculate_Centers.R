@@ -126,19 +126,31 @@ if (config::get(config = general_config)$calculate_centers) {
     # 100 m from shoreline, indicating possible shoreline mixed pixels.
     tar_target(
       name = a_poi_with_flags,
-      command = a_combined_poi %>% 
-        mutate(flag_optical_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 30,
-                                                1,  # possible shoreline contamination
-                                                0), # no expected shoreline contamination
-               flag_thermal_TM_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 120,
-                                                   1, # possible shoreline contamination
-                                                   0), # no expected shoreline contamination
-               flag_thermal_ETM_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 60,
-                                                    1, # possible shoreline contamination
-                                                    0), # no expected shoreline contamination
-               flag_thermal_TIRS_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 100,
-                                                     1, # possible shoreline contamination
-                                                     0)) # no expected shoreline contamination
+      command = {
+        poi_with_flags <- a_combined_poi %>% 
+          mutate(flag_optical_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 30,
+                                                  1,  # possible shoreline contamination
+                                                  0), # no expected shoreline contamination
+                 flag_thermal_MSS_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 120,
+                                                      1, # possible shoreline contamination
+                                                      0), # no expected shoreline contamination
+                 flag_thermal_ETM_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 60,
+                                                      1, # possible shoreline contamination
+                                                      0), # no expected shoreline contamination
+                 flag_thermal_TIRS_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 100,
+                                                       1, # possible shoreline contamination
+                                                       0)) # no expected shoreline contamination
+        # coerce NA -> "" when wb assignment but no gnis/name
+        poi_with_flags <- poi_with_flags %>% 
+          mutate(across(.cols = c(gnis_id, gnis_name), 
+                        .fns = ~ if_else(!is.na(nhd_id) & is.na(.x), "", .x)))
+        # save locally
+        write_csv(poi_with_flags,
+                  paste0("a_Calculate_Centers/out/lakeSR_poi_with_flags_", 
+                         lakeSR_config$centers_version, 
+                         ".csv"))
+        poi_with_flags
+      }
     ),
     
     # check for drive folder if set to export
@@ -228,14 +240,17 @@ if (config::get(config = general_config)$calculate_centers) {
     
     tar_target(
       name = a_poi_with_flags,
-      command = retrieve_target(
-        target = "a_poi_with_flags", 
-        id_df = a_combined_poi_drive_ids, 
-        local_folder = "a_Calculate_Centers/mid/", 
-        google_email = lakeSR_config$google_email, 
-        version_date = lakeSR_config$centers_version,
-        file_type = ".csv"
-      ),
+      command = {
+        a_check_dir_structure
+        retrieve_target(
+          target = "a_poi_with_flags", 
+          id_df = a_combined_poi_drive_ids, 
+          local_folder = "a_Calculate_Centers/mid/", 
+          google_email = lakeSR_config$google_email, 
+          version_date = lakeSR_config$centers_version,
+          file_type = ".csv"
+        )
+      },
       packages = c("tidyverse", "googledrive")
     )
     

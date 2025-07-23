@@ -34,13 +34,7 @@ calculate_centers_HUC4 <- function(HUC4) {
         areasqkm >= 0.01) %>% 
       mutate(ftype = case_when(ftype == "LakePond" ~ 390,
                                ftype == "Reservoir" ~ 436,
-                               TRUE ~ NA_real_),
-             gnis_id = if_else(gnis_id == "", 
-                               NA_character_, 
-                               gnis_id),
-             gnis_name = if_else(gnis_name == "",
-                                 NA_character_,
-                                 gnis_name))
+                               TRUE ~ NA_real_))
     
     # grab smaller (<4ha) lakes/ponds that are characterized as intermittent by NHD
     intermittent <- wbd_filter %>% 
