@@ -278,7 +278,7 @@ if (config::get(config = general_config)$update_and_share) {
         drive_ids <- d_send_sorted_files_to_Drive %>% 
           select(name, id)
         write_csv(drive_ids,
-                  paste0("d_qa_filteR_sort/out/Landsat_sorted_files_drive_ids_v",
+                  paste0("d_qa_filter_sort/out/Landsat_sorted_files_drive_ids_v",
                          d_qa_version_identifier,
                          ".csv"))
         drive_ids
@@ -332,7 +332,7 @@ if (config::get(config = general_config)$update_and_share) {
         drive_ids <- d_send_feather_files_to_Drive %>% 
           select(name, id)
         write_csv(drive_ids,
-                  paste0("d_qa_filteR_sort/out/Landsat_QA_feather_files_drive_ids_v",
+                  paste0("d_qa_filter_sort/out/Landsat_QA_feather_files_drive_ids_v",
                          d_qa_version_identifier,
                          ".csv"))
         drive_ids
@@ -354,7 +354,7 @@ if (config::get(config = general_config)$update_and_share) {
       command = {
         # make directories if needed
         directories <- c("d_qa_filter_sort/sort/",
-                        file.path("d_qa_filteR_sort/out/", d_qa_version_identifier))
+                        file.path("d_qa_filter_sort/out/", d_qa_version_identifier))
         walk(directories, function(dir) {
           if(!dir.exists(dir)){
             dir.create(dir)
@@ -388,7 +388,7 @@ if (config::get(config = general_config)$update_and_share) {
       name = d_save_sorted_drive_info,
       command = {
         d_check_dir_structure
-        read_csv(paste0("d_qa_filteR_sort/out/Landsat_sorted_files_drive_ids_v",
+        read_csv(paste0("d_qa_filter_sort/out/Landsat_sorted_files_drive_ids_v",
                         d_qa_version_identifier,
                         ".csv"))
       }
@@ -398,7 +398,7 @@ if (config::get(config = general_config)$update_and_share) {
       name = d_save_feather_drive_info,
       command = {
         d_check_dir_structure
-        read_csv(paste0("d_qa_filteR_sort/out/Landsat_QA_feather_files_drive_ids_v",
+        read_csv(paste0("d_qa_filter_sort/out/Landsat_QA_feather_files_drive_ids_v",
                         d_qa_version_identifier,
                         ".csv"))
       }
@@ -409,7 +409,7 @@ if (config::get(config = general_config)$update_and_share) {
       command = {
         d_check_dir_structure
         retrieve_data(id_df = d_save_sorted_drive_info,
-                      local_folder = "d_qa_filteR_sort/sort/",
+                      local_folder = "d_qa_filter_sort/sort/",
                       google_email = lakeSR_config$google_email,
                       file_type = ".feather",
                       version_date = d_qa_version_identifier)
@@ -423,7 +423,7 @@ if (config::get(config = general_config)$update_and_share) {
       command = {
         d_check_dir_structure
         retrieve_data(id_df = d_save_feather_drive_info,
-                      local_folder = file.path("d_qa_filteR_sort/out/", d_qa_version_identifier),
+                      local_folder = file.path("d_qa_filter_sort/out/", d_qa_version_identifier),
                       google_email = lakeSR_config$google_email,
                       file_type = ".feather",
                       version_date = d_qa_version_identifier)

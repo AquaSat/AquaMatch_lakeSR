@@ -1,7 +1,7 @@
 default:
   # The default setting for the configuration file is set to use pre-existing 
   # centers and collated datasets. 
-  google_email: "" # enter google email
+  google_email: "therossyndicate@gmail.com" # enter google email
   calculate_centers: FALSE # the center calculation will not run, and previously-
   # collated centers will be used
   centers_version: "2025-02-12" # yyyy-mm-dd of version, must be a date listed in the 
@@ -14,7 +14,7 @@ default:
   parent_Drive_folder: "~/lakeSR_Landsat_C2/" # optional. character string, parent folder 
   # location to store files on Google Drive. Can also be "" if no parent folder desired.
   # Only used if calculate_centers, run_gee, and/or update_and_share set to TRUE.
-  update_and_share: FALSE # boolean, indication of whether the qa steps should be 
+  update_and_share: TRUE # boolean, indication of whether the qa steps should be 
   # re-run and updated to Drive. If TRUE, qa steps will be run locally and .csv
   # and feather files will be created and sent to drive. If FALSE, the previously-
   # created/shared files with the `qa_version` below will be used in the pipeline.

@@ -1,4 +1,4 @@
-# Source functions for this {targets} list
+3# Source functions for this {targets} list
 tar_source("e_calculate_handoffs/src/")
 
 # Calculate handoff coefficients -----------------------------
@@ -548,8 +548,10 @@ e_calculate_handoffs <- list(
     command = {
       handoffs <- bind_rows(e_Roy_handoffs, e_Gardner_handoffs) %>%
         select(band, correction, dswe, sat_corr, sat_to, method, intercept, slope, B1, B2, min_in_val, max_in_val)
-      write_csv(handoffs, paste0("e_calculate_handoffs/out/collated_handoffs_v",
-                                 b_yml_poi$run_date,
+      write_csv(handoffs, paste0("e_calculate_handoffs/out/lakeSR_collated_handoffs_GEEv",
+                                 lakeSR_config$collated_version,
+                                 "_QAv", 
+                                 lakeSR_config$qa_version, 
                                  ".csv"))
     }
   )
