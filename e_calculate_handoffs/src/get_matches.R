@@ -7,7 +7,8 @@
 #'
 #' @param dir Character string specifying the directory path where the input files are located.
 #' @param dswe Character string specifying the Dynamic Surface Water Extent (DSWE) criteria.
-#' @param version Character string specifying the version of the data.
+#' @param gee_version Character string specifying the GEE run version identifier (YYYY-MM-DD)
+#' @param qa_version Character string specifying the qa version identifier (YYYY-MM-DD)
 #' @param early_LS_mission Character string specifying the early Landsat mission (e.g., "LT05", "LE07").
 #' @param late_LS_mission Character string specifying the late Landsat mission (e.g., "LC08", "LC09").
 #' @param early_path_prefix Character string specifying the path prefix for early period data (e.g., "00", "01").
@@ -16,7 +17,7 @@
 #' @returns A data.table containing matched Landsat data from early and late periods.
 #'
 #'
-get_matches <- function(dir, dswe, version,
+get_matches <- function(dir, dswe, gee_version, qa_version,
                         early_LS_mission, late_LS_mission, 
                         early_path_prefix, late_path_prefix){
   
@@ -29,8 +30,10 @@ get_matches <- function(dir, dswe, version,
                                               "_",
                                               dswe,
                                               "_",
-                                              version, 
-                                              "_filtered.feather")))
+                                              gee_version, 
+                                              "_filtered_",
+                                              qa_version,
+                                              ".feather")))
   late <- read_feather(file.path(dir, paste0("LSC2_poi_collated_sites_",
                                              late_LS_mission, 
                                              "_",
@@ -38,8 +41,10 @@ get_matches <- function(dir, dswe, version,
                                              "_",
                                              dswe,
                                              "_",
-                                             version, 
-                                             "_filtered.feather")))
+                                             gee_version, 
+                                             "_filtered_",
+                                             qa_version,
+                                             ".feather")))
   
   
   # prep data ---------------------------------------------------------------

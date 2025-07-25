@@ -7,11 +7,20 @@
 #' @param file file path to feather file to be updated and prepared for export.
 #' File name must include `metadata`.
 #' @param file_type output file type (either "csv" or "feather")
+#' @param qa_identifier date string formatted yyyy-mm-dd used to version the 
+#' qa process. This is set in the general configuration yaml under `qa_version`
+#' @param gee_identifier date string formatted yyyy-mm-dd used to version the
+#' original gee pull. This is set in the general configuration yaml under 
+#' `collated_version`
 #' @param out_path Directory where updated files should be saved. 
 #' 
 #' @returns full relative file path of saved file.
 #' 
-prep_LS_metadata_for_export <- function(file, file_type, out_path) {
+prep_LS_metadata_for_export <- function(file, 
+                                        file_type, 
+                                        qa_identifier, 
+                                        gee_identifier,
+                                        out_path) {
   
   # make sure file type is accepted
   if (!file_type %in% c("csv", "feather")) {
@@ -36,6 +45,7 @@ prep_LS_metadata_for_export <- function(file, file_type, out_path) {
   } else {
     "IMAGE_QUALITY_OLI"
   }
+  
   data[image_qual_name >= 8]
   
   # we'll export a handful of columns of the metadata that may be useful in 
@@ -62,20 +72,28 @@ prep_LS_metadata_for_export <- function(file, file_type, out_path) {
   # get the basename of the file, without the extension
   fn <- basename(file)
   
+  # make ext
+  ext <- paste0(".", file_type)
+  
+  # do some string-replace to create the new fn
+  new_fn <- str_replace(fn, 
+                        "LSC2_poi_collated_metadata", 
+                        "lakeSR_metadata") %>% 
+    str_replace(., 
+                paste0(gee_identifier, ".feather"), 
+                paste0("export_", qa_identifier, ext)) 
+  
+  # store the new file path
+  full_file_path <- file.path(out_path, new_fn)
+  
   if (file_type == "csv") {
-    full_file_path <- file.path(out_path,
-                                paste0(str_replace(fn, ".feather", "_export.csv")))
-    write_csv(data,
-              full_file_path)
+    write_csv(data, full_file_path)
   }
   if (file_type == "feather") {
-    full_file_path <- file.path(out_path,
-                                paste0(str_replace(fn, ".feather", "_export.feather")))
     write_feather(data,
                   full_file_path,
                   compression = "lz4")
   }
-  
   
   full_file_path
   
