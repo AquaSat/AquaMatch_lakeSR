@@ -1,4 +1,4 @@
-3# Source functions for this {targets} list
+# Source functions for this {targets} list
 tar_source("e_calculate_handoffs/src/")
 
 # Calculate handoff coefficients -----------------------------
