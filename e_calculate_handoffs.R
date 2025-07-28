@@ -275,7 +275,7 @@ e_calculate_handoffs <- list(
       get_matches(files = d_all_feather_Landsat_files, 
                   dswe = "DSWE1a", 
                   qa_version = d_qa_version_identifier,
-                  early_LS_mission = "Landsat7", late_LS_mission = "Landast8")
+                  early_LS_mission = "Landsat7", late_LS_mission = "Landsat8")
     },
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
