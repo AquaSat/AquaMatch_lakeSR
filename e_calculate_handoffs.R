@@ -37,7 +37,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS4_forLS45corr_quantiles,
-    command = get_quantile_values(qa_files = d_all_sorted_Landsat_files,
+    command = get_quantile_values(qa_files = d_all_feather_Landsat_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LT04",
                                   location_info = a_poi_with_flags,
@@ -50,14 +50,13 @@ e_calculate_handoffs <- list(
                                             "med_Nir", "med_Swir1", "med_Swir2",
                                             "med_SurfaceTemp")),
     pattern = map(c_dswe_types), 
-    packages = c("data.table", "dplyr", "purrr", "readr", "stringr",
-                 "arrow", "lubridate", "rlang"), 
+    packages = c("data.table", "tidyverse", "arrow"), 
     deployment = "main" # these are still too large for multicore!
   ),
   
   tar_target(
     name = e_LS5_forLS45corr_quantiles,
-    command = get_quantile_values(qa_files = d_all_sorted_Landsat_files,
+    command = get_quantile_values(qa_files = d_all_feather_Landsat_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LT05",
                                   location_info = a_poi_with_flags,
@@ -76,7 +75,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS5_forLS57corr_quantiles,
-    command = get_quantile_values(qa_files = d_all_sorted_Landsat_files,
+    command = get_quantile_values(qa_files = d_all_feather_Landsat_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LT05",
                                   location_info = a_poi_with_flags,
@@ -95,7 +94,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS7_forLS57corr_quantiles,
-    command = get_quantile_values(qa_files = d_all_sorted_Landsat_files,
+    command = get_quantile_values(qa_files = d_all_feather_Landsat_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LE07",
                                   location_info = a_poi_with_flags,
@@ -114,7 +113,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS7_forLS78corr_quantiles,
-    command = get_quantile_values(qa_files = d_all_sorted_Landsat_files,
+    command = get_quantile_values(qa_files = d_all_feather_Landsat_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LE07",
                                   location_info = a_poi_with_flags,
@@ -133,7 +132,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS8_forLS78corr_quantiles,
-    command = get_quantile_values(qa_files = d_all_sorted_Landsat_files,
+    command = get_quantile_values(qa_files = d_all_feather_Landsat_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LC08",
                                   location_info = a_poi_with_flags,
@@ -152,7 +151,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS8_forLS89corr_quantiles,
-    command = get_quantile_values(qa_files = d_all_sorted_Landsat_files,
+    command = get_quantile_values(qa_files = d_all_feather_Landsat_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LC08",
                                   location_info = a_poi_with_flags,
@@ -171,7 +170,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS9_forLS89corr_quantiles,
-    command = get_quantile_values(qa_files = d_all_sorted_Landsat_files,
+    command = get_quantile_values(qa_files = d_all_feather_Landsat_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LC09",
                                   location_info = a_poi_with_flags,
@@ -194,48 +193,17 @@ e_calculate_handoffs <- list(
   # This section creates paired data from mission flyovers using the Roy et al.
   # 2016 method
   
-  # make a matrix of possible path prefix overlaps (aka 00 overlaps with 00 and 01, 
-  # 03 overlaps with 02, 03, 04, etc)
-  tar_target(
-    name = e_path_prefix_table,
-    command = tibble(early_prefix = c("00", "00", 
-                                      "01", "01", "01", 
-                                      "02", "02", "02",
-                                      "03", "03", "03",
-                                      "04", "04", "04",
-                                      "05", "05", "05",
-                                      "06", "06", "06",
-                                      "07", "07","07",
-                                      "08", "08",
-                                      "10"),
-                     late_prefix = c("00", "01", 
-                                     "00", "01", "02",
-                                     "01", "02", "03",
-                                     "02", "03", "04",
-                                     "03", "04", "05",
-                                     "04", "05", "06",
-                                     "05", "06", "07",
-                                     "06", "07", "08",
-                                     "07", "08",
-                                     "10"))
-  ),
-  
   # these are too large to do both dswe at the same time, so break out into indiv
   # matches per dswe type:
   
   tar_target(
     name = e_LS45_DSWE1_matches,
     command = {
-      d_all_sorted_Landsat_files
-      get_matches(dir = "d_qa_filter_sort/qa/", 
+      get_matches(files = d_all_feather_Landsat_files, 
                   dswe = "DSWE1", 
-                  gee_version = d_gee_version_identifier,
                   qa_version = d_qa_version_identifier,
-                  early_LS_mission = "LT04", late_LS_mission = "LT05",
-                  early_path_prefix = e_path_prefix_table$early_prefix, 
-                  late_path_prefix =  e_path_prefix_table$late_prefix)
+                  early_LS_mission = "Landsat4", late_LS_mission = "Landsat5")
     },
-    pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   ),
@@ -243,16 +211,11 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS57_DSWE1_matches,
     command = {
-      d_all_sorted_Landsat_files
-      get_matches(dir = "d_qa_filter_sort/qa/", 
+      get_matches(files = d_all_feather_Landsat_files, 
                   dswe = "DSWE1", 
-                  gee_version = d_gee_version_identifier,
                   qa_version = d_qa_version_identifier,
-                  early_LS_mission = "LT05", late_LS_mission = "LE07",
-                  early_path_prefix = e_path_prefix_table$early_prefix, 
-                  late_path_prefix =  e_path_prefix_table$late_prefix)
+                  early_LS_mission = "Landsat5", late_LS_mission = "Landsat7")
     },
-    pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   ),
@@ -260,16 +223,11 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS78_DSWE1_matches,
     command = {
-      d_all_sorted_Landsat_files
-      get_matches(dir = "d_qa_filter_sort/qa/", 
+      get_matches(files = d_all_feather_Landsat_files, 
                   dswe = "DSWE1", 
-                  gee_version = d_gee_version_identifier,
                   qa_version = d_qa_version_identifier,
-                  early_LS_mission = "LE07", late_LS_mission = "LC08",
-                  early_path_prefix = e_path_prefix_table$early_prefix, 
-                  late_path_prefix =  e_path_prefix_table$late_prefix)
+                  early_LS_mission = "Landsat7", late_LS_mission = "Landsat8")
     },
-    pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   ),
@@ -277,16 +235,11 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS89_DSWE1_matches,
     command = {
-      d_all_sorted_Landsat_files
-      get_matches(dir = "d_qa_filter_sort/qa/", 
+      get_matches(files = d_all_feather_Landsat_files, 
                   dswe = "DSWE1", 
-                  gee_version = d_gee_version_identifier,
                   qa_version = d_qa_version_identifier,
-                  early_LS_mission = "LC08", late_LS_mission = "LC09",
-                  early_path_prefix = e_path_prefix_table$early_prefix, 
-                  late_path_prefix =  e_path_prefix_table$late_prefix)
+                  early_LS_mission = "Landsat8", late_LS_mission = "Landsat9")
     },
-    pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   ),
@@ -295,16 +248,11 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS45_DSWE1a_matches,
     command = {
-      d_all_sorted_Landsat_files
-      get_matches(dir = "d_qa_filter_sort/qa/", 
+      get_matches(files = d_all_feather_Landsat_files, 
                   dswe = "DSWE1a", 
-                  gee_version = d_gee_version_identifier,
                   qa_version = d_qa_version_identifier,
-                  early_LS_mission = "LT04", late_LS_mission = "LT05",
-                  early_path_prefix = e_path_prefix_table$early_prefix, 
-                  late_path_prefix = e_path_prefix_table$late_prefix)
+                  early_LS_mission = "Landsat4", late_LS_mission = "Landsat5")
     },
-    pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   ),
@@ -312,16 +260,11 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS57_DSWE1a_matches,
     command = {
-      d_all_sorted_Landsat_files
-      get_matches(dir = "d_qa_filter_sort/qa/", 
+      get_matches(files = d_all_feather_Landsat_files, 
                   dswe = "DSWE1a", 
-                  gee_version = d_gee_version_identifier,
                   qa_version = d_qa_version_identifier,
-                  early_LS_mission = "LT05", late_LS_mission = "LE07",
-                  early_path_prefix = e_path_prefix_table$early_prefix, 
-                  late_path_prefix = e_path_prefix_table$late_prefix)
+                  early_LS_mission = "Landsat5", late_LS_mission = "Landsat7")
     },
-    pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   ),
@@ -329,16 +272,11 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS78_DSWE1a_matches,
     command = {
-      d_all_sorted_Landsat_files
-      get_matches(dir = "d_qa_filter_sort/qa/", 
+      get_matches(files = d_all_feather_Landsat_files, 
                   dswe = "DSWE1a", 
-                  gee_version = d_gee_version_identifier,
                   qa_version = d_qa_version_identifier,
-                  early_LS_mission = "LE07", late_LS_mission = "LC08",
-                  early_path_prefix = e_path_prefix_table$early_prefix, 
-                  late_path_prefix =  e_path_prefix_table$late_prefix)
+                  early_LS_mission = "Landsat7", late_LS_mission = "Landast8")
     },
-    pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   ),
@@ -346,16 +284,11 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS89_DSWE1a_matches,
     command = {
-      d_all_sorted_Landsat_files
-      get_matches(dir = "d_qa_filter_sort/qa/", 
+      get_matches(files = d_all_feather_Landsat_files, 
                   dswe = "DSWE1a", 
-                  gee_version = d_gee_version_identifier,
                   qa_version = d_qa_version_identifier,
-                  early_LS_mission = "LC08", late_LS_mission = "LC09",
-                  early_path_prefix = e_path_prefix_table$early_prefix, 
-                  late_path_prefix =  e_path_prefix_table$late_prefix)
+                  early_LS_mission = "Landsat8", late_LS_mission = "Landsat9")
     },
-    pattern = map(e_path_prefix_table),
     packages = c("data.table", "tidyverse", "arrow"),
     deployment = "main"
   ),

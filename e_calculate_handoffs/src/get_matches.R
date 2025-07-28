@@ -5,69 +5,44 @@
 #' ('early' and 'late') based on specified criteria. This function uses data.table
 #' syntax for efficiency and memory use minimization.
 #'
-#' @param dir Character string specifying the directory path where the input files are located.
+#' @param files Character string specifying the directory path and file names of the feather files.
 #' @param dswe Character string specifying the Dynamic Surface Water Extent (DSWE) criteria.
-#' @param gee_version Character string specifying the GEE run version identifier (YYYY-MM-DD)
 #' @param qa_version Character string specifying the qa version identifier (YYYY-MM-DD)
-#' @param early_LS_mission Character string specifying the early Landsat mission (e.g., "LT05", "LE07").
-#' @param late_LS_mission Character string specifying the late Landsat mission (e.g., "LC08", "LC09").
-#' @param early_path_prefix Character string specifying the path prefix for early period data (e.g., "00", "01").
-#' @param late_path_prefix Character string specifying the path prefix for late period data (e.g., "00", "01").
+#' @param early_LS_mission Character string specifying the early Landsat mission (e.g., "Landsat5", "Landsat7").
+#' @param late_LS_mission Character string specifying the late Landsat mission (e.g., "Landsat8", "Landsat9").
 #'
 #' @returns A data.table containing matched Landsat data from early and late periods.
 #'
 #'
-get_matches <- function(dir, dswe, gee_version, qa_version,
-                        early_LS_mission, late_LS_mission, 
-                        early_path_prefix, late_path_prefix){
+get_matches <- function(files, dswe, gee_version, qa_version,
+                        early_LS_mission, late_LS_mission){
   
   # load filtered data ------------------------------------------------------
   
-  early <- read_feather(file.path(dir, paste0("LSC2_poi_collated_sites_",
-                                              early_LS_mission, 
-                                              "_",
-                                              early_path_prefix,
-                                              "_",
-                                              dswe,
-                                              "_",
-                                              gee_version, 
-                                              "_filtered_",
-                                              qa_version,
-                                              ".feather")))
-  late <- read_feather(file.path(dir, paste0("LSC2_poi_collated_sites_",
-                                             late_LS_mission, 
-                                             "_",
-                                             late_path_prefix,
-                                             "_",
-                                             dswe,
-                                             "_",
-                                             gee_version, 
-                                             "_filtered_",
-                                             qa_version,
-                                             ".feather")))
+  early <- files[grepl(early_LS_mission, files)] %>% 
+    .[grepl(qa_version, .)] %>%
+    .[grepl(paste0("_", dswe, "_"), .)] %>% 
+    read_feather(.)
+  
+  late <- files[grepl(late_LS_mission, files)] %>% 
+    .[grepl(qa_version, .)] %>% 
+    .[grepl(paste0("_", dswe, "_"), .)] %>% 
+    read_feather(.)
   
   
   # prep data ---------------------------------------------------------------
   
   # convert to DT by reference
   setDT(early)
-  # add date column
-  early[, early_date := ymd(str_extract(`system:index`, "(?<=_)\\d{8}(?=_)"))] 
-  # add lakeSR_id column
-  early[, lakeSR_id := str_extract(`system:index`, "\\d{4}_\\d+$")]
-  # and reformat `system:index`
-  early[, early_sat_id := str_extract(`system:index`, ".*(?=_\\d{4}_\\d+$)")]
+  # rename date and sat_id columns for join
+  setnames(early, old = c("date", "sat_id"), new = c("early_date", "early_sat_id"))
   # grab pathrow from source
   early[, early_pathrow := str_extract(source, "(?<=_)\\d{6}(?=_)")]
   
   # convert to DT by reference
   setDT(late)
-  # add date column
-  late[, late_date := ymd(str_extract(`system:index`, "(?<=_)\\d{8}(?=_)"))] 
-  # add lakeSR_id column
-  late[, lakeSR_id := str_extract(`system:index`, "\\d{4}_\\d+$")]
-  # and reformat `system:index`
-  late[, late_sat_id := str_extract(`system:index`, ".*(?=_\\d{4}_\\d+$)")]
+  # rename date and sat_id columns for join
+  setnames(late, old = c("date", "sat_id"), new = c("late_date", "late_sat_id"))
   # grab pathrow from source
   late[, late_pathrow := str_extract(source, "(?<=_)\\d{6}(?=_)")]
   
