@@ -305,45 +305,57 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_calculate_gardner_LS5_to_LS7,
-    command = calculate_gardner_handoff(quantile_from = e_LS5_forLS57corr_quantiles, 
-                                        quantile_to = e_LS7_forLS57corr_quantiles, 
-                                        mission_from = "LS5", 
-                                        mission_to = "LS7",
-                                        DSWE = c_dswe_types, 
-                                        band = e_bands_for_correction),
+    command = {
+      e_check_dir_structure
+      calculate_gardner_handoff(quantile_from = e_LS5_forLS57corr_quantiles, 
+                                quantile_to = e_LS7_forLS57corr_quantiles, 
+                                mission_from = "LS5", 
+                                mission_to = "LS7",
+                                DSWE = c_dswe_types, 
+                                band = e_bands_for_correction)
+    },
     pattern = cross(c_dswe_types, e_bands_for_correction)
   ),
   
   tar_target(
     name = e_calculate_gardner_LS8_to_LS7,
-    command = calculate_gardner_handoff(quantile_from = e_LS8_forLS78corr_quantiles, 
-                                        quantile_to = e_LS7_forLS78corr_quantiles, 
-                                        mission_from = "LS8", 
-                                        mission_to = "LS7",
-                                        DSWE = c_dswe_types, 
-                                        band = e_bands_for_correction),
+    command = {
+      e_check_dir_structure
+      calculate_gardner_handoff(quantile_from = e_LS8_forLS78corr_quantiles, 
+                                quantile_to = e_LS7_forLS78corr_quantiles, 
+                                mission_from = "LS8", 
+                                mission_to = "LS7",
+                                DSWE = c_dswe_types, 
+                                band = e_bands_for_correction)
+    },
     pattern = cross(c_dswe_types, e_bands_for_correction)
   ),
   
   tar_target(
     name = e_calculate_gardner_LS7_to_LS8,
-    command = calculate_gardner_handoff(quantile_from = e_LS7_forLS78corr_quantiles, 
-                                        quantile_to = e_LS8_forLS78corr_quantiles, 
-                                        mission_from = "LS7", 
-                                        mission_to = "LS8",
-                                        DSWE = c_dswe_types, 
-                                        band = e_bands_for_correction),
+    command = {
+      e_check_dir_structure
+      calculate_gardner_handoff(quantile_from = e_LS7_forLS78corr_quantiles, 
+                                quantile_to = e_LS8_forLS78corr_quantiles, 
+                                mission_from = "LS7", 
+                                mission_to = "LS8",
+                                DSWE = c_dswe_types, 
+                                band = e_bands_for_correction)
+    },
     pattern = cross(c_dswe_types, e_bands_for_correction)
   ),
   
   tar_target(
     name = e_calculate_gardner_LS9_to_LS8,
-    command = calculate_gardner_handoff(quantile_from = e_LS9_forLS89corr_quantiles, 
-                                        quantile_to = e_LS8_forLS89corr_quantiles, 
-                                        mission_from = "LS9", 
-                                        mission_to = "LS8",
-                                        DSWE = c_dswe_types, 
-                                        band = e_bands_for_correction),
+    command = {
+      e_check_dir_structure
+      calculate_gardner_handoff(quantile_from = e_LS9_forLS89corr_quantiles, 
+                                quantile_to = e_LS8_forLS89corr_quantiles, 
+                                mission_from = "LS9", 
+                                mission_to = "LS8",
+                                DSWE = c_dswe_types, 
+                                band = e_bands_for_correction)
+    },
     pattern = cross(c_dswe_types, e_bands_for_correction)
   ), 
   
@@ -351,104 +363,128 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_Roy_LS5_to_LS7_DSWE1_handoff,
-    command = calculate_roy_handoff(matched_data = e_LS57_DSWE1_matches, 
-                                    mission_from = "LS5",
-                                    mission_to = "LS7",
-                                    location_info = a_poi_with_flags,
-                                    invert_mission_match = FALSE,
-                                    bands = e_bands_for_correction,
-                                    DSWE = "DSWE1"),
+    command = {
+      e_check_dir_structure
+      calculate_roy_handoff(matched_data = e_LS57_DSWE1_matches, 
+                            mission_from = "LS5",
+                            mission_to = "LS7",
+                            location_info = a_poi_with_flags,
+                            invert_mission_match = FALSE,
+                            bands = e_bands_for_correction,
+                            DSWE = "DSWE1")
+    },
     packages = c("tidyverse", "deming"),
     deployment = "main"
   ),
   
   tar_target(
     name = e_Roy_LS8_to_LS7_DSWE1_handoff,
-    command = calculate_roy_handoff(matched_data = e_LS78_DSWE1_matches, 
-                                    mission_from = "LS8",
-                                    mission_to = "LS7",
-                                    location_info = a_poi_with_flags,
-                                    invert_mission_match = TRUE,
-                                    bands = e_bands_for_correction,
-                                    DSWE = "DSWE1"),
+    command = {
+      e_check_dir_structure
+      calculate_roy_handoff(matched_data = e_LS78_DSWE1_matches, 
+                            mission_from = "LS8",
+                            mission_to = "LS7",
+                            location_info = a_poi_with_flags,
+                            invert_mission_match = TRUE,
+                            bands = e_bands_for_correction,
+                            DSWE = "DSWE1")
+    },
     packages = c("tidyverse", "deming"),
     deployment = "main"
   ),
   
   tar_target(
     name = e_Roy_LS7_to_LS8_DSWE1_handoff,
-    command = calculate_roy_handoff(matched_data = e_LS78_DSWE1_matches, 
-                                    mission_from = "LS7",
-                                    mission_to = "LS8",
-                                    location_info = a_poi_with_flags,
-                                    invert_mission_match = FALSE,
-                                    bands = e_bands_for_correction,
-                                    DSWE = "DSWE1"),
+    command = {
+      e_check_dir_structure
+      calculate_roy_handoff(matched_data = e_LS78_DSWE1_matches, 
+                            mission_from = "LS7",
+                            mission_to = "LS8",
+                            location_info = a_poi_with_flags,
+                            invert_mission_match = FALSE,
+                            bands = e_bands_for_correction,
+                            DSWE = "DSWE1")
+    },
     packages = c("tidyverse", "deming"),
     deployment = "main"
   ),
   
   tar_target(
     name = e_Roy_LS9_to_LS8_DSWE1_handoff,
-    command = calculate_roy_handoff(matched_data = e_LS89_DSWE1_matches, 
-                                    mission_from = "LS9",
-                                    mission_to = "LS8",
-                                    location_info = a_poi_with_flags,
-                                    invert_mission_match = TRUE,
-                                    bands = e_bands_for_correction,
-                                    DSWE = "DSWE1"),
+    command = {
+      e_check_dir_structure
+      calculate_roy_handoff(matched_data = e_LS89_DSWE1_matches, 
+                            mission_from = "LS9",
+                            mission_to = "LS8",
+                            location_info = a_poi_with_flags,
+                            invert_mission_match = TRUE,
+                            bands = e_bands_for_correction,
+                            DSWE = "DSWE1")
+    },
     packages = c("tidyverse", "deming"),
     deployment = "main"
   ), 
   
   tar_target(
     name = e_Roy_LS5_to_LS7_DSWE1a_handoff,
-    command = calculate_roy_handoff(matched_data = e_LS57_DSWE1a_matches, 
-                                    mission_from = "LS5",
-                                    mission_to = "LS7",
-                                    location_info = a_poi_with_flags,
-                                    invert_mission_match = FALSE,
-                                    bands = e_bands_for_correction,
-                                    DSWE = "DSWE1a"),
+    command = {
+      e_check_dir_structure
+      calculate_roy_handoff(matched_data = e_LS57_DSWE1a_matches, 
+                            mission_from = "LS5",
+                            mission_to = "LS7",
+                            location_info = a_poi_with_flags,
+                            invert_mission_match = FALSE,
+                            bands = e_bands_for_correction,
+                            DSWE = "DSWE1a")
+    },
     packages = c("tidyverse", "deming"),
     deployment = "main"
   ),
   
   tar_target(
     name = e_Roy_LS8_to_LS7_DSWE1a_handoff,
-    command = calculate_roy_handoff(matched_data = e_LS78_DSWE1a_matches, 
-                                    mission_from = "LS8",
-                                    mission_to = "LS7",
-                                    location_info = a_poi_with_flags,
-                                    invert_mission_match = TRUE,
-                                    bands = e_bands_for_correction,
-                                    DSWE = "DSWE1a"),
+    command = {
+      e_check_dir_structure
+      calculate_roy_handoff(matched_data = e_LS78_DSWE1a_matches, 
+                            mission_from = "LS8",
+                            mission_to = "LS7",
+                            location_info = a_poi_with_flags,
+                            invert_mission_match = TRUE,
+                            bands = e_bands_for_correction,
+                            DSWE = "DSWE1a")
+    },
     packages = c("tidyverse", "deming"),
     deployment = "main"
   ),
   
   tar_target(
     name = e_Roy_LS7_to_LS8_DSWE1a_handoff,
-    command = calculate_roy_handoff(matched_data = e_LS78_DSWE1a_matches, 
-                                    mission_from = "LS7",
-                                    mission_to = "LS8",
-                                    location_info = a_poi_with_flags,
-                                    invert_mission_match = FALSE,
-                                    bands = e_bands_for_correction,
-                                    DSWE = "DSWE1a"),
+    command = {
+      e_check_dir_structure
+      calculate_roy_handoff(matched_data = e_LS78_DSWE1a_matches, 
+                            mission_from = "LS7",
+                            mission_to = "LS8",
+                            location_info = a_poi_with_flags,
+                            invert_mission_match = FALSE,
+                            bands = e_bands_for_correction,
+                            DSWE = "DSWE1a")
+    },
     packages = c("tidyverse", "deming"),
     deployment = "main"
   ),
   
   tar_target(
     name = e_Roy_LS9_to_LS8_DSWE1a_handoff,
-    command = calculate_roy_handoff(matched_data = e_LS89_DSWE1a_matches,
-                                    mission_from = "LS9",
-                                    mission_to = "LS8",
-                                    location_info = a_poi_with_flags,
-                                    invert_mission_match = TRUE,
-                                    bands = e_bands_for_correction,
-                                    DSWE = "DSWE1a"),
+    command = {
+      e_check_dir_structure
+      calculate_roy_handoff(matched_data = e_LS89_DSWE1a_matches,
+                            mission_from = "LS9",
+                            mission_to = "LS8",
+                            location_info = a_poi_with_flags,
+                            invert_mission_match = TRUE,
+                            bands = e_bands_for_correction,
+                            DSWE = "DSWE1a")
+    },
     packages = c("tidyverse", "deming"),
     deployment = "main"
   ),
