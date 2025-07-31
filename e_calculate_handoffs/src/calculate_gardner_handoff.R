@@ -1,12 +1,20 @@
 calculate_gardner_handoff <- function(quantile_from, quantile_to, 
                                       mission_from, mission_to,
+                                      location_info,
                                       DSWE, band) {
   
-  # filter for dswe
-  y <- quantile_to %>% 
-    filter(dswe == DSWE)
-  x <- quantile_from %>% 
-    filter(dswe == DSWE)
+  # filter list for dswe and band
+  type <- if (band == "med_SurfaceTemp") { "thermal" } else { "optical" }
+  # get the list name
+  list_name_to <- names(quantile_to) %>% 
+    .[grepl(type, .)] %>% 
+    .[endsWith(., DSWE)]
+  list_name_from <- names(quantile_from) %>% 
+    .[grepl(type, .)] %>% 
+    .[endsWith(., DSWE)]
+  
+  y <- quantile_to[list_name_to][[1]]
+  x <- quantile_from[list_name_from][[1]]
   
   # pull the specific band quantiles
   y_q <- y %>%
@@ -15,8 +23,10 @@ calculate_gardner_handoff <- function(quantile_from, quantile_to,
   x_q <- x %>%
     pull(band) 
   
+  # calculate the poly model
   gard <- lm(y_q ~ poly(x_q, 2, raw = T))
   
+  # store the unit info
   unit <- if (band == "med_SurfaceTemp") { " deg K" } else { " Rrs" }
   
   # plot and save handoff fig
