@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-07-14" />
+<meta name="date" content="2025-08-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -502,7 +502,7 @@ pipeline collates these sites, then reduces that collation to only distinct
 sites defined by organization identifier, monitoring location identifier, WGS84
 latitude and WGS84 longitude. Across the WQP, NWIS, and the harmonization
 pipeline, there are currently
-1,207,840 distinct sites in the
+1,207,214 distinct sites in the
 United States and Territories for which we create “stacks” of remote sensing
 data. A “stack” refers to all the remote sensing data available during a time
 period of interest at a single site.</p>
@@ -552,7 +552,7 @@ Figure 3.4: Water Quality Portal data location types present in siteSR after fil
 <h3><span class="header-section-number">3.2.2</span> Assignment of NHD flowline and waterbodies<a href="locs-data-acq.html#fl-wb-assignment" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For each WQP monitoring location, we attempt to assign HUC8’s wherever they are
 missing from the <code>HUCEightDigitCode</code> column output from the WQP (n =
-228581). To do this we
+227955). To do this we
 use the <code>get_huc()</code> function from {nhdplusTools} <span class="citation">(Blodgett and Johnson 2023)</span> package in R.
 After HUC8 assignment is finished only
 25628 sites remained
