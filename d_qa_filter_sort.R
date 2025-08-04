@@ -438,10 +438,20 @@ if (config::get(config = general_config)$update_and_share) {
       command = {
         d_retrieve_sorted_files
         list.files("d_qa_filter_sort/sort/", full.names = TRUE) %>% 
-          .[grepl(paste0("filtered_", d_qa_version_identifier), .)]
+          .[grepl(d_qa_version_identifier, .)]
+      }
+    ),
+    
+    # get a list of the qa'd feather files
+    tar_target(
+      name = d_all_feather_Landsat_files,
+      command = {
+        d_retrieve_feather_files
+        list.files(file.path("d_qa_filter_sort/out", d_qa_version_identifier), full.names = TRUE) %>% 
+          .[grepl(d_qa_version_identifier, .)]
       }
     )
-    
+
   )
   
 }

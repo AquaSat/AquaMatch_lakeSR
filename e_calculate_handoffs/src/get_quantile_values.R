@@ -33,24 +33,20 @@ get_quantile_values <- function(qa_files, mission_id, version_id, location_info,
                          LC09 = "Landsat9")
   
   # filter files for those in arguments
-  fps <- qa_files %>% 
+  fp <- qa_files %>% 
     .[grepl(mission_name, .)] %>% 
     .[grepl(version_id, .)] %>% 
     .[grepl(paste0("_", dswe, "_"), .)]
   
   # quick reality check, return null if no files
-  if (length(fps) == 0) { return( NULL ) }
+  if (length(fp) == 0) { return( NULL ) }
   
-  # get and filter data
-  data <- map(fps, 
-              \(fp) {
-                dt <- fread(fp) 
-                # convert to DT by reference
-                setDT(dt)
-                # filter for dates and return
-                dt[date >= start_date & date <= end_date]
-              }) %>% 
-    rbindlist() 
+  # read in and filter for date range of overlap
+  data <- read_feather(fp) 
+  # convert to DT by reference
+  setDT(data)
+  # filter for dates and return
+  data[date >= start_date & date <= end_date]
 
   # make sure all the band data are numeric values
   walk(.x = bands[bands %in% names(data)], 

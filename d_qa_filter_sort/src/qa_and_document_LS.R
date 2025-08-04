@@ -138,10 +138,10 @@ qa_and_document_LS <- function(mission_info,
                     cols_to_round <- names(data) %>% 
                       .[startsWith(., "med") | startsWith(., "mean") | startsWith(., "sd")] %>% 
                       .[!grepl("SurfaceTemp", .)]
-                    data[,(cols_to_round) := round(.SD, 3), .SDcols = cols_to_round]
+                    data[, (cols_to_round) := round(.SD, 3), .SDcols = cols_to_round]
                     thermal_cols <- names(data) %>% 
                       .[grepl("SurfaceTemp", .)]
-                    data[,(thermal_cols) := round(.SD, 2), .SDcols = thermal_cols]
+                    data[, (thermal_cols) := round(.SD, 2), .SDcols = thermal_cols]
                     
                     # make a new file name using fp from mission_files
                     out_fn <- last(unlist(str_split(fp, '/')))
