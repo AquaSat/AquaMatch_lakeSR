@@ -18,14 +18,6 @@ knitr::opts_chunk$set(echo = FALSE,
 ```
 
 ```{r r-setup-data-acq, echo = FALSE}
-library(tidyverse)
-library(sf)
-library(tigris)
-library(USA.state.boundaries)
-library(tmap)
-library(nhdplusTools)
-library(targets)
-
 CONUS <- a_poi_with_flags %>% 
   filter(nhd_source == "NHDBestRes")
 nonCONUS <- anti_join(a_poi_with_flags, CONUS)
@@ -275,7 +267,7 @@ Wisconsin, whereas AquaMatch via the lakeSR product includes
 `r format(nrow(WI_poi), big.mark = ",")` (Figure \@ref(fig:WI-lakes)) -
 accounting for a majority of the state's freshwater water bodies.
 
-```{r WI-lakes, echo=F, fig.cap="Deepest point of Wisconsin lakes included in LimnoSat-US defined by the Hydrolakes data product (left) and those included in AquaMatch via lakeSR defined by the NHDPlusV2 data product (right). Deepest point for each lake is indicated with a black dot, spatial histogram of density by longitude and latitude presented below the maps."}
+```{r WI-lakes, echo=F, fig.cap="Deepest point of Wisconsin lakes included in LimnoSat-US defined by the Hydrolakes data product (left) and those included in AquaMatch via lakeSR defined by the NHDPlusV2 data product (right). Deepest point for each lake is indicated with a black dot, spatial histogram of density by longitude and latitude presented below the maps.", fig.height=7}
 
 # convert for ggplot
 coords_limno <- st_coordinates(WI_HL_DP)
@@ -293,18 +285,26 @@ max_y_y <- max(
   ggplot_build(ggplot(coords_as_df, aes(x = Y)) + geom_histogram())$data[[1]]$count
 )
 
+# shared x/y ranges across both datasets
+x_range <- range(c(coords_limno_df$X, coords_as_df$X))
+y_range <- range(c(coords_limno_df$Y, coords_as_df$Y))
+
 # make cowplot for limnosat
 hist_x_limno <- ggplot(coords_limno_df, aes(x = X)) +
-  geom_histogram(bins = 30, fill = "grey60") +
+  geom_histogram(bins = 60, fill = "grey60") +
   ylim(0, max_y_x) +
   labs(x = NULL, y = NULL) +
-  theme_few()
+  theme_few() +
+  annotate("text", label = "LimnoSat", 
+           x = x_range[1] + 0.4, y = max_y_x*0.9)
 
 hist_y_limno <- ggplot(coords_limno_df, aes(x = Y)) +
-  geom_histogram(bins = 30, fill = "grey60") +
+  geom_histogram(bins = 60, fill = "grey60") +
   ylim(0, max_y_y) +
   labs(x = NULL, y = NULL) +
-  theme_few()
+  theme_few() +
+  annotate("text", label = "LimnoSat", 
+           x = y_range[1] + 0.4, y = max_y_y*0.9)
 
 map_limno <- ggplot() +
   geom_sf(data = WI_for_viz, fill = NA, color = "black") +
@@ -318,16 +318,20 @@ map_limno <- ggplot() +
 
 # make cowplot for aquasat
 hist_x_as <- ggplot(coords_as_df, aes(x = X)) +
-  geom_histogram(bins = 30, fill = "grey60") +
+  geom_histogram(bins = 60, fill = "grey60") +
   ylim(0, max_y_x) +
   labs(x = NULL, y = NULL) +
-  theme_few()
+  theme_few() +
+  annotate("text", label = "AquaSat v2", 
+           x = x_range[1] + 0.4, y = max_y_x*0.9)
 
 hist_y_as <- ggplot(coords_as_df, aes(x = Y)) +
-  geom_histogram(bins = 30, fill = "grey60") +
+  geom_histogram(bins = 60, fill = "grey60") +
   ylim(0, max_y_y) +
   labs(x = NULL, y = NULL) +
-  theme_few()
+  theme_few() +
+  annotate("text", label = "AquaSat v2", 
+           x = y_range[1] + 0.4, y = max_y_y*0.9)
 
 map_as <- ggplot() +
   geom_sf(data = WI_for_viz, fill = NA, color = "black") +
@@ -338,22 +342,27 @@ map_as <- ggplot() +
              size = 0.5) +
   coord_sf() +
   theme_minimal() +
-  labs(x = NULL, y = NULL)
+  labs(x = NULL, y = NULL) 
 
+# stack them like panels
 limno_stack <- plot_grid(
-  NULL, map_limno, hist_x_limno, hist_y_limno, 
+  NULL, map_limno, NULL, hist_x_limno, hist_x_as, 
   ncol = 1, 
-  rel_heights = c(0.1, 1, 0.25, 0.25)
+  rel_heights = c(0.1, 1, 0.1, 0.25, 0.25),
+  labels = c("", "", "Waterbody Count by Latitude", "", "")
 )
 
 as_stack <- plot_grid(
-  NULL, map_as, hist_x_as, hist_y_as, 
+  NULL, map_as, NULL, hist_y_limno, hist_y_as, 
   ncol = 1,
-  rel_heights = c(0.1, 1, 0.25, 0.25)
+  labels = c("", "", "Waterbody Count by Longitude", "", ""),
+  rel_heights = c(0.1, 1, 0.1, 0.25, 0.25)
 )
 
+# put the panels together
 plot_grid(
-  limno_stack, as_stack, nrow = 1, labels = c("LimnoSat", "AquaSat v2")
+  limno_stack, as_stack, nrow = 1, 
+  labels = c("LimnoSat", "AquaSat v2")
 )
 
 ```

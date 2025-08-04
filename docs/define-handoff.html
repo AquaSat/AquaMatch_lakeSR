@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>8 Calculating intermission handoffs | AquaSat v2: lakeSR and siteSR</title>
+  <title>8 Calculating intermission handoffs | AquaMatch: lakeSR and siteSR</title>
   <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="8 Calculating intermission handoffs | AquaSat v2: lakeSR and siteSR" />
+  <meta property="og:title" content="8 Calculating intermission handoffs | AquaMatch: lakeSR and siteSR" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="8 Calculating intermission handoffs | AquaSat v2: lakeSR and siteSR" />
+  <meta name="twitter:title" content="8 Calculating intermission handoffs | AquaMatch: lakeSR and siteSR" />
   
   <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
   
@@ -163,7 +163,7 @@ div.csl-indent {
 <ul class="summary">
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#repository-links-for-the-aquamatch-suite"><i class="fa fa-check"></i><b>1.1</b> Repository Links for the AquaMatch Suite</a></li>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#repository-links-for-the-aquamatch-data-suite"><i class="fa fa-check"></i><b>1.1</b> Repository Links for the AquaMatch Data Suite</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#note"><i class="fa fa-check"></i><b>1.2</b> Note</a></li>
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#disclaimer"><i class="fa fa-check"></i><b>1.3</b> Disclaimer</a></li>
 </ul></li>
@@ -171,15 +171,17 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#lakesr-code-architecture"><i class="fa fa-check"></i><b>2.1</b> lakeSR Code Architecture</a>
 <ul>
-<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#lakesr-output-files"><i class="fa fa-check"></i><b>2.1.1</b> lakeSR Output Files</a></li>
-<li class="chapter" data-level="2.1.2" data-path="background.html"><a href="background.html#configuration-files"><i class="fa fa-check"></i><b>2.1.2</b> Configuration Files</a></li>
-<li class="chapter" data-level="2.1.3" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.1.3</b> {targets} groups</a></li>
+<li class="chapter" data-level="2.1.1" data-path="background.html"><a href="background.html#lakesr-targets-groups"><i class="fa fa-check"></i><b>2.1.1</b> lakeSR {targets} groups</a></li>
+<li class="chapter" data-level="2.1.2" data-path="background.html"><a href="background.html#lakesr-output-files"><i class="fa fa-check"></i><b>2.1.2</b> lakeSR Output Files</a></li>
+<li class="chapter" data-level="2.1.3" data-path="background.html"><a href="background.html#lakesr-config"><i class="fa fa-check"></i><b>2.1.3</b> Configuration Files</a></li>
+<li class="chapter" data-level="2.1.4" data-path="background.html"><a href="background.html#repository-folder-structure"><i class="fa fa-check"></i><b>2.1.4</b> Repository Folder Structure</a></li>
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="background.html"><a href="background.html#sitesr-code-architecture"><i class="fa fa-check"></i><b>2.2</b> siteSR Code Architecture</a>
 <ul>
-<li class="chapter" data-level="2.2.1" data-path="background.html"><a href="background.html#sitesr-output-files"><i class="fa fa-check"></i><b>2.2.1</b> siteSR Output Files</a></li>
-<li class="chapter" data-level="2.2.2" data-path="background.html"><a href="background.html#setup-description"><i class="fa fa-check"></i><b>2.2.2</b> Configuration Files</a></li>
-<li class="chapter" data-level="2.2.3" data-path="background.html"><a href="background.html#targets-groups-1"><i class="fa fa-check"></i><b>2.2.3</b> {targets} Groups</a></li>
+<li class="chapter" data-level="2.2.1" data-path="background.html"><a href="background.html#targets-groups"><i class="fa fa-check"></i><b>2.2.1</b> {targets} Groups</a></li>
+<li class="chapter" data-level="2.2.2" data-path="background.html"><a href="background.html#sitesr-output-files"><i class="fa fa-check"></i><b>2.2.2</b> siteSR Output Files</a></li>
+<li class="chapter" data-level="2.2.3" data-path="background.html"><a href="background.html#setup-description"><i class="fa fa-check"></i><b>2.2.3</b> Configuration Files</a></li>
+<li class="chapter" data-level="2.2.4" data-path="background.html"><a href="background.html#repository-folder-structure-1"><i class="fa fa-check"></i><b>2.2.4</b> Repository Folder Structure</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="locs-data-acq.html"><a href="locs-data-acq.html"><i class="fa fa-check"></i><b>3</b> Locations of Data Acquisition</a>
@@ -242,7 +244,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="7" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html"><i class="fa fa-check"></i><b>7</b> Post-Hoc Quality Assurance</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR stack collation</a></li>
+<li class="chapter" data-level="7.1" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#raw-lakesr"><i class="fa fa-check"></i><b>7.1</b> Raw lakeSR &amp; siteSR stack collation</a></li>
 <li class="chapter" data-level="7.2" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#post-hoc-filters"><i class="fa fa-check"></i><b>7.2</b> Post-hoc filters</a>
 <ul>
 <li class="chapter" data-level="7.2.1" data-path="post-hoc-qa.html"><a href="post-hoc-qa.html#data-truncation"><i class="fa fa-check"></i><b>7.2.1</b> Data Truncation</a></li>
@@ -281,7 +283,7 @@ div.csl-indent {
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AquaSat v2: lakeSR and siteSR</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AquaMatch: lakeSR and siteSR</a>
           </h1>
         </div>
 

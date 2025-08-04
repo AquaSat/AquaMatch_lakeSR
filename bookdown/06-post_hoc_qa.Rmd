@@ -32,7 +32,7 @@ due to sensor malfunction, clouds, haze, and glint as described in Section
 sensing stacks to assure high-quality data. These post-hoc filters are described
 in \@ref(post-hoc-filters).
 
-## Raw lakeSR stack collation {#raw-lakesr}
+## Raw lakeSR & siteSR stack collation {#raw-lakesr}
 
 The data exported from the GEE tasks described in Section \@ref(LS-SRST-pull)
 were collated into large compressed .feather files per DSWE type (DSWE1 and
@@ -117,8 +117,8 @@ either unidentified ice or unidentified cloud contamination.
 
 Data coming out of Google Earth Engine carry nearly unending significant digits
 due to the data aggregation that occurs in that step. Prior to exporting any
-files, we also truncate optical data to 3 significant digits and thermal data to
-2 significant digits.
+final lakeSR or siteSR files, we also truncate optical data to 3 significant
+digits and thermal data to 2 significant digits.
 
 ### Landsat 4 QA Summary
 
