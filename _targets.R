@@ -42,7 +42,25 @@ config_list <- list(
   # store general configuration file
   tar_target(
     name = lakeSR_config,
-    command = config::get(config = general_config),
+    command = {
+      cfg <- config::get(config = general_config)
+      # do some simple configuration logic to make sure things will run without 
+      # issue
+      if (cfg$calculate_centers && !cfg$run_GEE) {
+        stop("To re-calculate centers for lakeSR, `run_GEE` configuration setting
+                in `config.yml` must be TRUE.")
+      }
+      if (cfg$run_GEE && !cfg$update_and_share) {
+        stop("To re-run GEE for lakeSR, `update_and_share` configuration setting
+                in `config.yml` must be TRUE.")
+      }
+      if (cfg$update_bookdown && !cfg$update_and_share) {
+        stop("To render the bookdown, `update_and_share`configuration setting
+                in `config.yml` must be TRUE in order generate necessary figures.")
+      }
+      # return the configuration settings
+      cfg
+    },
     cue = tar_cue("always")
   )
   
@@ -58,8 +76,7 @@ tar_source(files = c(
   "e_calculate_handoffs.R",
   "y_siteSR_targets.R",
   "z_render_bookdown.R"
-)
-)
+))
 
 # Collate targets groups: ---------------------------------------
 
