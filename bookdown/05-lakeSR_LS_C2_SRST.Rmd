@@ -151,7 +151,8 @@ this example, location 1 would be extracted for both path-row 1 and 2, location
 
 ## Overview of Acquisition Steps
 
-The workflow for data acquisition from GEE for lakeSR and siteSR is as follows:
+The workflow for data acquisition from GEE for lakeSR and siteSR is as follows
+and is automated within the lakeSR and siteSR workflows:
 
 1.  read in and format the yaml configuration file
     (`b_pull_Landsat_SRST_poi/config_files/config_poi.yml` for lakeSR or
@@ -297,11 +298,12 @@ to summarizing the data within the buffered area.
 ### Defining water area {#dswe-implementation}
 
 We use an adapted version of the Dynamic Surface Water Extent (DSWE) algorithm
-to define what pixels are water within the buffer of our specific locations.
-DSWE was defined in @jones2019 for Landsat Collection 1 and re-implemented for
-Collection 2 as a Level-3 data product in @usgeologicalsurvey2023. Differences
-between the Level-3 implementation and the on-the-fly calculation made within
-our workflow are as follows:
+to define what pixels are water within the buffer of our specific locations
+(also implemented in `run_GEE_per_pathrow.py`). DSWE was defined in @jones2019
+for Landsat Collection 1 and re-implemented for Collection 2 as a Level-3 data
+product in @usgeologicalsurvey2023. Differences between the Level-3
+implementation and the on-the-fly calculation made within our workflow are as
+follows:
 
 1.  we use the Level 2 SR product instead of the Level 2 Analysis Ready Data
     Product to calculate DSWE threshold values
@@ -375,6 +377,12 @@ out. Columns for the proportion of pixels masked by clouds and shaded by terrain
 are also provided, no additive mask is used when tallying these pixels. These
 tallies are meant to be used as diagnostic tools for further quality control and
 modeling purposes, though we do not have recommended uses at this time.
+
+See the formal metadata for definitions of these flags, which are stored
+alongside the remote sensing summaries in the lakeSR and siteSR output files
+(stored as one feather file per Landsat mission, e.g.
+lakeSR_Landsat9_DSWE1_2025-06-04.feather,
+siteSR_Landsat4_DSWE1_2025-06-06.feather).
 
 ## Payload handling
 

@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-08-04" />
+<meta name="date" content="2025-08-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -196,9 +196,10 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR Acquisition Locations</a>
 <ul>
-<li class="chapter" data-level="3.2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#rs-vis"><i class="fa fa-check"></i><b>3.2.1</b> Assessing for remote sensing visibility</a></li>
+<li class="chapter" data-level="3.2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#rs-vis"><i class="fa fa-check"></i><b>3.2.1</b> Harmonizing siteSR site types</a></li>
 <li class="chapter" data-level="3.2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#fl-wb-assignment"><i class="fa fa-check"></i><b>3.2.2</b> Assignment of NHD flowline and waterbodies</a></li>
-<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr-updates-in-aquamatch"><i class="fa fa-check"></i><b>3.2.3</b> siteSR updates in AquaMatch</a></li>
+<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#assessing-for-remote-sensing-visibility"><i class="fa fa-check"></i><b>3.2.3</b> Assessing for remote sensing visibility</a></li>
+<li class="chapter" data-level="3.2.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr-updates-in-aquamatch"><i class="fa fa-check"></i><b>3.2.4</b> siteSR updates in AquaMatch</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>4</b> Satellite Data Acquisition Software and Settings</a>
@@ -417,7 +418,8 @@ path-row acquisitions that failed.</p></li>
 </div>
 <div id="overview-of-acquisition-steps" class="section level2 hasAnchor" number="6.2">
 <h2><span class="header-section-number">6.2</span> Overview of Acquisition Steps<a href="LS-SRST-pull.html#overview-of-acquisition-steps" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The workflow for data acquisition from GEE for lakeSR and siteSR is as follows:</p>
+<p>The workflow for data acquisition from GEE for lakeSR and siteSR is as follows
+and is automated within the lakeSR and siteSR workflows:</p>
 <ol style="list-style-type: decimal">
 <li><p>read in and format the yaml configuration file
 (<code>b_pull_Landsat_SRST_poi/config_files/config_poi.yml</code> for lakeSR or
@@ -551,11 +553,12 @@ to summarizing the data within the buffered area.</p>
 <div id="dswe-implementation" class="section level3 hasAnchor" number="6.3.2">
 <h3><span class="header-section-number">6.3.2</span> Defining water area<a href="LS-SRST-pull.html#dswe-implementation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>We use an adapted version of the Dynamic Surface Water Extent (DSWE) algorithm
-to define what pixels are water within the buffer of our specific locations.
-DSWE was defined in <span class="citation">Jones (2019)</span> for Landsat Collection 1 and re-implemented for
-Collection 2 as a Level-3 data product in <span class="citation">US Geological Survey (2023a)</span>. Differences
-between the Level-3 implementation and the on-the-fly calculation made within
-our workflow are as follows:</p>
+to define what pixels are water within the buffer of our specific locations
+(also implemented in <code>run_GEE_per_pathrow.py</code>). DSWE was defined in <span class="citation">Jones (2019)</span>
+for Landsat Collection 1 and re-implemented for Collection 2 as a Level-3 data
+product in <span class="citation">US Geological Survey (2023a)</span>. Differences between the Level-3
+implementation and the on-the-fly calculation made within our workflow are as
+follows:</p>
 <ol style="list-style-type: decimal">
 <li><p>we use the Level 2 SR product instead of the Level 2 Analysis Ready Data
 Product to calculate DSWE threshold values</p></li>
@@ -626,6 +629,11 @@ out. Columns for the proportion of pixels masked by clouds and shaded by terrain
 are also provided, no additive mask is used when tallying these pixels. These
 tallies are meant to be used as diagnostic tools for further quality control and
 modeling purposes, though we do not have recommended uses at this time.</p>
+<p>See the formal metadata for definitions of these flags, which are stored
+alongside the remote sensing summaries in the lakeSR and siteSR output files
+(stored as one feather file per Landsat mission, e.g.
+lakeSR_Landsat9_DSWE1_2025-06-04.feather,
+siteSR_Landsat4_DSWE1_2025-06-06.feather).</p>
 </div>
 <div id="payload-handling" class="section level2 hasAnchor" number="6.5">
 <h2><span class="header-section-number">6.5</span> Payload handling<a href="LS-SRST-pull.html#payload-handling" class="anchor-section" aria-label="Anchor link to header"></a></h2>

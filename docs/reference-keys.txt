@@ -1,6 +1,8 @@
 fig:NHDPlusV2-HUC4
 fig:WI-lakes
 fig:siteSR-types-WQP
+fig:siteSR-types-NWIS
+fig:siteSR-types-AM
 fig:siteSR-filtered
 tab:roy-table
 tab:roy-coeff-dem-corr7
@@ -33,6 +35,7 @@ case-study-wisconsin-waterbodies
 siteSR-locs
 rs-vis
 fl-wb-assignment
+assessing-for-remote-sensing-visibility
 sitesr-updates-in-aquamatch
 software-settings
 r-environment-and-package-information

@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-08-04" />
+<meta name="date" content="2025-08-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -196,9 +196,10 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#siteSR-locs"><i class="fa fa-check"></i><b>3.2</b> siteSR Acquisition Locations</a>
 <ul>
-<li class="chapter" data-level="3.2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#rs-vis"><i class="fa fa-check"></i><b>3.2.1</b> Assessing for remote sensing visibility</a></li>
+<li class="chapter" data-level="3.2.1" data-path="locs-data-acq.html"><a href="locs-data-acq.html#rs-vis"><i class="fa fa-check"></i><b>3.2.1</b> Harmonizing siteSR site types</a></li>
 <li class="chapter" data-level="3.2.2" data-path="locs-data-acq.html"><a href="locs-data-acq.html#fl-wb-assignment"><i class="fa fa-check"></i><b>3.2.2</b> Assignment of NHD flowline and waterbodies</a></li>
-<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr-updates-in-aquamatch"><i class="fa fa-check"></i><b>3.2.3</b> siteSR updates in AquaMatch</a></li>
+<li class="chapter" data-level="3.2.3" data-path="locs-data-acq.html"><a href="locs-data-acq.html#assessing-for-remote-sensing-visibility"><i class="fa fa-check"></i><b>3.2.3</b> Assessing for remote sensing visibility</a></li>
+<li class="chapter" data-level="3.2.4" data-path="locs-data-acq.html"><a href="locs-data-acq.html#sitesr-updates-in-aquamatch"><i class="fa fa-check"></i><b>3.2.4</b> siteSR updates in AquaMatch</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="software-settings.html"><a href="software-settings.html"><i class="fa fa-check"></i><b>4</b> Satellite Data Acquisition Software and Settings</a>
@@ -293,6 +294,11 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="locs-data-acq" class="section level1 hasAnchor" number="3">
 <h1><span class="header-section-number">3</span> Locations of Data Acquisition<a href="locs-data-acq.html#locs-data-acq" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p><strong>Technical Note</strong></p>
+<p>This process is completed in the targets group <code>a_calculate_centers</code>. The
+primary output file is the lakeSR site file
+(<code>lakeSR_poi_with_flags_2025-02-12.csv</code>).</p>
+<p><strong>Background</strong></p>
 <p>As noted in the Introduction (Section <a href="index.html#introduction">1</a>), for the purposes of
 AquaMatch, surface reflectance and surface temperature data are acquired at
 specific, centrally-located points within waterbodies (typically in deep
@@ -315,8 +321,8 @@ would require additional data handling steps at both the remote sensing and
 post-hoc filter steps to provide consistent data summaries. This may mean that
 each waterbody has differing proportions of the area represented in the data
 summaries. Users may wish to consider total surface area of waterbodies
-(provided in the output file <code>lakeSR_poi_with_flags_xDATEx.csv</code> via the column
-<code>areasqkm</code>) when analyzing the remote sensing data.</p>
+(provided in the lakeSR site file in the column <code>areasqkm</code>) when analyzing the
+remote sensing data.</p>
 <div id="waterbodies" class="section level2 hasAnchor" number="3.1">
 <h2><span class="header-section-number">3.1</span> Waterbodies Included in lakeSR<a href="locs-data-acq.html#waterbodies" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>For lakeSR, we use the NHDPlusV2 dataset for lakes within the conterminous US
@@ -338,18 +344,18 @@ Figure 3.1: NHD HUC4 map for the United States and Territories, courtesy of the 
 <a href="locs-data-acq.html#fig:NHDPlusV2-HUC4">3.1</a>), all waterbodies are limited to those with <a href="https://www.usgs.gov/ngp-standards-and-specifications/national-hydrography-dataset-nhd-data-dictionary-feature-classes">NHD
 Waterbody
 Subtypes</a>
-belonging to the following groups: 390 (lake/pond) and 436 (reservoir) and are
+belonging to the following groups: 390 (lake/pond) and 436 (reservoir) that are
 at least 0.01 km<sup>2</sup> (1 hectare) in area according to the area value provided in
 the NHD file. If the <a href="https://www.usgs.gov/ngp-standards-and-specifications/national-hydrography-dataset-nhd-data-dictionary-feature-domains">feature type
 (FType)</a>
-of the waterbody belonged to an intermittent category (39001, 39005, 39006,
+of the waterbody is assigned to an intermittent category (39001, 39005, 39006,
 43614) the threshold for inclusion was increased to 0.04 km<sup>2</sup> (4 hectares) to
 reduce processing time when extracting data from Google Earth Engine assuming
 that intermittent waterbodies smaller than 4 hectares would not normally be
-“visible” in remote sensing (see Section <a href="locs-data-acq.html#rs-vis">3.2.1</a>). This filtering resulted
-in 729,941 waterbodies included in
-our dataset, including 313,248 non-CONUS
-waterbodies. This is a
+“visible” in remote sensing images (see Section <a href="locs-data-acq.html#rs-vis">3.2.1</a>). This filtering
+resulted in 729,941 waterbodies
+included in our dataset, including 313,248
+non-CONUS waterbodies. This is a
 1,185
 percent increase over the 56,792 lakes included in the original AquaSat product.</p>
 <p>For each waterbody, the Pole of Inaccessibility (see Section <a href="locs-data-acq.html#poi">3.1.2</a>) and
@@ -386,25 +392,21 @@ For lakeSR, we use POI to determine the point in a waterbody that is furthest
 from the shoreline using the <code>polylabelr::poi()</code> function <span class="citation">(Larsson 2024)</span>, which
 calculates a point in space and the radius of the circle used to define the POI.</p>
 <p>The <code>poi()</code> function can sometimes attribute a POI to a location other than the
-point furthest away from a shoreline. This appears to occur in polygons with a
+point furthest away from a shoreline. This appears to occur in features with a
 very large number of indices (due to sheer area or geomorphological complexity);
 however the points calculated should be an acceptable proxy for deep lake
 conditions operating under the assumption that lake depth increases as distance
-from shore increases. No action was taken to correct these or enumerate them
-within our dataset given the assumption that the point is still far from shore
-(though not always the “farthest”) and there is no obvious programmatic way to
-identify these points. Additionally, we did not compare the LimnoSat-US
-locations with AquaMatch_lakeSR locations (even for pseudonymous lakes) since
-the spatial extent of the polygons used do not share geometries and comparing
-locations between these products was outside of the scope of lakeSR at this
-time.</p>
+from shore increases. No action was taken to correct or enumerate instances
+where this occurred within our dataset given the assumption that the point is
+still far from shore (though not always the “farthest”) and there is no obvious
+programmatic way to identify these points. Additionally, we did not compare the
+LimnoSat-US locations with AquaMatch_lakeSR locations (even for pseudonymous
+lakes) since the spatial extent of the polygons used do not share geometries and
+comparing locations between these products was outside of the scope of lakeSR at
+this time.</p>
 </div>
 <div id="technical-implementation-of-lakesr" class="section level3 hasAnchor" number="3.1.3">
 <h3><span class="header-section-number">3.1.3</span> Technical Implementation of lakeSR<a href="locs-data-acq.html#technical-implementation-of-lakesr" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>The code for gathering NHD waterbodies and calculating their respective POIs is
-found in {targets} group a_Calculate_Centers which is located in the script
-<a href="https://github.com/aquasat/lakeSR/blob/main/a_Calculate_Centers.R">a_Calculate_Centers.R</a>
-at the root directory of the repository.</p>
 <p>The processing begins by acquiring the polygons of all US states and territories
 using the {tigris} package <span class="citation">(Walker 2025)</span>. These polygons are used to acquire a
 list HUC4s that intersect with each municipal boundary using the
@@ -429,12 +431,11 @@ workflow. Within the data presented in optical remote sensing products from
 AquaMatch, we do not currently flag reflectance data for possible bottom
 reflectance signals (that is, we do not signifiy whether the optical reflectance
 values are wholly attributable to the water column or whether there may be
-signals of sediment reflectance due to clear water/shallow bathymetry at the
-given location). Users should consider that, especially at sites where the
-distance to shore is small or where the waterbody is particularily shallow, that
-there may be bottom reflectance introduced into the remote sensing summaries. We
-encourage users to consider this in their analysis and interpretation of the
-data.</p>
+signals of bottom reflectance due to clear water/shallow bathymetry at the given
+location). Users should consider that, especially at sites where the distance to
+shore is small or where the waterbody is particularily shallow, that there may
+be bottom reflectance introduced into the remote sensing summaries. We encourage
+users to consider this in their analysis and interpretation of the data.</p>
 <p>Note: AquaMatch assumes static water elevation and inundation area based on the
 associated NHD features. Given this, users should consider whether elevational
 changes in surface water height (and therefore inundation area) may impact their
@@ -445,7 +446,7 @@ reduces processing time substantially as processing thousands of polygons is
 quite time consuming. If you are running this workflow on your own computer, the
 length of time that it takes to calculate POIs will be dependent on the number
 of cores you allow for processing (we used 11 cores
-during the development of this workflow).</p>
+during the development and operation of this workflow).</p>
 </div>
 <div id="lakeSR-shoreline" class="section level3 hasAnchor" number="3.1.4">
 <h3><span class="header-section-number">3.1.4</span> Flagging shoreline proximity<a href="locs-data-acq.html#lakeSR-shoreline" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -466,15 +467,20 @@ used for GEE extraction (defined in the lakeSR GEE configuration file) to the
 pixel size of the sensor used for reflectance detection (see Section
 <a href="LS-C2-SRST.html#sensor-resolution">5.2.2</a> for details). For optical bands (Red, Green, Blue, Nir,
 Swir) we use the site buffer plus 30 meters. For thermal bands, we create 3 flag
-columns for each sensor’s (Landsat 4/5: MSS, Landsat 7: ETM, Landsat 8/9: TIRS)
+columns for each sensor’s (Landsat 4/5: TM, Landsat 7: ETM, Landsat 8/9: TIRS)
 native thermal resolution (120, 60, 100 meters). These flags are binary and are
-inlcuded in the <code>lakeSR_poi_with_flags_xDATEx.csv</code> file:</p>
+included in the lakeSR site file as the flag columns <code>flag_optical_shoreline</code>,
+<code>flag_thermal_TM_shoreline</code>, <code>flag_thermal_ETM_shoreline</code>,
+<code>flag_thermal_TIRS_shoreline</code>:</p>
 <blockquote>
 <p>0: unlikely shoreline contamination (distance to shore is greater than the sum
 of the site buffer and pixel size)</p>
 <p>1: possible shoreline contamination (distance to shore is less than or equal
 to sum of the site buffer and pixel size)</p>
 </blockquote>
+<p>These flags are defined based on static shoreline location defined by the NHD,
+so caution should be taken in interpretation of these flags if the waterbody in
+question experiences water level fluctuations.</p>
 </div>
 <div id="case-study-wisconsin-waterbodies" class="section level3 hasAnchor" number="3.1.5">
 <h3><span class="header-section-number">3.1.5</span> Case Study: Wisconsin Waterbodies<a href="locs-data-acq.html#case-study-wisconsin-waterbodies" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -493,149 +499,274 @@ Figure 3.2: Deepest point of Wisconsin lakes included in LimnoSat-US defined by 
 </div>
 <div id="siteSR-locs" class="section level2 hasAnchor" number="3.2">
 <h2><span class="header-section-number">3.2</span> siteSR Acquisition Locations<a href="locs-data-acq.html#siteSR-locs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><strong>Technical Note</strong></p>
+<p>This process is orchestrated in the targets group <code>a_compile_sites</code> in the
+siteSR workflow. The primary output file of this process is the siteSR site file
+(<code>siteSR_collated_WQP_NWIS_sites_with_NHD_info_2025-06-04.csv</code>).</p>
+<p><strong>Background</strong></p>
 <p>The acquisition locations within siteSR are defined using the {dataRetrieval}
-package functions <code>whatWQPsites()</code> and <code>whatNWISsites()</code>. All sites were
-filtered for those that represent surface water according to the populated
-<code>MonitoringLocationTypeName</code> for WQP sites and <code>type_cd</code> for NWIS sites. These
-sites were supplemented by those for which we have harmonized parameter data
-from the AquaMatch parameter harmonization pipeline but that did not appear in
-the <code>whatWQPsites()</code> query, due to the dynamic nature of the WQP. The siteSR
-pipeline collates these sites, then reduces that collation to only distinct
-sites defined by organization identifier, monitoring location identifier, WGS84
-latitude and WGS84 longitude. Across the WQP, NWIS, and the harmonization
-pipeline, there are currently
-1,207,214 distinct sites in the
-United States and Territories for which we create “stacks” of remote sensing
+package <span class="citation">(DeCicco et al. 2025)</span> functions <code>whatWQPsites()</code> and <code>whatNWISsites()</code> which
+are stored in the siteSR site file. All sites were filtered for those that
+represent surface water according to the populated <code>MonitoringLocationTypeName</code>
+for WQP sites and <code>site_tp_cd</code> for NWIS sites. These sites were supplemented by
+those for which we have harmonized parameter data from the AquaMatch parameter
+harmonization pipeline but that did not appear in the <code>whatWQPsites()</code> query.
+Absence of a limited number of sites in the whatWQPsites() query is expected and
+is due to the dynamic nature of the WQP, since some of the AquaMatch parameter
+harmonization was queried at a different time than the query for siteSR. The
+siteSR pipeline collates these sites, then reduces that collation to only
+distinct sites defined by organization identifier, monitoring location
+identifier, WGS84 latitude and WGS84 longitude. Across the WQP, NWIS, and the
+harmonization pipeline, there are currently
+1,207,214 sites in the United
+States and Territories for which we attempt to create “stacks” of remote sensing
 data. A “stack” refers to all the remote sensing data available during a time
 period of interest at a single site.</p>
-<p>Every site in the WQP has a <code>MonitoringLocationTypeName</code> associated with it. For
-the purposes of siteSR, we do not subset the sites by these types, but they are
-helpful for understanding the type of data included in siteSR.</p>
+<p>Every site in the WQP has a <code>MonitoringLocationTypeName</code> associated with it.
+Within siteSR there are
+1,015,748
+sites from the WQP.</p>
 <div class="figure"><span style="display:block;" id="fig:siteSR-types-WQP"></span>
 <img src="AquaMatch_lakeSR_files/figure-html/siteSR-types-WQP-1.png" alt="Water Quality Portal data location types present in siteSR. Unique WQP monitoring location count above bar, divided by `MonitoringLocationTypeName`." width="672" />
 <p class="caption">
 Figure 3.3: Water Quality Portal data location types present in siteSR. Unique WQP monitoring location count above bar, divided by <code>MonitoringLocationTypeName</code>.
 </p>
 </div>
-<p>Similarly, every site in the NWIS database has a <code>type_cd</code> associated with it.</p>
-<p>For siteSR, we will acquire Landsat stacks for all sites deemed “visible” by
-remote sensing (see Section <a href="locs-data-acq.html#rs-vis">3.2.1</a> for further information). Note that
-this is different from lakeSR, where we only acquire data for lakes, reservoirs
-and pond according to the NHD. This was a functional choice, as most canal sites
-will not be RS-visible and estuary extents are limited in the NHD (and when
-present the technique to determine the POI may not be appropriate).</p>
-<div id="rs-vis" class="section level3 hasAnchor" number="3.2.1">
-<h3><span class="header-section-number">3.2.1</span> Assessing for remote sensing visibility<a href="locs-data-acq.html#rs-vis" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>We use the JRC Global Surface Water Mapping Layers v1.4 <span class="citation">(Pekel et al. 2016)</span> to
-determine whether or not sites are visible by remote sensing (“RS-visible”) and
-should therefore be sent through the GEE data acquisition process detailed in
-Section <a href="LS-SRST-pull.html#LS-SRST-pull">6</a>. This dataset is a compilation of 38 years of the
-Landsat record and enumerates the proportion of time a single 30x30 meter pixel
-has the presence of water. As long as a WQP monitoring location has at least one
-pixel with water at least 80% of the time during that 38 year period within a
-200 meter radius, we include it in the list of sites we acquire Landsat stacks
-for. Like with assessing possible shoreline contamination, we do not analyze
-whether the presence of water within the AquaMatch buffer is associated with a
-singular waterbody or flowline feature from the NHD. See Section
-<a href="locs-data-acq.html#fl-wb-assignment">3.2.2</a> for details on attribution of a site to NHD feature and
-the associated assumptions. After this assessment,
-395,307 sites were deemed to be
-visible by remote sensing
-(67.3%
-loss of sites).</p>
-<div class="figure"><span style="display:block;" id="fig:siteSR-filtered"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/siteSR-filtered-1.png" alt="Water Quality Portal data location types present in siteSR after filtering for those that are deemed visible by remote sensing. Count of sites provided above bar, arranged by `MonitoringLocationTypeName`." width="672" />
+<p>Similarly, every site in the NWIS database has a <code>site_tp_cd</code> associated with
+it. Within siteSR there are
+191,466
+sites from NWIS.</p>
+<div class="figure"><span style="display:block;" id="fig:siteSR-types-NWIS"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/siteSR-types-NWIS-1.png" alt="National Water Information System data location types present in siteSR. Unique NWIS monitoring location count above bar, divided by site type. ST = Stream, ST-CA = Canal, ST-DCH = Ditch, LK = Lake/Reservoir, ES = Estuary." width="672" />
 <p class="caption">
-Figure 3.4: Water Quality Portal data location types present in siteSR after filtering for those that are deemed visible by remote sensing. Count of sites provided above bar, arranged by <code>MonitoringLocationTypeName</code>.
+Figure 3.4: National Water Information System data location types present in siteSR. Unique NWIS monitoring location count above bar, divided by site type. ST = Stream, ST-CA = Canal, ST-DCH = Ditch, LK = Lake/Reservoir, ES = Estuary.
+</p>
+</div>
+<div id="rs-vis" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Harmonizing siteSR site types<a href="locs-data-acq.html#rs-vis" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In order to harmonize the site types across WQP and NWIS data providers, we
+attempt to generalize site types into five groups: Lake/Reservoir/Pond, Stream,
+Canal/Ditch, Estuary, Other. These designations are stored in the column
+<code>harmonized_site_type</code> in the siteSR site file.</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>AquaMatch harmonized_site_type</th>
+<th>NWIS site_tp_cd</th>
+<th>WQP MonitoringLocationTypeName</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Lake/Reservoir</td>
+<td>LK</td>
+<td>contains “lake”, “reservoir”, or “impoundment”</td>
+</tr>
+<tr class="even">
+<td>Pond</td>
+<td>no associated code</td>
+<td>contains “pond”</td>
+</tr>
+<tr class="odd">
+<td>Stream</td>
+<td>ST</td>
+<td>contains “stream”</td>
+</tr>
+<tr class="even">
+<td>Canal/Ditch</td>
+<td>ST-CA, ST-DCH</td>
+<td>contains “canal” or “ditch”</td>
+</tr>
+<tr class="odd">
+<td>Estuary</td>
+<td>ES</td>
+<td>Estuary</td>
+</tr>
+<tr class="even">
+<td>Other</td>
+<td>all remaining codes</td>
+<td>all remaining codes</td>
+</tr>
+</tbody>
+</table>
+<div class="figure"><span style="display:block;" id="fig:siteSR-types-AM"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/siteSR-types-AM-1.png" alt="AquaMatch `harmonized_site_type` categories provided in siteSR. Unique AquaMatch site count above bar, divided by harmonized_site_type." width="672" />
+<p class="caption">
+Figure 3.5: AquaMatch <code>harmonized_site_type</code> categories provided in siteSR. Unique AquaMatch site count above bar, divided by harmonized_site_type.
 </p>
 </div>
 </div>
 <div id="fl-wb-assignment" class="section level3 hasAnchor" number="3.2.2">
 <h3><span class="header-section-number">3.2.2</span> Assignment of NHD flowline and waterbodies<a href="locs-data-acq.html#fl-wb-assignment" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>For each WQP monitoring location, we attempt to assign HUC8’s wherever they are
-missing from the <code>HUCEightDigitCode</code> column output from the WQP (n =
-227955). To do this we
-use the <code>get_huc()</code> function from {nhdplusTools} <span class="citation">(Blodgett and Johnson 2023)</span> package in R.
-After HUC8 assignment is finished only
-25628 sites remained
-without a HUC8 assignment. All of these sites were coastal sites outside of the
-extent of NHD boundaries. These sites remain in siteSR, but will have no NHD
-attribution information. In siteSR, the <code>flag_HUC8</code> column indicates whether
-this HUC8 was assigned within the WQP (value of 0), assigned in this process
-(value of 1), or was unable to be assigned (value of 2).</p>
-<p>Using the HUC8 information to iterate, we then can use {nhdplusTools} to assign
-waterbodies and flowlines to sites within the CONUS and data from The National
-Map best resolution files <span class="citation">(e.g. US Geological Survey 2023b)</span> for sites outside of CONUS
-by HUC4. For all sites with a <code>MonitoringLocationTypeName</code> that contains the
-words “lake” or “reservoir”, we assign NHD ids to each point for the waterbody
-it is contained by or the waterbody it is closest to. NHD waterbody file has
-been filtered to only contain Lake, Ponds, Reservoirs, and Estuaries (NHD
-feature types 390, 436, 493) when performing this task. We flag (<code>flag_wb</code>) the
-results of this assignment as follows:</p>
+<p><strong>HUC8 assignment</strong></p>
+<p>For each siteSR location, we attempt to assign HUC8’s using the <code>get_huc()</code>
+function in the {nhdplusTools} <span class="citation">(Blodgett and Johnson 2023)</span> package in R. While there is a
+column (<code>HUCEightDigitCode</code>) provided with WQP sites query that attributes a
+HUC8 to sites, some of them are missing data (n =
+10577)
+and some of them differ from those obtained using the reported location latitude
+and longitude and the <code>get_huc()</code> function (n =
+25628).
+Additionally, NWIS sites are not associated with HUC8’s when queried and this
+process assigns a HUC8 as a value add to downstream users. These HUC assignments
+are stored in the <code>assigned_HUC</code> column in the siteSR site file. After this
+process, only 1641
+sites remained without a HUC8 assignment using the nhdplusTools method. Most of
+these sites were coastal sites outside of the extent of NHD boundaries (n =
+1357) or were
+assigned a HUC8 in the WQP data and were estuaries, but were unable to be
+assigned in this process (n =
+284). All sites
+remain in siteSR, but those without an assigned HUC8 using this process
+(<code>flag_HUC</code> of 3 or 4) will have no NHD feature attribution information.</p>
+<p>In siteSR, we provide a <code>flag_HUC8</code> column in the siteSR site file with the
+following code definitions:</p>
 <blockquote>
-<p>0: point inside NHD waterbody polygon</p>
+<p>0: HUC8 reported in WQP site information, matches nhdplusTools assignment</p>
+<p>1: HUC8 successfully assigned using nhdplusTools, no HUC8 reported in
+HUCEightDigitCode</p>
+<p>2: HUC8 mismatch between Water Quality Portal HUCEightDigitCode assignment and
+nhdplusTools assignment</p>
+<p>3: HUCEightDigitCode was assigned to a site type of estuary, but not able to
+be assigned using the nhdplusTools method</p>
+<p>4: HUC8 unable to be assigned for site location using the nhdplusTools method
+and was not provided by WQP/NWIS site information</p>
+</blockquote>
+<p><strong>NHD Waterbody Feature Assignment</strong></p>
+<p>Using the assigned HUC8 information to iterate, we then can use {nhdplusTools}
+to assign waterbodies and flowlines to sites within the CONUS and data from The
+National Map best resolution files <span class="citation">(e.g. US Geological Survey 2023b)</span> for sites outside
+of CONUS by HUC4. For all sites with a <code>harmonized_site_type</code> of Lake/Reservoir,
+Pond, Estuary or Other, we assign NHD ids to each point for the NHD waterbody
+feature it is contained by or the NHD feature it is closest to. The NHD
+waterbody layer has been filtered to only contain Lake, Ponds, Reservoirs, and
+Estuaries (NHD feature types 390, 436, 493) when performing this task. We flag
+(<code>flag_wb</code> in the siteSR site file) the results of this assignment as follows:</p>
+<blockquote>
+<p>0: point inside NHD waterbody feature polygon</p>
 <p>1: point within GEE buffer distance (default 200 meters for siteSR) of the NHD
-waterbody</p>
+waterbody feature</p>
 <p>2: point between GEE buffer distance and 500 meters of the NHD waterbody
-polygon</p>
-<p>3: point unable to be assigned to waterbody (it is &gt; 500 meters away from the
-NHD waterbody polygon)</p>
-<p>4: point does not have HUC8 assignment or MonitoringLocationTypeName does not
-contain “lake”, “reservoir”, or “estuary”. No waterbody is assigned.</p>
+feature polygon</p>
+<p>3: point unable to be assigned to waterbody feature (it is &gt; 500 meters away
+from the closest NHD waterbody feature polygon)</p>
+<p>4: point does not have HUC8 assignment or harmonized_site_type is not
+Lake/Reservoir, Pond, Estuary, or Other. No NHD waterbody feature is assigned.</p>
 </blockquote>
-<p>For all points with a flag value of 0 or 1 we provide the NHD identifier for the
-polygon the monitoring location is associated with (comid for NHDPlusV2 and
-permanent identifier for NHD Best Resolution), for all points with a flag value
-of 1 or 2, we provide the distance (in meters) to the nearest NHD waterbody of
-feature type 390, 436, or 493. For waterbodies with a flag of 0, we provide
-distance to shore. We follow lakeSR’s implementation of flags for shoreline
-proximity for these sites as well, but with the siteSR default site buffer of
-200 meters instead of lakeSR’s buffer of 120 meters.</p>
-<p>Flowlines are assigned to sites with a MonitoringLocationTypeName that contains
-“lake”, “reservoir”, “stream”, or “river”. NHD flowlines are filtered to contain
-streams/rivers and artificial paths (that is flowlines in waterbodies) (NHD
-feature types 460 and 558). We flag (<code>flag_fl</code>) the results of this assignment
-as follows:</p>
+<p>For all points with a flag value of 0, 1, and 2, we provide the NHD identifier
+(<code>wb_nhd_id</code> in the siteSR site file) for the polygon the monitoring location is
+associated with (comid for NHDPlusV2 and permanent identifier for NHD Best
+Resolution), for all points with a flag value of 1, 2, and 3, we provide the
+distance (in meters) to the nearest NHD waterbody (<code>dist_to_wb</code> in siteSR site
+file) of feature type 390, 436, or 493. For waterbodies with a flag of 0, we
+provide distance to shore (<code>dist_to_shore</code> in siteSR site file).</p>
+<p>We follow lakeSR’s implementation of flags for shoreline proximity for these
+sites. For sites with a distance to shore value, we also provide a diagnostic
+column that indicates likelihood of shoreline contamination within the scope of
+Landsat extraction. To determine the possibility of shoreline contamination, we
+add the site buffer used for GEE extraction (200 m for siteSR) to the pixel size
+of the sensor used for reflectance detection. For optical bands (Red, Green,
+Blue, Nir, Swir) we use the site buffer plus 30 meters
+(<code>flag_optical_shoreline</code>). For thermal bands, we create 3 flag columns for each
+sensor’s native thermal resolution (Landsat 4/5: TM 120m
+<code>flag_thermal_TM_shoreline</code>, Landsat 7: ETM 60 m <code>flag_thermal_ETM_shoreline</code>,
+Landsat 8/9: TIRS 100m <code>flag_thermal_TIRS_shoreline</code>). These flags are binary
+values in the siteSR site file for sites with a flag_wb value of 0 (indicating
+that the site is inside of the NHD waterbody feature):</p>
 <blockquote>
-<p>0: point &lt;= 100 meters from nearest flowline</p>
-<p>1: point between 100 meters and GEE buffer distance (default 200 meters for
-siteSR) to nearest flowline</p>
-<p>2: point between GEE buffer distance and 500 meters from nearest flowline</p>
-<p>3: point unable to be assigned to flowline for a stream site because distance
-to nearest stream &gt; 500 meters</p>
-<p>4: point is a lake or reservoir site and is &gt; 500 meters away from nearest
-flowline</p>
-<p>5: point does not have HUC8 assignment or MonitoringLocationTypeName does not
-contain “stream”, “river”, “lake”, or “reservoir”. No flowline assigned.</p>
+<p>0: unlikely shoreline contamination (distance to shore is greater than the sum
+of the site buffer and pixel size)</p>
+<p>1: possible shoreline contamination (distance to shore is less than or equal
+to sum of the site buffer and pixel size)</p>
 </blockquote>
-<p>For all points with a flag 0/1/2 we provide the NHD identifier for the flowline
-the monitoring location is associated with (comid for NHDPlusV2 and permanent
-identifier for NHD Best Resolution), for all points with a flag value of 1-3, we
-provide the distance (in meters) to the nearest NHD flowline of feature type 460
-or 558.</p>
-<p>For all sites, we calculate how many waterbodies or flowlines are within the
-buffer distance set in the siteSR GEE configuration file. Any site that has more
-than one waterbody and/or flow line within the buffer distance may be including
+<p><strong>NHD Flowline Feature Assignment</strong></p>
+<p>Flowlines are assigned to all siteSR sites. NHD flowlines are filtered to
+contain streams/rivers, canals, and artificial paths (that is flowlines within
+NHD waterbody features) (NHD feature types 460, 336, and 558). We flag
+(<code>flag_fl</code> in the siteSR site file) the results of this assignment as follows:</p>
+<blockquote>
+<p>0: point &lt;= 100 meters from nearest NHD flowline feature</p>
+<p>1: point between 100 meters and GEE buffer distance (default 200 meters for
+siteSR) to nearest NHD flowline feature</p>
+<p>2: point between GEE buffer distance and 500 meters from nearest NHD flowline
+feature</p>
+<p>3: point unable to be assigned to a NHD flowline for a stream/canal site
+because distance to nearest NHD flowline feature &gt; 500 meters</p>
+<p>4: point is a lake/reservoir/pond/other/estuary (defined by
+harmonized_site_type) and is &gt; 500 meters away from nearest NHD flowline
+feature</p>
+<p>5: point does not have HUC8 assignment. No flowline assigned.</p>
+</blockquote>
+<p>For all points with a flag 0-3 we provide the NHD identifier (<code>fl_nhd_id</code> in the
+siteSR site file) for the flowline the monitoring location is associated with
+(comid for NHDPlusV2 and permanent identifier for NHD Best Resolution), for all
+points with a flag value of 0-4, we provide the distance (in meters) to the
+nearest NHD flowline (<code>dist_to_fl</code> in siteSR site file) of feature type 460,
+558, 336.</p>
+<p><strong>Multiple Intersecting NHD Features</strong></p>
+<p>For all sites with an <code>assigned_HUC8</code>, we calculate how many waterbodies or
+flowlines are within the buffer distance set in the siteSR GEE configuration
+file (stored in <code>number_int_wb</code> for number of waterbodies and <code>number_int_fl</code>
+for flowlines in the siteSR site file). Any site that has more than one
+waterbody and/or flow line within the buffer distance may be including
 reflectance data from another surface water source. Within the context of
 siteSR, we do not investigate what, if any, impacts multiple waterbodies,
 flowlines, or combinations thereof have on the validity of the reflectance data
 or thermal data summary.</p>
-<p>Site information, NHD attribution, and associated flags described here are
-stored in the file <code>collated_WQP_NWIS_sites_with_NHD_info.csv</code>. We provide these
-identifiers and additional metadata about the sites to help users make informed
-decisions about remote sensing data quality (specifically, related to
-edge/shoreline contamination) and NHD comid/permanent id attribution to
-individual sites and any available flags to assess uncertainty to those
+<p>We provide these identifiers and additional metadata about the sites to help
+users make informed decisions about remote sensing data quality (specifically,
+related to edge/shoreline contamination) and NHD comid/permanent id attribution
+to individual sites and any available flags to assess uncertainty to those
 assignments or the buffered area relative to the site.</p>
+<p>Note that the siteSR site file noted above collates NHD Best Resolution
+permanent identifiers and NHDPlusV2 comid values into a column for waterbody
+features <code>wb_nhd_id</code> and one for flowline features <code>fl_nhd_id</code>. The upstream
+source of the NHD data is noted in <code>wb_nhd_source</code> and <code>fl_nhd_source</code> columns
+to allow users to know whether the value in the <code>wb_nhd_id</code> or <code>fl_nhd_id</code>
+columns is a NHD Best Resolution permanent identifier (“NHDBestRes”) or a
+NHDPlusV2 comid (“NHDPlusV2”).</p>
 </div>
-<div id="sitesr-updates-in-aquamatch" class="section level3 hasAnchor" number="3.2.3">
-<h3><span class="header-section-number">3.2.3</span> siteSR updates in AquaMatch<a href="locs-data-acq.html#sitesr-updates-in-aquamatch" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="assessing-for-remote-sensing-visibility" class="section level3 hasAnchor" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> Assessing for remote sensing visibility<a href="locs-data-acq.html#assessing-for-remote-sensing-visibility" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For siteSR, we will acquire Landsat stacks for all sites deemed “visible” by
+remote sensing irrelevant of site type. Note that this is different from lakeSR,
+where we only acquire data for lakes, reservoirs and ponds according to the NHD.
+This was a functional choice, as estuary extents are limited in the NHD (and
+when present the technique to determine the POI may not be appropriate).</p>
+<p>We use the JRC Global Surface Water Mapping Layers v1.4 <span class="citation">(Pekel et al. 2016)</span> to
+determine whether or not sites are visible by remote sensing (“RS visible”) and
+should therefore be sent through the GEE data acquisition process detailed in
+Section <a href="LS-SRST-pull.html#LS-SRST-pull">6</a>. Th JRC surface water dataset is a compilation of 38
+years of the Landsat record and enumerates the proportion of time a single 30x30
+meter pixel has the presence of water. As long as a siteSR site location has at
+least one pixel designated as being occupied by water at least 80% of the time
+during that 38 year period within a 200 meter radius, we include the site in the
+list for which we acquire Landsat stacks.</p>
+<p>After assessing for remote sensing visibility,
+395,307 sites were deemed to be
+visible by remote sensing
+(67.3%
+loss of sites).</p>
+<div class="figure"><span style="display:block;" id="fig:siteSR-filtered"></span>
+<img src="AquaMatch_lakeSR_files/figure-html/siteSR-filtered-1.png" alt="siteSR data location types present in the dataset after filtering for those that are deemed visible by remote sensing. Count of sites provided above bar, arranged by `harmonized_site_type`." width="672" />
+<p class="caption">
+Figure 3.6: siteSR data location types present in the dataset after filtering for those that are deemed visible by remote sensing. Count of sites provided above bar, arranged by <code>harmonized_site_type</code>.
+</p>
+</div>
+</div>
+<div id="sitesr-updates-in-aquamatch" class="section level3 hasAnchor" number="3.2.4">
+<h3><span class="header-section-number">3.2.4</span> siteSR updates in AquaMatch<a href="locs-data-acq.html#sitesr-updates-in-aquamatch" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>In our updated workflow, we acquire and provide the historical Landsat stacks
-for all sites collated from the harmonization pipeline, regardless of whether
-they are associated with a specific in situ observation. In the previous
-iteration, we only provided a matchup dataset for in situ data. Assigning
-flowlines and waterbodies to all siteSR sites is also a feature introduced in
-AquaMatch.</p>
+for all sites available from the WQP and NWIS, regardless of whether they are
+associated with a specific in situ observation present in our harmonization
+pipeline. In the previous iteration, we only provided a matchup dataset for in
+situ data. Assigning NHD flowlines and waterbodies to all siteSR sites is also a
+feature introduced in AquaMatch.</p>
 
 </div>
 </div>

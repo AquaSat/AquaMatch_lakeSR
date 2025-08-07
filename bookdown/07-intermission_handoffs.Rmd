@@ -68,21 +68,24 @@ coefficients if using data from more than one sensor group (TM, ETM+, OLI).
 For the purposes of creating these handoff coefficients, we use flags created
 when the locations were defined (see Section \@ref(lakeSR-shoreline) and some of
 the flags created in the GEE workflow (see Section \@ref(diagnostic-columns)) to
-reduce impacts of errant data. There are endless filters that can be applied
-prior to calculating the handoff coefficients, but for the purposes of this
-document and data product, we are somewhat conservative in filtering the data.
+use only the data we are most confident in when defining the handoff
+coefficient. There are endless filters that can be applied prior to calculating
+the handoff coefficients, but for the purposes of this document and data
+product, we are somewhat conservative in filtering the data.
 
 For optical bands, we removed data from sites where the `flag_optical_shoreline`
-was 1 for this analysis (indicating that there is a possiblity that the buffer
+was 1 for this analysis (indicating that there is a possibility that the buffer
 area includes mixed pixels). While we do use the DSWE-like algorithms to only
 include confident water pixels, this is an effort to reduce impacts of
 near-shore contamination in this process. Similarly, we removed the thermal band
 data when the `flag_thermal_...` was 1 (where the `...` represents the column
-appropriate for the given mission, see Section @ref(lakeSR-shoreline)). For
-thermal data, we also removed data from this process when there was any detected
-cloud in the buffered area of the point (`prop_clouds` column). The thermal
-sensor values can be dramatically impacted by clouds and we wanted to take a
-step to reduce that carrying through this analysis.
+appropriate for the given mission, see Section @ref(lakeSR-shoreline)).
+Additionally, we removed data from this process when there was any detected
+cloud in the buffered area of the point (`prop_clouds` column), the metadata
+file for the scene contained more than 50% cloud cover (`CLOUD_COVER` column),
+and if either the `flag_temp_min` or `flag_temp_max` were 1. The thermal sensor
+values can be dramatically impacted by clouds and we wanted to take a step to
+reduce that carrying through this analysis.
 
 ## Roy method
 
