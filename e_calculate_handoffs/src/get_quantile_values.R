@@ -36,7 +36,7 @@ get_quantile_values <- function(qa_files, mission_id, version_id, location_info,
                           LT04 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS457_export_", version_id, ".csv"),
                           LT05 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS457_export_", version_id, ".csv"), 
                           LE07 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS457_export_", version_id, ".csv"), 
-                          LC08 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS89_export", version_id, ".csv"), 
+                          LC08 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS89_export_", version_id, ".csv"), 
                           LC09 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS89_export_", version_id, ".csv"))
   
   # filter files for those in arguments
