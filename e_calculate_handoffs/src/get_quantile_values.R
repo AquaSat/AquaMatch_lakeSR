@@ -32,6 +32,13 @@ get_quantile_values <- function(qa_files, mission_id, version_id, location_info,
                          LC08 = "Landsat8", 
                          LC09 = "Landsat9")
   
+  metadata_file <- switch(EXPR = mission_id,
+                          LT04 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS457_export_", version_id, ".csv"),
+                          LT05 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS457_export_", version_id, ".csv"), 
+                          LE07 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS457_export_", version_id, ".csv"), 
+                          LC08 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS89_export", version_id, ".csv"), 
+                          LC09 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS89_export_", version_id, ".csv"))
+  
   # filter files for those in arguments
   fp <- qa_files %>% 
     .[grepl(mission_name, .)] %>% 
@@ -47,7 +54,7 @@ get_quantile_values <- function(qa_files, mission_id, version_id, location_info,
   setDT(data)
   # filter for dates and return
   data[date >= start_date & date <= end_date]
-
+  
   # make sure all the band data are numeric values
   walk(.x = bands[bands %in% names(data)], 
        .f = ~ set(data, j = .x, value = as.numeric(data[[.x]])))
@@ -62,7 +69,7 @@ get_quantile_values <- function(qa_files, mission_id, version_id, location_info,
     filter(lakeSR_id %in% data$lakeSR_id)
   
   # calculate quantile values for each band
-  quantile_seq <- seq(0.01, 0.99, 0.01)
+  quantile_seq <- seq(0.01, 0.99, 0.02)
   optical_bands <- bands[bands != "med_SurfaceTemp"]
   
   # check to make sure there are bands from argument input and run for optical
@@ -75,6 +82,17 @@ get_quantile_values <- function(qa_files, mission_id, version_id, location_info,
     # contamination
     filtered_optical_data <- data %>% 
       filter(lakeSR_id %in% optical_no_shore$lakeSR_id)
+    
+    ## do some additional conservative filtering for best quality data
+    # filter for scene-level cloud cover < 50
+    metadata <- read_csv(metadata_file) %>% 
+      filter(sat_id %in% filtered_optical_data$sat_id, CLOUD_COVER <= 50)
+    filtered_optical_data <- filtered_optical_data %>% 
+      filter(sat_id %in% metadata$sat_id)
+    # prop_clouds = 0, flag_temp_min/max = 0
+    filtered_optical_data <- filtered_optical_data %>% 
+      filter(prop_clouds == 0, flag_temp_min == 0, flag_temp_max == 0)
+    
     # get ids that have the necessary record length of data - need to specify lubridate here
     ids_optical <- filtered_optical_data[, .(n_years = uniqueN(lubridate::year(date))), by = .(lakeSR_id)][n_years >= record_length]
     # filter data for those ids
@@ -122,10 +140,20 @@ get_quantile_values <- function(qa_files, mission_id, version_id, location_info,
     
     # filter sites for no flag in thermal band, no clouds in buffered area
     thermal_no_shore <- filter(sites, .data[[thermal_flag]] == 0)
-    filtered_thermal_data <- data %>% 
-      filter(lakeSR_id %in% thermal_no_shore$lakeSR_id,
-             !is.na(med_SurfaceTemp), 
-             prop_clouds == 0)
+    filtered_thermal_data <- data[
+      lakeSR_id %in% thermal_no_shore$lakeSR_id &
+        !is.na(med_SurfaceTemp) &
+        prop_clouds == 0]
+    
+    ## do some additional conservative filtering for best quality data
+    # filter for scene-level cloud cover < 50
+    metadata <- read_csv(metadata_file) %>% 
+      filter(sat_id %in% filtered_optical_data$sat_id, CLOUD_COVER <= 50)
+    filtered_optical_data <- filtered_optical_data %>% 
+      filter(sat_id %in% metadata$sat_id)
+    # prop_clouds = 0, flag_temp_min/max = 0
+    filtered_optical_data <- filtered_optical_data %>% 
+      filter(prop_clouds == 0, flag_temp_min == 0, flag_temp_max == 0)
     
     # get ids that have the necessary length of data - need to specify lubridate here
     ids_thermal <- filtered_thermal_data[, .(n_years = uniqueN(lubridate::year(date))), by = .(lakeSR_id)][n_years >= record_length]
@@ -149,15 +177,15 @@ get_quantile_values <- function(qa_files, mission_id, version_id, location_info,
              dswe = dswe,
              version = version_id)
     
-  } else {
-    
-    thermal_quantiles = NULL
-    
-  }
+} else {
+  
+  thermal_quantiles = NULL
+  
+}
   
   outlist <- list(optical_quantiles, thermal_quantiles)
   names(outlist) <- c(paste0("optical_", dswe), paste0("thermal_", dswe))
   
   outlist
   
-}
+  }
