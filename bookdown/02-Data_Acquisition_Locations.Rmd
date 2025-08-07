@@ -445,7 +445,7 @@ Canal/Ditch, Estuary, Other. These designations are stored in the column
 `harmonized_site_type` in the siteSR site file.
 
 | AquaMatch harmonized_site_type | NWIS site_tp_cd | WQP MonitoringLocationTypeName |
-|----|----|----|
+|---------------------------|---------------------------|---------------------------|
 | Lake/Reservoir | LK | contains "lake", "reservoir", or "impoundment" |
 | Pond | no associated code | contains "pond" |
 | Stream | ST | contains "stream" |

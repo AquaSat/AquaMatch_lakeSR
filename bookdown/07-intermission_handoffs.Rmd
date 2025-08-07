@@ -78,8 +78,8 @@ was 1 for this analysis (indicating that there is a possibility that the buffer
 area includes mixed pixels). While we do use the DSWE-like algorithms to only
 include confident water pixels, this is an effort to reduce impacts of
 near-shore contamination in this process. Similarly, we removed the thermal band
-data when the `flag_thermal_...` was 1 (where the `...` represents the column
-appropriate for the given mission, see Section @ref(lakeSR-shoreline)).
+data when the `flag_thermal_...` was 1, where the `...` represents the column
+appropriate for the given mission, see Section \@ref(lakeSR-shoreline).
 Additionally, we removed data from this process when there was any detected
 cloud in the buffered area of the point (`prop_clouds` column), the metadata
 file for the scene contained more than 50% cloud cover (`CLOUD_COVER` column),
@@ -112,8 +112,8 @@ computationally intensive, the regression line is defined by a random sample of
 10,000 matches. For the purposes of this documentation, we only include figures
 and tables for the Deming regression (minimum likelihood estimation method) and
 DSWE1. Intercepts and slopes for all handoffs are available at the file path
-`e_calculate_handoffs/out/collated_handoffs_xDATEx.csv` and figures for all
-handoffs are created when the pipeline is run.
+`e_calculate_handoffs/out/lakeSR_collated_handoffs_GEEv2025-02-12_QAv2025-06-04.csv`
+and figures for all handoffs are created when the pipeline is run.
 
 ## Gardner method
 
@@ -139,8 +139,8 @@ any, systematic differences are present between the two missions. We provide the
 Gardner method handoffs for continuity with the riverSR product for users who
 would like that interoperability. As with the Roy, et al. method, intercepts and
 slopes for all handoffs are available at the file path
-`e_calculate_handoffs/out/collated_handoffs_xDATEx.csv` and figures for all
-handoffs are created when the pipeline is run.
+`e_calculate_handoffs/out/lakeSR_collated_handoffs_GEEv2025-02-12_QAv2025-06-04.csv`
+and figures for all handoffs are created when the pipeline is run.
 
 ## Implementing Roy Handoffs
 
