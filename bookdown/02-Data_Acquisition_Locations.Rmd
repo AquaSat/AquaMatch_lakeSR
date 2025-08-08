@@ -173,8 +173,8 @@ reflectance signals (that is, we do not signifiy whether the optical reflectance
 values are wholly attributable to the water column or whether there may be
 signals of bottom reflectance due to clear water/shallow bathymetry at the given
 location). Users should consider that, especially at sites where the distance to
-shore is small or where the waterbody is particularily shallow, that there may
-be bottom reflectance introduced into the remote sensing summaries. We encourage
+shore is small or where the waterbody is particularly shallow, that there may be
+bottom reflectance introduced into the remote sensing summaries. We encourage
 users to consider this in their analysis and interpretation of the data.
 
 Note: AquaMatch assumes static water elevation and inundation area based on the
@@ -197,7 +197,7 @@ waterbodies/visible water sources within the site buffer used for lakeSR or
 siteSR extraction. We do offer two flags to help users assess possibilities of
 shoreline contamination through a simple calculation. This calculation is based
 on the distance to shore calculated in the POI step, which does not account for
-differing shoreline locations due to water surface level change. A flagged pixel
+differing shoreline locations due to water surface level change. A flagged site
 for shoreline proximity also does not imply that the data are contaminated,
 rather is intended as a diagnostic tool to identify sites that may be more
 likely to have some sort of shoreline contamination. Because the lakeSR pipeline

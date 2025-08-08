@@ -125,7 +125,7 @@ configuration setting `qa_version`.
 See Section \@ref(post-hoc-qa) for detailed methodology of this portion of the
 workflow.
 
-**e_caclculate_handoffs:**
+**e_calculate_handoffs:**
 
 This {targets} group creates "matched" data for two different "intermission
 handoff" methods that standardize the SR values relative to Landsat 7 and to

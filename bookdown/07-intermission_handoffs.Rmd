@@ -66,9 +66,9 @@ coefficients if using data from more than one sensor group (TM, ETM+, OLI).
 ## Additional filtering applied
 
 For the purposes of creating these handoff coefficients, we use flags created
-when the locations were defined (see Section \@ref(lakeSR-shoreline) and some of
-the flags created in the GEE workflow (see Section \@ref(diagnostic-columns)) to
-use only the data we are most confident in when defining the handoff
+when the locations were defined (see Section \@ref(lakeSR-shoreline)) and some
+of the flags created in the GEE workflow (see Section \@ref(diagnostic-columns))
+to use only the data we are most confident in when defining the handoff
 coefficient. There are endless filters that can be applied prior to calculating
 the handoff coefficients, but for the purposes of this document and data
 product, we are somewhat conservative in filtering the data.
