@@ -1,1 +1,7 @@
+---
+editor_options:
+  markdown:
+    wrap: 80
+---
+
 # References

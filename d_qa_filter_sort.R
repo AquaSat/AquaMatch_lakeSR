@@ -196,12 +196,12 @@ if (config::get(config = general_config)$update_and_share) {
     ),
     
     tar_target(
-      name = d_make_feather_files,
+      name = d_make_lakeSR_feather_files,
       command = {
         if (!dir.exists(file.path("d_qa_filter_sort/out/", d_qa_version_identifier))) {
           dir.create(file.path("d_qa_filter_sort/out/", d_qa_version_identifier))
         }
-        map(.x = str_replace(d_mission_identifiers$mission_names, " ", ""),
+        walk(.x = str_replace(d_mission_identifiers$mission_names, " ", ""),
             .f = ~ {
               fns  <- d_all_sorted_Landsat_files[grepl(.x, d_all_sorted_Landsat_files)]
               fns_dswe <- fns[grepl(paste0(c_dswe_types, "_"), fns)]
@@ -210,14 +210,21 @@ if (config::get(config = general_config)$update_and_share) {
               write_feather(data, 
                             paste0("d_qa_filter_sort/out/", d_qa_version_identifier, "/lakeSR_", .x, "_", c_dswe_types, "_", d_qa_version_identifier, ".feather"),
                             compression = "lz4")
-              paste0("d_qa_filter_sort/out/", d_qa_version_identifier, "/lakeSR_", .x, "_", c_dswe_types, "_", d_qa_version_identifier, ".feather")
-            }) %>% 
-          list_c()
+            }) 
       },
       pattern = cross(c_dswe_types, d_mission_identifiers),
       packages = c("arrow", "data.table", "tidyverse"),
       deployment = "main" # these are huge, so make sure this runs solo
     ), 
+    
+    tar_target(
+      name = d_lakeSR_feather_files,
+      command = {
+        d_make_lakeSR_feather_files
+        list.files(file.path("d_qa_filter_sort/out", d_qa_version_identifier), full.names = TRUE) %>% 
+          .[grepl(d_qa_version_identifier, .)]
+      }
+    ),
     
     # check for Drive folders and architecture per config setup
     tar_target(
@@ -318,11 +325,11 @@ if (config::get(config = general_config)$update_and_share) {
     
     tar_target(
       name = d_send_feather_files_to_Drive,
-      command = export_single_file(file_path = d_make_feather_files,
+      command = export_single_file(file_path = d_lakeSR_feather_files,
                                    drive_path = d_check_Drive_feather_folder,
                                    google_email = lakeSR_config$google_email),
       packages = c("tidyverse", "googledrive"),
-      pattern = map(d_make_feather_files)
+      pattern = map(d_lakeSR_feather_files)
     ),
     
     tar_target(
@@ -444,7 +451,7 @@ if (config::get(config = general_config)$update_and_share) {
     
     # get a list of the qa'd feather files
     tar_target(
-      name = d_all_feather_Landsat_files,
+      name = d_lakeSR_feather_files,
       command = {
         d_retrieve_feather_files
         list.files(file.path("d_qa_filter_sort/out", d_qa_version_identifier), full.names = TRUE) %>% 

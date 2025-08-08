@@ -9,3 +9,4 @@ rmd_files: ["index.Rmd",
 "07-intermission_handoffs.Rmd",
 "z-Refs.Rmd"]
 output_dir: "../docs"
+delete_merged_file: true

@@ -36,13 +36,14 @@ calculate_roy_handoff <- function(matched_data,
                                      LS8 = "flag_thermal_TIRS_shoreline",
                                      LS9 = "flag_thermal_TIRS_shoreline")
            
-           # filter sites for no flag in thermal band
+           # filter sites for no flag in thermal band, make sure matches have data
            thermal_no_shore <- filter(sites, !!sym(thermal_flag_from) == 0 & !!sym(thermal_flag_to) == 0)
-           filtered_matched_data <- matched_data %>% 
-             filter(lakeSR_id %in% thermal_no_shore$lakeSR_id,
-                    !is.na(med_SurfaceTemp) & !is.na(i.med_SurfaceTemp),
-                    prop_clouds == 0 & i.prop_clouds == 0)
+           filtered_matched_data <- matched_data[ 
+             lakeSR_id %in% thermal_no_shore$lakeSR_id &
+                    !is.na(med_SurfaceTemp) & !is.na(i.med_SurfaceTemp)]
+           
          } else {
+           
            # grab sites most certainly without shoreline contamination for optical bands
            optical_no_shore <- sites %>% 
              filter(flag_optical_shoreline == 0)
@@ -50,6 +51,7 @@ calculate_roy_handoff <- function(matched_data,
            # contamination
            filtered_matched_data <- matched_data %>% 
              filter(lakeSR_id %in% optical_no_shore$lakeSR_id)
+           
          }
          
          # store x/y based on invert argument
