@@ -151,7 +151,7 @@ your console if you have not run the python setup script before, or you may get
 a warning similar to that below if you have previously run the python setup
 script:
 
-![](images/Screenshot 2025-08-12 at 3.14.04 PM.png)
+![](images/python_warning_okay.png)
 
 Now, we'll make sure that the Earth Engine API is set up correctly. Running this
 code chunk will open a web browser if you have not used your account with GEE
