@@ -135,7 +135,11 @@ After the above steps have been taken, create a virtual environment for this use
 of Python, so that we can test that your Earth Engine connection is working properly.
 
 ```{r}
-source("python/pySetup.R")
+if (!dir.exists("env")) {
+  source("python/pySetup.R")
+} else {
+ reticulate::use_condaenv(condaenv = file.path(getwd(), "env"))
+}
 ```
 
 The final output of the previous cell will be "conda environment activated" in your
@@ -146,6 +150,10 @@ code chunk will open a web browser if you have not used your account with GEE
 before. Make sure that the credentials you use are the same that appear in your 
 GEE config file. When your browser will indicate that you 
 have successfully authenticated, return here to finish this step.
+
+If this code chunk errors out with a "ModuleNotFoundError", please restart your
+R session and re-run the previous code chunk before re-running the following 
+code.
 
 ```{python}
 import ee
