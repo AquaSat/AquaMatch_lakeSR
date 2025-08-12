@@ -129,7 +129,8 @@ In order to use the configuration `run_GEE: TRUE`, you must have a
 [Google Earth Engine account](https://earthengine.google.com/signup/) 
 and a configured [Google Cloud Project](https://developers.google.com/earth-engine/cloud/projects). 
 You will also need to [download, install, and initialize gcloud](https://cloud.google.com/sdk/docs/install). 
-If you are running with the configuration `run_GEE: FALSE`, you can skip this section.
+If you are running with the configuration `run_GEE: FALSE` or as the default 
+configuration, you can skip this section.
 
 After the above steps have been taken, create a virtual environment for this use 
 of Python, so that we can test that your Earth Engine connection is working properly.
@@ -151,9 +152,9 @@ before. Make sure that the credentials you use are the same that appear in your
 GEE config file. When your browser will indicate that you 
 have successfully authenticated, return here to finish this step.
 
-If this code chunk errors out with a "ModuleNotFoundError", please restart your
-R session and re-run the previous code chunk before re-running the following 
-code.
+If the following python code chunk errors out with a "ModuleNotFoundError", please restart your
+R session and re-run the previous code chunk before re-running the following python
+chunk.
 
 ```{python}
 import ee
