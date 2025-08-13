@@ -21,8 +21,8 @@ if (config::get(config = general_config)$update_and_share) {
       command = {
         # make directories if needed
         directories <- c("d_qa_filter_sort/qa/",
-                        "d_qa_filter_sort/sort/",
-                        "d_qa_filter_sort/out/")
+                         "d_qa_filter_sort/sort/",
+                         "d_qa_filter_sort/out/")
         walk(directories, function(dir) {
           if(!dir.exists(dir)){
             dir.create(dir)
@@ -66,7 +66,7 @@ if (config::get(config = general_config)$update_and_share) {
     ),
     
     # track metadata files, we'll use those in the filtering process
-    tar_target(
+    tar_files(
       name = d_metadata_files,
       command = list.files(file.path("c_collate_Landsat_data/mid/", d_gee_version_identifier), 
                            full.names = TRUE) %>% 
@@ -90,7 +90,7 @@ if (config::get(config = general_config)$update_and_share) {
     ),
     
     # get a list of the qa'd files
-    tar_target(
+    tar_files(
       name = d_qa_Landsat_file_paths,
       command = {
         d_qa_Landsat_files
@@ -196,35 +196,78 @@ if (config::get(config = general_config)$update_and_share) {
     ),
     
     tar_target(
-      name = d_make_lakeSR_feather_files,
+      name = d_lakeSR_feather_files,
       command = {
         if (!dir.exists(file.path("d_qa_filter_sort/out/", d_qa_version_identifier))) {
           dir.create(file.path("d_qa_filter_sort/out/", d_qa_version_identifier))
         }
-        walk(.x = str_replace(d_mission_identifiers$mission_names, " ", ""),
-            .f = ~ {
-              fns  <- d_all_sorted_Landsat_files[grepl(.x, d_all_sorted_Landsat_files)]
-              fns_dswe <- fns[grepl(paste0(c_dswe_types, "_"), fns)]
-              data <- map(fns_dswe, fread) %>% 
-                rbindlist(., use.names = TRUE, fill = TRUE)
-              write_feather(data, 
-                            paste0("d_qa_filter_sort/out/", d_qa_version_identifier, "/lakeSR_", .x, "_", c_dswe_types, "_", d_qa_version_identifier, ".feather"),
-                            compression = "lz4")
-            }) 
+        
+        # filter for identifier/dswe
+        fns  <- d_all_sorted_Landsat_files[grepl(gsub(" ", "", d_mission_identifiers$mission_names),
+                                                 d_all_sorted_Landsat_files)]
+        fns_dswe <- fns[grepl(paste0(c_dswe_types, "_"), fns)]
+        
+        # create the output filepath
+        out_fp <- paste0("d_qa_filter_sort/out/", 
+                         d_qa_version_identifier, 
+                         "/lakeSR_", 
+                         str_replace(d_mission_identifiers$mission_names," ", ""),
+                         "_", c_dswe_types, "_", 
+                         d_qa_version_identifier, ".feather")
+        
+        # check to see if this is a single file, or multiple and needs additional
+        # data handling
+        if (length(fns_dswe > 1)) {
+          
+          # create a temp directory for the temporary Arrow dataset
+          temp_dataset_dir <- tempfile("arrow_ds_")
+          dir.create(temp_dataset_dir)
+          # these files need to be processed by chunk to deal with memory issues
+          walk(fns_dswe, function(fn) {
+            # read chunk
+            chunk <- fread(fn)
+            setDT(chunk)
+            
+            # add source_file column to partition by
+            chunk[, source_file := tools::file_path_sans_ext(basename(fn))]
+            
+            # write chunk using partitioning (otherwise we hit memory issues)
+            write_dataset(chunk,
+                          path = temp_dataset_dir,
+                          format = "feather",
+                          partitioning = "source_file",
+                          existing_data_behavior = "delete_matching")
+          })
+          
+          # connect to the arrow-partitioned file
+          ds <- open_dataset(temp_dataset_dir, format = "feather")
+          
+          # and grab all the data and write the feather file
+          ds %>% 
+            collect() %>% 
+            select(-source_file) %>% 
+            write_feather(., out_fp, compression = "lz4")
+          
+          # housekeeping
+          unlink(temp_dataset_dir, recursive = TRUE)
+          gc()
+          Sys.sleep(5)
+          
+        } else {
+          
+          data <- fread(fn)
+          write_feather(data, out_fp, compression = "lz4")
+          
+        }
+        
+        # return filepath
+        out_fp
+        
       },
       pattern = cross(c_dswe_types, d_mission_identifiers),
       packages = c("arrow", "data.table", "tidyverse"),
       deployment = "main" # these are huge, so make sure this runs solo
     ), 
-    
-    tar_target(
-      name = d_lakeSR_feather_files,
-      command = {
-        d_make_lakeSR_feather_files
-        list.files(file.path("d_qa_filter_sort/out", d_qa_version_identifier), full.names = TRUE) %>% 
-          .[grepl(d_qa_version_identifier, .)]
-      }
-    ),
     
     # check for Drive folders and architecture per config setup
     tar_target(
@@ -361,7 +404,7 @@ if (config::get(config = general_config)$update_and_share) {
       command = {
         # make directories if needed
         directories <- c("d_qa_filter_sort/sort/",
-                        file.path("d_qa_filter_sort/out/", d_qa_version_identifier))
+                         file.path("d_qa_filter_sort/out/", d_qa_version_identifier))
         walk(directories, function(dir) {
           if(!dir.exists(dir)){
             dir.create(dir)
@@ -440,7 +483,7 @@ if (config::get(config = general_config)$update_and_share) {
     ), 
     
     # get a list of the qa'd files
-    tar_target(
+    tar_files(
       name = d_all_sorted_Landsat_files,
       command = {
         d_retrieve_sorted_files
@@ -450,7 +493,7 @@ if (config::get(config = general_config)$update_and_share) {
     ),
     
     # get a list of the qa'd feather files
-    tar_target(
+    tar_files(
       name = d_lakeSR_feather_files,
       command = {
         d_retrieve_feather_files
@@ -458,7 +501,7 @@ if (config::get(config = general_config)$update_and_share) {
           .[grepl(d_qa_version_identifier, .)]
       }
     )
-
+    
   )
   
 }

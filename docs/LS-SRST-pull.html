@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-08-08" />
+<meta name="date" content="2025-08-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -538,17 +538,7 @@ not remove very deep, oligotrophic and/or high DOC water systems from our
 data set while implementing this QA filter.</p></li>
 <li><p><code>add_glint_mask</code>: Adds a mask band where any optical band is &gt; 0.2,
 indicating likely sun glint artifacts.</p></li>
-<li><p><code>add_ir_glint_flag</code>: Adds a band where any near infrared or shortwave
-infrared value is greater than 0.1, but does not mask the pixel. This flag
-is meant to be a diagnostic for downstream users to make additional
-qualitative assessment of sun glint affected data and is tallied with all
-masks implemented.</p></li>
 </ul>
-<p>We track pixel-level instances of the use of the aerosol mask in Landsat 8/9,
-the opacity mask in Landsat 4/5/7, the realistic mask (holistically and per
-band), and the sun glint mask (holistically and per band) in our GEE workflow.
-These tallies represent the number of pixels masked for each QA procedure prior
-to summarizing the data within the buffered area.</p>
 </div>
 <div id="dswe-implementation" class="section level3 hasAnchor" number="6.3.2">
 <h3><span class="header-section-number">6.3.2</span> Defining water area<a href="LS-SRST-pull.html#dswe-implementation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -609,24 +599,15 @@ environments.</p>
 <p>During the masking and flagging step of the workflow, we tally pixels that met
 certain criteria for use as diagnostic tools, which are stored in the same file
 as the summary remote sensing data. This includes tallying of varying DSWE types
-(greater than 0 – water of some kind with any confidence, 1 high confidence
-water, 1a high confidence water with positive algal mask, 3 high confidence
-vegetated water) within the buffered area. These tallies are of any pixel that
-meets the DSWE category and met the hillshade, cloud, opacity/aerosol,
-realistic, and glint thresholds. The number of pixels that were high
-opacity/high aerosol, overly negative values, and likely sun glint were also
-tallied within the buffer. These tallies are of the entire buffer area and no
-additional masks are incorporated into the tallies (e.g. the sun glint mask and
-infrared mask may also indicate high reflectance from shoreline vegetation
-within the buffered area). Counts of pixels were tallied per band to indicate
-the number of pixels that were below zero, below the threshold for realistic
-values, or above the glint threshold. These tallies were completed in
-conjunction with the hillshade, cloud, opacity/aerosol and DSWE masks,
-representing the number of pixels that were masked after the baseline pixel QA
-process. The number of pixels that had infrared reflectance values (NIR, SWIR1,
-and SWIR2) greater than 0.1 were also tallied, but these pixels were not masked
-out. Columns for the proportion of pixels masked by clouds and shaded by terrain
-are also provided, no additive mask is used when tallying these pixels. These
+(greater than 0 – water of some kind with any confidence <code>pCount_dswe_gt0</code>, 1
+high confidence water <code>pCount_dswe1</code>, 1a high confidence water with positive
+algal mask <code>pCount_dswe1a</code>, 3 high confidence vegetated water <code>pCount_dswe3</code>)
+within the buffered area. These tallies are of any pixel that meets the DSWE
+category and met the hillshade, cloud, opacity/aerosol, realistic, and glint
+thresholds within the set buffer. Columns for the proportion of pixels masked by
+clouds <code>prop_clouds</code> and shaded by terrain <code>prop_hillShadow</code> are also provided,
+no additive mask is used when tallying these pixels so the value represents the
+proportion of pixels masked from the data summary in the buffered area. These
 tallies are meant to be used as diagnostic tools for further quality control and
 modeling purposes, though we do not have recommended uses at this time.</p>
 <p>See the formal metadata for definitions of these flags, which are stored
