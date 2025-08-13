@@ -626,7 +626,7 @@ when present the technique to determine the POI may not be appropriate).
 We use the JRC Global Surface Water Mapping Layers v1.4 [@pekel2016] to
 determine whether or not sites are visible by remote sensing ("RS visible") and
 should therefore be sent through the GEE data acquisition process detailed in
-Section \@ref(LS-SRST-pull). Th JRC surface water dataset is a compilation of 38
+Section \@ref(LS-SRST-pull). The JRC surface water dataset is a compilation of 38
 years of the Landsat record and enumerates the proportion of time a single 30x30
 meter pixel has the presence of water. As long as a siteSR site location has at
 least one pixel designated as being occupied by water at least 80% of the time
