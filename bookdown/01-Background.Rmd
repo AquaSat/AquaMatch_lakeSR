@@ -371,7 +371,7 @@ version date identifier):
     pipeline, as well as any additional sites from the AquaMatch pipeline (for
     Secchi disc depth, chlorophyll *a*, dissolved organic carbon, and total
     suspended solids) that were not present in the WQP site pull. This file also
-    contains column attributing a HUC8, NHD features (waterbodies and/or
+    contains columns attributing a HUC8, NHD features (waterbodies and/or
     flowlines), and flags meant to aid in data interpretation. See Section
     \@ref(siteSR-locs) for more information about this file. This file is the
     same content as the {targets} object `a_sites_with_NHD_info`, which can be
