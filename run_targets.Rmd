@@ -14,8 +14,8 @@ Collection 2 Surface Reflectance Product for the furthest point from shore
 and Territories greater than 1ha and all waterbodies deemed "intermittent" by
 the NHD greater than 4ha.
 
-This R Markdown document is not meant to be "knit", rather to walk the user
-through the process of setting up and running this workflow. Additional overview
+This R Markdown document is not meant to be "knit" all at once. Rather, we suggest that the user 
+walks through the process of setting up and running this workflow chunk-by-chunk. Additional overview
 about the {targets} workflow is available in the README file.
 
 Anytime this workflow is run, you should start in a new R session, otherwise
