@@ -41,7 +41,7 @@ AquaMatch builds upon AquaSat [@ross2019] (referred to here as "AquaSat v1") and
 
 AquaMatch code is built on the {targets} workflow management system for R [@landau2021]. The {targets} architecture is based on lists of functions performed in a specific order, each function called a *target*. These targets are grouped together into processing groups. The primary benefit of {targets} workflows is that code is only run if a target, a target's code, or a target's dependencies have changed (or become "outdated" in {targets} speak).
 
-Full documentation of the WQP download and QA process from the upstream AquaMatch download and harmonize pipelines [is located here](https://aquasat.github.io/AquaMatch_harmonize_WQP/).
+Full documentation of the WQP download and QA process from the upstream AquaMatch download and harmonize pipelines [is located here](https://aquasat.github.io/AquaMatch_documentation/).
 
 ## Repository Links for the AquaMatch Data Suite
 
