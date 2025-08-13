@@ -19,7 +19,7 @@ applicable.
 We recommend using the most recent release of R, R Studio, {targets} and all R
 packages used within the workflow. The most recent run of lakeSR and siteSR was
 completed using R version 4.5.0 [@rcoreteam2025] in R Studio 2025.05.0
-[@positteam2023] . The table below lists the packages used across the lakeSR and
+[@positteam2023]. The table below lists the packages used across the lakeSR and
 siteSR workflow, versions used, and the associated citation.
 
 | R Package            | version  | citation                   |
