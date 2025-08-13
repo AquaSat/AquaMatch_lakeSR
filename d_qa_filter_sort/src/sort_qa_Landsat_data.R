@@ -41,6 +41,17 @@ sort_qa_Landsat_data <- function(qa_files,
                     dt <- read_feather(fp) 
                     # convert to DT by reference
                     setDT(dt)
+                    # drop some of the pCount columns that didn't count correctly in GEE
+                    # see issues #57, #58
+                    cols_to_drop <- c(
+                      names(dt)[endsWith(names(dt), "val")],
+                      names(dt)[endsWith(names(dt), "glint")],
+                      names(dt)[endsWith(names(dt), "thresh")],
+                      names(dt)[endsWith(names(dt), "zero")],
+                      names(dt)[endsWith(names(dt), "opac")],
+                      names(dt)[endsWith(names(dt), "aero")]
+                    )
+                    dt[, (cols_to_drop) := NULL]
                     dt[, `:=`(
                       lakeSR_id = stri_extract_last_regex(`system:index`, "\\d{4}_\\d+$"), 
                       dswe_filter = stri_extract_first_regex(fp, "DSWE\\d+a?"),
@@ -83,6 +94,17 @@ sort_qa_Landsat_data <- function(qa_files,
                     dt <- read_feather(fp) 
                     # convert to DT by reference
                     setDT(dt)
+                    # drop some of the pCount columns that didn't count correctly in GEE
+                    # see issues #57, #58
+                    cols_to_drop <- c(
+                      names(dt)[endsWith(names(dt), "val")],
+                      names(dt)[endsWith(names(dt), "glint")],
+                      names(dt)[endsWith(names(dt), "thresh")],
+                      names(dt)[endsWith(names(dt), "zero")],
+                      names(dt)[endsWith(names(dt), "opac")],
+                      names(dt)[endsWith(names(dt), "aero")]
+                    )
+                    dt[, (cols_to_drop) := NULL]
                     dt[, `:=`(
                       lakeSR_id = stri_extract_last_regex(`system:index`, "\\d{4}_\\d+$"), 
                       dswe_filter = stri_extract_first_regex(fp, "DSWE\\d+a?"),
