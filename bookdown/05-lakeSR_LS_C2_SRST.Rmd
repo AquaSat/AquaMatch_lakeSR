@@ -407,6 +407,6 @@ Generally speaking, failed tasks would indicate an error within the GEE
 acquisition script, usually due to changes in the
 `b_pull_Landsat_SRST_poi/py/run_GEE_per_pathrow.py` script. We recommend
 checking the task status of the GEE run at
-<https://code.earthengine.google.com/tasks> after any changes to they GEE
+<https://code.earthengine.google.com/tasks> after any changes to the GEE
 functions file, which will indicate if tasks are failing due to code error
 without waiting for the total completion of the GEE target.
