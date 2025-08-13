@@ -46,6 +46,47 @@ get_matches <- function(files, dswe, gee_version, qa_version,
   # grab pathrow from source
   late[, late_pathrow := str_extract(source, "(?<=_)\\d{6}(?=_)")]
   
+  # filter conservatively ---------------------------------------------------
+  
+  metadata_file_early <- switch(EXPR = early_LS_mission,
+                                Landsat4 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS457_export_", qa_version, ".csv"),
+                                Landsat5 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS457_export_", qa_version, ".csv"), 
+                                Landsat7 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS457_export_", qa_version, ".csv"), 
+                                Landsat8 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS89_export_", qa_version, ".csv"), 
+                                Landsat9 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS89_export_", qa_version, ".csv"))
+  
+  metadata_file_late <- switch(EXPR = late_LS_mission,
+                               Landsat4 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS457_export_", qa_version, ".csv"),
+                               Landsat5 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS457_export_", qa_version, ".csv"), 
+                               Landsat7 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS457_export_", qa_version, ".csv"), 
+                               Landsat8 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS89_export_", qa_version, ".csv"), 
+                               Landsat9 = paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS89_export_", qa_version, ".csv"))
+  
+  
+  ## do some additional conservative filtering for best quality data
+  # filter for scene-level cloud cover < 50
+  metadata_early <- read_csv(metadata_file_early) %>% 
+    filter(sat_id %in% early$early_sat_id, CLOUD_COVER <= 50)
+  metadata_late <- read_csv(metadata_file_late) %>% 
+    filter(sat_id %in% late$late_sat_id, CLOUD_COVER <= 50)
+  
+  # filter in place using data.table syntax - low cloud cover, no clouds
+  # in aoi, no flags for temp min/max
+  early <- early[
+    early_sat_id %in% metadata_early$sat_id &
+      prop_clouds == 0 &
+      flag_temp_min == 0 &
+      flag_temp_max == 0
+  ]
+  setnames(early, "mission", "early_mission")
+  late <- late[
+    late_sat_id %in% metadata_late$sat_id &
+      prop_clouds == 0 &
+      flag_temp_min == 0 &
+      flag_temp_max == 0
+  ]
+  setnames(late, "mission", "early_mission")
+  
   
   # make paired dataset ------------------------------------------------------
   
@@ -59,9 +100,9 @@ get_matches <- function(files, dswe, gee_version, qa_version,
   setkeyv(late, c("lakeSR_id", "start", "end"))
   
   matched <- foverlaps(x = early, y = late, 
-                      by.x = key(early),
-                      by.y = key(late), 
-                      type = "any", nomatch = NULL, mult = "all")
+                       by.x = key(early),
+                       by.y = key(late), 
+                       type = "any", nomatch = NULL, mult = "all")
   
   # do some cache-clearing
   rm(early, late)
@@ -69,7 +110,7 @@ get_matches <- function(files, dswe, gee_version, qa_version,
   
   # add dswe info
   matched[, dswe := dswe]
-
+  
   matched
   
 }

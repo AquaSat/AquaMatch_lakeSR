@@ -46,11 +46,11 @@ if (config::get(config = general_config)$update_bookdown) {
       name = move_siteSR_drop_images,
       command = {
         # Define source and destination directories
-        source_dir <- file.path(config_siteSR_directory, "7_qa_stack/out/")
+        source_dir <- file.path(config_siteSR_directory, "d_qa_stack/qa/")
         site_dir <- "bookdown/images/siteSR/"
         dir.create(site_dir, recursive = TRUE, showWarnings = FALSE)
         # Get list of files to copy
-        files_to_copy <- list.files(source_dir, full.names = TRUE)
+        files_to_copy <- list.files(source_dir, pattern = ".png", full.names = TRUE)
         # Copy files
         file.copy(from = files_to_copy, to = site_dir, overwrite = TRUE)
       },
@@ -87,8 +87,8 @@ if (config::get(config = general_config)$update_bookdown) {
         source_dir <- "e_calculate_handoffs/roy/"
         handoff_dir <- "bookdown/images/roy/handoffs/"
         resid_dir <- "bookdown/images/roy/residuals/"
-        dir.create(handoff_dir, recursive = T)
-        dir.create(resid_dir, recursive = T)
+        dir.create(handoff_dir, recursive = T, showWarnings = FALSE)
+        dir.create(resid_dir, recursive = T, showWarnings = FALSE)
         # Get list of files to copy
         handoff_to_copy <- list.files(source_dir, full.names = TRUE) %>% 
           .[grepl("DSWE1_", .)] %>% 
@@ -137,8 +137,8 @@ if (config::get(config = general_config)$update_bookdown) {
                              params = list(
                                poi = a_poi_with_flags,
                                locs_run_date = lakeSR_config$collated_version,
-                               sites = p4_WQP_site_NHD_info,
-                               visible_sites = p5_visible_sites,
+                               sites = a_sites_with_NHD_info,
+                               visible_sites = b_visible_sites,
                                LS5_for57 = e_LS5_forLS57corr_quantiles,
                                LS7_for57 = e_LS7_forLS57corr_quantiles,
                                LS7_for78 = e_LS7_forLS78corr_quantiles,
@@ -149,8 +149,8 @@ if (config::get(config = general_config)$update_bookdown) {
                              ))
                },
                packages = c("tidyverse", "bookdown", "sf", "tigris", "nhdplusTools", 
-                            "tmap", "googledrive", "feather", "kableExtra", "cowplot",
-                            "ggthemes"),
+                            "tmap", "googledrive", "arrow", "kableExtra", "cowplot",
+                            "ggthemes", "USA.state.boundaries"),
                deployment = "main")
   )
   

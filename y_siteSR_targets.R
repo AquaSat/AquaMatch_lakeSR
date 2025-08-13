@@ -47,7 +47,8 @@ if (config::get(config = general_config)$update_bookdown) {
                         version_date = str_sub(most_recent$name, -14 , -5),
                         file_type = ".rds")
       },
-      packages = c("sf", "tidyverse", "googledrive")
+      packages = c("sf", "tidyverse", "googledrive"),
+      cue = tar_cue("always")
     ),
     
     tar_file_read(
@@ -71,7 +72,8 @@ if (config::get(config = general_config)$update_bookdown) {
                         version_date = str_sub(most_recent$name, -14 , -5),
                         file_type = ".rds")
       },
-      packages = c("tidyverse", "googledrive")
+      packages = c("tidyverse", "googledrive"),
+      cue = tar_cue("always")
     ), 
     
     
@@ -97,9 +99,9 @@ if (config::get(config = general_config)$update_bookdown) {
                         version_date = str_sub(most_recent$name, -14 , -5),
                         file_type = ".rds")
       },
-      packages = c("tidyverse", "googledrive")
+      packages = c("tidyverse", "googledrive"),
+      cue = tar_cue("always")
     )
-    
     
   )
   

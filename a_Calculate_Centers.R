@@ -131,7 +131,7 @@ if (config::get(config = general_config)$calculate_centers) {
           mutate(flag_optical_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 30,
                                                   1,  # possible shoreline contamination
                                                   0), # no expected shoreline contamination
-                 flag_thermal_MSS_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 120,
+                 flag_thermal_TM_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 120,
                                                       1, # possible shoreline contamination
                                                       0), # no expected shoreline contamination
                  flag_thermal_ETM_shoreline = if_else(poi_dist_m <= as.numeric(b_yml_poi$site_buffer) + 60,

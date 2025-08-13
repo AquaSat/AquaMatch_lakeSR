@@ -37,7 +37,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS4_forLS45corr_quantiles,
-    command = get_quantile_values(qa_files = d_all_feather_Landsat_files,
+    command = get_quantile_values(qa_files = d_lakeSR_feather_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LT04",
                                   location_info = a_poi_with_flags,
@@ -56,7 +56,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS5_forLS45corr_quantiles,
-    command = get_quantile_values(qa_files = d_all_feather_Landsat_files,
+    command = get_quantile_values(qa_files = d_lakeSR_feather_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LT05",
                                   location_info = a_poi_with_flags,
@@ -75,7 +75,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS5_forLS57corr_quantiles,
-    command = get_quantile_values(qa_files = d_all_feather_Landsat_files,
+    command = get_quantile_values(qa_files = d_lakeSR_feather_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LT05",
                                   location_info = a_poi_with_flags,
@@ -94,7 +94,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS7_forLS57corr_quantiles,
-    command = get_quantile_values(qa_files = d_all_feather_Landsat_files,
+    command = get_quantile_values(qa_files = d_lakeSR_feather_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LE07",
                                   location_info = a_poi_with_flags,
@@ -113,7 +113,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS7_forLS78corr_quantiles,
-    command = get_quantile_values(qa_files = d_all_feather_Landsat_files,
+    command = get_quantile_values(qa_files = d_lakeSR_feather_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LE07",
                                   location_info = a_poi_with_flags,
@@ -132,7 +132,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS8_forLS78corr_quantiles,
-    command = get_quantile_values(qa_files = d_all_feather_Landsat_files,
+    command = get_quantile_values(qa_files = d_lakeSR_feather_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LC08",
                                   location_info = a_poi_with_flags,
@@ -151,7 +151,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS8_forLS89corr_quantiles,
-    command = get_quantile_values(qa_files = d_all_feather_Landsat_files,
+    command = get_quantile_values(qa_files = d_lakeSR_feather_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LC08",
                                   location_info = a_poi_with_flags,
@@ -170,7 +170,7 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_LS9_forLS89corr_quantiles,
-    command = get_quantile_values(qa_files = d_all_feather_Landsat_files,
+    command = get_quantile_values(qa_files = d_lakeSR_feather_files,
                                   version_id = d_qa_version_identifier,
                                   mission_id = "LC09",
                                   location_info = a_poi_with_flags,
@@ -199,7 +199,7 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS45_DSWE1_matches,
     command = {
-      get_matches(files = d_all_feather_Landsat_files, 
+      get_matches(files = d_lakeSR_feather_files, 
                   dswe = "DSWE1", 
                   qa_version = d_qa_version_identifier,
                   early_LS_mission = "Landsat4", late_LS_mission = "Landsat5")
@@ -211,7 +211,7 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS57_DSWE1_matches,
     command = {
-      get_matches(files = d_all_feather_Landsat_files, 
+      get_matches(files = d_lakeSR_feather_files, 
                   dswe = "DSWE1", 
                   qa_version = d_qa_version_identifier,
                   early_LS_mission = "Landsat5", late_LS_mission = "Landsat7")
@@ -223,7 +223,7 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS78_DSWE1_matches,
     command = {
-      get_matches(files = d_all_feather_Landsat_files, 
+      get_matches(files = d_lakeSR_feather_files, 
                   dswe = "DSWE1", 
                   qa_version = d_qa_version_identifier,
                   early_LS_mission = "Landsat7", late_LS_mission = "Landsat8")
@@ -235,7 +235,7 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS89_DSWE1_matches,
     command = {
-      get_matches(files = d_all_feather_Landsat_files, 
+      get_matches(files = d_lakeSR_feather_files, 
                   dswe = "DSWE1", 
                   qa_version = d_qa_version_identifier,
                   early_LS_mission = "Landsat8", late_LS_mission = "Landsat9")
@@ -248,7 +248,7 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS45_DSWE1a_matches,
     command = {
-      get_matches(files = d_all_feather_Landsat_files, 
+      get_matches(files = d_lakeSR_feather_files, 
                   dswe = "DSWE1a", 
                   qa_version = d_qa_version_identifier,
                   early_LS_mission = "Landsat4", late_LS_mission = "Landsat5")
@@ -260,7 +260,7 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS57_DSWE1a_matches,
     command = {
-      get_matches(files = d_all_feather_Landsat_files, 
+      get_matches(files = d_lakeSR_feather_files, 
                   dswe = "DSWE1a", 
                   qa_version = d_qa_version_identifier,
                   early_LS_mission = "Landsat5", late_LS_mission = "Landsat7")
@@ -272,7 +272,7 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS78_DSWE1a_matches,
     command = {
-      get_matches(files = d_all_feather_Landsat_files, 
+      get_matches(files = d_lakeSR_feather_files, 
                   dswe = "DSWE1a", 
                   qa_version = d_qa_version_identifier,
                   early_LS_mission = "Landsat7", late_LS_mission = "Landsat8")
@@ -284,7 +284,7 @@ e_calculate_handoffs <- list(
   tar_target(
     name = e_LS89_DSWE1a_matches,
     command = {
-      get_matches(files = d_all_feather_Landsat_files, 
+      get_matches(files = d_lakeSR_feather_files, 
                   dswe = "DSWE1a", 
                   qa_version = d_qa_version_identifier,
                   early_LS_mission = "Landsat8", late_LS_mission = "Landsat9")
