@@ -118,21 +118,21 @@ qa_and_document_LS <- function(mission_info,
                     data <- data %>% 
                       mutate(flag_temp_min = case_when(is.na(med_SurfaceTemp) ~ 1,
                                                        med_SurfaceTemp < thermal_threshold ~ 2,
-                                                       .default = 0),
-                             med_SurfaceTemp = if_else(med_SurfaceTemp < thermal_threshold,
-                                                       NA_real_, 
-                                                       med_SurfaceTemp))
+                                                       .default = 0))
                     
-                    # flag thermal > 213.15 (above 40 deg C), recode only temp
+                    # flag thermal > 313.15 (above 40 deg C), recode only temp
                     ## flag_temp_max: 0 = valid data, 1 = no data available, 
                     ##                2 = recoded for above temp threshold
                     data <- data %>% 
                       mutate(flag_temp_max = case_when(is.na(med_SurfaceTemp) ~ 1,
                                                        med_SurfaceTemp > thermal_maximum ~ 2,
-                                                       .default = 0),
-                             med_SurfaceTemp = if_else(med_SurfaceTemp > thermal_maximum,
-                                                       NA_real_, 
-                                                       med_SurfaceTemp))
+                                                       .default = 0))
+                    
+                    # recode temp data based on flags
+                    # columns to modify
+                    cols <- grep("surfacetemp", names(data), ignore.case = TRUE, value = TRUE)
+                    # in-place update
+                    data[(flag_temp_min == 2 | flag_temp_max == 2), (cols) := NA]
                     
                     # round to sig digits for optical and thermal
                     cols_to_round <- names(data) %>% 

@@ -144,7 +144,7 @@ if (config::get(config = general_config)$run_GEE) {
     # Save collated files to Drive, create csv with ids -----------------------
     
     # get list of files to save to drive
-    tar_target(
+    tar_files(
       name = c_collated_files,
       command = {
         c_make_collated_metadata
@@ -256,7 +256,7 @@ if (config::get(config = general_config)$run_GEE) {
       pattern = map(c_save_collated_drive_info)
     ),
     
-    tar_target(
+    tar_files(
       name = c_collated_files,
       command = {
         c_download_drive_files
