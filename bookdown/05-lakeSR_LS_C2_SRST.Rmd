@@ -301,13 +301,34 @@ follows:
     Earth Engine using the MERIT DEM version 1.0.3 [@yamazaki2017] at an extent
     of 3000 meters surrounding a given point for analysis.
 
-    ![Screenshot of code used for implementation of hill shadow to determine
-    masking procedures of the DSWE value.](images/hillshadow.png){width="600"}
+    ```{python}
+    #| eval: false
+    #| echo: true
+
+    def calc_hill_shadows(image, geo):
+      """ caluclate the hill shadow per pixel
+      
+      Args:
+          image: ee.Image of an ee.ImageCollection
+          geo: geometry of the WRS tile as wrs.geometry() in script
+      
+      Returns:
+          a band named 'hillShadow' where values calculated are the hill shadow per 
+          pixel. output 1 where pixels are illumunated and 0 where they are shadowed.
+      """
+      MergedDEM = ee.Image("MERIT/DEM/v1_0_3").clip(geo.buffer(3000))
+      hillShadow = ee.Terrain.hillShadow(MergedDEM, 
+        ee.Number(image.get('SUN_AZIMUTH')),
+        ee.Number(90).subtract(image.get('SUN_ELEVATION')), 
+        30)
+      hillShadow = hillShadow.rename(['hillShadow'])
+      return hillShadow
+    ```
 
     This is different from the implementation described in the Level 3 data
     product which uses a set of hillshade and landcover thresholds to determine
-    whether or not the resulting DSWE value should be masked. Based on extensive
-    visual inspection, our adaptation seems to label pixels as expected.
+    whether or not the resulting DSWE value should be masked. Based on visual
+    inspection, our adaptation seems to label pixels as expected.
 
 Our implementation of the DSWE algorithm results in the following values per
 pixel based on the thresholds described in @usgeologicalsurvey2023 table 2.2 and

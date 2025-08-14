@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-08-13" />
+<meta name="date" content="2025-08-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -335,7 +335,7 @@ available for all states and territories outside CONUS. All waterbody polygons
 were downloaded and processed on 2025-02-12 by HUC4 using the most
 updated version available at the time of download.</p>
 <div class="figure"><span style="display:block;" id="fig:NHDPlusV2-HUC4"></span>
-<img src="https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/thumbnails/image/WBD_SubRegions_24x18.png" alt="NHD HUC4 map for the United States and Territories, courtesy of the USGS."  />
+<img src="https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/thumbnails/image/WBD_SubRegions_24x18.png" alt="Drawing of the Continental United States with HUC2 boundaries indicated with thick red lines and HUC4 boundaries indcated with thinner red lines. Insets of HUC2 and HUC4 shown for Alaska, Hawaii, Caribbean Region, South Pacific Region."  />
 <p class="caption">
 Figure 3.1: NHD HUC4 map for the United States and Territories, courtesy of the USGS.
 </p>
@@ -490,7 +490,7 @@ Wisconsin, whereas AquaMatch via the lakeSR product includes
 10,574 (Figure <a href="locs-data-acq.html#fig:WI-lakes">3.2</a>) -
 accounting for a majority of the state’s freshwater water bodies.</p>
 <div class="figure"><span style="display:block;" id="fig:WI-lakes"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/WI-lakes-1.png" alt="Deepest point of Wisconsin lakes included in LimnoSat-US defined by the Hydrolakes data product (left) and those included in AquaMatch via lakeSR defined by the NHDPlusV2 data product (right). Deepest point for each lake is indicated with a black dot, spatial histogram of density by longitude and latitude presented below the maps." width="672" />
+<img src="AquaMatch_lakeSR_files/figure-html/WI-lakes-1.png" alt="This is a multi-panel figure, on the top row, two maps of the state of Wisconsin with dots representing all the lakes included in the lakeSR dataset. The top left represents the water bodies included in LimnoSat, the top right is those included in AquaSat v2, which has a higher density of dots. Below these two maps are histograms of the number of lakes with an x axis for Longitude (bottom left) or Latitude (bottom right), showing the difference in count between the LimnoSat and AquaSat v2 data products." width="672" />
 <p class="caption">
 Figure 3.2: Deepest point of Wisconsin lakes included in LimnoSat-US defined by the Hydrolakes data product (left) and those included in AquaMatch via lakeSR defined by the NHDPlusV2 data product (right). Deepest point for each lake is indicated with a black dot, spatial histogram of density by longitude and latitude presented below the maps.
 </p>
@@ -527,7 +527,7 @@ Within siteSR there are
 1,015,748
 sites from the WQP.</p>
 <div class="figure"><span style="display:block;" id="fig:siteSR-types-WQP"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/siteSR-types-WQP-1.png" alt="Water Quality Portal data location types present in siteSR. Unique WQP monitoring location count above bar, divided by `MonitoringLocationTypeName`." width="672" />
+<img src="AquaMatch_lakeSR_files/figure-html/siteSR-types-WQP-1.png" alt="This figure is a histogram representing the number of NHD features associated with siteSR site locations acquired from the Water Quality Portal. The highest bars are for River/Stream (490,637 sites), Stream (152,812), Lake (129,908), and Estuary (102,222)." width="672" />
 <p class="caption">
 Figure 3.3: Water Quality Portal data location types present in siteSR. Unique WQP monitoring location count above bar, divided by <code>MonitoringLocationTypeName</code>.
 </p>
@@ -595,7 +595,7 @@ Canal/Ditch, Estuary, Other. These designations are stored in the column
 </tbody>
 </table>
 <div class="figure"><span style="display:block;" id="fig:siteSR-types-AM"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/siteSR-types-AM-1.png" alt="AquaMatch `harmonized_site_type` categories provided in siteSR. Unique AquaMatch site count above bar, divided by harmonized_site_type." width="672" />
+<img src="AquaMatch_lakeSR_files/figure-html/siteSR-types-AM-1.png" alt="This figure shows a histogram of all sites in siteSR using the simplified `harmonized_site_type` category. The highest category is Stream (816,145 sites), followed by Lake/Reservoir (224,551), then Estuary (106,447)." width="672" />
 <p class="caption">
 Figure 3.5: AquaMatch <code>harmonized_site_type</code> categories provided in siteSR. Unique AquaMatch site count above bar, divided by harmonized_site_type.
 </p>
@@ -741,19 +741,19 @@ when present the technique to determine the POI may not be appropriate).</p>
 <p>We use the JRC Global Surface Water Mapping Layers v1.4 <span class="citation">(Pekel et al. 2016)</span> to
 determine whether or not sites are visible by remote sensing (“RS visible”) and
 should therefore be sent through the GEE data acquisition process detailed in
-Section <a href="LS-SRST-pull.html#LS-SRST-pull">6</a>. Th JRC surface water dataset is a compilation of 38
-years of the Landsat record and enumerates the proportion of time a single 30x30
-meter pixel has the presence of water. As long as a siteSR site location has at
-least one pixel designated as being occupied by water at least 80% of the time
-during that 38 year period within a 200 meter radius, we include the site in the
-list for which we acquire Landsat stacks.</p>
+Section <a href="LS-SRST-pull.html#LS-SRST-pull">6</a>. The JRC surface water dataset is a compilation of
+38 years of the Landsat record and enumerates the proportion of time a single
+30x30 meter pixel has the presence of water. As long as a siteSR site location
+has at least one pixel designated as being occupied by water at least 80% of the
+time during that 38 year period within a 200 meter radius, we include the site
+in the list for which we acquire Landsat stacks.</p>
 <p>After assessing for remote sensing visibility,
 395,307 sites were deemed to be
 visible by remote sensing
 (67.3%
 loss of sites).</p>
 <div class="figure"><span style="display:block;" id="fig:siteSR-filtered"></span>
-<img src="AquaMatch_lakeSR_files/figure-html/siteSR-filtered-1.png" alt="siteSR data location types present in the dataset after filtering for those that are deemed visible by remote sensing. Count of sites provided above bar, arranged by `harmonized_site_type`." width="672" />
+<img src="AquaMatch_lakeSR_files/figure-html/siteSR-filtered-1.png" alt="The figure is a histogram of siteSR sites after being filtered for remote sensing visibility. The highest category after filtering is Lake/Reservoir (165,745 sites), Stream (118,156), and Estuary (100,323)." width="672" />
 <p class="caption">
 Figure 3.6: siteSR data location types present in the dataset after filtering for those that are deemed visible by remote sensing. Count of sites provided above bar, arranged by <code>harmonized_site_type</code>.
 </p>

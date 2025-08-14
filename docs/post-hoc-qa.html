@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-08-13" />
+<meta name="date" content="2025-08-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -358,23 +358,25 @@ DSWE1a data.</p>
 thermal data were outside of specific minimum and maximum thresholds:</p>
 <ul>
 <li><p>if the median temperature is below freezing (<code>med_SurfaceTemp</code> &lt; 273.15 °
-K), the row is flagged <code>flag_temp_min</code> as 1 (otherwise 0). This is our best
-attempt at identifying data during any freezing period and also is an
-attempt at detecting clouds, which can impact the thermal estimates. In
-particular, cirrus clouds can go unnoticed in the cloud detection algorithms
-that inform our masking procedures.</p></li>
+K), the row is flagged <code>flag_temp_min</code> as 2 (otherwise 0 for valid data for
+this flag or 1 for no data after GEE filters). This is our best attempt at
+identifying data during any freezing period and also is an attempt at
+detecting clouds, which can impact the thermal estimates. In particular,
+cirrus clouds can go unnoticed in the cloud detection algorithms that inform
+our masking procedures.</p></li>
 <li><p>if the median temperature is greater than or equal to 40°C (313.15 °K) the
-row is flagged <code>flag_temp_max</code> as 1 (otherwise 0). This maximum was defined
-based on the maximum value included <span class="citation">Willard et al. (2021)</span> composed of <em>in situ</em>
+row is flagged <code>flag_temp_max</code> as 2 (otherwise 0 for valid data for this
+flag or 1 for no data after GEE filters). This maximum was defined based on
+the maximum value included in <span class="citation">Willard et al. (2021)</span>, a dataset composed of <em>in situ</em>
 measurements and remote sensing estimates.</p></li>
 </ul>
-<p>When thermal data are outside of these ranges (and the flag column is 1) we
+<p>When thermal data are outside of these ranges (and the flag column is 2) we
 suggest removing the thermal data from your analysis. While the thermal data and
 optical data are processed separately, when either <code>flag_temp_min</code> or
-<code>flag_temp_max</code> is 1, users should consider whether the optical data is
+<code>flag_temp_max</code> is 2, users should consider whether the optical data is
 appropriate to use in your analysis or whether there may be contamination of
 some kind that could impact the validity optical data. For instance, if your
-site is far from shore and the <code>flag_temp_min</code> is 1, it is possible there is
+site is far from shore and the <code>flag_temp_min</code> is 2, it is possible there is
 either unidentified ice or unidentified cloud contamination.</p>
 <div id="data-truncation" class="section level3 hasAnchor" number="7.2.1">
 <h3><span class="header-section-number">7.2.1</span> Data Truncation<a href="post-hoc-qa.html#data-truncation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -386,76 +388,86 @@ digits and thermal data to 2 significant digits.</p>
 <div id="landsat-4-qa-summary" class="section level3 hasAnchor" number="7.2.2">
 <h3><span class="header-section-number">7.2.2</span> Landsat 4 QA Summary<a href="post-hoc-qa.html#landsat-4-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="float" id="fig:site-ls9-dswe1-drop">
-<img src="images/lakeSR/LT04_DSWE1_drop_summary.png" alt="Summary of rows retained during lakeSR Landsat 4’s quality filtering for DSWE1 (confident water) remote sensing summaries." />
+<img src="images/lakeSR/LT04_DSWE1_drop_summary.png" alt="Summary of rows retained during lakeSR Landsat 4’s quality filtering for DSWE1 (confident water) remote sensing summaries. Prior to post-hoc QA, there were 827,630 records, after post-hoc QA there were 384,324 records." />
 <div class="figcaption">Summary of rows retained during lakeSR Landsat 4’s quality filtering for DSWE1
-(confident water) remote sensing
-summaries.</div>
+(confident water) remote sensing summaries. Prior to post-hoc QA, there were
+827,630 records, after post-hoc QA there were 384,324
+records.</div>
 </div>
 <div class="float">
-<img src="images/siteSR/LT04_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR Landsat 4’s quality filtering for DSWE1 (confident water) remote sensing summaries." />
+<img src="images/siteSR/LT04_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR Landsat 4’s quality filtering for DSWE1 (confident water) remote sensing summaries. Prior to post-hoc QA, there were 496,827 records, after post-hoc QA there were 356,824 records." />
 <div class="figcaption">Summary of rows retained during siteSR Landsat 4’s quality filtering for DSWE1
-(confident water) remote sensing
-summaries.</div>
+(confident water) remote sensing summaries. Prior to post-hoc QA, there were
+496,827 records, after post-hoc QA there were 356,824
+records.</div>
 </div>
 </div>
 <div id="landsat-5-qa-summary" class="section level3 hasAnchor" number="7.2.3">
 <h3><span class="header-section-number">7.2.3</span> Landsat 5 QA Summary<a href="post-hoc-qa.html#landsat-5-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="float">
-<img src="images/lakeSR/LT05_DSWE1_drop_summary.png" alt="Summary of rows retained during lakeSR Landsat 5’s quality filtering for DSWE1 (confident water) remote sensing summaries." />
+<img src="images/lakeSR/LT05_DSWE1_drop_summary.png" alt="Summary of rows retained during lakeSR Landsat 5’s quality filtering for DSWE1 (confident water) remote sensing summaries. Prior to post-hoc QA, there were 61,286,631 records, after post-hoc QA there were 35,285,627 records." />
 <div class="figcaption">Summary of rows retained during lakeSR Landsat 5’s quality filtering for DSWE1
-(confident water) remote sensing
-summaries.</div>
+(confident water) remote sensing summaries. Prior to post-hoc QA, there were
+61,286,631 records, after post-hoc QA there were 35,285,627
+records.</div>
 </div>
 <div class="float">
-<img src="images/siteSR/LT05_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR Landsat 5’s quality filtering for DSWE1 (confident water) remote sensing summaries." />
+<img src="images/siteSR/LT05_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR Landsat 5’s quality filtering for DSWE1 (confident water) remote sensing summaries. Prior to post-hoc QA, there were 89,645,418 records, after post-hoc QA there were 74,295,228 records." />
 <div class="figcaption">Summary of rows retained during siteSR Landsat 5’s quality filtering for DSWE1
-(confident water) remote sensing
-summaries.</div>
+(confident water) remote sensing summaries. Prior to post-hoc QA, there were
+89,645,418 records, after post-hoc QA there were 74,295,228
+records.</div>
 </div>
 </div>
 <div id="landsat-7-qa-summary" class="section level3 hasAnchor" number="7.2.4">
 <h3><span class="header-section-number">7.2.4</span> Landsat 7 QA Summary<a href="post-hoc-qa.html#landsat-7-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="float">
-<img src="images/lakeSR/LE07_DSWE1_drop_summary.png" alt="Summary of rows retained during lakeSR Landsat 7’s quality filtering for DSWE1 (confident water) remote sensing summaries." />
+<img src="images/lakeSR/LE07_DSWE1_drop_summary.png" alt="Summary of rows retained during lakeSR Landsat 7’s quality filtering for DSWE1 (confident water) remote sensing summaries. Prior to post-hoc QA, there were 66,838,911 records, after post-hoc QA there were 37,409,839 records." />
 <div class="figcaption">Summary of rows retained during lakeSR Landsat 7’s quality filtering for DSWE1
-(confident water) remote sensing
-summaries.</div>
+(confident water) remote sensing summaries. Prior to post-hoc QA, there were
+66,838,911 records, after post-hoc QA there were 37,409,839
+records.</div>
 </div>
 <div class="float">
-<img src="images/siteSR/LE07_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR Landsat 7’s quality filtering for DSWE1 (confident water) remote sensing summaries." />
+<img src="images/siteSR/LE07_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR Landsat 7’s quality filtering for DSWE1 (confident water) remote sensing summaries. Prior to post-hoc QA, there were 73,452,572 records, after post-hoc QA there were 61,650,399 records." />
 <div class="figcaption">Summary of rows retained during siteSR Landsat 7’s quality filtering for DSWE1
-(confident water) remote sensing
-summaries.</div>
+(confident water) remote sensing summaries. Prior to post-hoc QA, there were
+73,452,572 records, after post-hoc QA there were 61,650,399
+records.</div>
 </div>
 </div>
 <div id="landsat-8-qa-summary" class="section level3 hasAnchor" number="7.2.5">
 <h3><span class="header-section-number">7.2.5</span> Landsat 8 QA Summary<a href="post-hoc-qa.html#landsat-8-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="float" id="fig:lake-ls8-dswe1-drop">
-<img src="images/lakeSR/LC08_DSWE1_drop_summary.png" alt="Summary of rows retained during lakeSR quality filtering for Landsat 8 DSWE1 (confident water) remote sensing summaries." />
+<img src="images/lakeSR/LC08_DSWE1_drop_summary.png" alt="Summary of rows retained during lakeSR quality filtering for Landsat 8 DSWE1 (confident water) remote sensing summaries. Prior to post-hoc QA, there were 23,152,027 records, after post-hoc QA there were 10,656,479 records." />
 <div class="figcaption">Summary of rows retained during lakeSR quality filtering for Landsat 8 DSWE1
-(confident water) remote sensing
-summaries.</div>
+(confident water) remote sensing summaries. Prior to post-hoc QA, there were
+23,152,027 records, after post-hoc QA there were 10,656,479
+records.</div>
 </div>
 <div class="float" id="fig:site-ls8-dswe1-drop">
-<img src="images/siteSR/LC08_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR quality filtering for Landsat 8 DSWE1 (confident water) remote sensing summaries." />
+<img src="images/siteSR/LC08_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR quality filtering for Landsat 8 DSWE1 (confident water) remote sensing summaries. Prior to post-hoc QA, there were 83,945,134 records, after post-hoc QA there were 24,416,786 records." />
 <div class="figcaption">Summary of rows retained during siteSR quality filtering for Landsat 8 DSWE1
-(confident water) remote sensing
-summaries.</div>
+(confident water) remote sensing summaries. Prior to post-hoc QA, there were
+83,945,134 records, after post-hoc QA there were 24,416,786
+records.</div>
 </div>
 </div>
 <div id="landsat-9-qa-summary" class="section level3 hasAnchor" number="7.2.6">
 <h3><span class="header-section-number">7.2.6</span> Landsat 9 QA Summary<a href="post-hoc-qa.html#landsat-9-qa-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="float" id="fig:lake-ls9-dswe1-drop">
-<img src="images/lakeSR/LC09_DSWE1_drop_summary.png" alt="Summary of rows retained during lakeSR quality filtering for Landsat 9 DSWE1 (confident water) remote sensing summaries." />
+<img src="images/lakeSR/LC09_DSWE1_drop_summary.png" alt="Summary of rows retained during lakeSR quality filtering for Landsat 9 DSWE1 (confident water) remote sensing summaries. Prior to post-hoc QA, there were 5,845,374 records, after post-hoc QA there were 2,733,304 records." />
 <div class="figcaption">Summary of rows retained during lakeSR quality filtering for Landsat 9 DSWE1
-(confident water) remote sensing
-summaries.</div>
+(confident water) remote sensing summaries. Prior to post-hoc QA, there were
+5,845,374 records, after post-hoc QA there were 2,733,304
+records.</div>
 </div>
 <div class="float">
-<img src="images/siteSR/LC09_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR quality filtering for Landsat 9 DSWE1 (confident water) remote sensing summaries." />
+<img src="images/siteSR/LC09_DSWE1_drop_summary.png" alt="Summary of rows retained during siteSR quality filtering for Landsat 9 DSWE1 (confident water) remote sensing summaries. Prior to post-hoc QA, there were 9,347,528 records, after post-hoc QA there were 6,753,349 records." />
 <div class="figcaption">Summary of rows retained during siteSR quality filtering for Landsat 9 DSWE1
-(confident water) remote sensing
-summaries.</div>
+(confident water) remote sensing summaries. Prior to post-hoc QA, there were
+9,347,528 records, after post-hoc QA there were 6,753,349
+records.</div>
 </div>
 
 </div>
