@@ -126,10 +126,12 @@ drive_auth()
 
 ## Confirm GEE access via API
 
-In order to use the configuration `run_GEE: TRUE`, you must have a [Google Earth
-Engine account](https://earthengine.google.com/signup/) and a configured [Google
-Cloud Project](https://developers.google.com/earth-engine/cloud/projects). You
-will also need to [download, install, and initialize
+If you are using the `default` configuration, you will not need to follow these
+steps. In order to use the configuration `run_GEE: TRUE`, you must have a
+[Google Earth Engine account](https://earthengine.google.com/signup/) and a
+configured [Google Cloud
+Project](https://developers.google.com/earth-engine/cloud/projects). You will
+also need to [download, install, and initialize
 gcloud](https://cloud.google.com/sdk/docs/install). If you are running with the
 configuration `run_GEE: FALSE` or as the default configuration, you can skip
 this section.
@@ -213,7 +215,9 @@ And this code chunk will run the pipeline:
 ```{r run_targets}
 library(targets)
 
-tar_make()
+# for the purposes of this document, we comment out the following lines, as they may take a long time to run depending on configuration settings. Double check configuration before proceeding. 
+
+# tar_make()
 ```
 
 ### Create a network diagram of the workflow.

@@ -3,7 +3,7 @@ default:
   # centers and collated datasets. 
   
   # enter google email here
-  google_email: "therossyndicate@gmail.com"
+  google_email: ""
   
   # the center calculation will not run, and previously-
   # collated centers will be used

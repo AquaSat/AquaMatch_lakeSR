@@ -71,7 +71,7 @@ available for all states and territories outside CONUS. All waterbody polygons
 were downloaded and processed on `r params$locs_run_date` by HUC4 using the most
 updated version available at the time of download.
 
-```{r NHDPlusV2-HUC4, echo=F, fig.cap="NHD HUC4 map for the United States and Territories, courtesy of the USGS."}
+```{r NHDPlusV2-HUC4, echo=F, fig.cap="NHD HUC4 map for the United States and Territories, courtesy of the USGS.", fig.alt="Drawing of the Continental United States with HUC2 boundaries indicated with thick red lines and HUC4 boundaries indcated with thinner red lines. Insets of HUC2 and HUC4 shown for Alaska, Hawaii, Caribbean Region, South Pacific Region."}
 knitr::include_graphics("https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/thumbnails/image/WBD_SubRegions_24x18.png")
 ```
 
@@ -275,7 +275,7 @@ Wisconsin, whereas AquaMatch via the lakeSR product includes
 `r format(nrow(WI_poi), big.mark = ",")` (Figure \@ref(fig:WI-lakes)) -
 accounting for a majority of the state's freshwater water bodies.
 
-```{r WI-lakes, echo=F, fig.cap="Deepest point of Wisconsin lakes included in LimnoSat-US defined by the Hydrolakes data product (left) and those included in AquaMatch via lakeSR defined by the NHDPlusV2 data product (right). Deepest point for each lake is indicated with a black dot, spatial histogram of density by longitude and latitude presented below the maps.", fig.height=7}
+```{r WI-lakes, echo=F, fig.cap="Deepest point of Wisconsin lakes included in LimnoSat-US defined by the Hydrolakes data product (left) and those included in AquaMatch via lakeSR defined by the NHDPlusV2 data product (right). Deepest point for each lake is indicated with a black dot, spatial histogram of density by longitude and latitude presented below the maps.", fig.height=7, fig.alt="This is a multi-panel figure, on the top row, two maps of the state of Wisconsin with dots representing all the lakes included in the lakeSR dataset. The top left represents the water bodies included in LimnoSat, the top right is those included in AquaSat v2, which has a higher density of dots. Below these two maps are histograms of the number of lakes with an x axis for Longitude (bottom left) or Latitude (bottom right), showing the difference in count between the LimnoSat and AquaSat v2 data products."}
 
 # convert for ggplot
 coords_limno <- st_coordinates(WI_HL_DP)
@@ -412,7 +412,7 @@ Within siteSR there are
 `r format(a_sites_with_NHD_info %>% filter(source == "WQP") %>% nrow(.), big.mark = ",")`
 sites from the WQP.
 
-```{r siteSR-types-WQP, fig.cap="Water Quality Portal data location types present in siteSR. Unique WQP monitoring location count above bar, divided by `MonitoringLocationTypeName`."}
+```{r siteSR-types-WQP, fig.cap="Water Quality Portal data location types present in siteSR. Unique WQP monitoring location count above bar, divided by `MonitoringLocationTypeName`.", fig.alt="This figure is a histogram representing the number of NHD features associated with siteSR site locations acquired from the Water Quality Portal. The highest bars are for River/Stream (490,637 sites), Stream (152,812), Lake (129,908), and Estuary (102,222)."}
 a_sites_with_NHD_info %>% 
   filter(source == "WQP") %>% 
   ggplot(., aes(x = MonitoringLocationTypeName)) +
@@ -427,7 +427,7 @@ it. Within siteSR there are
 `r format(a_sites_with_NHD_info %>% filter(source == "NWIS") %>% nrow(.), big.mark = ",")`
 sites from NWIS.
 
-```{r siteSR-types-NWIS, fig.cap="National Water Information System data location types present in siteSR. Unique NWIS monitoring location count above bar, divided by site type. ST = Stream, ST-CA = Canal, ST-DCH = Ditch, LK = Lake/Reservoir, ES = Estuary."}
+```{r siteSR-types-NWIS, fig.cap="National Water Information System data location types present in siteSR. Unique NWIS monitoring location count above bar, divided by site type. ST = Stream, ST-CA = Canal, ST-DCH = Ditch, LK = Lake/Reservoir, ES = Estuary.", alt.text="This figure is a histogram depicting sites from the National Water Information Service by site type. The majority of sites from NWIS are Stream sites (154,022), followed by Lakes (27,776)."}
 a_sites_with_NHD_info %>% 
   filter(source == "NWIS") %>% 
   ggplot(., aes(x = site_tp_cd)) +
@@ -445,7 +445,7 @@ Canal/Ditch, Estuary, Other. These designations are stored in the column
 `harmonized_site_type` in the siteSR site file.
 
 | AquaMatch harmonized_site_type | NWIS site_tp_cd | WQP MonitoringLocationTypeName |
-|---------------------------|---------------------------|---------------------------|
+|----|----|----|
 | Lake/Reservoir | LK | contains "lake", "reservoir", or "impoundment" |
 | Pond | no associated code | contains "pond" |
 | Stream | ST | contains "stream" |
@@ -453,7 +453,7 @@ Canal/Ditch, Estuary, Other. These designations are stored in the column
 | Estuary | ES | Estuary |
 | Other | all remaining codes | all remaining codes |
 
-```{r siteSR-types-AM, fig.cap="AquaMatch `harmonized_site_type` categories provided in siteSR. Unique AquaMatch site count above bar, divided by harmonized_site_type."}
+```{r siteSR-types-AM, fig.cap="AquaMatch `harmonized_site_type` categories provided in siteSR. Unique AquaMatch site count above bar, divided by harmonized_site_type.", fig.alt="This figure shows a histogram of all sites in siteSR using the simplified `harmonized_site_type` category. The highest category is Stream (816,145 sites), followed by Lake/Reservoir (224,551), then Estuary (106,447)."}
 a_sites_with_NHD_info %>% 
   ggplot(., aes(x = harmonized_site_type)) +
   geom_bar() +
@@ -626,12 +626,12 @@ when present the technique to determine the POI may not be appropriate).
 We use the JRC Global Surface Water Mapping Layers v1.4 [@pekel2016] to
 determine whether or not sites are visible by remote sensing ("RS visible") and
 should therefore be sent through the GEE data acquisition process detailed in
-Section \@ref(LS-SRST-pull). The JRC surface water dataset is a compilation of 38
-years of the Landsat record and enumerates the proportion of time a single 30x30
-meter pixel has the presence of water. As long as a siteSR site location has at
-least one pixel designated as being occupied by water at least 80% of the time
-during that 38 year period within a 200 meter radius, we include the site in the
-list for which we acquire Landsat stacks.
+Section \@ref(LS-SRST-pull). The JRC surface water dataset is a compilation of
+38 years of the Landsat record and enumerates the proportion of time a single
+30x30 meter pixel has the presence of water. As long as a siteSR site location
+has at least one pixel designated as being occupied by water at least 80% of the
+time during that 38 year period within a 200 meter radius, we include the site
+in the list for which we acquire Landsat stacks.
 
 After assessing for remote sensing visibility,
 `r format(nrow(b_visible_sites), big.mark = ",")` sites were deemed to be
@@ -639,7 +639,7 @@ visible by remote sensing
 (`r round(abs((nrow(b_visible_sites)-nrow(a_sites_with_NHD_info))/nrow(a_sites_with_NHD_info)*100), 1)`%
 loss of sites).
 
-```{r siteSR-filtered, fig.cap="siteSR data location types present in the dataset after filtering for those that are deemed visible by remote sensing. Count of sites provided above bar, arranged by `harmonized_site_type`."}
+```{r siteSR-filtered, fig.cap="siteSR data location types present in the dataset after filtering for those that are deemed visible by remote sensing. Count of sites provided above bar, arranged by `harmonized_site_type`.", fig.alt="The figure is a histogram of siteSR sites after being filtered for remote sensing visibility. The highest category after filtering is Lake/Reservoir (165,745 sites), Stream (118,156), and Estuary (100,323)."}
 b_visible_sites %>% 
   rename(siteSR_id = id) %>% 
   left_join(., a_sites_with_NHD_info) %>% 

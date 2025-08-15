@@ -94,9 +94,10 @@ specific sites, where the reflectance data are obtained from two missions (e.g.
 Landsat 7 and Landsat 8) separated by one day at a specific location within the
 overlapping paths in the WRS2 path-row framework:
 
-![An example of two overlapping WRS2 paths (grey area) separated by one day. Any
-location with data for both images (in the grey area) would be considered a
-paired data point to define the Roy method intermission
+![An example of two overlapping WRS2 paths (grey area, path 5 and 4) separated
+by one day (2013-09-14 Landsat 7, 2013-09-15 Landsat 8). Any location with data
+for both images (in the grey area of overlap) would be considered a paired data
+point to define the Roy method intermission
 handoffs.](images/path_overlap_roy.png)
 
 While @roy2016 implemented this method on a pixel-by-pixel basis, we implement

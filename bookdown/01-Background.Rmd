@@ -150,10 +150,9 @@ list will be empty.
 
 ### lakeSR Output Files
 
-This workflow creates a number of files (where `xDATEx` is a placeholder for the
-version date identifier):
+This workflow creates a number of files:
 
--   locations file (`lakesR_poi_with_flags_xDATEx.csv`) containing all sites
+-   locations file (`lakeSR_poi_with_flags_2025-02-12.csv`) containing all sites
     within the lakeSR dataset, defined by the National Hydrography Dataset. This
     file also contains column that link the location (Latitude/Longitude) to NHD
     waterbody features, and flags meant to aid in data interpretation. See
@@ -162,30 +161,32 @@ version date identifier):
     loaded into the R studio environment using `tar_load(a_poi_with_flags)`.
 
 -   remote sensing data file(s) for sites (e.g.
-    `lakeSR_Landast8_DSWE1_xDATEx.feather`,
-    `lakeSR_HUC2_18_collated_sites_Landsat7_DSWE1_xDATEx.csv`) which contain the
-    lakeSR identifier ("lakeSR_id", can be matched with the locations file),
-    numerical summaries of remote sensing data for each site and satellite
-    image, as well as columns containing summarized information about pixels
-    that have been masked in the Google Earth Engine QAQC and filtering process.
-    The csv files (zipped per mission) and the feather files contain the same
-    data, but are provided in two data formats. See sections \@ref(LS-C2-SRST),
-    \@ref(LS-SRST-pull), and \@ref(post-hoc-qa) for additional details.
+    `lakeSR_Landast8_DSWE1_2025-06-04.feather`,
+    `lakeSR_HUC2_18_Landsat7_DSWE1_2025-06-04.csv`) which contain the lakeSR
+    identifier (`lakeSR_id`, can be matched with the locations file), numerical
+    summaries of remote sensing data for each site and satellite image, as well
+    as columns containing summarized information about pixels that have been
+    masked in the Google Earth Engine QAQC and filtering process. The csv files
+    (zipped per mission) and the feather files contain the same data, but are
+    provided in an alternate data format, where the data have been grouped by
+    HUC2. See sections \@ref(LS-C2-SRST), \@ref(LS-SRST-pull), and
+    \@ref(post-hoc-qa) for additional details.
 
 -   remote sensing scene-level metadata file(s) (e.g.
-    `lakeSR_collated_metadata_LS89_xDATEx_export.csv`,
-    `lakeSR_collated_metadata_LS457_xDATEx_export.csv`) which contain a subset
-    of columns of the scene-level metadata for each Landsat image within the
-    lakeSR remote sensing data file. This can be joined to the remote sensing
-    data using the `sat_id` column. While we reduce the number of columns from
-    the upstream data during the remote sensing data file collation, we do not
-    process the metadata information further nor have suggested uses but rather
-    encourage users to use this metadata file for further data interpretation.
+    `lakeSR_collated_metadata_LS89_export_2022-06-04.csv`,
+    `lakeSR_collated_metadata_LS457_export_2025-06-04.csv`) which contain a
+    subset of columns of the scene-level metadata for each Landsat image within
+    the lakeSR remote sensing data file. This can be joined to the remote
+    sensing data using the `sat_id` column. While we reduce the number of
+    columns from the upstream data during the remote sensing data file
+    collation, we do not process the metadata information further nor have
+    suggested uses but rather encourage users to use this metadata file for
+    further data interpretation.
 
 -   intermission handoff file(s) (e.g.
-    `lakeSR_collated_handoffs_GEEvDATE_QAvDATE.csv`) which contains coefficients
-    for aligning data across multiple Landsat missions for timeseries analysis.
-    See Section \@ref(define-handoff) for details.
+    `lakeSR_collated_handoffs_GEEv2025-02-12_QAv2025-06-04.csv`) which contains
+    coefficients for aligning data across multiple Landsat missions for
+    timeseries analysis. See Section \@ref(define-handoff) for details.
 
 ### Configuration Files {#lakesr-config}
 
@@ -363,38 +364,37 @@ See section \@ref(post-hoc-filters) for details on this process.
 
 ### siteSR Output Files
 
-This workflow creates a number of files (where `xDATEx` is a placeholder for the
-version date identifier):
+This workflow creates a number of files:
 
--   locations file (`siteSR_collated_WQP_NWIS_sites_with_NHD_info_xDATEx.csv`)
-    containing all sites from the WQP and NWIS at the time of running the
-    pipeline, as well as any additional sites from the AquaMatch pipeline (for
-    Secchi disc depth, chlorophyll *a*, dissolved organic carbon, and total
-    suspended solids) that were not present in the WQP site pull. This file also
-    contains columns attributing a HUC8, NHD features (waterbodies and/or
-    flowlines), and flags meant to aid in data interpretation. See Section
-    \@ref(siteSR-locs) for more information about this file. This file is the
-    same content as the {targets} object `a_sites_with_NHD_info`, which can be
-    loaded into the R studio environment using
-    `tar_load(a_sites_with_NHD_info)`.
+-   locations file
+    (`siteSR_collated_WQP_NWIS_sites_with_NHD_info_2025-06-04.csv`) containing
+    all sites from the WQP and NWIS at the time of running the pipeline, as well
+    as any additional sites from the AquaMatch pipeline (for Secchi disc depth,
+    chlorophyll *a*, dissolved organic carbon, and total suspended solids) that
+    were not present in the WQP site pull. This file also contains columns
+    attributing a HUC8, NHD features (waterbodies and/or flowlines), and flags
+    meant to aid in data interpretation. See Section \@ref(siteSR-locs) for more
+    information about this file. This file is the same content as the {targets}
+    object `a_sites_with_NHD_info`, which can be loaded into the R studio
+    environment using `tar_load(a_sites_with_NHD_info)`.
 
 -   remote sensing data file(s) for sites (e.g.
-    `siteSR_Landsat4_DSWE1_xDATEx.feather`,
-    `siteSR_collated_sites_LT04_DSWE1_xDATEx_export.csv`) which contain the
-    siteSR identifier (can be matched with the locations file), numerical
-    summaries of remote sensing data for each site and satellite image, as well
-    as columns containing summarized information about pixels that have been
-    masked in the Google Earth Engine QAQC and filtering process. See sections
+    `siteSR_Landsat4_DSWE1_2025-06-06.feather`,
+    `siteSR_HUC2_22_Landsat8_DSWE1_2025-06-06.csv`) which contain the siteSR
+    identifier (can be matched with the locations file), numerical summaries of
+    remote sensing data for each site and satellite image, as well as columns
+    containing summarized information about pixels that have been masked in the
+    Google Earth Engine QAQC and filtering process. See sections
     \@ref(LS-C2-SRST), \@ref(LS-SRST-pull), and \@ref(post-hoc-qa) for
     additional details.
 
 -   remote sensing scene-level metadata file(s) (e.g.
-    `siteSR_collated_metadata_LS89_xDATEx_export.csv`,
-    `siteSR_collated_metadata_LS457_xDATEx_export.csv`) which contain a subset
-    of columns of the scene-level metadata for each Landsat image within the
-    siteSR remote sensing data file. This can be joined to the remote sensing
-    data using the `sat_id` column. While we reduce the number of columns from
-    the upstream data during the remote sensing data file collation, we do not
+    `siteSR_collated_metadata_LS89_2025-06-06.csv`,
+    `siteSR_collated_metadata_LS457_2025-06-06.csv`) which contain a subset of
+    columns of the scene-level metadata for each Landsat image within the siteSR
+    remote sensing data file. This can be joined to the remote sensing data
+    using the `sat_id` column. While we reduce the number of columns from the
+    upstream data during the remote sensing data file collation, we do not
     process the metadata information further nor have suggested uses but rather
     encourage users to use this metadata file for further data interpretation.
 
