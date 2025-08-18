@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-08-08" />
+<meta name="date" content="2025-08-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -296,7 +296,7 @@ div.csl-indent {
 <h1 class="title">AquaMatch: lakeSR and siteSR</h1>
 <h2 class="subtitle"><em>Compiled Satellite Surface Reflectance and Surface Temperature for Waterbodies in the United States and US Territories</em></h2>
 <p class="author"><em>ROSSyndicate</em></p>
-<p class="date"><em>2025-08-08</em></p>
+<p class="date"><em>2025-08-14</em></p>
 </div>
 <div id="introduction" class="section level1 hasAnchor" number="1">
 <h1><span class="header-section-number">1</span> Introduction<a href="index.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
@@ -310,7 +310,7 @@ div.csl-indent {
 <p>The goal of these data products is to facilitate assessment and monitoring of waterbodies within the United States and Territories using both <em>in situ</em> and remote sensing data.</p>
 <p>AquaMatch builds upon AquaSat <span class="citation">(Ross et al. 2019)</span> (referred to here as “AquaSat v1”) and LimnoSat-US <span class="citation">(Topp et al. 2020)</span>. AquaSat v1 focused on pairing remote sensing data with <em>in situ</em> observations and measurements while LimnoSat-US acquired remote sensing for all waterbodies greater than 10 hectares across the Continental United States (CONUS) regardless of whether <em>in situ</em> measurements were available for that waterbody. In AquaMatch, we bring these products together. For instance, lakeSR can define Landsat intermission handoffs to enable use of Landsat as a timeseries product, siteSR products can be used to create parameter-specific algorithms, and those algorithms can be applied to a lakeSR “stack” to create a timeseries of water quality for waterbodies in the US and territories.</p>
 <p>AquaMatch code is built on the {targets} workflow management system for R <span class="citation">(Landau 2021b)</span>. The {targets} architecture is based on lists of functions performed in a specific order, each function called a <em>target</em>. These targets are grouped together into processing groups. The primary benefit of {targets} workflows is that code is only run if a target, a target’s code, or a target’s dependencies have changed (or become “outdated” in {targets} speak).</p>
-<p>Full documentation of the WQP download and QA process from the upstream AquaMatch download and harmonize pipelines <a href="https://aquasat.github.io/AquaMatch_harmonize_WQP/">is located here</a>.</p>
+<p>Full documentation of the WQP download and QA process from the upstream AquaMatch download and harmonize pipelines <a href="https://aquasat.github.io/AquaMatch_documentation/">is located here</a>.</p>
 <div id="repository-links-for-the-aquamatch-data-suite" class="section level2 hasAnchor" number="1.1">
 <h2><span class="header-section-number">1.1</span> Repository Links for the AquaMatch Data Suite<a href="index.html#repository-links-for-the-aquamatch-data-suite" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><a href="https://github.com/AquaSat/AquaMatch_download_WQP">AquaMatch_download_WQP</a>: This repository contains code that downloads parameters from the WQP using the {dataRetrieval} package.</p>
