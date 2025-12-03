@@ -8,6 +8,7 @@ calculate_roy_handoff <- function(matched_data,
   
   binwidth <- list(c(0.001, 0.001), c(0.001, 0.001),
                    c(0.001, 0.001), c(0.001, 0.001),
+                   c(0.001, 0.001), c(0.001, 0.001),
                    c(0.1, 0.1))
   
   # perform some quick filters based on the flags we created upstream
@@ -24,14 +25,14 @@ calculate_roy_handoff <- function(matched_data,
          if (band == "med_SurfaceTemp") {
            # define the column to assess visibility
            thermal_flag_from <- switch(EXPR = mission_from, 
-                                       LS4 = "flag_thermal_MSS_shoreline",
-                                       LS5 = "flag_thermal_MSS_shoreline",
+                                       LS4 = "flag_thermal_TM_shoreline",
+                                       LS5 = "flag_thermal_TM_shoreline",
                                        LS7 = "flag_thermal_ETM_shoreline",
                                        LS8 = "flag_thermal_TIRS_shoreline",
                                        LS9 = "flag_thermal_TIRS_shoreline")
            thermal_flag_to <- switch(EXPR = mission_to, 
-                                     LS4 = "flag_thermal_MSS_shoreline",
-                                     LS5 = "flag_thermal_MSS_shoreline",
+                                     LS4 = "flag_thermal_TM_shoreline",
+                                     LS5 = "flag_thermal_TM_shoreline",
                                      LS7 = "flag_thermal_ETM_shoreline",
                                      LS8 = "flag_thermal_TIRS_shoreline",
                                      LS9 = "flag_thermal_TIRS_shoreline")

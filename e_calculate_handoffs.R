@@ -298,7 +298,8 @@ e_calculate_handoffs <- list(
   
   tar_target(
     name = e_bands_for_correction,
-    command = c("med_Blue", "med_Green", "med_Red", "med_Nir", "med_SurfaceTemp")
+    command = c("med_Blue", "med_Green", "med_Red", "med_Nir", 
+                "med_Swir1", "med_Swir2", "med_SurfaceTemp")
   ), 
   
   # calculate Gardner method

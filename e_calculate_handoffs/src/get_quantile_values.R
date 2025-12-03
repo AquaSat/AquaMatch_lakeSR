@@ -132,8 +132,8 @@ get_quantile_values <- function(qa_files, mission_id, version_id, location_info,
     
     # define the column to assess visibility
     thermal_flag <- switch(EXPR = mission_id, 
-                           LT04 = "flag_thermal_MSS_shoreline",
-                           LT05 = "flag_thermal_MSS_shoreline",
+                           LT04 = "flag_thermal_TM_shoreline",
+                           LT05 = "flag_thermal_TM_shoreline",
                            LE07 = "flag_thermal_ETM_shoreline",
                            LC08 = "flag_thermal_TIRS_shoreline",
                            LC09 = "flag_thermal_TIRS_shoreline")
