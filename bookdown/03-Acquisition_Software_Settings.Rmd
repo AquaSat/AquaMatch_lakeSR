@@ -8,7 +8,7 @@ bibliography: references.bib
 # Satellite Data Acquisition Software and Settings {#software-settings}
 
 Currently, all satellite data in AquaMatch are obtained using the Python API for
-Google Earth Engine [GEE, @gorelick2017, @gorelick2023]. While the orchestration
+Google Earth Engine [@gorelick2017, @gorelick2023]. While the orchestration
 of data acquisition is performed by the {targets} workflow, all code directly
 related to GEE data acquisition is written in Python. If you are running the
 'default' configuration for lakeSR or siteSR the following directions are not
@@ -76,7 +76,7 @@ pipeline to assure a smooth run of the workflow.
 ## Google Earth Engine Setup
 
 If running the 'admin_update' configuration for either lakeSR or siteSR, you
-will need to have a GEE account, the gcloud CLI installed and configured, create
+will need to have a GEE account, the gcloud Command Line Interface ("CLI") installed and configured, create
 an Earth Engine Project, have successful authenticated your account, and you
 will need to alter the configuration file. All of these tasks are described in
 the section below.
