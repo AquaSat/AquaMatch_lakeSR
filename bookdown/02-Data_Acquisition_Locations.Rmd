@@ -36,18 +36,19 @@ primary output file is the lakeSR site file
 As noted in the Introduction (Section \@ref(introduction)), for the purposes of
 AquaMatch, surface reflectance and surface temperature data are acquired at
 specific, centrally-located points within waterbodies (typically in deep
-locations of lakes, lakeSR) and at locations where there are in situ data
+locations of lakes, lakeSR) and at locations where there are *in situ* data
 (siteSR). For the purposes of lakeSR, we consider "deep" locations to be
 relative to a waterbody and defined by the NHD waterbody feature, where a deep
 location is far from the shoreline indicated by the NHD (see Section
-\@ref(waterbodies)). The data acquired at locations where there are in situ data
-are meant to create location-specific algorithms using the AquaMatch database,
-which can then be applied to the data collected over the centrally-located point
-across all waterbodies in the lakeSR database. lakeSR does not acquire nor
-summarize data over the entire waterbody's surface, as it is computationally
-impractical for most large lakes, especially those that cross multiple satellite
-path-rows or tiles. For the lakeSR product, we summarize the Landsat data within
-a 120 meter radius of a defined location. For siteSR, we use a 200 meter buffer.
+\@ref(waterbodies)). The data acquired at locations where there are *in situ*
+data are meant to create location-specific algorithms using the AquaMatch
+database, which can then be applied to the data collected over the
+centrally-located point across all waterbodies in the lakeSR database. lakeSR
+does not acquire nor summarize data over the entire waterbody's surface, as it
+is computationally impractical for most large lakes, especially those that cross
+multiple satellite path-rows or tiles. For the lakeSR product, we summarize the
+Landsat data within a 120 meter radius of a defined location. For siteSR, we use
+a 200 meter buffer.
 
 AquaMatch products summarize data within a buffered area of unique locations
 primarily to reduce computation time versus aggregating the entire lake area and
@@ -71,11 +72,11 @@ available for all states and territories outside CONUS. All waterbody polygons
 were downloaded and processed on `r params$locs_run_date` by HUC4 using the most
 updated version available at the time of download.
 
-```{r NHDPlusV2-HUC4, echo=F, fig.cap="NHD HUC4 map for the United States and Territories, courtesy of the USGS.", fig.alt="Drawing of the Continental United States with HUC2 boundaries indicated with thick red lines and HUC4 boundaries indcated with thinner red lines. Insets of HUC2 and HUC4 shown for Alaska, Hawaii, Caribbean Region, South Pacific Region."}
+```{r NHDPlusV2-HUC4, echo=F, fig.cap="NHD HUC4 map for the United States and territories, courtesy of the USGS.", fig.alt="Drawing of the Continental United States with HUC2 boundaries indicated with thick red lines and HUC4 boundaries indcated with thinner red lines. Insets of HUC2 and HUC4 shown for Alaska, Hawaii, Caribbean Region, South Pacific Region."}
 knitr::include_graphics("https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/thumbnails/image/WBD_SubRegions_24x18.png")
 ```
 
-For every HUC4 in the United States and Territories (Figure
+For every HUC4 in the United States and territories (Figure
 \@ref(fig:NHDPlusV2-HUC4)), all waterbodies are limited to those with [NHD
 Waterbody
 Subtypes](https://www.usgs.gov/ngp-standards-and-specifications/national-hydrography-dataset-nhd-data-dictionary-feature-classes)
@@ -148,19 +149,19 @@ this time.
 
 The processing begins by acquiring the polygons of all US states and territories
 using the {tigris} package [@walker2025]. These polygons are used to acquire a
-list HUC4s that intersect with each municipal boundary using the
-`nhdplusTools::get_huc()` function, which are then reduced to distinct HUC4's
-and transformed into a vector of HUC4s. HUC4s are then split into CONUS (HUC4 \<
-1900) and non-CONUS (HUC4 ≥ 1900) groups. To efficiently calculate the POI
-across hundreds of HUC4s, we use the {targets} dynamic branching feature to
-iterate over each HUC4. For each HUC4, the NHDPlusV2 (CONUS) or NHD Best
-Resolution (non CONUS) waterbodies are acquired and filtered for lake/ponds and
-reservoirs of at least 1 hectare in area or 4 hectares for intermittent
-lake/ponds or reservoirs.
+list of four-digit Hydrologic Unit Codes ("HUC4s") that intersect with each
+municipal boundary using the `nhdplusTools::get_huc()` function, which are then
+reduced to distinct HUC4's and transformed into a vector of HUC4s. HUC4s are
+then split into CONUS (HUC4 \< 1900) and non-CONUS (HUC4 ≥ 1900) groups. To
+efficiently calculate the POI across hundreds of HUC4s, we use the {targets}
+dynamic branching feature to iterate over each HUC4. For each HUC4, the
+NHDPlusV2 (CONUS) or NHD Best Resolution (non-CONUS) waterbodies are acquired
+and filtered for lake/ponds and reservoirs of at least 1 hectare in area or 4
+hectares for intermittent lake/ponds or reservoirs.
 
 In order to accurately calculate distance-to-shore when using the
 `polylabelr::poi()` function as described in Section \@ref(waterbodies), each
-waterbody was converted to the proper Universal Transverse Mercator (UTM)
+waterbody was converted to the proper Universal Transverse Mercator ("UTM")
 projection calculated from the mean longitudinal value of the polygon vertices
 prior to applying the poi() function. By using the point-local UTM projection,
 we decrease distortion expected from any single CRS used to represent all of the
@@ -208,13 +209,13 @@ the lakeSR data.
 To determine the possibility of shoreline contamination, we add the site buffer
 used for GEE extraction (defined in the lakeSR GEE configuration file) to the
 pixel size of the sensor used for reflectance detection (see Section
-\@ref(sensor-resolution) for details). For optical bands (Red, Green, Blue, Nir,
-Swir) we use the site buffer plus 30 meters. For thermal bands, we create 3 flag
-columns for each sensor's (Landsat 4/5: TM, Landsat 7: ETM, Landsat 8/9: TIRS)
-native thermal resolution (120, 60, 100 meters). These flags are binary and are
-included in the lakeSR site file as the flag columns `flag_optical_shoreline`,
-`flag_thermal_TM_shoreline`, `flag_thermal_ETM_shoreline`,
-`flag_thermal_TIRS_shoreline`:
+\@ref(sensor-resolution) for details). For optical bands (Red, Green, Blue, Near
+Infrared ("Nir"), Short Wave Infrared ("Swir")) we use the site buffer plus 30
+meters. For thermal bands, we create 3 flag columns for each sensor's (Landsat
+4/5: TM, Landsat 7: ETM, Landsat 8/9: TIRS) native thermal resolution (120, 60,
+100 meters). These flags are binary and are included in the lakeSR site file as
+the flag columns `flag_optical_shoreline`, `flag_thermal_TM_shoreline`,
+`flag_thermal_ETM_shoreline`, `flag_thermal_TIRS_shoreline`:
 
 > 0: unlikely shoreline contamination (distance to shore is greater than the sum
 > of the site buffer and pixel size)
@@ -392,18 +393,18 @@ The acquisition locations within siteSR are defined using the {dataRetrieval}
 package [@decicco2025] functions `whatWQPsites()` and `whatNWISsites()` which
 are stored in the siteSR site file. All sites were filtered for those that
 represent surface water according to the populated `MonitoringLocationTypeName`
-for WQP sites and `site_tp_cd` for NWIS sites. These sites were supplemented by
-those for which we have harmonized parameter data from the AquaMatch parameter
-harmonization pipeline but that did not appear in the `whatWQPsites()` query.
-Absence of a limited number of sites in the whatWQPsites() query is expected and
-is due to the dynamic nature of the WQP, since some of the AquaMatch parameter
-harmonization was queried at a different time than the query for siteSR. The
-siteSR pipeline collates these sites, then reduces that collation to only
-distinct sites defined by organization identifier, monitoring location
-identifier, WGS84 latitude and WGS84 longitude. Across the WQP, NWIS, and the
-harmonization pipeline, there are currently
+for WQP sites and `site_tp_cd` ("site type code") for NWIS sites. These sites
+were supplemented by those for which we have harmonized parameter data from the
+AquaMatch parameter harmonization pipeline but that did not appear in the
+`whatWQPsites()` query. Absence of a limited number of sites in the
+whatWQPsites() query is expected and is due to the dynamic nature of the WQP,
+since some of the AquaMatch parameter harmonization was queried at a different
+time than the query for siteSR. The siteSR pipeline collates these sites, then
+reduces that collation to only distinct sites defined by organization
+identifier, monitoring location identifier, WGS84 latitude and WGS84 longitude.
+Across the WQP, NWIS, and the harmonization pipeline, there are currently
 `r format(nrow(a_sites_with_NHD_info), big.mark = ",")` sites in the United
-States and Territories for which we attempt to create "stacks" of remote sensing
+States and territories for which we attempt to create "stacks" of remote sensing
 data. A "stack" refers to all the remote sensing data available during a time
 period of interest at a single site.
 
@@ -445,7 +446,7 @@ Canal/Ditch, Estuary, Other. These designations are stored in the column
 `harmonized_site_type` in the siteSR site file.
 
 | AquaMatch harmonized_site_type | NWIS site_tp_cd | WQP MonitoringLocationTypeName |
-|----|----|----|
+|---------------------------|---------------------------|---------------------------|
 | Lake/Reservoir | LK | contains "lake", "reservoir", or "impoundment" |
 | Pond | no associated code | contains "pond" |
 | Stream | ST | contains "stream" |
@@ -514,7 +515,8 @@ Pond, Estuary or Other, we assign NHD ids to each point for the NHD waterbody
 feature it is contained by or the NHD feature it is closest to. The NHD
 waterbody layer has been filtered to only contain Lake, Ponds, Reservoirs, and
 Estuaries (NHD feature types 390, 436, 493) when performing this task. We flag
-(`flag_wb` in the siteSR site file) the results of this assignment as follows:
+(`flag_wb` "waterbody flag" in the siteSR site file) the results of this
+assignment as follows:
 
 > 0: point inside NHD waterbody feature polygon
 >
@@ -623,15 +625,15 @@ where we only acquire data for lakes, reservoirs and ponds according to the NHD.
 This was a functional choice, as estuary extents are limited in the NHD (and
 when present the technique to determine the POI may not be appropriate).
 
-We use the JRC Global Surface Water Mapping Layers v1.4 [@pekel2016] to
-determine whether or not sites are visible by remote sensing ("RS visible") and
-should therefore be sent through the GEE data acquisition process detailed in
-Section \@ref(LS-SRST-pull). The JRC surface water dataset is a compilation of
-38 years of the Landsat record and enumerates the proportion of time a single
-30x30 meter pixel has the presence of water. As long as a siteSR site location
-has at least one pixel designated as being occupied by water at least 80% of the
-time during that 38 year period within a 200 meter radius, we include the site
-in the list for which we acquire Landsat stacks.
+We use the European Commission's JRC Global Surface Water Mapping Layers v1.4
+[@pekel2016] to determine whether or not sites are visible by remote sensing
+("RS visible") and should therefore be sent through the GEE data acquisition
+process detailed in Section \@ref(LS-SRST-pull). The JRC surface water dataset
+is a compilation of 38 years of the Landsat record and enumerates the proportion
+of time a single 30x30 meter pixel has the presence of water. As long as a
+siteSR site location has at least one pixel designated as being occupied by
+water at least 80% of the time during that 38 year period within a 200 meter
+radius, we include the site in the list for which we acquire Landsat stacks.
 
 After assessing for remote sensing visibility,
 `r format(nrow(b_visible_sites), big.mark = ",")` sites were deemed to be

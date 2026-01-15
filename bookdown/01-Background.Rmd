@@ -49,10 +49,11 @@ downstream impacts of lakes whose surface crosses World Reference System 2
 ("WRS2") path-row boundaries. This {targets} list calculates Pole of
 Inaccessibility ("POI") [e.g. @stefansson1920] for all non-intermittent lakes,
 ponds, and reservoirs greater than 1 hectare in surface area and intermittent
-lakes, ponds, and reservoirs greater than 4 hectares using the NHDPlusV2
-polygons using the {nhdplusTools} package [@blodgett2023], NHD Best Resolution
-files for non-CONUS waterbodies, and the `poi()` function in the {polylabelr}
-package [@larsson2024]. We limit the inclusion of small intermittent waterbodies
+lakes, ponds, and reservoirs greater than 4 hectares using the National
+Hydrography Dataset Plut Version 2 ("NHDPlusV2") polygons using the
+{nhdplusTools} package [@blodgett2023], NHD Best Resolution files for non-CONUS
+waterbodies, and the `poi()` function in the {polylabelr} package
+[@larsson2024]. We limit the inclusion of small intermittent waterbodies
 operating under the assumption that these features are not consistently visible
 via remote sensing. See Section \@ref(locs-data-acq) for additional background
 and detailed methodology.
@@ -169,7 +170,7 @@ This workflow creates a number of files:
     masked in the Google Earth Engine QA and filtering process. The csv files
     (zipped per mission) and the feather files contain the same data, but are
     provided in an alternate data format, where the data have been grouped by
-    Hydrologic Unit Code w ("HUC2"). See sections \@ref(LS-C2-SRST),
+    the two-digit Hydrologic Unit Code ("HUC2"). See sections \@ref(LS-C2-SRST),
     \@ref(LS-SRST-pull), and \@ref(post-hoc-qa) for additional details.
 
 -   remote sensing scene-level metadata file(s) (e.g.
@@ -320,11 +321,11 @@ This initial group of targets checks the configuration settings in `config.yml`.
 
 This {targets} group collates the sites from the WQP, NWIS, and the AquaMatch
 harmonization pipeline, creating a list of locations to acquire remote sensing
-data. All locations are associated with a Hydrologic Unit Code 8 ("HUC8"),
-regardless if one is not listed in the metadata for the site from the WQP, then
-we associate points with waterbodies and flowlines of the NHDPlusV2 for those in
-the continental United States ("CONUS") or NHD Best Resolution for non-CONUS
-HUCs datasets where HUC8s were able to be assigned. This is a very
+data. All locations are associated with an eight-digit Hydrologic Unit Code
+("HUC8"), regardless if one is not listed in the metadata for the site from the
+WQP, then we associate points with waterbodies and flowlines of the NHDPlusV2
+for those in the continental United States ("CONUS") or NHD Best Resolution for
+non-CONUS HUCs datasets where HUC8s were able to be assigned. This is a very
 computationally-intensive group of functions and can take multiple days to run
 if `compile_locations` in the config file is set to TRUE. We do not recommend
 running this without at least 64GB memory available on your computer.
