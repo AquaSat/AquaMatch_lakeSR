@@ -25,7 +25,7 @@ params:
 
 # Introduction
 
-This {bookdown} [@xie2016] document explains the methodology we use in the acquisition and compilation of satellite surface reflectance and surface temperature data for the AquaMatch data suite. AquaMatch is the data product coming from the revision of the original AquaSat dataset [@ross2019], sometimes referred to as AquaSat v2. Specifically, this document describes remotely-sensed data for all lakes greater than 1 hectare from the National Hydrography Dataset ("NHD") in the United States and US Territories. These data comprise "lakeSR" (lake surface reflectance). We also describe the remotely-sensed data associated with Water Quality Portal ("WQP") monitoring locations and National Water Information System ("NWIS") sensor locations. These data comprise "siteSR" (site surface reflectance). Generally speaking, siteSR refers to remote sensing data acquired at locations with *in situ* data (from the WQP and NWIS) and lakeSR refers to remote sensing data acquired at centrally-located points of waterbodies (defined by the NHD).
+This {bookdown} [@xie2016] document explains the methodology we use in the acquisition and compilation of satellite surface reflectance and surface temperature data for the AquaMatch data suite. AquaMatch is the data product coming from the revision of the original AquaSat dataset [@ross2019], sometimes referred to as AquaSat v2. Specifically, this document describes remotely-sensed data for all lakes greater than 1 hectare from the National Hydrography Dataset ("NHD") in the United States and US territories. These data comprise "lakeSR" (lake surface reflectance). We also describe the remotely-sensed data associated with Water Quality Portal ("WQP") monitoring locations and National Water Information System ("NWIS") sensor locations. These data comprise "siteSR" (site surface reflectance). Generally speaking, siteSR refers to remote sensing data acquired at locations with *in situ* data (from the WQP and NWIS) and lakeSR refers to remote sensing data acquired at centrally-located points of waterbodies (defined by the NHD).
 
 The AquaSat v2 effort via AquaMatch represents modular code and data infrastructure for:
 
@@ -55,8 +55,8 @@ Full documentation of the WQP download and quality assurance process from the up
 
 ## Note
 
-Landsat remote sensing images used in analyses courtesy of the United States Geological Survey. Any use of trade, firm, or product names is for descriptive purposes only and does not imply endorsement by the U.S. Government.
+Landsat remote sensing images used in analyses courtesy of the United States Geological Survey. Any use of trade, firm, or product names is for descriptive purposes only and does not imply endorsement by the United States Government.
 
 ## Disclaimer
 
-Unless otherwise stated, all data, metadata and related materials are considered to satisfy the quality standards relative to the purpose for which the data were collected. Although these data and associated metadata have been reviewed for accuracy and completeness and approved for release by the U.S. Geological Survey (USGS), no warranty expressed or implied is made regarding the display or utility of the data for other purposes, nor on all computer systems, nor shall the act of distribution constitute any such warranty.
+Unless otherwise stated, all data, metadata and related materials are considered to satisfy the quality standards relative to the purpose for which the data were collected. Although these data and associated metadata have been reviewed for accuracy and completeness and approved for release by the United States Geological Survey (USGS), no warranty expressed or implied is made regarding the display or utility of the data for other purposes, nor on all computer systems, nor shall the act of distribution constitute any such warranty.
