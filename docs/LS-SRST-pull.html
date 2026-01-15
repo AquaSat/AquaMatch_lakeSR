@@ -4,26 +4,26 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>6 Landsat Collection 2 SRST Data Product | AquaMatch: lakeSR and siteSR</title>
-  <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  <title>6 Landsat Collection 2 SR ST Data Product | AquaMatch: Lake Surface Reflectance (lakeSR) and Site Surface Reflectance (siteSR)</title>
+  <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US territories." />
   <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="6 Landsat Collection 2 SRST Data Product | AquaMatch: lakeSR and siteSR" />
+  <meta property="og:title" content="6 Landsat Collection 2 SR ST Data Product | AquaMatch: Lake Surface Reflectance (lakeSR) and Site Surface Reflectance (siteSR)" />
   <meta property="og:type" content="book" />
   
-  <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US territories." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="6 Landsat Collection 2 SRST Data Product | AquaMatch: lakeSR and siteSR" />
+  <meta name="twitter:title" content="6 Landsat Collection 2 SR ST Data Product | AquaMatch: Lake Surface Reflectance (lakeSR) and Site Surface Reflectance (siteSR)" />
   
-  <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US territories." />
   
 
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-12-03" />
+<meta name="date" content="2026-01-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -215,7 +215,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.3.4" data-path="software-settings.html"><a href="software-settings.html#auth"><i class="fa fa-check"></i><b>4.3.4</b> GEE Authentication</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
+<li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SR &amp; ST</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#initialisms-and-landsat-jargon"><i class="fa fa-check"></i><b>5.1</b> Initialisms and Landsat Jargon</a></li>
 <li class="chapter" data-level="5.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#valid-dates"><i class="fa fa-check"></i><b>5.2</b> Background Information</a>
@@ -229,7 +229,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="5.4" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#st-product"><i class="fa fa-check"></i><b>5.4</b> Surface Temperature</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html"><i class="fa fa-check"></i><b>6</b> Landsat Collection 2 SRST Data Product</a>
+<li class="chapter" data-level="6" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html"><i class="fa fa-check"></i><b>6</b> Landsat Collection 2 SR ST Data Product</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#changes-from-aquasat-v1-and-limnosat-us"><i class="fa fa-check"></i><b>6.1</b> Changes from AquaSat v1 and LimnoSat-US</a></li>
 <li class="chapter" data-level="6.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#overview-of-acquisition-steps"><i class="fa fa-check"></i><b>6.2</b> Overview of Acquisition Steps</a>
@@ -285,7 +285,7 @@ div.csl-indent {
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AquaMatch: lakeSR and siteSR</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AquaMatch: Lake Surface Reflectance (lakeSR) and Site Surface Reflectance (siteSR)</a>
           </h1>
         </div>
 
@@ -294,15 +294,15 @@ div.csl-indent {
 
             <section class="normal" id="section-">
 <div id="LS-SRST-pull" class="section level1 hasAnchor" number="6">
-<h1><span class="header-section-number">6</span> Landsat Collection 2 SRST Data Product<a href="LS-SRST-pull.html#LS-SRST-pull" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<h1><span class="header-section-number">6</span> Landsat Collection 2 SR ST Data Product<a href="LS-SRST-pull.html#LS-SRST-pull" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>The lakeSR data product is a set of tabular datasets, representing the Landsat
-surface reflectance (SR) and surface temperarture (ST) data summarized for the
-point of inaccessibility (POI) location which is meant to represent conditions
-at a given waterbody at a location far from shore (identified by its NHD unique
-identifier, see Section <a href="locs-data-acq.html#locs-data-acq">3</a>). This data product contains “full
-stacks” of the Landsat Collection 2 record - that is, all summarized Landsat
-data available within Google Earth Engine (ending 2024-12-31) from all Landsat
-missions that met our within-image QA criteria.</p>
+surface reflectance and surface temperarture data summarized for the point of
+inaccessibility location which is meant to represent conditions at a given
+waterbody at a location far from shore (identified by its NHD unique identifier,
+see Section <a href="locs-data-acq.html#locs-data-acq">3</a>). This data product contains “full stacks” of
+the Landsat Collection 2 record - that is, all summarized Landsat data available
+within Google Earth Engine (ending 2024-12-31) from all Landsat missions that
+met our within-image QA criteria.</p>
 <p>The siteSR data product is similar, but is acquired at unique sampling locations
 as described in <a href="locs-data-acq.html#siteSR-locs">3.2</a>.</p>
 <div id="changes-from-aquasat-v1-and-limnosat-us" class="section level2 hasAnchor" number="6.1">
@@ -315,7 +315,7 @@ summarize the changes implemented in this update. Code below is pulled from the
 Python scripts that acquire the Landsat data from Google Earth Engine. Software
 settings are listed in Section <a href="software-settings.html#software-settings">4</a>.</p>
 <ul>
-<li><p>using yaml file for configuration of the workflow. This allows for greater
+<li><p>using .yaml file for configuration of the workflow. This allows for greater
 flexibility in data acquisition including the use of custom configurations
 for the pull.</p></li>
 <li><p>assuring location and buffer area are completely contained in a path-row
@@ -345,9 +345,9 @@ thermal band. In AquaMatch, we include data from this band. See Section
 <li><p>sending tasks to GEE explicitly per path-row and limiting the Landsat stack
 to the explicit path-row to eliminate duplicate acquisitions. In the
 previous products, duplicate location/path-row data were acquired because
-the extracted Landsat stack was not limited to the explicit WRS path-row
+the extracted Landsat stack was not limited to the explicit WRS-2 path-row
 that the point and buffer were in. This meant that locations that were in a
-path-row overlap would be extracted twice in two different WRS path-row
+path-row overlap would be extracted twice in two different WRS-2 path-row
 extents. The code below is an example of this type of filtering that occurs
 per mission as we run a path-row extraction, where we once clipped the stack
 to the AOI of the path-row instead of filtering for the path-row itself.
@@ -397,12 +397,12 @@ addition to clouds, snow, and ice. The proportion of pixels within the
 location buffer that were masked out due to clouds is now tracked as
 <code>prop_clouds</code> as an additional method of QA handling downstream of the GEE
 extraction.</p></li>
-<li><p>DSWE-like implementation for water detection. We have moved from using the
-JRC Global Surface Water Mapping Layers <span class="citation">Pekel et al. (2016)</span> to using a modified
-Dynamic Surface Water Extent (DSWE) algorithm based on the USGS
-implementation of DSWE described in LSDS-2042 version 3
-<span class="citation">(US Geological Survey 2023a)</span>. See Section <a href="LS-SRST-pull.html#dswe-implementation">6.3.2</a> for
-details.</p></li>
+<li><p>Dynamic Surface Water Extent (“DSWE”)-like implementation for water
+detection. We have moved from using the JRC Global Surface Water Mapping
+Layers <span class="citation">Pekel et al. (2016)</span> to using a modified DSWE algorithm based on the USGS
+implementation of DSWE described in Landsat Satellites Data System (“LSDS”)
+document number 2042 version 3 <span class="citation">(US Geological Survey 2023a)</span>. See Section
+<a href="LS-SRST-pull.html#dswe-implementation">6.3.2</a> for details.</p></li>
 <li><p>removing no-data acquisitions before GEE export. In AquaMatch, we remove any
 rows from the summarized GEE product containing no data before export. This
 adds efficiency to the pull by removing those rows before export, which is a
@@ -488,34 +488,35 @@ to see some of the masks in action. In the descriptions below, “optical band�
 used to describe any non-thermal band.</p>
 <ul>
 <li><p><code>apply_rad_mask</code>: Masks out all pixels that are radiometrically saturated in
-any optical band using the QA_RADSAT QA band. The Landsat User Guides
-<span class="citation">(US Geological Survey 2021, 2024)</span> note that radiometrically
-saturated data are “unusable”. Saturated bands happen infrequently in
-Landsat 8 and 9, but we still apply this mask to all Landsat mission data
-for continuity.</p></li>
+any optical band using the QA_RADSAT (radiometric saturation quality
+assessment) band. The Landsat User Guides <span class="citation">(US Geological Survey 2021, 2024)</span> note that radiometrically saturated data are
+“unusable”. Saturated bands happen infrequently in Landsat 8 and 9, but we
+still apply this mask to all Landsat mission data for continuity.</p></li>
 <li><p><code>add_cf_mask</code>: Adds a mask band for any pixels obstructed by clouds and
-snow/ice using the CLOUD_QA band. This is a general QA band that describes
-clouds/snow/ice detected by algorithms defined by the atmospheric processing
-procedure. We have elected to only include pixels that do not contain
-clouds, cloud shadows, dispersed clouds, or snow/ice as defined by this
-band. In particular, we follow the suggestions in the product User Guide
-<span class="citation">(US Geological Survey 2021, 2024)</span></p>
+snow/ice using the CLOUD_QA (cloud quality assessment) band. This is a
+general QA band that describes clouds/snow/ice detected by algorithms
+defined by the atmospheric processing procedure. We have elected to only
+include pixels that do not contain clouds, cloud shadows, dispersed clouds,
+or snow/ice as defined by this band. In particular, we follow the
+suggestions in the product User Guide <span class="citation">(US Geological Survey 2021, 2024)</span></p>
 <blockquote>
 <p>Users are advised to engage the QA “Dilated Cloud” (bit 1) AND “Cloud”
 (bit 3) OFF condition to correctly identify clear pixels over water.</p>
 </blockquote></li>
 <li><p><code>add_sr_aero_mask</code>: Adds a mask band for any pixels in Landsat 8 and 9 that
-have ‘medium’ or ‘high’ aerosol QA flags from the SR_QA_AEROSOL band.
-Because water is particularly difficult to assess from space, we are more
-aggressive in this mask than suggested by the Landsat 8 and 9 User Guide
-<span class="citation">(US Geological Survey 2024)</span> which states: “Note that pixels classified as high
-aerosol content are not recommended for use.”</p></li>
+have ‘medium’ or ‘high’ aerosol QA flags from the SR_QA_AEROSOL (aerosol
+surface reflectance quality assurance) band. Because water is particularly
+difficult to assess from space, we are more aggressive in this mask than
+suggested by the Landsat 8 and 9 User Guide <span class="citation">(US Geological Survey 2024)</span> which
+states: “Note that pixels classified as high aerosol content are not
+recommended for use.”</p></li>
 <li><p><code>add_opac_mask</code>: Adds a mask band to remove pixels where atmospheric opacity
-is greater than 0.3 in Landsat 4, 5, and 7 using the SR_ATMOS_OPACITY band.
-For similar reasons as a more aggressive aerosol mask in Landsat 8 &amp; 9, we
-use this mask in addition to the cloud mask (<code>apply_cf_mask</code>). The Landsat
-4-7 User Guide <span class="citation">(US Geological Survey 2021)</span> states the following about the
-atmospheric opacity values:</p>
+is greater than 0.3 in Landsat 4, 5, and 7 using the SR_ATMOS_OPACITY
+(surface reflectance product atmospheric opacity) band. For similar reasons
+as a more aggressive aerosol mask in Landsat 8 &amp; 9, we use this mask in
+addition to the cloud mask (<code>apply_cf_mask</code> function). The Landsat 4-7 User
+Guide <span class="citation">(US Geological Survey 2021)</span> states the following about the atmospheric
+opacity values:</p>
 <blockquote>
 <p>A general interpretation of atmospheric opacity is that values less than
 0.1 are clear, 0.1-0.3 are average, and values greater than 0.3 indicate
@@ -554,8 +555,9 @@ follows:</p>
 <li><p>we use the Level 2 SR product instead of the Level 2 Analysis Ready Data
 Product to calculate DSWE threshold values</p></li>
 <li><p>we mask any DSWE values that are not fully illuminated (a value of 0 in the
-function below) as defined by the ee.Terrain.hillShadow function in Google
-Earth Engine using the MERIT DEM version 1.0.3 <span class="citation">(Yamazaki et al. 2017)</span> at an extent
+function below) as defined by the <code>ee.Terrain.hillShadow</code> function in Google
+Earth Engine using the Multi-Error-Removed Improved-Terrain (“MERIT”)
+Digital Elevation Model (“DEM”) version 1.0.3 <span class="citation">(Yamazaki et al. 2017)</span> at an extent
 of 3000 meters surrounding a given point for analysis.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="LS-SRST-pull.html#cb5-1" tabindex="-1"></a><span class="kw">def</span> calc_hill_shadows(image, geo):</span>
 <span id="cb5-2"><a href="LS-SRST-pull.html#cb5-2" tabindex="-1"></a>  <span class="co">&quot;&quot;&quot; caluclate the hill shadow per pixel</span></span>
@@ -591,13 +593,13 @@ pixel based on the thresholds described in <span class="citation">US Geological 
 <li><p>4 is low confidence partial water</p></li>
 </ul>
 <p>Within the scope of lakeSR and siteSR, we tabulate pixels that are a DSWE value
-of 1 (DSWE1) for high confidence open water, or what we call DSWE1a - high
-confidence open water OR the pixel meets a threshold that may indicate there is
-surface-level algae. Like the QA masks, the DSWE implementation occurs in the
-Python script <code>run_GEE_per_pathrow.py</code>. The algae mask is defined as when a
-pixel has a DSWE value greater than 1 and the green band scaled value is greater
-than 0.05 and the red band scaled value is less than 0.04. These values are
-based on optical properties intended to mimic the spectral response of
+of 1 (“DSWE1”) for high confidence open water, or what we call “DSWE1a”<br />
+- high confidence open water OR the pixel meets a threshold that may indicate
+there is surface-level algae. Like the QA masks, the DSWE implementation occurs
+in the Python script <code>run_GEE_per_pathrow.py</code>. The algae mask is defined as when
+a pixel has a DSWE value greater than 1 and the green band scaled value is
+greater than 0.05 and the red band scaled value is less than 0.04. These values
+are based on optical properties intended to mimic the spectral response of
 chlorophyll <em>a</em> as described by <span class="citation">Burket, Olmanson, and Brezonik (2023)</span>. This is an experimental mask, so we
 export both DSWE1 and DSWE1a summaries within lakeSR. We have found some
 omission error within DSWE1 for visible floating scum within river systems and
@@ -627,8 +629,8 @@ modeling purposes, though we do not have recommended uses at this time.</p>
 <p>See the formal metadata for definitions of these flags, which are stored
 alongside the remote sensing summaries in the lakeSR and siteSR output files
 (stored as one feather file per Landsat mission, e.g.
-lakeSR_Landsat9_DSWE1_2025-06-04.feather,
-siteSR_Landsat4_DSWE1_2025-06-06.feather).</p>
+<code>lakeSR_Landsat9_DSWE1_2025-06-04.feather</code>,
+<code>siteSR_Landsat4_DSWE1_2025-06-06.feather</code>).</p>
 </div>
 <div id="payload-handling" class="section level2 hasAnchor" number="6.5">
 <h2><span class="header-section-number">6.5</span> Payload handling<a href="LS-SRST-pull.html#payload-handling" class="anchor-section" aria-label="Anchor link to header"></a></h2>

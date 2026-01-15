@@ -4,26 +4,26 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>2 Background | AquaMatch: lakeSR and siteSR</title>
-  <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  <title>2 Background | AquaMatch: Lake Surface Reflectance (lakeSR) and Site Surface Reflectance (siteSR)</title>
+  <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US territories." />
   <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="2 Background | AquaMatch: lakeSR and siteSR" />
+  <meta property="og:title" content="2 Background | AquaMatch: Lake Surface Reflectance (lakeSR) and Site Surface Reflectance (siteSR)" />
   <meta property="og:type" content="book" />
   
-  <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US territories." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2 Background | AquaMatch: lakeSR and siteSR" />
+  <meta name="twitter:title" content="2 Background | AquaMatch: Lake Surface Reflectance (lakeSR) and Site Surface Reflectance (siteSR)" />
   
-  <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US territories." />
   
 
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-12-03" />
+<meta name="date" content="2026-01-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -215,7 +215,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.3.4" data-path="software-settings.html"><a href="software-settings.html#auth"><i class="fa fa-check"></i><b>4.3.4</b> GEE Authentication</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
+<li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SR &amp; ST</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#initialisms-and-landsat-jargon"><i class="fa fa-check"></i><b>5.1</b> Initialisms and Landsat Jargon</a></li>
 <li class="chapter" data-level="5.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#valid-dates"><i class="fa fa-check"></i><b>5.2</b> Background Information</a>
@@ -229,7 +229,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="5.4" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#st-product"><i class="fa fa-check"></i><b>5.4</b> Surface Temperature</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html"><i class="fa fa-check"></i><b>6</b> Landsat Collection 2 SRST Data Product</a>
+<li class="chapter" data-level="6" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html"><i class="fa fa-check"></i><b>6</b> Landsat Collection 2 SR ST Data Product</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#changes-from-aquasat-v1-and-limnosat-us"><i class="fa fa-check"></i><b>6.1</b> Changes from AquaSat v1 and LimnoSat-US</a></li>
 <li class="chapter" data-level="6.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#overview-of-acquisition-steps"><i class="fa fa-check"></i><b>6.2</b> Overview of Acquisition Steps</a>
@@ -285,7 +285,7 @@ div.csl-indent {
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AquaMatch: lakeSR and siteSR</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AquaMatch: Lake Surface Reflectance (lakeSR) and Site Surface Reflectance (siteSR)</a>
           </h1>
         </div>
 
@@ -299,10 +299,10 @@ div.csl-indent {
 Landsat Collection 2 record from 1984 until the end of 2024, including the
 following missions:</p>
 <ul>
-<li>Landsat 4 Thematic Mapper (TM)</li>
+<li>Landsat 4 Thematic Mapper (“TM”)</li>
 <li>Landsat 5 TM</li>
-<li>Landsat 7 Enhanced Thematic Mapper Plus (ETM+)</li>
-<li>Landsat 8 Operational Land Imager/Thermal Infrared Sensor (OLI/TIRS)</li>
+<li>Landsat 7 Enhanced Thematic Mapper Plus (“ETM+”)</li>
+<li>Landsat 8 Operational Land Imager/Thermal Infrared Sensor (“OLI/TIRS”)</li>
 <li>Landsat 9 OLI/TIRS</li>
 </ul>
 <p><strong>WARNING: the Landsat Surface Reflectance and Surface Temperature products
@@ -312,12 +312,11 @@ process.</p>
 <p>There will be additional satellite data incorporated into AquaMatch in the
 future.</p>
 <p>For <em>in situ</em> parameter matching, AquaMatch_siteSR currently includes sites from
-the Water Quality Portal (WQP), the National Water Information System (NWIS),
-and any sites present in the AquaMatch_harmonize pipeline not available via WQP
-at the time of site collation. At the time of collation, the AquaMatch_harmonize
-pipeline contained data for Secchi disc depth (SDD) <span class="citation">(De La Torre et al. 2025)</span>, chlorophyll
-<em>a</em> (chla) <span class="citation">(Brousil et al. 2024)</span>, dissolved organic carbon (DOC) <span class="citation">(Brousil, Meyer, Willi, Steele, and Ross 2025)</span>, and total
-suspended solids (TSS) <span class="citation">(Brousil, Meyer, Willi, Steele, Gardner, et al. 2025)</span>.</p>
+the WQP, NWIS, and any sites present in the AquaMatch_harmonize pipeline not
+available via WQP at the time of site collation. At the time of collation, the
+AquaMatch_harmonize pipeline contained data for Secchi disc depth (“SDD”)
+<span class="citation">(De La Torre et al. 2025)</span>, chlorophyll <em>a</em> (“chla”) <span class="citation">(Brousil et al. 2024)</span>, dissolved organic carbon
+(“DOC”) <span class="citation">(Brousil, Meyer, Willi, Steele, and Ross 2025)</span>, and total suspended solids (“TSS”) <span class="citation">(Brousil, Meyer, Willi, Steele, Gardner, et al. 2025)</span>.</p>
 <div id="lakesr-code-architecture" class="section level2 hasAnchor" number="2.1">
 <h2><span class="header-section-number">2.1</span> lakeSR Code Architecture<a href="background.html#lakesr-code-architecture" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><a href="https://github.com/AquaSat/AquaMatch_lakeSR">lakeSR code</a> is broken down into
@@ -329,16 +328,18 @@ both R and Python programming languages to complete these tasks.</p>
 <p><strong>a_Calculate_Centers</strong>:</p>
 <p>For all lakes, we aggregate remotely-sensed data via a central location with a
 buffer instead of the entire lake area to reduce processing time and the
-downstream impacts of lakes whose surface crosses WRS2 path-row boundaries. This
-{targets} list calculates “Pole of Inaccessibility” (POI) <span class="citation">(e.g. Stefansson 1920)</span>
-for all non-intermittent lakes, ponds, and reservoirs greater than 1 hectare in
-surface area and intermittent lakes, ponds, and reservoirs greater than 4
-hectares using the NHDPlusV2 polygons using the {nhdplusTools} package
-<span class="citation">(Blodgett and Johnson 2023)</span>, NHD Best Resolution files for non-CONUS waterbodies, and the
-<code>poi()</code> function in the {polylabelr} package <span class="citation">(Larsson 2024)</span>. We limit the
-inclusion of small intermittent waterbodies operating under the assumption that
-these features are not consistently visible via remote sensing. See Section
-<a href="locs-data-acq.html#locs-data-acq">3</a> for additional background and detailed methodology.</p>
+downstream impacts of lakes whose surface crosses World Reference System 2
+(“WRS2”) path-row boundaries. This {targets} list calculates Pole of
+Inaccessibility (“POI”) <span class="citation">(e.g. Stefansson 1920)</span> for all non-intermittent lakes,
+ponds, and reservoirs greater than 1 hectare in surface area and intermittent
+lakes, ponds, and reservoirs greater than 4 hectares using the National
+Hydrography Dataset Plut Version 2 (“NHDPlusV2”) polygons using the
+{nhdplusTools} package <span class="citation">(Blodgett and Johnson 2023)</span>, NHD Best Resolution files for non-CONUS
+waterbodies, and the <code>poi()</code> function in the {polylabelr} package
+<span class="citation">(Larsson 2024)</span>. We limit the inclusion of small intermittent waterbodies
+operating under the assumption that these features are not consistently visible
+via remote sensing. See Section <a href="locs-data-acq.html#locs-data-acq">3</a> for additional background
+and detailed methodology.</p>
 <p>This group is either run completely or pulled from existing files based on
 lakeSR general configuration file using the boolean <code>calculate_centers</code> setting.
 If set to <code>FALSE</code> a version date must be provided in the <code>centers_version</code>
@@ -347,13 +348,13 @@ in the README, and in the general configuration file of the lakeSR repository
 (“config.yml”).</p>
 <p><strong>b_pull_Landsat_SRST_poi</strong>:</p>
 <p>This {targets} group uses the Google Earth Engine configuration file
-<code>b_pull_Landsat_SRST_poi/config_files/config_poi.yml</code> and the “Pole of
-Inaccessibility” points created in the <code>a_Calculate_Centers</code> group to pull
-Landsat Collection 2 Surface Reflectance and Surface Temperature using the
-Google Earth Engine (GEE) API. In this group, we use the most conservative LS4-7
-pixel filters, as we are applying these settings across such a large continuum
-of time and space. This group ends with a branched target that sends tasks to
-Google Earth engine by mapping over WRS2 path rows that intersect with the
+<code>b_pull_Landsat_SRST_poi/config_files/config_poi.yml</code> and the POI points created
+in the <code>a_Calculate_Centers</code> group to pull Landsat Collection 2 Surface
+Reflectance (“SR”) and Surface Temperature (“ST”) using the Google Earth Engine
+(“GEE”) Application Programming Interface (“API”). In this group, we use the
+most conservative LS4-7 pixel filters, as we are applying these settings across
+such a large continuum of time and space. This group ends with a branched target
+that sends tasks to GEE by mapping over WRS2 path rows that intersect with the
 points created in the <code>a_Calculate_Centers</code> group. This task-submission process
 is managed by the {targets} workflow which checks for the number of running or
 cued tasks and only sends additional tasks when the total tasks is below a
@@ -376,8 +377,8 @@ README, and in the GEE configuration file of the lakeSR repository
 <p><strong>c_collate_Landsat_data:</strong></p>
 <p>This {targets} list collates the data from the Google Earth Engine run
 orchestrated in the {targets} group <code>b_pull_Landsat_SRST_poi</code> and creates
-publicly-available files for downstream use, storing a dataframe of Drive ids in
-a .csv in the <code>c_collate_Landsat_data/out/</code> folder.</p>
+publicly-available files for downstream use, storing a dataframe of Drive
+identifiers in a .csv in the <code>c_collate_Landsat_data/out/</code> folder.</p>
 <p>This group is either run completely or pulled from existing files based on
 lakeSR general configuration file using the boolean <code>run_GEE</code> setting. If set to
 <code>FALSE</code> a version date must be provided in the <code>collated_version</code> setting.
@@ -429,11 +430,11 @@ loaded into the R studio environment using <code>tar_load(a_poi_with_flags)</cod
 identifier (<code>lakeSR_id</code>, can be matched with the locations file), numerical
 summaries of remote sensing data for each site and satellite image, as well
 as columns containing summarized information about pixels that have been
-masked in the Google Earth Engine QAQC and filtering process. The csv files
+masked in the Google Earth Engine QA and filtering process. The csv files
 (zipped per mission) and the feather files contain the same data, but are
 provided in an alternate data format, where the data have been grouped by
-HUC2. See sections <a href="LS-C2-SRST.html#LS-C2-SRST">5</a>, <a href="LS-SRST-pull.html#LS-SRST-pull">6</a>, and
-<a href="post-hoc-qa.html#post-hoc-qa">7</a> for additional details.</p></li>
+the two-digit Hydrologic Unit Code (“HUC2”). See sections <a href="LS-C2-SRST.html#LS-C2-SRST">5</a>,
+<a href="LS-SRST-pull.html#LS-SRST-pull">6</a>, and <a href="post-hoc-qa.html#post-hoc-qa">7</a> for additional details.</p></li>
 <li><p>remote sensing scene-level metadata file(s) (e.g.
 <code>lakeSR_collated_metadata_LS89_export_2022-06-04.csv</code>,
 <code>lakeSR_collated_metadata_LS457_export_2025-06-04.csv</code>) which contain a
@@ -465,8 +466,8 @@ filters {targets} group -d- and calculation of handoff coefficients group
 the pipeline may require non-automated changes to the text of the bookdown.</p></li>
 <li><p>“admin_update” is intended for use by ROSSyndicate members when updating
 lakeSR datasets and by by default creates publicly-stable versions of the
-lakeSR dataset in Google Drive, and the Drive file ids are stored in the
-AquaMatch_lakeSR repository for external users. This configuration could
+lakeSR dataset in Google Drive, and the Drive file identifiers are stored in
+the AquaMatch_lakeSR repository for external users. This configuration could
 also be used by others to re-run the pipeline and wish to make changes to
 the site location calculations ({targets} group -a-) or GEE implementation
 ({targets} group -b-) and collation ({targets} group -c-). By default, the
@@ -568,14 +569,15 @@ between sensors (see Section</strong> <a href="define-handoff.html#define-handof
 <div id="targets-groups" class="section level3 hasAnchor" number="2.2.1">
 <h3><span class="header-section-number">2.2.1</span> {targets} Groups<a href="background.html#targets-groups" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p><strong>_targets.R:</strong></p>
-<p>This initial group of targets checks the configuration settings in config.yml.</p>
+<p>This initial group of targets checks the configuration settings in <code>config.yml</code>.</p>
 <p><strong>a_compile_sites:</strong></p>
 <p>This {targets} group collates the sites from the WQP, NWIS, and the AquaMatch
 harmonization pipeline, creating a list of locations to acquire remote sensing
-data. All locations are associated with a HUC8, regardless if one is not listed
-in the metadata for the site from the WQP, then we associate points with
-waterbodies and flowlines of the NHDPlusV2 (CONUS) or NHD Best Resolution
-(non-CONUS HUCs) files where HUC8s were able to be assigned. This is a very
+data. All locations are associated with an eight-digit Hydrologic Unit Code
+(“HUC8”), regardless if one is not listed in the metadata for the site from the
+WQP, then we associate points with waterbodies and flowlines of the NHDPlusV2
+for those in the continental United States (“CONUS”) or NHD Best Resolution for
+non-CONUS HUCs datasets where HUC8s were able to be assigned. This is a very
 computationally-intensive group of functions and can take multiple days to run
 if <code>compile_locations</code> in the config file is set to TRUE. We do not recommend
 running this without at least 64GB memory available on your computer.</p>
@@ -583,14 +585,15 @@ running this without at least 64GB memory available on your computer.</p>
 <p><strong>b_determine_RS_visibility:</strong></p>
 <p>The resulting list of <em>in situ</em> locations are used to assess remote-sensing
 visibility in this {targets} group. Sites are assessed for visibility using the
-JRC Global Surface Water <span class="citation">(Pekel et al. 2016)</span> which is based on the historical Landsat
-record. This {targets} group takes a number of hours to run, if the
-configuration of <code>run_pekel</code> is set to TRUE. If the configuration is set to
-FALSE, run time will be dependent on your internet connection (to access the
-previously-created files) and the number of cores available to run the workflow.</p>
+European Commision’s Joint Reserach Centre (“JRC”) Global Surface Water product
+<span class="citation">(Pekel et al. 2016)</span> which is based on the historical Landsat record. This {targets}
+group takes a number of hours to run, if the configuration of <code>run_pekel</code> is set
+to TRUE. If the configuration is set to FALSE, run time will be dependent on
+your internet connection (to access the previously-created files) and the number
+of cores available to run the workflow.</p>
 <p>See section <a href="locs-data-acq.html#rs-vis">3.2.1</a> for details on this process.</p>
 <p><strong>c_siteSR_stack:</strong></p>
-<p>This group of {targets} acquires Landsat Collection 2 SRST stacks for sites
+<p>This group of {targets} acquires Landsat Collection 2 SR &amp; ST stacks for sites
 determined to be visible in the previous {targets} group. Data are collated in
 this step. This {targets} group takes about one week to run, if the
 configuration <code>run_GEE</code> is set to TRUE. If the configuration is set to FALSE,
@@ -600,7 +603,7 @@ previously-created files) and the number of cores available to run the workflow.
 <p><strong>d_siteSR_qa:</strong></p>
 <p>Collated Landsat data are filtered for quality based on broadly applicable
 thresholds and exported from the pipeline for data archiving. The resulting data
-are archived in Google Drive and the Drive file ids area stored in this
+are archived in Google Drive and the Drive file identifiers area stored in this
 repository for external access.</p>
 <p>See section <a href="post-hoc-qa.html#post-hoc-filters">7.2</a> for details on this process.</p>
 </div>
@@ -625,7 +628,7 @@ environment using <code>tar_load(a_sites_with_NHD_info)</code>.</p></li>
 identifier (can be matched with the locations file), numerical summaries of
 remote sensing data for each site and satellite image, as well as columns
 containing summarized information about pixels that have been masked in the
-Google Earth Engine QAQC and filtering process. See sections
+Google Earth Engine QA and filtering process. See sections
 <a href="LS-C2-SRST.html#LS-C2-SRST">5</a>, <a href="LS-SRST-pull.html#LS-SRST-pull">6</a>, and <a href="post-hoc-qa.html#post-hoc-qa">7</a> for
 additional details.</p></li>
 <li><p>remote sensing scene-level metadata file(s) (e.g.
@@ -654,8 +657,8 @@ Landsat record from GEE) are not run, but rather archived files are pulled
 in to reduce run time.</p></li>
 <li><p>“admin_update” is intended for use by ROSSyndicate members when updating
 siteSR datasets and by default creates publicly-stable versions of the
-siteSR dataset in Google Drive, and the Drive file ids are stored in the
-AquaMatch_siteSR repository for external users. This configuration could
+siteSR dataset in Google Drive, and the Drive file identifiers are stored in
+the AquaMatch_siteSR repository for external users. This configuration could
 also be used by others to re-run the pipeline and wish to make changes to
 the site location collation ({targets} group -a-), remote sensing visibility
 thresholds ({targets} group -b-) or GEE implementation ({targets} group
