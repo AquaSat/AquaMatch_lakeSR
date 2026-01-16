@@ -211,7 +211,7 @@ use of lakeSR and siteSR products.*
 The Landsat C2 SR product is a Level 2 data product that has been
 atmospherically corrected from the Level 1 Top of Atmosphere product using a
 myriad of inputs to create a reasonably consistent data product across space and
-time. The USGS Earth Resources Observation and Science ("EROS") Center describes
+time. The USGS Earth Resources Observation and Science (EROS) Center describes
 the SR product as follows:
 
 > *Surface reflectance improves comparison between multiple images over the same
@@ -224,8 +224,8 @@ the SR product as follows:
 ### SR Atmospheric Processing {#atm-corr}
 
 The SR product for Landsat 4-7 is calculated using the Land Ecosystem
-Disturbance Adaptive Processing System ("LEDAPS") [@schmidt2013] and Landsat 8
-and 9 SR data are calculated using the Land Surface Reflectance Code ("LaSRC")
+Disturbance Adaptive Processing System (LEDAPS) [@schmidt2013] and Landsat 8 and
+9 SR data are calculated using the Land Surface Reflectance Code (LaSRC)
 algorithm [@vermote2016]. The two algorithms are functionally different, but the
 outcome is the same: a consistently-processed surface reflectance product that
 is available worldwide. See the table under section heading ['Differences in
@@ -248,7 +248,7 @@ temperature estimates in degrees Kelvin. While these data are considered
 interoperable over space and time with few differences in the ST algorithm
 product within Collection 2, there do appear to be slight differences in the ST
 product between sensors. Like with the surface reflectance product, we calculate
-between-mission handoffs for the TM/ETM/TIRS products in Section
+between-mission handoffs for the TM/ETM+/TIRS products in Section
 \@ref(define-handoff).
 
 It is important to note that the thermal band spatial resolution is coarser than

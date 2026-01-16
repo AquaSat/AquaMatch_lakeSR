@@ -25,11 +25,11 @@ params:
 
 # Introduction
 
-This {bookdown} [@xie2016] document explains the methodology we use in the acquisition and compilation of satellite surface reflectance and surface temperature data for the AquaMatch data suite. AquaMatch is the data product coming from the revision of the original AquaSat dataset [@ross2019], sometimes referred to as AquaSat v2. Specifically, this document describes remotely-sensed data for all lakes greater than 1 hectare from the National Hydrography Dataset ("NHD") in the United States and US territories. These data comprise "lakeSR" (lake surface reflectance). We also describe the remotely-sensed data associated with Water Quality Portal ("WQP") monitoring locations and National Water Information System ("NWIS") sensor locations. These data comprise "siteSR" (site surface reflectance). Generally speaking, siteSR refers to remote sensing data acquired at locations with *in situ* data (from the WQP and NWIS) and lakeSR refers to remote sensing data acquired at centrally-located points of waterbodies (defined by the NHD).
+This {bookdown} [@xie2016] document explains the methodology we use in the acquisition and compilation of satellite surface reflectance and surface temperature data for the AquaMatch data suite. AquaMatch is the data product coming from the revision of the original AquaSat dataset [@ross2019], sometimes referred to as AquaSat v2. Specifically, this document describes remotely-sensed data for all lakes greater than 1 hectare from the National Hydrography Dataset (NHD) in the United States and US territories. These data comprise "lakeSR" (lake surface reflectance). We also describe the remotely-sensed data associated with Water Quality Portal (WQP) monitoring locations and National Water Information System ("NWIS") sensor locations. These data comprise "siteSR" (site surface reflectance). Generally speaking, siteSR refers to remote sensing data acquired at locations with *in situ* data (from the WQP and NWIS) and lakeSR refers to remote sensing data acquired at centrally-located points of waterbodies (defined by the NHD).
 
 The AquaSat v2 effort via AquaMatch represents modular code and data infrastructure for:
 
-1.  harmonizing *in situ* data from the Water Quality Portal and providing an interoperability tiering structure to allow for easier downstream filtering ("AquaMatch_harmonize_WQP")
+1.  harmonizing *in situ* data from the Water Quality Portal and providing an interoperability tiering structure to allow for easier downstream filtering (e.g. AquaMatch_harmonize_WQP)
 
 2.  acquiring remote sensing data of inland waterbodies and rivers (lakeSR, siteSR, and riverSR (river surface reflectance))
 
@@ -41,13 +41,13 @@ AquaMatch builds upon AquaSat [@ross2019] (referred to here as "AquaSat v1") and
 
 AquaMatch code is built on the {targets} workflow management system for R [@landau2021]. The {targets} architecture is based on lists of functions performed in a specific order, each function called a *target*. These targets are grouped together into processing groups. The primary benefit of {targets} workflows is that code is only run if a target, a target's code, or a target's dependencies have changed (or become "outdated" in {targets} speak).
 
-Full documentation of the WQP download and quality assurance process from the upstream AquaMatch download and harmonize pipelines [is located here](https://aquasat.github.io/AquaMatch_documentation/).
+Full documentation of the WQP download and quality assurance (QA) process from the upstream AquaMatch download and harmonize pipelines [is located here](https://aquasat.github.io/AquaMatch_documentation/).
 
 ## Repository Links for the AquaMatch Data Suite
 
 [AquaMatch_download_WQP](https://github.com/AquaSat/AquaMatch_download_WQP): This repository contains code that downloads parameters from the WQP using the {dataRetrieval} package.
 
-[AquaMatch_harmonize_WQP](https://github.com/AquaSat/AquaMatch_harmonize_WQP): This repository contains code that applies quality control to the heterogenous dataset resulting from the WQP download. The pipleline applies tiering, flagging, and quality control across WQP parameter groups.
+[AquaMatch_harmonize_WQP](https://github.com/AquaSat/AquaMatch_harmonize_WQP): This repository contains code that applies quality QA to the heterogenous dataset resulting from the WQP download. The pipleline applies tiering, flagging, and quality control across WQP parameter groups.
 
 [AquaMatch_siteSR](https://github.com/AquaSat/AquaMatch_siteSR): This repository contains code that collates locations for acquisition of remote sensing data, and obtains, collates, and applies quality control filters on the resulting data.
 

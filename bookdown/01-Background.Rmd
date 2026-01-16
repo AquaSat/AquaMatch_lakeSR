@@ -11,11 +11,12 @@ Currently, AquaMatch remote sensing products contain data from the historical
 Landsat Collection 2 record from 1984 until the end of 2024, including the
 following missions:
 
--   Landsat 4 Thematic Mapper ("TM")
+-   Landsat 4 Thematic Mapper (TM)
 -   Landsat 5 TM
--   Landsat 7 Enhanced Thematic Mapper Plus ("ETM+")
--   Landsat 8 Operational Land Imager/Thermal Infrared Sensor ("OLI/TIRS")
--   Landsat 9 OLI/TIRS
+-   Landsat 7 Enhanced Thematic Mapper Plus (ETM+ or ETM)
+-   Landsat 8 Operational Land Imager/Thermal Infrared Sensor (OLI/TIRS)
+-   Landsat 9 Operational Land Imager 2/Thermal Infrared Sensor 2 (OLI-2/TIRS-2
+    or OLI/TIRS)
 
 **WARNING: the Landsat Surface Reflectance and Surface Temperature products
 should not be used without applying a handoff coefficient to harmonize data
@@ -28,9 +29,9 @@ future.
 For *in situ* parameter matching, AquaMatch_siteSR currently includes sites from
 the WQP, NWIS, and any sites present in the AquaMatch_harmonize pipeline not
 available via WQP at the time of site collation. At the time of collation, the
-AquaMatch_harmonize pipeline contained data for Secchi disc depth ("SDD")
-[@delatorre], chlorophyll *a* ("chla") [@brousil], dissolved organic carbon
-("DOC") [@brousila], and total suspended solids ("TSS") [@brousilb].
+AquaMatch_harmonize pipeline contained data for Secchi disc depth (SDD)
+[@delatorre], chlorophyll *a* (chla) [@brousil], dissolved organic carbon (DOC)
+[@brousila], and total suspended solids (TSS) [@brousilb].
 
 ## lakeSR Code Architecture
 
@@ -46,35 +47,34 @@ both R and Python programming languages to complete these tasks.
 For all lakes, we aggregate remotely-sensed data via a central location with a
 buffer instead of the entire lake area to reduce processing time and the
 downstream impacts of lakes whose surface crosses World Reference System 2
-("WRS2") path-row boundaries. This {targets} list calculates Pole of
-Inaccessibility ("POI") [e.g. @stefansson1920] for all non-intermittent lakes,
+(WRS-2) path-row boundaries. This {targets} list calculates Pole of
+Inaccessibility (POI) [e.g. @stefansson1920] for all non-intermittent lakes,
 ponds, and reservoirs greater than 1 hectare in surface area and intermittent
 lakes, ponds, and reservoirs greater than 4 hectares using the National
-Hydrography Dataset Plut Version 2 ("NHDPlusV2") polygons using the
-{nhdplusTools} package [@blodgett2023], NHD Best Resolution files for non-CONUS
-waterbodies, and the `poi()` function in the {polylabelr} package
-[@larsson2024]. We limit the inclusion of small intermittent waterbodies
-operating under the assumption that these features are not consistently visible
-via remote sensing. See Section \@ref(locs-data-acq) for additional background
-and detailed methodology.
+Hydrography Dataset Plut Version 2 (NHDPlusV2) polygons using the {nhdplusTools}
+package [@blodgett2023], NHD Best Resolution files for non-CONUS waterbodies,
+and the `poi()` function in the {polylabelr} package [@larsson2024]. We limit
+the inclusion of small intermittent waterbodies operating under the assumption
+that these features are not consistently visible via remote sensing. See Section
+\@ref(locs-data-acq) for additional background and detailed methodology.
 
 This group is either run completely or pulled from existing files based on
 lakeSR general configuration file using the boolean `calculate_centers` setting.
 If set to `FALSE` a version date must be provided in the `centers_version`
 setting. Additional guidance is provided below in Section \@ref(lakesr-config),
 in the README, and in the general configuration file of the lakeSR repository
-("config.yml").
+(`config.yml`).
 
 **b_pull_Landsat_SRST_poi**:
 
 This {targets} group uses the Google Earth Engine configuration file
 `b_pull_Landsat_SRST_poi/config_files/config_poi.yml` and the POI points created
 in the `a_Calculate_Centers` group to pull Landsat Collection 2 Surface
-Reflectance ("SR") and Surface Temperature ("ST") using the Google Earth Engine
-("GEE") Application Programming Interface ("API"). In this group, we use the
-most conservative LS4-7 pixel filters, as we are applying these settings across
-such a large continuum of time and space. This group ends with a branched target
-that sends tasks to GEE by mapping over WRS2 path rows that intersect with the
+Reflectance (SR) and Surface Temperature (ST) using the Google Earth Engine
+(GEE) Application Programming Interface (API). In this group, we use the most
+conservative LS4-7 pixel filters, as we are applying these settings across such
+a large continuum of time and space. This group ends with a branched target that
+sends tasks to GEE by mapping over WRS-2 path rows that intersect with the
 points created in the `a_Calculate_Centers` group. This task-submission process
 is managed by the {targets} workflow which checks for the number of running or
 cued tasks and only sends additional tasks when the total tasks is below a
@@ -322,13 +322,13 @@ This initial group of targets checks the configuration settings in `config.yml`.
 This {targets} group collates the sites from the WQP, NWIS, and the AquaMatch
 harmonization pipeline, creating a list of locations to acquire remote sensing
 data. All locations are associated with an eight-digit Hydrologic Unit Code
-("HUC8"), regardless if one is not listed in the metadata for the site from the
+(HUC8), regardless if one is not listed in the metadata for the site from the
 WQP, then we associate points with waterbodies and flowlines of the NHDPlusV2
-for those in the continental United States ("CONUS") or NHD Best Resolution for
-non-CONUS HUCs datasets where HUC8s were able to be assigned. This is a very
-computationally-intensive group of functions and can take multiple days to run
-if `compile_locations` in the config file is set to TRUE. We do not recommend
-running this without at least 64GB memory available on your computer.
+for those in CONUS or NHD Best Resolution for non-CONUS HUCs datasets where
+HUC8s were able to be assigned. This is a very computationally-intensive group
+of functions and can take multiple days to run if `compile_locations` in the
+config file is set to TRUE. We do not recommend running this without at least
+64GB memory available on your computer.
 
 See section \@ref(siteSR-locs) for details on this process.
 
@@ -336,7 +336,7 @@ See section \@ref(siteSR-locs) for details on this process.
 
 The resulting list of *in situ* locations are used to assess remote-sensing
 visibility in this {targets} group. Sites are assessed for visibility using the
-European Commision's Joint Reserach Centre ("JRC") Global Surface Water product
+European Commission's Joint Research Centre (JRC) Global Surface Water product
 [@pekel2016] which is based on the historical Landsat record. This {targets}
 group takes a number of hours to run, if the configuration of `run_pekel` is set
 to TRUE. If the configuration is set to FALSE, run time will be dependent on
