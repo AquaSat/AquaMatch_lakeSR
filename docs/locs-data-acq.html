@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2026-01-15" />
+<meta name="date" content="2026-01-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -318,7 +318,7 @@ Landsat data within a 120 meter radius of a defined location. For siteSR, we use
 a 200 meter buffer.</p>
 <p>AquaMatch products summarize data within a buffered area of unique locations
 primarily to reduce computation time versus aggregating the entire lake area and
-to reduce issues with lakes that lie within more than one WRS2 path-row which
+to reduce issues with lakes that lie within more than one WRS-2 path-row which
 would require additional data handling steps at both the remote sensing and
 post-hoc filter steps to provide consistent data summaries. This may mean that
 each waterbody has differing proportions of the area represented in the data
@@ -352,15 +352,15 @@ the NHD file. If the <a href="https://www.usgs.gov/ngp-standards-and-specificati
 (FType)</a>
 of the waterbody is assigned to an intermittent category (39001, 39005, 39006,
 43614) the threshold for inclusion was increased to 0.04 km<sup>2</sup> (4 hectares) to
-reduce processing time when extracting data from Google Earth Engine assuming
-that intermittent waterbodies smaller than 4 hectares would not normally be
-“visible” in remote sensing images (see Section <a href="locs-data-acq.html#rs-vis">3.2.1</a>). This filtering
-resulted in 729,941 waterbodies
-included in our dataset, including 313,248
-non-CONUS waterbodies. This is a
+reduce processing time when extracting data from GEE assuming that intermittent
+waterbodies smaller than 4 hectares would not normally be “visible” in remote
+sensing images (see Section <a href="locs-data-acq.html#rs-vis">3.2.1</a>). This filtering resulted in
+729,941 waterbodies included in our
+dataset, including 313,248 non-CONUS
+waterbodies. This is a
 1,185
 percent increase over the 56,792 lakes included in the original AquaSat product.</p>
-<p>For each waterbody, the Pole of Inaccessibility (see Section <a href="locs-data-acq.html#poi">3.1.2</a>) and
+<p>For each waterbody, the pole of inaccessibility (see Section <a href="locs-data-acq.html#poi">3.1.2</a>) and
 distance-to-shore radius was calculated using the <code>polylabelr::poi()</code> function.</p>
 <div id="updates-in-aquamatch" class="section level3 hasAnchor" number="3.1.1">
 <h3><span class="header-section-number">3.1.1</span> Updates in AquaMatch<a href="locs-data-acq.html#updates-in-aquamatch" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -383,7 +383,7 @@ States and permanently inhabited territories.</p>
 polygons than the HydroLakes shapes, which makes it computationally impossible
 to use the Chebyshev Center <span class="citation">(“deepest point,” Yang 2020)</span> calculation used in
 LimnoSat-US due to the number of vertices in each polygon. To replace this
-important step in the update, we employ the concept of “pole of inaccessibility”
+important step in the update, we employ the concept of pole of inaccessibility
 <span class="citation">(POI, Stefansson 1920)</span>.</p>
 <p>The concept of POI is used to define the geographic center of a circle with the
 largest circumference within any complex polygon. The foundational principle is
@@ -411,33 +411,34 @@ this time.</p>
 <h3><span class="header-section-number">3.1.3</span> Technical Implementation of lakeSR<a href="locs-data-acq.html#technical-implementation-of-lakesr" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The processing begins by acquiring the polygons of all US states and territories
 using the {tigris} package <span class="citation">(Walker 2025)</span>. These polygons are used to acquire a
-list of four-digit Hydrologic Unit Codes (“HUC4s”) that intersect with each
-municipal boundary using the <code>nhdplusTools::get_huc()</code> function, which are then
-reduced to distinct HUC4’s and transformed into a vector of HUC4s. HUC4s are
-then split into CONUS (HUC4 &lt; 1900) and non-CONUS (HUC4 ≥ 1900) groups. To
-efficiently calculate the POI across hundreds of HUC4s, we use the {targets}
-dynamic branching feature to iterate over each HUC4. For each HUC4, the
-NHDPlusV2 (CONUS) or NHD Best Resolution (non-CONUS) waterbodies are acquired
-and filtered for lake/ponds and reservoirs of at least 1 hectare in area or 4
-hectares for intermittent lake/ponds or reservoirs.</p>
+list of HUC4s that intersect with each municipal boundary using the
+<code>nhdplusTools::get_huc()</code> function, which are then reduced to distinct HUC4’s
+and transformed into a vector of HUC4s. HUC4s are then split into CONUS (HUC4 &lt;
+1900) and non-CONUS (HUC4 ≥ 1900) groups. To efficiently calculate the POI
+across hundreds of HUC4s, we use the {targets} dynamic branching feature to
+iterate over each HUC4. For each HUC4, the NHDPlusV2 (CONUS) or NHD Best
+Resolution (non-CONUS) waterbodies are acquired and filtered for lake/ponds and
+reservoirs of at least 1 hectare in area or 4 hectares for intermittent
+lake/ponds or reservoirs.</p>
 <p>In order to accurately calculate distance-to-shore when using the
 <code>polylabelr::poi()</code> function as described in Section <a href="locs-data-acq.html#waterbodies">3.1</a>, each
 waterbody was converted to the proper Universal Transverse Mercator (“UTM”)
 projection calculated from the mean longitudinal value of the polygon vertices
 prior to applying the poi() function. By using the point-local UTM projection,
-we decrease distortion expected from any single CRS used to represent all of the
-locations from which we have lakes. The latitude and longitude values of the POI
-were transformed to decimal degrees in World Geodetic System 1984 (WGS84,
-EPSG:4326) from UTM easting and northing coordinates for use later in the
-workflow. Within the data presented in optical remote sensing products from
-AquaMatch, we do not currently flag reflectance data for possible bottom
-reflectance signals (that is, we do not signifiy whether the optical reflectance
-values are wholly attributable to the water column or whether there may be
-signals of bottom reflectance due to clear water/shallow bathymetry at the given
-location). Users should consider that, especially at sites where the distance to
-shore is small or where the waterbody is particularly shallow, that there may be
-bottom reflectance introduced into the remote sensing summaries. We encourage
-users to consider this in their analysis and interpretation of the data.</p>
+we decrease distortion expected from any single coordinate reference system used
+to represent all of the locations from which we have lakes. The latitude and
+longitude values of the POI were transformed to decimal degrees in World
+Geodetic System 1984 (WGS84, EPSG:4326) from UTM easting and northing
+coordinates for use later in the workflow. Within the data presented in optical
+remote sensing products from AquaMatch, we do not currently flag reflectance
+data for possible bottom reflectance signals (that is, we do not signify whether
+the optical reflectance values are wholly attributable to the water column or
+whether there may be signals of bottom reflectance due to clear water/shallow
+bathymetry at the given location). Users should consider that, especially at
+sites where the distance to shore is small or where the waterbody is
+particularly shallow, that there may be bottom reflectance introduced into the
+remote sensing summaries. We encourage users to consider this in their analysis
+and interpretation of the data.</p>
 <p>Note: AquaMatch assumes static water elevation and inundation area based on the
 associated NHD features. Given this, users should consider whether elevational
 changes in surface water height (and therefore inundation area) may impact their
@@ -468,9 +469,9 @@ the lakeSR data.</p>
 used for GEE extraction (defined in the lakeSR GEE configuration file) to the
 pixel size of the sensor used for reflectance detection (see Section
 <a href="LS-C2-SRST.html#sensor-resolution">5.2.2</a> for details). For optical bands (Red, Green, Blue, Near
-Infrared (“Nir”), Short Wave Infrared (“Swir”)) we use the site buffer plus 30
+Infrared (NIR), Short Wave Infrared (SWIR)) we use the site buffer plus 30
 meters. For thermal bands, we create 3 flag columns for each sensor’s (Landsat
-4/5: TM, Landsat 7: ETM, Landsat 8/9: TIRS) native thermal resolution (120, 60,
+4/5: TM, Landsat 7: ETM+, Landsat 8/9: TIRS) native thermal resolution (120, 60,
 100 meters). These flags are binary and are included in the lakeSR site file as
 the flag columns <code>flag_optical_shoreline</code>, <code>flag_thermal_TM_shoreline</code>,
 <code>flag_thermal_ETM_shoreline</code>, <code>flag_thermal_TIRS_shoreline</code>:</p>
@@ -534,8 +535,8 @@ sites from the WQP.</p>
 Figure 3.3: Water Quality Portal data location types present in siteSR. Unique WQP monitoring location count above bar, divided by <code>MonitoringLocationTypeName</code>.
 </p>
 </div>
-<p>Similarly, every site in the NWIS database has a <code>site_tp_cd</code> associated with
-it. Within siteSR there are
+<p>Similarly, every site in the NWIS database has a site type code (<code>site_tp_cd</code>)
+associated with it. Within siteSR there are
 191,466
 sites from NWIS.</p>
 <div class="figure"><span style="display:block;" id="fig:siteSR-types-NWIS"></span>
@@ -673,11 +674,11 @@ sites. For sites with a distance to shore value, we also provide a diagnostic
 column that indicates likelihood of shoreline contamination within the scope of
 Landsat extraction. To determine the possibility of shoreline contamination, we
 add the site buffer used for GEE extraction (200 m for siteSR) to the pixel size
-of the sensor used for reflectance detection. For optical bands (Red, Green,
-Blue, Nir, Swir) we use the site buffer plus 30 meters
-(<code>flag_optical_shoreline</code>). For thermal bands, we create 3 flag columns for each
-sensor’s native thermal resolution (Landsat 4/5: TM 120m
-<code>flag_thermal_TM_shoreline</code>, Landsat 7: ETM 60 m <code>flag_thermal_ETM_shoreline</code>,
+of the sensor used for reflectance detection. For optical sensor bands (Red,
+Green, Blue, NIR, SWIR) we use the site buffer plus 30 meters
+(<code>flag_optical_shoreline</code>). For thermal sensor bands, we create 3 flag columns
+for each sensor’s native thermal resolution (Landsat 4/5: TM 120m
+<code>flag_thermal_TM_shoreline</code>, Landsat 7: ETM+ 60 m <code>flag_thermal_ETM_shoreline</code>,
 Landsat 8/9: TIRS 100m <code>flag_thermal_TIRS_shoreline</code>). These flags are binary
 values in the siteSR site file for sites with a flag_wb value of 0 (indicating
 that the site is inside of the NHD waterbody feature):</p>
@@ -723,16 +724,17 @@ flowlines, or combinations thereof have on the validity of the reflectance data
 or thermal data summary.</p>
 <p>We provide these identifiers and additional metadata about the sites to help
 users make informed decisions about remote sensing data quality (specifically,
-related to edge/shoreline contamination) and NHD comid/permanent id attribution
-to individual sites and any available flags to assess uncertainty to those
-assignments or the buffered area relative to the site.</p>
+related to edge/shoreline contamination) and NHD common unique identifier
+(COMID) or permanent identifier attribution to individual sites and any
+available flags to assess uncertainty to those assignments or the buffered area
+relative to the site.</p>
 <p>Note that the siteSR site file noted above collates NHD Best Resolution
 permanent identifiers and NHDPlusV2 comid values into a column for waterbody
 features <code>wb_nhd_id</code> and one for flowline features <code>fl_nhd_id</code>. The upstream
 source of the NHD data is noted in <code>wb_nhd_source</code> and <code>fl_nhd_source</code> columns
 to allow users to know whether the value in the <code>wb_nhd_id</code> or <code>fl_nhd_id</code>
-columns is a NHD Best Resolution permanent identifier (“NHDBestRes”) or a
-NHDPlusV2 comid (“NHDPlusV2”).</p>
+columns is a NHD Best Resolution permanent identifier (NHDBestRes) or a
+NHDPlusV2 COMID (NHDPlusV2).</p>
 </div>
 <div id="assessing-for-remote-sensing-visibility" class="section level3 hasAnchor" number="3.2.3">
 <h3><span class="header-section-number">3.2.3</span> Assessing for remote sensing visibility<a href="locs-data-acq.html#assessing-for-remote-sensing-visibility" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -742,14 +744,14 @@ where we only acquire data for lakes, reservoirs and ponds according to the NHD.
 This was a functional choice, as estuary extents are limited in the NHD (and
 when present the technique to determine the POI may not be appropriate).</p>
 <p>We use the European Commission’s JRC Global Surface Water Mapping Layers v1.4
-<span class="citation">(Pekel et al. 2016)</span> to determine whether or not sites are visible by remote sensing
-(“RS visible”) and should therefore be sent through the GEE data acquisition
-process detailed in Section <a href="LS-SRST-pull.html#LS-SRST-pull">6</a>. The JRC surface water dataset
-is a compilation of 38 years of the Landsat record and enumerates the proportion
-of time a single 30x30 meter pixel has the presence of water. As long as a
-siteSR site location has at least one pixel designated as being occupied by
-water at least 80% of the time during that 38 year period within a 200 meter
-radius, we include the site in the list for which we acquire Landsat stacks.</p>
+<span class="citation">(Pekel et al. 2016)</span> to determine whether or not sites are visible by remote sensing (RS
+visible) and should therefore be sent through the GEE data acquisition process
+detailed in Section <a href="LS-SRST-pull.html#LS-SRST-pull">6</a>. The JRC surface water dataset is a
+compilation of 38 years of the Landsat record and enumerates the proportion of
+time a single 30x30 meter pixel has the presence of water. As long as a siteSR
+site location has at least one pixel designated as being occupied by water at
+least 80% of the time during that 38 year period within a 200 meter radius, we
+include the site in the list for which we acquire Landsat stacks.</p>
 <p>After assessing for remote sensing visibility,
 395,307 sites were deemed to be
 visible by remote sensing

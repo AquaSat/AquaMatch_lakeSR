@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2026-01-15" />
+<meta name="date" content="2026-01-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -442,7 +442,7 @@ siteSR workflow, versions used, and the associated citation.</p>
 </div>
 <div id="reticulate-conda-environment" class="section level2 hasAnchor" number="4.2">
 <h2><span class="header-section-number">4.2</span> {reticulate} Conda Environment<a href="software-settings.html#reticulate-conda-environment" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>RStudio <span class="citation">(Posit team 2023)</span> is an IDE that, alongside the {reticulate} package
+<p>RStudio <span class="citation">(Posit team 2023)</span> is an integrated development environment that, alongside the {reticulate} package
 <span class="citation">(Ushey, Allaire, and Tang 2025)</span>, facilitates integration of R and Python code within the same
 environment. In AquaMatch, we use <a href="https://github.com/AquaSat/lakeSR/blob/main/python/pySetup.R">a single R
 script</a> to set up
@@ -502,7 +502,7 @@ pipeline to assure a smooth run of the workflow.</p>
 <div id="google-earth-engine-setup" class="section level2 hasAnchor" number="4.3">
 <h2><span class="header-section-number">4.3</span> Google Earth Engine Setup<a href="software-settings.html#google-earth-engine-setup" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>If running the ‘admin_update’ configuration for either lakeSR or siteSR, you
-will need to have a GEE account, the gcloud Command Line Interface (“CLI”) installed and configured, create
+will need to have a GEE account, the gcloud Command Line Interface (CLI) installed and configured, create
 an Earth Engine Project, have successful authenticated your account, and you
 will need to alter the configuration file. All of these tasks are described in
 the section below.</p>
@@ -541,7 +541,7 @@ Project that is managed by the Google Account you authenticate this run with.</p
 <div id="auth" class="section level3 hasAnchor" number="4.3.4">
 <h3><span class="header-section-number">4.3.4</span> GEE Authentication<a href="software-settings.html#auth" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Once <code>gcloud</code> is installed and initialized, the configuration file is properly
-set up, and the Conda environment is set up, you can authenticate your GEE
+set up, and the Python Conda environment is set up, you can authenticate your GEE
 instance. For this workflow, this is completed in the <code>run_targets.Rmd</code> script
 at the root directory. This script provides explicit directions to complete this
 task before running the pipeline.</p>
