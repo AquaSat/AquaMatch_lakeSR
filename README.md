@@ -137,8 +137,4 @@ purposes only and does not imply endorsement by the U.S. Government.
 
 ## Disclaimer
 
-These data are preliminary or provisional and are subject to revision. They are 
-being provided to meet the need for timely best science. The data have not received 
-final approval by the U.S. Geological Survey (USGS) and are provided on the 
-condition that neither the USGS nor the U.S. Government shall be held liable 
-for any damages resulting from the authorized or unauthorized use of the data.
+Unless otherwise stated, all data, metadata and related materials are considered to satisfy the quality standards relative to the purpose for which the data were collected. Although these data and associated metadata have been reviewed for accuracy and completeness and approved for release by the U.S. Geological Survey (USGS), no warranty expressed or implied is made regarding the display or utility of the data for other purposes, nor on all computer systems, nor shall the act of distribution constitute any such warranty.
