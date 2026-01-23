@@ -5,7 +5,7 @@ editor_options:
 bibliography: references.bib
 ---
 
-# Landsat Collection 2 SRST {#LS-C2-SRST}
+# Landsat Collection 2 SR & ST {#LS-C2-SRST}
 
 ## Initialisms and Landsat Jargon
 
@@ -16,7 +16,7 @@ bibliography: references.bib
 *Collection 2 (C2)*: The second version of the Landsat record - the transition
 to C2 began in 2020. There were extensive changes to the data storage and
 metadata when moving from Collection 1 to C2. An overview of the differences is
-available as a PDF download
+available as a Portable Document Format ("PDF") download
 [here](https://www.usgs.gov/media/files/landsat-collection-1-vs-collection-2-summary)
 from the USGS. AquaSat v1 and LimnoSat-US were based on Collection 1 data, which
 are no longer available from the USGS and have been superseded by Collection 2
@@ -58,13 +58,33 @@ relevant to the creation and use of lakeSR.*
 The Landsat archive of multispectral and thermal data in lakeSR is composed of
 Landsat missions 4 through 9 and spans more than 40 years.
 
-| Mission and Sensor | Launch Date | End of Science Mission | Decommission Date | Date Range Included in AquaMatch |
-|----|:--:|:--:|:--:|----|
-| Landsat 4 TM [@eroscenter] | 1982-07-16 | 1993-12-14 | 2001-06-15 | Launch Date through End of Science Mission |
-| Landsat 5 TM [@eroscenter] | 1984-03-01 | 2011-11-18 | 2013-06-05 | Launch Date through End of Science Mission |
-| Landsat 7 ETM+ [@eros1999] | 1999-04-15 | 2022-04-06 | 2025-06-04 | 1999-05-28 through 2019-12-31 |
-| Landsat 8 OLI/TIRS [@eros2013] | 2013-02-11 | N/A | N/A | Launch Date through 2024-12-31 |
-| Landsat 9 OLI-2/TIRS-2 [@eros2013] | 2021-09-27 | N/A | N/A | Launch Date through 2024-12-31 |
++--------------+--------------+--------------+--------------+--------------+
+| Mission and  | Launch Date  | End of       | Decommission | Date Range   |
+| Sensor       |              | Science      | Date         | Included in  |
+|              |              | Mission      |              | AquaMatch    |
++==============+:============:+:============:+:============:+==============+
+| Landsat 4 TM | 1982-07-16   | 1993-12-14   | 2001-06-15   | Launch Date  |
+| [            |              |              |              | through End  |
+| @eroscenter] |              |              |              | of Science   |
+|              |              |              |              | Mission      |
++--------------+--------------+--------------+--------------+--------------+
+| Landsat 5 TM | 1984-03-01   | 2011-11-18   | 2013-06-05   | Launch Date  |
+| [            |              |              |              | through End  |
+| @eroscenter] |              |              |              | of Science   |
+|              |              |              |              | Mission      |
++--------------+--------------+--------------+--------------+--------------+
+| Landsat 7    | 1999-04-15   | 2022-04-06   | 2025-06-04   | 1999-05-28   |
+| ETM+         |              |              |              | through      |
+| [@eros1999]  |              |              |              | 2019-12-31   |
++--------------+--------------+--------------+--------------+--------------+
+| Landsat 8    | 2013-02-11   | N/A          | N/A          | Launch Date  |
+| OLI/TIRS     |              |              |              | through      |
+| [@eros2013]  |              |              |              | 2024-12-31   |
++--------------+--------------+--------------+--------------+--------------+
+| Landsat 9    | 2021-09-27   | N/A          | N/A          | Launch Date  |
+| OLI-2/TIRS-2 |              |              |              | through      |
+| [@eros2013]  |              |              |              | 2024-12-31   |
++--------------+--------------+--------------+--------------+--------------+
 
 The image record for Landsat 4 is not consistent nor robust due to a data
 transmitter failure early in service, however our pipeline acquires data as
@@ -98,24 +118,45 @@ ETM+ = Landsat 7, OLI/TIRS = Landsat 8, and OLI-2/TIRS-2 = Landsat
 
 As depicted in the above figure, band designations have changed over time. The
 AquaMatch workflow automatically renames the band designation from a number
-(e.g. B1, B2, B3) to an assigned name (e.g. Blue, Green, Red, Landsat 4-7, but
-Aerosol, Blue, Green for Landsat 8/9) within the Google Earth Engine script and
-prior to exporting data for inclusion in this workflow. The table below denotes
-how these designations have been applied in AquaMatch.
+(e.g. B1 (band 1), B2 (band 2), B3 (band 3), etc) to an assigned name (e.g.
+Blue, Green, Red, Landsat 4-7, but Aerosol, Blue, Green for Landsat 8/9) within
+the Google Earth Engine script and prior to exporting data for inclusion in this
+workflow. The table below denotes how these designations have been applied in
+AquaMatch.
 
-| Band Label/Value | Landsat 4-7 Name | Landsat 8/9 Name |
-|----|----|----|
-| B1 | Blue | Aerosol |
-| B2 | Green | Blue |
-| B3 | Red | Green |
-| B4 | Near Infrared "NIR" | Red |
-| B5 | Shortwave Infrared 1 "SWIR1" | Near Infrared "NIR" |
-| B6 | Thermal Band | Shortwave Infrared 1 "SWIR1" |
-| B7 | Shortwave Infrared 2 "SWIR2" | Shortwave Infrared 2 "SWIR2" |
-| B8 | Panchromatic band (not available for Landsat 4, not included in AquaMatch) | Panchromatic (not included in AquaMatch) |
-| B9 | N/A | Cirrus (not included in AquaMatch |
-| B10 | N/A | Thermal Band 1 |
-| B11 | N/A | Thermal Band 2 (not included in AquaMatch) |
++-------------------------+-------------------------+-------------------------+
+| Band Label/Value        | Landsat 4-7 Name        | Landsat 8/9 Name        |
++=========================+=========================+=========================+
+| B1                      | Blue                    | Aerosol                 |
++-------------------------+-------------------------+-------------------------+
+| B2                      | Green                   | Blue                    |
++-------------------------+-------------------------+-------------------------+
+| B3                      | Red                     | Green                   |
++-------------------------+-------------------------+-------------------------+
+| B4                      | Near Infrared "NIR"     | Red                     |
++-------------------------+-------------------------+-------------------------+
+| B5                      | Shortwave Infrared 1    | Near Infrared "NIR"     |
+|                         | "SWIR1"                 |                         |
++-------------------------+-------------------------+-------------------------+
+| B6                      | Thermal Band            | Shortwave Infrared 1    |
+|                         |                         | "SWIR1"                 |
++-------------------------+-------------------------+-------------------------+
+| B7                      | Shortwave Infrared 2    | Shortwave Infrared 2    |
+|                         | "SWIR2"                 | "SWIR2"                 |
++-------------------------+-------------------------+-------------------------+
+| B8                      | Panchromatic band (not  | Panchromatic (not       |
+|                         | available for Landsat   | included in AquaMatch)  |
+|                         | 4, not included in      |                         |
+|                         | AquaMatch)              |                         |
++-------------------------+-------------------------+-------------------------+
+| B9                      | N/A                     | Cirrus (not included in |
+|                         |                         | AquaMatch               |
++-------------------------+-------------------------+-------------------------+
+| B10                     | N/A                     | Thermal Band 1          |
++-------------------------+-------------------------+-------------------------+
+| B11                     | N/A                     | Thermal Band 2 (not     |
+|                         |                         | included in AquaMatch)  |
++-------------------------+-------------------------+-------------------------+
 
 : Band number and band designation across the Landsat archive. The panchromatic
 band is not part of the Level 2 Surface Reflectance Product, and is therefore
@@ -126,20 +167,20 @@ processed to the Surface Reflectance product, but rather used to define QA band
 ### Sensor Resolution {#sensor-resolution}
 
 The spatial resolution of the Level 1 data that the SR and ST products are
-derived from has not changed for optical bands over time (Aerosol, RGB, NIR,
-SWIR) but has varied over the historic record for thermal data:
+derived from has not changed for optical bands over time (Aerosol, Red, Green,
+Blue, NIR, SWIR) but has varied over the historic record for thermal data:
 
-+--------------+---------------+---------------+
-| Sensors      | Optical Bands | Thermal Bands |
-+:============:+:=============:+:=============:+
-| TM           | 30            | 120           |
-+--------------+---------------+---------------+
-| ETM+         | 30            | 60            |
-+--------------+---------------+---------------+
-| OLI/TIRS     | 30            | 100           |
-|              |               |               |
-| OLI-2/TIRS-2 |               |               |
-+--------------+---------------+---------------+
++-----------------+-----------------+-----------------+
+| Sensors         | Optical Bands   | Thermal Bands   |
++:===============:+:===============:+:===============:+
+| TM              | 30              | 120             |
++-----------------+-----------------+-----------------+
+| ETM+            | 30              | 60              |
++-----------------+-----------------+-----------------+
+| OLI/TIRS        | 30              | 100             |
+|                 |                 |                 |
+| OLI-2/TIRS-2    |                 |                 |
++-----------------+-----------------+-----------------+
 
 All Collection 2 Level 2 Surface Reflectance and Surface Temperature data have
 been resampled to 30m.
@@ -170,7 +211,8 @@ use of lakeSR and siteSR products.*
 The Landsat C2 SR product is a Level 2 data product that has been
 atmospherically corrected from the Level 1 Top of Atmosphere product using a
 myriad of inputs to create a reasonably consistent data product across space and
-time. The USGS EROS describes the SR product as follows:
+time. The USGS Earth Resources Observation and Science (EROS) Center describes
+the SR product as follows:
 
 > *Surface reflectance improves comparison between multiple images over the same
 > region by accounting for atmospheric effects such as aerosol scattering and
@@ -200,13 +242,13 @@ product page and has been summarized here for the purpose of providing
 background information about the Landsat archive relevant to the creation and
 use of lakeSR and siteSR products.*
 
-The Landsat Collection 2 Surface Temperature (ST) product is calculated using a
+The Landsat Collection 2 Surface Temperature product is calculated using a
 single-channel algorithm [@cook2014] to convert the thermal band data to
 temperature estimates in degrees Kelvin. While these data are considered
 interoperable over space and time with few differences in the ST algorithm
 product within Collection 2, there do appear to be slight differences in the ST
 product between sensors. Like with the surface reflectance product, we calculate
-between-mission handoffs for the TM/ETM/TIRS products in Section
+between-mission handoffs for the TM/ETM+/TIRS products in Section
 \@ref(define-handoff).
 
 It is important to note that the thermal band spatial resolution is coarser than

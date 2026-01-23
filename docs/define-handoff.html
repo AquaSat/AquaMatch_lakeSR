@@ -4,26 +4,26 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>8 Calculating intermission handoffs | AquaMatch: lakeSR and siteSR</title>
-  <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  <title>8 Calculating intermission handoffs | AquaMatch: Lake Surface Reflectance (lakeSR) and Site Surface Reflectance (siteSR)</title>
+  <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US territories." />
   <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="8 Calculating intermission handoffs | AquaMatch: lakeSR and siteSR" />
+  <meta property="og:title" content="8 Calculating intermission handoffs | AquaMatch: Lake Surface Reflectance (lakeSR) and Site Surface Reflectance (siteSR)" />
   <meta property="og:type" content="book" />
   
-  <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  <meta property="og:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US territories." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="8 Calculating intermission handoffs | AquaMatch: lakeSR and siteSR" />
+  <meta name="twitter:title" content="8 Calculating intermission handoffs | AquaMatch: Lake Surface Reflectance (lakeSR) and Site Surface Reflectance (siteSR)" />
   
-  <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US Territories." />
+  <meta name="twitter:description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US territories." />
   
 
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2025-12-03" />
+<meta name="date" content="2026-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -215,7 +215,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.3.4" data-path="software-settings.html"><a href="software-settings.html#auth"><i class="fa fa-check"></i><b>4.3.4</b> GEE Authentication</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SRST</a>
+<li class="chapter" data-level="5" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html"><i class="fa fa-check"></i><b>5</b> Landsat Collection 2 SR &amp; ST</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#initialisms-and-landsat-jargon"><i class="fa fa-check"></i><b>5.1</b> Initialisms and Landsat Jargon</a></li>
 <li class="chapter" data-level="5.2" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#valid-dates"><i class="fa fa-check"></i><b>5.2</b> Background Information</a>
@@ -229,7 +229,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="5.4" data-path="LS-C2-SRST.html"><a href="LS-C2-SRST.html#st-product"><i class="fa fa-check"></i><b>5.4</b> Surface Temperature</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html"><i class="fa fa-check"></i><b>6</b> Landsat Collection 2 SRST Data Product</a>
+<li class="chapter" data-level="6" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html"><i class="fa fa-check"></i><b>6</b> Landsat Collection 2 SR ST Data Product</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#changes-from-aquasat-v1-and-limnosat-us"><i class="fa fa-check"></i><b>6.1</b> Changes from AquaSat v1 and LimnoSat-US</a></li>
 <li class="chapter" data-level="6.2" data-path="LS-SRST-pull.html"><a href="LS-SRST-pull.html#overview-of-acquisition-steps"><i class="fa fa-check"></i><b>6.2</b> Overview of Acquisition Steps</a>
@@ -285,7 +285,7 @@ div.csl-indent {
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AquaMatch: lakeSR and siteSR</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AquaMatch: Lake Surface Reflectance (lakeSR) and Site Surface Reflectance (siteSR)</a>
           </h1>
         </div>
 
@@ -298,7 +298,7 @@ div.csl-indent {
 <p>It is necessary to standardize band values between Landsat missions in order to
 create a robust timeseries. <span class="citation">Maciel et al. (2023)</span> notes the issues in using the Landsat
 Surface Reflectance product for aquatic systems as a timeseries without careful
-handling of data between missions. <span class="citation">King et al. (2024)</span> notes that this type of standardization
+handling of data between missions. <span class="citation">King et al. (2025)</span> notes that this type of standardization
 is necessary for the thermal band, as well. This standardization process
 attempts to address changes in sensor spectral response and atmospheric
 correction procedures. For the purposes of AquaMatch, we call this
@@ -362,12 +362,13 @@ of the explicit filters described in the Roy method (saturated pixels,
 cloudy/snowy pixels, and pixels with value changes greater than the changes in
 atmospheric correction), as we have implemented masks and QA filters to reduce
 these sources of error. Handoff coefficients are defined by the ordinary least
-squares (OLS) regression line or the Deming regression (MLE, assuming equal and
-constant error in both x and y variables). Because Deming regression is
-computationally intensive, the regression line is defined by a random sample of
-10,000 matches. For the purposes of this documentation, we only include figures
-and tables for the Deming regression (minimum likelihood estimation method) and
-DSWE1. Intercepts and slopes for all handoffs are available at the file path
+squares (OLS) regression line or the Deming regression (minimum likelihood
+estimation or MLE, assuming equal and constant error in both x and y variables).
+Because Deming regression is computationally intensive, the regression line is
+defined by a random sample of 10,000 matches. For the purposes of this
+documentation, we only include figures and tables for the Deming regression
+(minimum likelihood estimation method) and DSWE1. Intercepts and slopes for all
+handoffs are available at the file path
 <code>e_calculate_handoffs/out/lakeSR_collated_handoffs_GEEv2025-02-12_QAv2025-06-04.csv</code>
 and figures for all handoffs are created when the pipeline is run.</p>
 </div>
@@ -387,10 +388,10 @@ extreme caution.</p>
 number of observations is high, if there is a difference between total
 observations contributing to the quantile summaries, there may be systematic
 differences built into the coefficients. An example of possible systematic
-differences could be fewer observations from non-CONUS locations in Landsat 5
-due to data transmission errors. We did not investigate the differences in
-number of images listed in Table <a href="define-handoff.html#tab:gardner-table">8.4</a> to determine what, if
-any, systematic differences are present between the two missions. We provide the
+differences could be fewer observations from oCONUS locations in Landsat 5 due
+to data transmission errors. We did not investigate the differences in number of
+images listed in Table <a href="define-handoff.html#tab:gardner-table">8.4</a> to determine what, if any,
+systematic differences are present between the two missions. We provide the
 Gardner method handoffs for continuity with the riverSR product for users who
 would like that interoperability. As with the Roy, et al. method, intercepts and
 slopes for all handoffs are available at the file path

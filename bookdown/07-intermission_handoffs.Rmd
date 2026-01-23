@@ -107,12 +107,13 @@ of the explicit filters described in the Roy method (saturated pixels,
 cloudy/snowy pixels, and pixels with value changes greater than the changes in
 atmospheric correction), as we have implemented masks and QA filters to reduce
 these sources of error. Handoff coefficients are defined by the ordinary least
-squares (OLS) regression line or the Deming regression (MLE, assuming equal and
-constant error in both x and y variables). Because Deming regression is
-computationally intensive, the regression line is defined by a random sample of
-10,000 matches. For the purposes of this documentation, we only include figures
-and tables for the Deming regression (minimum likelihood estimation method) and
-DSWE1. Intercepts and slopes for all handoffs are available at the file path
+squares (OLS) regression line or the Deming regression (minimum likelihood
+estimation or MLE, assuming equal and constant error in both x and y variables).
+Because Deming regression is computationally intensive, the regression line is
+defined by a random sample of 10,000 matches. For the purposes of this
+documentation, we only include figures and tables for the Deming regression
+(minimum likelihood estimation method) and DSWE1. Intercepts and slopes for all
+handoffs are available at the file path
 `e_calculate_handoffs/out/lakeSR_collated_handoffs_GEEv2025-02-12_QAv2025-06-04.csv`
 and figures for all handoffs are created when the pipeline is run.
 
@@ -133,10 +134,10 @@ One additional consideration when using the Gardner method is, even when the
 number of observations is high, if there is a difference between total
 observations contributing to the quantile summaries, there may be systematic
 differences built into the coefficients. An example of possible systematic
-differences could be fewer observations from non-CONUS locations in Landsat 5
-due to data transmission errors. We did not investigate the differences in
-number of images listed in Table \@ref(tab:gardner-table) to determine what, if
-any, systematic differences are present between the two missions. We provide the
+differences could be fewer observations from oCONUS locations in Landsat 5 due
+to data transmission errors. We did not investigate the differences in number of
+images listed in Table \@ref(tab:gardner-table) to determine what, if any,
+systematic differences are present between the two missions. We provide the
 Gardner method handoffs for continuity with the riverSR product for users who
 would like that interoperability. As with the Roy, et al. method, intercepts and
 slopes for all handoffs are available at the file path
