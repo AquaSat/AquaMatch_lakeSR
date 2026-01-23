@@ -47,7 +47,7 @@ Full documentation of the WQP download and quality assurance (QA) process from t
 
 [AquaMatch_download_WQP](https://github.com/AquaSat/AquaMatch_download_WQP): This repository contains code that downloads parameters from the WQP using the {dataRetrieval} package.
 
-[AquaMatch_harmonize_WQP](https://github.com/AquaSat/AquaMatch_harmonize_WQP): This repository contains code that applies quality QA to the heterogenous dataset resulting from the WQP download. The pipleline applies tiering, flagging, and quality control across WQP parameter groups.
+[AquaMatch_harmonize_WQP](https://github.com/AquaSat/AquaMatch_harmonize_WQP): This repository contains code that applies QA steps to the heterogenous dataset resulting from the WQP download. The pipleline applies tiering, flagging, and quality control across WQP parameter groups.
 
 [AquaMatch_siteSR](https://github.com/AquaSat/AquaMatch_siteSR): This repository contains code that collates locations for acquisition of remote sensing data, and obtains, collates, and applies quality control filters on the resulting data.
 

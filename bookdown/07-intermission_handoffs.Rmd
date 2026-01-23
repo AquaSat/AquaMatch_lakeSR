@@ -134,10 +134,10 @@ One additional consideration when using the Gardner method is, even when the
 number of observations is high, if there is a difference between total
 observations contributing to the quantile summaries, there may be systematic
 differences built into the coefficients. An example of possible systematic
-differences could be fewer observations from non-CONUS locations in Landsat 5
-due to data transmission errors. We did not investigate the differences in
-number of images listed in Table \@ref(tab:gardner-table) to determine what, if
-any, systematic differences are present between the two missions. We provide the
+differences could be fewer observations from oCONUS locations in Landsat 5 due
+to data transmission errors. We did not investigate the differences in number of
+images listed in Table \@ref(tab:gardner-table) to determine what, if any,
+systematic differences are present between the two missions. We provide the
 Gardner method handoffs for continuity with the riverSR product for users who
 would like that interoperability. As with the Roy, et al. method, intercepts and
 slopes for all handoffs are available at the file path

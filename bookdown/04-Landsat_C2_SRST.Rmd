@@ -58,33 +58,33 @@ relevant to the creation and use of lakeSR.*
 The Landsat archive of multispectral and thermal data in lakeSR is composed of
 Landsat missions 4 through 9 and spans more than 40 years.
 
-+---------------+---------------+---------------+---------------+---------------+
-| Mission and   | Launch Date   | End of        | Decommission  | Date Range    |
-| Sensor        |               | Science       | Date          | Included in   |
-|               |               | Mission       |               | AquaMatch     |
-+===============+:=============:+:=============:+:=============:+===============+
-| Landsat 4 TM  | 1982-07-16    | 1993-12-14    | 2001-06-15    | Launch Date   |
-| [@eroscenter] |               |               |               | through End   |
-|               |               |               |               | of Science    |
-|               |               |               |               | Mission       |
-+---------------+---------------+---------------+---------------+---------------+
-| Landsat 5 TM  | 1984-03-01    | 2011-11-18    | 2013-06-05    | Launch Date   |
-| [@eroscenter] |               |               |               | through End   |
-|               |               |               |               | of Science    |
-|               |               |               |               | Mission       |
-+---------------+---------------+---------------+---------------+---------------+
-| Landsat 7     | 1999-04-15    | 2022-04-06    | 2025-06-04    | 1999-05-28    |
-| ETM+          |               |               |               | through       |
-| [@eros1999]   |               |               |               | 2019-12-31    |
-+---------------+---------------+---------------+---------------+---------------+
-| Landsat 8     | 2013-02-11    | N/A           | N/A           | Launch Date   |
-| OLI/TIRS      |               |               |               | through       |
-| [@eros2013]   |               |               |               | 2024-12-31    |
-+---------------+---------------+---------------+---------------+---------------+
-| Landsat 9     | 2021-09-27    | N/A           | N/A           | Launch Date   |
-| OLI-2/TIRS-2  |               |               |               | through       |
-| [@eros2013]   |               |               |               | 2024-12-31    |
-+---------------+---------------+---------------+---------------+---------------+
++--------------+--------------+--------------+--------------+--------------+
+| Mission and  | Launch Date  | End of       | Decommission | Date Range   |
+| Sensor       |              | Science      | Date         | Included in  |
+|              |              | Mission      |              | AquaMatch    |
++==============+:============:+:============:+:============:+==============+
+| Landsat 4 TM | 1982-07-16   | 1993-12-14   | 2001-06-15   | Launch Date  |
+| [            |              |              |              | through End  |
+| @eroscenter] |              |              |              | of Science   |
+|              |              |              |              | Mission      |
++--------------+--------------+--------------+--------------+--------------+
+| Landsat 5 TM | 1984-03-01   | 2011-11-18   | 2013-06-05   | Launch Date  |
+| [            |              |              |              | through End  |
+| @eroscenter] |              |              |              | of Science   |
+|              |              |              |              | Mission      |
++--------------+--------------+--------------+--------------+--------------+
+| Landsat 7    | 1999-04-15   | 2022-04-06   | 2025-06-04   | 1999-05-28   |
+| ETM+         |              |              |              | through      |
+| [@eros1999]  |              |              |              | 2019-12-31   |
++--------------+--------------+--------------+--------------+--------------+
+| Landsat 8    | 2013-02-11   | N/A          | N/A          | Launch Date  |
+| OLI/TIRS     |              |              |              | through      |
+| [@eros2013]  |              |              |              | 2024-12-31   |
++--------------+--------------+--------------+--------------+--------------+
+| Landsat 9    | 2021-09-27   | N/A          | N/A          | Launch Date  |
+| OLI-2/TIRS-2 |              |              |              | through      |
+| [@eros2013]  |              |              |              | 2024-12-31   |
++--------------+--------------+--------------+--------------+--------------+
 
 The image record for Landsat 4 is not consistent nor robust due to a data
 transmitter failure early in service, however our pipeline acquires data as
@@ -170,17 +170,17 @@ The spatial resolution of the Level 1 data that the SR and ST products are
 derived from has not changed for optical bands over time (Aerosol, Red, Green,
 Blue, NIR, SWIR) but has varied over the historic record for thermal data:
 
-+----------------+----------------+----------------+
-| Sensors        | Optical Bands  | Thermal Bands  |
-+:==============:+:==============:+:==============:+
-| TM             | 30             | 120            |
-+----------------+----------------+----------------+
-| ETM+           | 30             | 60             |
-+----------------+----------------+----------------+
-| OLI/TIRS       | 30             | 100            |
-|                |                |                |
-| OLI-2/TIRS-2   |                |                |
-+----------------+----------------+----------------+
++-----------------+-----------------+-----------------+
+| Sensors         | Optical Bands   | Thermal Bands   |
++:===============:+:===============:+:===============:+
+| TM              | 30              | 120             |
++-----------------+-----------------+-----------------+
+| ETM+            | 30              | 60              |
++-----------------+-----------------+-----------------+
+| OLI/TIRS        | 30              | 100             |
+|                 |                 |                 |
+| OLI-2/TIRS-2    |                 |                 |
++-----------------+-----------------+-----------------+
 
 All Collection 2 Level 2 Surface Reflectance and Surface Temperature data have
 been resampled to 30m.

@@ -66,10 +66,10 @@ For lakeSR, we use the NHDPlusV2 dataset for lakes within the conterminous US
 using the {nhdplusTools} R package [@blodgett2023] and the NHD Best Resolution
 [e.g. @usgeologicalsurvey] data through The National Map for lakes outside of
 the extent of the conterminous US. Two versions are used because NHDPlusV2
-waterbodies are not available outside of CONUS. The NHD Best Resolution data are
-of slightly higher resolution relative to NHDPlusV2 and are complete and
-available for all states and territories outside CONUS. All waterbody polygons
-were downloaded and processed on `r params$locs_run_date` by HUC4 using the most
+waterbodies are not available outside of CONUS (oCONUS). The NHD Best Resolution
+data are of slightly higher resolution relative to NHDPlusV2 and are complete
+and available for all states and territories oCONUS. All waterbody polygons were
+downloaded and processed on `r params$locs_run_date` by HUC4 using the most
 updated version available at the time of download.
 
 ```{r NHDPlusV2-HUC4, echo=F, fig.cap="NHD HUC4 map for the United States and territories, courtesy of the USGS.", fig.alt="Drawing of the Continental United States with HUC2 boundaries indicated with thick red lines and HUC4 boundaries indcated with thinner red lines. Insets of HUC2 and HUC4 shown for Alaska, Hawaii, Caribbean Region, South Pacific Region."}
@@ -90,7 +90,7 @@ reduce processing time when extracting data from GEE assuming that intermittent
 waterbodies smaller than 4 hectares would not normally be "visible" in remote
 sensing images (see Section \@ref(rs-vis)). This filtering resulted in
 `r format(nrow(a_poi_with_flags), big.mark = ",")` waterbodies included in our
-dataset, including `r format(nrow(nonCONUS), big.mark = ",")` non-CONUS
+dataset, including `r format(nrow(nonCONUS), big.mark = ",")` oCONUS
 waterbodies. This is a
 `r format(round((nrow(a_poi_with_flags)-56792)*100/56792, 0), big.mark = ",")`
 percent increase over the 56,792 lakes included in the original AquaSat product.
@@ -152,12 +152,12 @@ using the {tigris} package [@walker2025]. These polygons are used to acquire a
 list of HUC4s that intersect with each municipal boundary using the
 `nhdplusTools::get_huc()` function, which are then reduced to distinct HUC4's
 and transformed into a vector of HUC4s. HUC4s are then split into CONUS (HUC4 \<
-1900) and non-CONUS (HUC4 ≥ 1900) groups. To efficiently calculate the POI
-across hundreds of HUC4s, we use the {targets} dynamic branching feature to
-iterate over each HUC4. For each HUC4, the NHDPlusV2 (CONUS) or NHD Best
-Resolution (non-CONUS) waterbodies are acquired and filtered for lake/ponds and
-reservoirs of at least 1 hectare in area or 4 hectares for intermittent
-lake/ponds or reservoirs.
+1900) and oCONUS (HUC4 ≥ 1900) groups. To efficiently calculate the POI across
+hundreds of HUC4s, we use the {targets} dynamic branching feature to iterate
+over each HUC4. For each HUC4, the NHDPlusV2 (CONUS) or NHD Best Resolution
+(oCONUS) waterbodies are acquired and filtered for lake/ponds and reservoirs of
+at least 1 hectare in area or 4 hectares for intermittent lake/ponds or
+reservoirs.
 
 In order to accurately calculate distance-to-shore when using the
 `polylabelr::poi()` function as described in Section \@ref(waterbodies), each
