@@ -10,6 +10,8 @@ tab:roy-coeff-dem-corr8
 tab:gardner-table
 tab:gard-coeff-corr7
 tab:gard-coeff-corr8
+tab:dense-example-location
+tab:dense-example-filter
 introduction
 repository-links-for-the-aquamatch-data-suite
 note
@@ -76,11 +78,6 @@ additional-filtering-applied
 roy-method
 gardner-method
 implementing-roy-handoffs
-roy-deming-correction-landsat-5-to-landsat-7
-roy-deming-correction-landsat-8-to-landsat-7
-roy-deming-correction-landsat-7-to-landsat-8
 implementing-gardner-handoffs
-gardner-correction-landsat-5-to-landsat-7
-gardner-correction-landsat-8-to-landsat-7
-gardner-correction-landsat-7-to-landsat-8
+examples-of-raw-rs-data-and-rs-with-handoffs-applied
 references

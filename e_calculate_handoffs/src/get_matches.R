@@ -22,29 +22,32 @@ get_matches <- function(files, dswe, gee_version, qa_version,
   early <- files[grepl(early_LS_mission, files)] %>% 
     .[grepl(qa_version, .)] %>%
     .[grepl(paste0("_", dswe, "_"), .)] %>% 
-    read_feather(.)
+    read_feather(.) %>% 
+    # add early prefix
+    rename_with(~ paste0("early_", .x), recycle0 = TRUE) %>% 
+    # rename id column back
+    rename(lakeSR_id = early_lakeSR_id)
   
   late <- files[grepl(late_LS_mission, files)] %>% 
     .[grepl(qa_version, .)] %>% 
     .[grepl(paste0("_", dswe, "_"), .)] %>% 
-    read_feather(.)
-  
+    read_feather(.) %>% 
+    # add late prefix
+    rename_with(~ paste0("late_", .x), recycle0 = TRUE) %>% 
+    # rename id col back
+    rename(lakeSR_id = late_lakeSR_id)
   
   # prep data ---------------------------------------------------------------
   
   # convert to DT by reference
   setDT(early)
-  # rename date and sat_id columns for join
-  setnames(early, old = c("date", "sat_id"), new = c("early_date", "early_sat_id"))
   # grab pathrow from source
-  early[, early_pathrow := str_extract(source, "(?<=_)\\d{6}(?=_)")]
+  early[, early_pathrow := str_extract(early_source, "(?<=_)\\d{6}(?=_)")]
   
   # convert to DT by reference
   setDT(late)
-  # rename date and sat_id columns for join
-  setnames(late, old = c("date", "sat_id"), new = c("late_date", "late_sat_id"))
   # grab pathrow from source
-  late[, late_pathrow := str_extract(source, "(?<=_)\\d{6}(?=_)")]
+  late[, late_pathrow := str_extract(late_source, "(?<=_)\\d{6}(?=_)")]
   
   # filter conservatively ---------------------------------------------------
   
@@ -74,19 +77,18 @@ get_matches <- function(files, dswe, gee_version, qa_version,
   # in aoi, no flags for temp min/max
   early <- early[
     early_sat_id %in% metadata_early$sat_id &
-      prop_clouds == 0 &
-      flag_temp_min == 0 &
-      flag_temp_max == 0
+      early_prop_clouds == 0 &
+      early_flag_temp_min == 0 &
+      early_flag_temp_max == 0
   ]
-  setnames(early, "mission", "early_mission")
+
   late <- late[
     late_sat_id %in% metadata_late$sat_id &
-      prop_clouds == 0 &
-      flag_temp_min == 0 &
-      flag_temp_max == 0
+      late_prop_clouds == 0 &
+      late_flag_temp_min == 0 &
+      late_flag_temp_max == 0
   ]
-  setnames(late, "mission", "early_mission")
-  
+
   
   # make paired dataset ------------------------------------------------------
   
@@ -107,9 +109,6 @@ get_matches <- function(files, dswe, gee_version, qa_version,
   # do some cache-clearing
   rm(early, late)
   gc()
-  
-  # add dswe info
-  matched[, dswe := dswe]
   
   matched
   

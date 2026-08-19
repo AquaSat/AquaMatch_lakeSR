@@ -232,7 +232,7 @@ handoffs to the filtered lakeSR and siteSR data.
 
 <summary>Roy Deming Handoff and Residual Figures</summary>
 
-### Roy Deming Correction Landsat 5 to Landsat 7
+**Roy Deming Correction Landsat 5 to Landsat 7**
 
 For each of the handoff figures below, the blue line is the Deming (MLE)
 regression, the red dotted line is the OLS regression line, and the grey dashed
@@ -261,7 +261,7 @@ is a 0 intercept, 0 slope line visual aide.
 
 ![](images/roy/residuals/med_SurfaceTemp_LS5_to_LS7_DSWE1_roy_deming_residuals.jpg){width="600"}
 
-### Roy Deming Correction Landsat 8 to Landsat 7
+**Roy Deming Correction Landsat 8 to Landsat 7**
 
 For each of the handoff figures below, the blue solid line is the Deming (MLE)
 regression, the red line is the OLS regression line, and the grey dashed line is
@@ -290,7 +290,7 @@ intercept, 0 slope line visual aide.
 
 ![](images/roy/residuals/med_SurfaceTemp_LS8_to_LS7_DSWE1_roy_deming_residuals.jpg){width="600"}
 
-### Roy Deming Correction Landsat 7 to Landsat 8
+**Roy Deming Correction Landsat 7 to Landsat 8**
 
 For each of the handoff figures below, the blue solid line is the Deming (MLE)
 regression, the red dotted line is the OLS regression line, and the grey dashed
@@ -345,7 +345,7 @@ e_collated_handoffs %>%
   kable(
     format = "html",
     digits = 3,
-    caption = "Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Deming (MLE) regression",
+    caption = "Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Gardner polynomial method",
     align = c('l', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c'),
     col.names = c(
       "Band",
@@ -376,7 +376,7 @@ e_collated_handoffs %>%
   kable(
     format = "html",
     digits = 3,
-    caption = "Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Deming (MLE) regression",
+    caption = "Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Gardner polynomial method",
     align = c('l', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c'),
     col.names = c(
       "Band",
@@ -417,7 +417,7 @@ the filtered lakeSR and siteSR data.
 
 <summary>Gardner Handoff and Residual Figures relative to Landsat 7</summary>
 
-### Gardner Correction Landsat 5 to Landsat 7
+**Gardner Correction Landsat 5 to Landsat 7**
 
 For each of the handoff figures below, the red line is the second order
 polynomial regression and the grey dashed line is the 1:1 line. Coefficients for
@@ -446,7 +446,7 @@ intercept, 0 slope line visual aide.
 
 ![](images/gardner/residuals/med_SurfaceTemp_LS5_to_LS7_DSWE1_gard_residuals.jpg){width="600"}
 
-### Gardner Correction Landsat 8 to Landsat 7
+**Gardner Correction Landsat 8 to Landsat 7**
 
 For each of the handoff figures below, the red line is the second order
 polynomial regression and the grey dashed line is the 1:1 line. Coefficients for
@@ -475,7 +475,7 @@ intercept, 0 slope line visual aide.
 
 ![](images/gardner/residuals/med_SurfaceTemp_LS8_to_LS7_DSWE1_gard_residuals.jpg){width="600"}
 
-### Gardner Correction Landsat 7 to Landsat 8
+**Gardner Correction Landsat 7 to Landsat 8**
 
 For each of the handoff figures below, the red line is the second order
 polynomial regression and the grey dashed line is the 1:1 line. Coefficients for
@@ -505,3 +505,197 @@ intercept, 0 slope line visual aide.
 ![](images/gardner/residuals/med_SurfaceTemp_LS7_to_LS8_DSWE1_gard_residuals.jpg){width="600"}
 
 </details>
+
+## Examples of Raw RS Data and RS with Handoffs Applied
+
+The previous sections describe how the intermission handoff coefficients are
+calculated and provide the coefficient tables and diagnostic figures for each
+method. Here, we walk through what applying those coefficients actually looks
+like for a single, densely-sampled lakeSR record, across all seven bands and
+four Landsat missions used in this pipeline (Landsat 5, 7, 8, and 9). We
+use `lakeSR_id` `1102_668` ("Nee Noshe Reservoir", CO) for this example: it has
+a long, well-populated record across missions (hundreds of observations per
+mission over multiple decades) and, unlike many small or narrow waterbodies in
+lakeSR, it passes the shoreline flags used to fit the handoff coefficients, so
+we can filter it exactly as described in Section
+\@ref(additional-filtering-applied) without losing the whole record.
+
+```{r dense-example-setup}
+library(arrow)
+
+# chapters are knit with the working directory set to bookdown/, but the
+# feather and metadata files below live at repo-root-relative paths (as
+# stored in the {targets} pipeline), so we step back up one level to read them
+repo_path <- function(path) file.path("..", path)
+```
+
+First, we grab this site's location and shoreline flag information from the
+lakeSR POI file:
+
+```{r dense-example-location, echo=TRUE}
+dense_id <- "1102_668"
+
+site_info <- a_poi_with_flags %>%
+  filter(lakeSR_id == dense_id)
+
+site_info %>%
+  select(lakeSR_id, gnis_name, areasqkm, poi_Latitude, poi_Longitude,
+         flag_optical_shoreline, flag_thermal_TM_shoreline,
+         flag_thermal_ETM_shoreline, flag_thermal_TIRS_shoreline) %>%
+  kable(
+    format = "html",
+    digits = 3,
+    col.names = c("lakeSR_id", "GNIS Name", "Area (sq. km)", "Latitude",
+                  "Longitude", "Optical Shoreline Flag",
+                  "TM Thermal Shoreline Flag", "ETM+ Thermal Shoreline Flag",
+                  "TIRS Thermal Shoreline Flag"),
+    caption = "Location and shoreline flag information for the example lakeSR_id, pulled from the lakeSR point-of-interest file."
+  ) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(width = "100%")
+```
+
+Next, we locate the DSWE1 feather files for Landsat 5, 7, 8, and 9 and pull
+the raw band data, QA columns, and scene id for this one site:
+
+```{r dense-example-raw, echo=TRUE}
+band_cols <- c("med_Blue", "med_Green", "med_Red", "med_Nir",
+               "med_Swir1", "med_Swir2", "med_SurfaceTemp")
+
+dense_files <- d_lakeSR_feather_files %>%
+  as.character() %>%
+  .[grepl("Landsat5|Landsat7|Landsat8|Landsat9", .)] %>%
+  .[grepl("_DSWE1_", .)]
+
+dense_raw <- map_dfr(dense_files, function(fp) {
+  read_feather(repo_path(fp), as_data_frame = FALSE) %>%
+    filter(lakeSR_id == dense_id) %>%
+    select(lakeSR_id, date, mission, sat_id, prop_clouds, flag_temp_min,
+           flag_temp_max, all_of(band_cols)) %>%
+    collect()
+  }) %>%
+  mutate(sat_short = paste0("LS", as.numeric(str_sub(mission, 3, 4))),
+         # LS9 has no direct-to-LS7 coefficients; assume it shares LS8's
+         # coefficients for the lookup below, same as elsewhere in this document
+         sat_corr_key = if_else(sat_short == "LS9", "LS8", sat_short))
+```
+
+Before applying the handoffs, we apply the same filtering used to calculate
+the coefficients themselves (see `calculate_roy_handoff()`,
+`calculate_gardner_handoff()`, and their upstream helpers `get_matches()` and
+`get_quantile_values()`, and Section \@ref(additional-filtering-applied)):
+scenes with more than 50% cloud cover, any detected cloud in the buffered
+area, or a flagged minimum/maximum temperature are dropped, and optical or
+thermal band values are dropped entirely if this site is flagged for possible
+shoreline contamination in the relevant band group.
+
+```{r dense-example-filter, echo=TRUE}
+metadata_LS457 <- read_csv(
+  repo_path(paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS457_export_",
+                    d_qa_version_identifier, ".csv")),
+  show_col_types = FALSE) %>%
+  select(sat_id, CLOUD_COVER)
+metadata_LS89 <- read_csv(
+  repo_path(paste0("d_qa_filter_sort/sort/lakeSR_metadata_LS89_export_",
+                    d_qa_version_identifier, ".csv")),
+  show_col_types = FALSE) %>%
+  select(sat_id, CLOUD_COVER)
+metadata_all <- bind_rows(metadata_LS457, metadata_LS89)
+
+# site-level shoreline flags, mapped per mission for the thermal band
+keep_optical <- site_info$flag_optical_shoreline == 0
+thermal_flags <- c(LT05 = site_info$flag_thermal_TM_shoreline,
+                   LE07 = site_info$flag_thermal_ETM_shoreline,
+                   LC08 = site_info$flag_thermal_TIRS_shoreline,
+                   LC09 = site_info$flag_thermal_TIRS_shoreline)
+
+# scene- and row-level QA filters
+dense_qa <- dense_raw %>%
+  left_join(metadata_all, by = "sat_id") %>%
+  mutate(thermal_flag_shoreline = thermal_flags[mission]) %>%
+  filter(prop_clouds == 0,
+         flag_temp_min == 0,
+         flag_temp_max == 0,
+         CLOUD_COVER <= 50)
+
+qa_summary <- dense_raw %>%
+  count(sat_short, name = "n_raw") %>%
+  left_join(dense_qa %>% count(sat_short, name = "n_after_qa_filters"), by = "sat_short")
+
+qa_summary %>%
+  kable(
+    format = "html",
+    caption = "Row counts per mission for lakeSR_id 1102_668 before and after the scene- and row-level QA filters."
+  ) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(width = "100%")
+
+# pivot long and apply the band-level shoreline flags
+dense_long <- dense_qa %>%
+  pivot_longer(cols = all_of(band_cols), names_to = "band", values_to = "value") %>%
+  filter(
+    (band != "med_SurfaceTemp" & keep_optical) |
+      (band == "med_SurfaceTemp" & thermal_flag_shoreline == 0)
+  ) %>%
+  select(lakeSR_id, date, mission, sat_short, sat_corr_key, band, value)
+```
+
+Finally, we apply the Gardner and Roy Deming handoff coefficients (harmonized
+to Landsat 7, DSWE1) to the filtered data, using the same application logic
+described earlier in this chapter:
+
+```{r dense-example-apply, echo=TRUE}
+gardner_coeffs <- e_collated_handoffs %>%
+  filter(dswe == "DSWE1", sat_to == "LS7", correction == "Gardner")
+
+roy_deming_coeffs <- e_collated_handoffs %>%
+  filter(dswe == "DSWE1", sat_to == "LS7", correction == "Roy", method == "deming")
+
+# Gardner: corrected = intercept + B1*raw + B2*raw^2
+apply_gardner <- function(data, coeffs) {
+  data %>%
+    left_join(coeffs, by = c("band", "sat_corr_key" = "sat_corr")) %>%
+    mutate(value = if_else(sat_short == "LS7",
+                           value,
+                           intercept + B1 * value + B2 * value^2)) %>%
+    select(lakeSR_id, date, mission, sat_short, band, value)
+}
+
+# Roy Deming: corrected = intercept + slope*raw
+apply_roy_deming <- function(data, coeffs) {
+  data %>%
+    left_join(coeffs, by = c("band", "sat_corr_key" = "sat_corr")) %>%
+    mutate(value = if_else(sat_short == "LS7",
+                           value,
+                           intercept + slope * value)) %>%
+    select(lakeSR_id, date, mission, sat_short, band, value)
+}
+
+dense_plot_data <- bind_rows(
+  dense_long %>%
+    select(lakeSR_id, date, mission, sat_short, band, value) %>%
+    mutate(correction = "Raw"),
+  apply_gardner(dense_long, gardner_coeffs) %>%
+    mutate(correction = "Gardner"),
+  apply_roy_deming(dense_long, roy_deming_coeffs) %>%
+    mutate(correction = "Roy Deming")
+) %>%
+  mutate(correction = factor(correction, levels = c("Raw", "Gardner", "Roy Deming")))
+```
+
+The figure below compares the raw band time series against the two
+harmonized-to-LS7 versions for this site. If the handoffs are working well,
+the mission-to-mission offsets visible in the "Raw" column should be reduced
+in the "Gardner" and "Roy Deming" columns.
+
+```{r dense-example-plot, fig.width=10, fig.height=11}
+ggplot(dense_plot_data, aes(x = date, y = value, color = sat_short)) +
+  geom_point(alpha = 0.6, size = 1) +
+  geom_line(aes(group = mission), alpha = 0.6) +
+  facet_grid(band ~ correction, scales = "free_y") +
+  labs(title = paste0("lakeSR_id: ", dense_id, " (", site_info$gnis_name, ")"),
+       x = NULL, y = NULL, color = "Mission") +
+  theme(legend.position = "bottom") +
+  theme_bw()
+```
+

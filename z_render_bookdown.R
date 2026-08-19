@@ -111,6 +111,9 @@ if (config::get(config = general_config)$update_bookdown) {
                  d_qa_Landsat_files
                  move_siteSR_drop_images
                  move_lakeSR_drop_images
+                 # needed for dense-record handoff example
+                 d_lakeSR_feather_files
+                 d_qa_version_identifier
                  # needed for correction figs
                  e_calculate_gardner_LS5_to_LS7
                  e_calculate_gardner_LS8_to_LS7

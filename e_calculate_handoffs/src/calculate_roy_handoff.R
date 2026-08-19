@@ -41,7 +41,7 @@ calculate_roy_handoff <- function(matched_data,
            thermal_no_shore <- filter(sites, !!sym(thermal_flag_from) == 0 & !!sym(thermal_flag_to) == 0)
            filtered_matched_data <- matched_data[ 
              lakeSR_id %in% thermal_no_shore$lakeSR_id &
-                    !is.na(med_SurfaceTemp) & !is.na(i.med_SurfaceTemp)]
+               !is.na(early_med_SurfaceTemp) & !is.na(late_med_SurfaceTemp)]
            
          } else {
            
@@ -55,17 +55,21 @@ calculate_roy_handoff <- function(matched_data,
            
          }
          
-         # store x/y based on invert argument
+         # store x/y so models are fit as sat_to ~ sat_corr (matches Gardner's
+         # convention) - x = mission_from (sat_corr, raw values to be
+         # corrected), y = mission_to (sat_to, target). This means the fitted
+         # coefficients can be applied forward (intercept + slope*raw) with no
+         # inversion needed downstream.
          if (invert_mission_match) {
-           y <- filtered_matched_data %>% 
-             pull(band)
-           x <- filtered_matched_data %>% 
-             pull(paste0("i.",band))
+           y <- filtered_matched_data %>%
+             pull(paste0("early_", band))
+           x <- filtered_matched_data %>%
+             pull(paste0("late_", band))
          } else {
-           x <- filtered_matched_data %>% 
-             pull(band)
-           y <- filtered_matched_data %>% 
-             pull(paste0("i.",band))
+           x <- filtered_matched_data %>%
+             pull(paste0("early_", band))
+           y <- filtered_matched_data %>%
+             pull(paste0("late_", band))
          }
          
          # calculate models
@@ -89,9 +93,9 @@ calculate_roy_handoff <- function(matched_data,
            coord_fixed(ratio = 1,
                        xlim = c(min(x, y), max(x, y)),
                        ylim = c(min(x, y), max(x, y))) +
-           labs(title = paste(band, mission_from, "to", 
-                              mission_to, "handoff", DSWE), 
-                x = paste0(mission_from, unit), 
+           labs(title = paste(band, mission_from, "to",
+                              mission_to, "handoff", DSWE),
+                x = paste0(mission_from, unit),
                 y = paste0(mission_to, unit)) +
            theme_bw()
          

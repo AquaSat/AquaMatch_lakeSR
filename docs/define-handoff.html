@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>8 Calculating intermission handoffs | AquaMatch: Lake Surface Reflectance (lakeSR) and Site Surface Reflectance (siteSR)</title>
   <meta name="description" content="Acquisition and compilation of satellite surface reflectance data for all lakes in the United States and US territories." />
-  <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.47 and GitBook 2.6.7" />
 
   <meta property="og:title" content="8 Calculating intermission handoffs | AquaMatch: Lake Surface Reflectance (lakeSR) and Site Surface Reflectance (siteSR)" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="ROSSyndicate" />
 
 
-<meta name="date" content="2026-01-23" />
+<meta name="date" content="2026-08-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -131,7 +131,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -262,18 +261,9 @@ div.csl-indent {
 <li class="chapter" data-level="8.1" data-path="define-handoff.html"><a href="define-handoff.html#additional-filtering-applied"><i class="fa fa-check"></i><b>8.1</b> Additional filtering applied</a></li>
 <li class="chapter" data-level="8.2" data-path="define-handoff.html"><a href="define-handoff.html#roy-method"><i class="fa fa-check"></i><b>8.2</b> Roy method</a></li>
 <li class="chapter" data-level="8.3" data-path="define-handoff.html"><a href="define-handoff.html#gardner-method"><i class="fa fa-check"></i><b>8.3</b> Gardner method</a></li>
-<li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-roy-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Roy Handoffs</a>
-<ul>
-<li class="chapter" data-level="8.4.1" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.4.1</b> Roy Deming Correction Landsat 5 to Landsat 7</a></li>
-<li class="chapter" data-level="8.4.2" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.4.2</b> Roy Deming Correction Landsat 8 to Landsat 7</a></li>
-<li class="chapter" data-level="8.4.3" data-path="define-handoff.html"><a href="define-handoff.html#roy-deming-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.4.3</b> Roy Deming Correction Landsat 7 to Landsat 8</a></li>
-</ul></li>
-<li class="chapter" data-level="8.5" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.5</b> Implementing Gardner Handoffs</a>
-<ul>
-<li class="chapter" data-level="8.5.1" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-5-to-landsat-7"><i class="fa fa-check"></i><b>8.5.1</b> Gardner Correction Landsat 5 to Landsat 7</a></li>
-<li class="chapter" data-level="8.5.2" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-8-to-landsat-7"><i class="fa fa-check"></i><b>8.5.2</b> Gardner Correction Landsat 8 to Landsat 7</a></li>
-<li class="chapter" data-level="8.5.3" data-path="define-handoff.html"><a href="define-handoff.html#gardner-correction-landsat-7-to-landsat-8"><i class="fa fa-check"></i><b>8.5.3</b> Gardner Correction Landsat 7 to Landsat 8</a></li>
-</ul></li>
+<li class="chapter" data-level="8.4" data-path="define-handoff.html"><a href="define-handoff.html#implementing-roy-handoffs"><i class="fa fa-check"></i><b>8.4</b> Implementing Roy Handoffs</a></li>
+<li class="chapter" data-level="8.5" data-path="define-handoff.html"><a href="define-handoff.html#implementing-gardner-handoffs"><i class="fa fa-check"></i><b>8.5</b> Implementing Gardner Handoffs</a></li>
+<li class="chapter" data-level="8.6" data-path="define-handoff.html"><a href="define-handoff.html#examples-of-raw-rs-data-and-rs-with-handoffs-applied"><i class="fa fa-check"></i><b>8.6</b> Examples of Raw RS Data and RS with Handoffs Applied</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>9</b> References</a></li>
 </ul>
@@ -454,10 +444,10 @@ Band
 DSWE type
 </th>
 <th style="text-align:center;">
-<span style="     ">Satellite<br>to Correct</span>
+<span>Satellite<br>to Correct</span>
 </th>
 <th style="text-align:center;">
-<span style="     ">Satellite<br>to Harmonize to</span>
+<span>Satellite<br>to Harmonize to</span>
 </th>
 <th style="text-align:center;">
 Intercept
@@ -466,10 +456,10 @@ Intercept
 Slope
 </th>
 <th style="text-align:center;">
-<span style="     ">Minimum Value<br>in Handoff</span>
+<span>Minimum Value<br>in Handoff</span>
 </th>
 <th style="text-align:center;">
-<span style="     ">Maximum Value<br>in Handoff</span>
+<span>Maximum Value<br>in Handoff</span>
 </th>
 </tr>
 </thead>
@@ -488,30 +478,13 @@ LS5
 LS7
 </td>
 <td style="text-align:center;width: auto; ">
-0.001
+-0.001
 </td>
 <td style="text-align:center;width: auto; ">
-0.994
+1.006
 </td>
 <td style="text-align:center;width: auto; ">
--0.010
-</td>
-<td style="text-align:center;width: auto; ">
-0.195
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Green
-</td>
-<td style="text-align:center;width: auto; ">
-0.004
-</td>
-<td style="text-align:center;width: auto; ">
-1.025
-</td>
-<td style="text-align:center;width: auto; ">
--0.005
+-0.009
 </td>
 <td style="text-align:center;width: auto; ">
 0.199
@@ -519,16 +492,16 @@ med_Green
 </tr>
 <tr>
 <td style="text-align:left;width: auto; ">
-med_Red
+med_Green
 </td>
 <td style="text-align:center;width: auto; ">
-0.005
+-0.004
 </td>
 <td style="text-align:center;width: auto; ">
-0.984
+0.976
 </td>
 <td style="text-align:center;width: auto; ">
--0.009
+-0.004
 </td>
 <td style="text-align:center;width: auto; ">
 0.200
@@ -536,13 +509,13 @@ med_Red
 </tr>
 <tr>
 <td style="text-align:left;width: auto; ">
-med_Nir
+med_Red
 </td>
 <td style="text-align:center;width: auto; ">
-0.002
+-0.005
 </td>
 <td style="text-align:center;width: auto; ">
-1.016
+1.017
 </td>
 <td style="text-align:center;width: auto; ">
 -0.008
@@ -553,121 +526,16 @@ med_Nir
 </tr>
 <tr>
 <td style="text-align:left;width: auto; ">
-med_Swir1
+med_Nir
 </td>
 <td style="text-align:center;width: auto; ">
 -0.002
 </td>
 <td style="text-align:center;width: auto; ">
-1.360
-</td>
-<td style="text-align:center;width: auto; ">
--0.006
-</td>
-<td style="text-align:center;width: auto; ">
-0.098
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Swir2
-</td>
-<td style="text-align:center;width: auto; ">
--0.001
-</td>
-<td style="text-align:center;width: auto; ">
-1.360
-</td>
-<td style="text-align:center;width: auto; ">
--0.007
-</td>
-<td style="text-align:center;width: auto; ">
-0.082
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_SurfaceTemp
-</td>
-<td style="text-align:center;width: auto; ">
--7.348
-</td>
-<td style="text-align:center;width: auto; ">
-1.027
-</td>
-<td style="text-align:center;width: auto; ">
-273.150
-</td>
-<td style="text-align:center;width: auto; ">
-313.150
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Blue
-</td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="7">
-LS8
-</td>
-<td style="text-align:center;width: auto; ">
--0.010
-</td>
-<td style="text-align:center;width: auto; ">
-0.768
-</td>
-<td style="text-align:center;width: auto; ">
--0.008
-</td>
-<td style="text-align:center;width: auto; ">
-0.195
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Green
-</td>
-<td style="text-align:center;width: auto; ">
--0.009
-</td>
-<td style="text-align:center;width: auto; ">
-0.991
-</td>
-<td style="text-align:center;width: auto; ">
--0.006
-</td>
-<td style="text-align:center;width: auto; ">
-0.200
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Red
-</td>
-<td style="text-align:center;width: auto; ">
--0.009
-</td>
-<td style="text-align:center;width: auto; ">
-0.967
-</td>
-<td style="text-align:center;width: auto; ">
--0.008
-</td>
-<td style="text-align:center;width: auto; ">
-0.200
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Nir
-</td>
-<td style="text-align:center;width: auto; ">
--0.013
-</td>
-<td style="text-align:center;width: auto; ">
 0.985
 </td>
 <td style="text-align:center;width: auto; ">
--0.010
+-0.006
 </td>
 <td style="text-align:center;width: auto; ">
 0.200
@@ -676,262 +544,15 @@ med_Nir
 <tr>
 <td style="text-align:left;width: auto; ">
 med_Swir1
-</td>
-<td style="text-align:center;width: auto; ">
--0.001
-</td>
-<td style="text-align:center;width: auto; ">
-0.796
-</td>
-<td style="text-align:center;width: auto; ">
--0.005
-</td>
-<td style="text-align:center;width: auto; ">
-0.095
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Swir2
 </td>
 <td style="text-align:center;width: auto; ">
 0.001
 </td>
 <td style="text-align:center;width: auto; ">
-0.765
-</td>
-<td style="text-align:center;width: auto; ">
--0.006
-</td>
-<td style="text-align:center;width: auto; ">
-0.082
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_SurfaceTemp
-</td>
-<td style="text-align:center;width: auto; ">
--18.088
-</td>
-<td style="text-align:center;width: auto; ">
-1.068
-</td>
-<td style="text-align:center;width: auto; ">
-273.150
-</td>
-<td style="text-align:center;width: auto; ">
-313.030
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Blue
-</td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="14">
-DSWE1a
-</td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="7">
-LS5
-</td>
-<td style="text-align:center;width: auto; ">
-0.002
-</td>
-<td style="text-align:center;width: auto; ">
-0.971
-</td>
-<td style="text-align:center;width: auto; ">
--0.010
-</td>
-<td style="text-align:center;width: auto; ">
-0.195
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Green
-</td>
-<td style="text-align:center;width: auto; ">
-0.004
-</td>
-<td style="text-align:center;width: auto; ">
-1.013
-</td>
-<td style="text-align:center;width: auto; ">
--0.005
-</td>
-<td style="text-align:center;width: auto; ">
-0.199
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Red
-</td>
-<td style="text-align:center;width: auto; ">
-0.005
-</td>
-<td style="text-align:center;width: auto; ">
-0.962
-</td>
-<td style="text-align:center;width: auto; ">
--0.009
-</td>
-<td style="text-align:center;width: auto; ">
-0.200
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Nir
-</td>
-<td style="text-align:center;width: auto; ">
-0.003
-</td>
-<td style="text-align:center;width: auto; ">
-0.988
+0.735
 </td>
 <td style="text-align:center;width: auto; ">
 -0.008
-</td>
-<td style="text-align:center;width: auto; ">
-0.200
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Swir1
-</td>
-<td style="text-align:center;width: auto; ">
--0.001
-</td>
-<td style="text-align:center;width: auto; ">
-1.253
-</td>
-<td style="text-align:center;width: auto; ">
--0.006
-</td>
-<td style="text-align:center;width: auto; ">
-0.099
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Swir2
-</td>
-<td style="text-align:center;width: auto; ">
-0.000
-</td>
-<td style="text-align:center;width: auto; ">
-1.172
-</td>
-<td style="text-align:center;width: auto; ">
--0.007
-</td>
-<td style="text-align:center;width: auto; ">
-0.082
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_SurfaceTemp
-</td>
-<td style="text-align:center;width: auto; ">
--7.373
-</td>
-<td style="text-align:center;width: auto; ">
-1.027
-</td>
-<td style="text-align:center;width: auto; ">
-273.150
-</td>
-<td style="text-align:center;width: auto; ">
-313.150
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Blue
-</td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="7">
-LS8
-</td>
-<td style="text-align:center;width: auto; ">
--0.009
-</td>
-<td style="text-align:center;width: auto; ">
-0.736
-</td>
-<td style="text-align:center;width: auto; ">
--0.008
-</td>
-<td style="text-align:center;width: auto; ">
-0.195
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Green
-</td>
-<td style="text-align:center;width: auto; ">
--0.009
-</td>
-<td style="text-align:center;width: auto; ">
-0.994
-</td>
-<td style="text-align:center;width: auto; ">
--0.006
-</td>
-<td style="text-align:center;width: auto; ">
-0.200
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Red
-</td>
-<td style="text-align:center;width: auto; ">
--0.008
-</td>
-<td style="text-align:center;width: auto; ">
-0.962
-</td>
-<td style="text-align:center;width: auto; ">
--0.008
-</td>
-<td style="text-align:center;width: auto; ">
-0.200
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Nir
-</td>
-<td style="text-align:center;width: auto; ">
--0.017
-</td>
-<td style="text-align:center;width: auto; ">
-1.112
-</td>
-<td style="text-align:center;width: auto; ">
--0.010
-</td>
-<td style="text-align:center;width: auto; ">
-0.200
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: auto; ">
-med_Swir1
-</td>
-<td style="text-align:center;width: auto; ">
-0.000
-</td>
-<td style="text-align:center;width: auto; ">
-0.774
-</td>
-<td style="text-align:center;width: auto; ">
--0.005
 </td>
 <td style="text-align:center;width: auto; ">
 0.098
@@ -945,13 +566,13 @@ med_Swir2
 0.001
 </td>
 <td style="text-align:center;width: auto; ">
-0.719
+0.735
 </td>
 <td style="text-align:center;width: auto; ">
--0.006
+-0.007
 </td>
 <td style="text-align:center;width: auto; ">
-0.082
+0.084
 </td>
 </tr>
 <tr>
@@ -959,80 +580,23 @@ med_Swir2
 med_SurfaceTemp
 </td>
 <td style="text-align:center;width: auto; ">
--21.097
+7.148
 </td>
 <td style="text-align:center;width: auto; ">
-1.078
+0.973
 </td>
 <td style="text-align:center;width: auto; ">
 273.150
 </td>
 <td style="text-align:center;width: auto; ">
-313.030
+313.020
 </td>
 </tr>
-</tbody>
-</table>
-</div>
-<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
-<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
-<caption>
-<span id="tab:roy-coeff-dem-corr8">Table 8.3: </span>Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Roy method and Deming (MLE) regression
-</caption>
-<thead>
-<tr>
-<th style="empty-cells: hide;border-bottom:hidden;" colspan="4">
-</th>
-<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
-<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
-Coefficients
-</div>
-</th>
-<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
-<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
-Input Value Range
-</div>
-</th>
-</tr>
-<tr>
-<th style="text-align:left;">
-Band
-</th>
-<th style="text-align:center;">
-DSWE type
-</th>
-<th style="text-align:center;">
-<span style="     ">Satellite<br>to Correct</span>
-</th>
-<th style="text-align:center;">
-<span style="     ">Satellite<br>to Harmonize to</span>
-</th>
-<th style="text-align:center;">
-Intercept
-</th>
-<th style="text-align:center;">
-Slope
-</th>
-<th style="text-align:center;">
-<span style="     ">Minimum Value<br>in Handoff</span>
-</th>
-<th style="text-align:center;">
-<span style="     ">Maximum Value<br>in Handoff</span>
-</th>
-</tr>
-</thead>
-<tbody>
 <tr>
 <td style="text-align:left;width: auto; ">
 med_Blue
 </td>
 <td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="7">
-DSWE1
-</td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="14">
-LS7
-</td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="14">
 LS8
 </td>
 <td style="text-align:center;width: auto; ">
@@ -1154,8 +718,133 @@ med_SurfaceTemp
 <td style="text-align:left;width: auto; ">
 med_Blue
 </td>
-<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="7">
+<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="14">
 DSWE1a
+</td>
+<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="7">
+LS5
+</td>
+<td style="text-align:center;width: auto; ">
+-0.002
+</td>
+<td style="text-align:center;width: auto; ">
+1.030
+</td>
+<td style="text-align:center;width: auto; ">
+-0.009
+</td>
+<td style="text-align:center;width: auto; ">
+0.199
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Green
+</td>
+<td style="text-align:center;width: auto; ">
+-0.004
+</td>
+<td style="text-align:center;width: auto; ">
+0.987
+</td>
+<td style="text-align:center;width: auto; ">
+-0.004
+</td>
+<td style="text-align:center;width: auto; ">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Red
+</td>
+<td style="text-align:center;width: auto; ">
+-0.005
+</td>
+<td style="text-align:center;width: auto; ">
+1.040
+</td>
+<td style="text-align:center;width: auto; ">
+-0.008
+</td>
+<td style="text-align:center;width: auto; ">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Nir
+</td>
+<td style="text-align:center;width: auto; ">
+-0.003
+</td>
+<td style="text-align:center;width: auto; ">
+1.012
+</td>
+<td style="text-align:center;width: auto; ">
+-0.006
+</td>
+<td style="text-align:center;width: auto; ">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Swir1
+</td>
+<td style="text-align:center;width: auto; ">
+0.001
+</td>
+<td style="text-align:center;width: auto; ">
+0.798
+</td>
+<td style="text-align:center;width: auto; ">
+-0.008
+</td>
+<td style="text-align:center;width: auto; ">
+0.098
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Swir2
+</td>
+<td style="text-align:center;width: auto; ">
+0.000
+</td>
+<td style="text-align:center;width: auto; ">
+0.853
+</td>
+<td style="text-align:center;width: auto; ">
+-0.007
+</td>
+<td style="text-align:center;width: auto; ">
+0.084
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_SurfaceTemp
+</td>
+<td style="text-align:center;width: auto; ">
+7.173
+</td>
+<td style="text-align:center;width: auto; ">
+0.973
+</td>
+<td style="text-align:center;width: auto; ">
+273.150
+</td>
+<td style="text-align:center;width: auto; ">
+313.020
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Blue
+</td>
+<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="7">
+LS8
 </td>
 <td style="text-align:center;width: auto; ">
 0.012
@@ -1275,6 +964,307 @@ med_SurfaceTemp
 </tbody>
 </table>
 </div>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:roy-coeff-dem-corr8">Table 8.3: </span>Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Roy method and Deming (MLE) regression
+</caption>
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="4">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Coefficients
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Input Value Range
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+Band
+</th>
+<th style="text-align:center;">
+DSWE type
+</th>
+<th style="text-align:center;">
+<span>Satellite<br>to Correct</span>
+</th>
+<th style="text-align:center;">
+<span>Satellite<br>to Harmonize to</span>
+</th>
+<th style="text-align:center;">
+Intercept
+</th>
+<th style="text-align:center;">
+Slope
+</th>
+<th style="text-align:center;">
+<span>Minimum Value<br>in Handoff</span>
+</th>
+<th style="text-align:center;">
+<span>Maximum Value<br>in Handoff</span>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Blue
+</td>
+<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="7">
+DSWE1
+</td>
+<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="14">
+LS7
+</td>
+<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="14">
+LS8
+</td>
+<td style="text-align:center;width: auto; ">
+-0.010
+</td>
+<td style="text-align:center;width: auto; ">
+0.768
+</td>
+<td style="text-align:center;width: auto; ">
+-0.008
+</td>
+<td style="text-align:center;width: auto; ">
+0.195
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Green
+</td>
+<td style="text-align:center;width: auto; ">
+-0.009
+</td>
+<td style="text-align:center;width: auto; ">
+0.991
+</td>
+<td style="text-align:center;width: auto; ">
+-0.006
+</td>
+<td style="text-align:center;width: auto; ">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Red
+</td>
+<td style="text-align:center;width: auto; ">
+-0.009
+</td>
+<td style="text-align:center;width: auto; ">
+0.967
+</td>
+<td style="text-align:center;width: auto; ">
+-0.008
+</td>
+<td style="text-align:center;width: auto; ">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Nir
+</td>
+<td style="text-align:center;width: auto; ">
+-0.013
+</td>
+<td style="text-align:center;width: auto; ">
+0.985
+</td>
+<td style="text-align:center;width: auto; ">
+-0.010
+</td>
+<td style="text-align:center;width: auto; ">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Swir1
+</td>
+<td style="text-align:center;width: auto; ">
+-0.001
+</td>
+<td style="text-align:center;width: auto; ">
+0.796
+</td>
+<td style="text-align:center;width: auto; ">
+-0.005
+</td>
+<td style="text-align:center;width: auto; ">
+0.095
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Swir2
+</td>
+<td style="text-align:center;width: auto; ">
+0.001
+</td>
+<td style="text-align:center;width: auto; ">
+0.765
+</td>
+<td style="text-align:center;width: auto; ">
+-0.006
+</td>
+<td style="text-align:center;width: auto; ">
+0.082
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_SurfaceTemp
+</td>
+<td style="text-align:center;width: auto; ">
+-18.088
+</td>
+<td style="text-align:center;width: auto; ">
+1.068
+</td>
+<td style="text-align:center;width: auto; ">
+273.150
+</td>
+<td style="text-align:center;width: auto; ">
+313.030
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Blue
+</td>
+<td style="text-align:center;width: auto; vertical-align: middle !important;" rowspan="7">
+DSWE1a
+</td>
+<td style="text-align:center;width: auto; ">
+-0.009
+</td>
+<td style="text-align:center;width: auto; ">
+0.736
+</td>
+<td style="text-align:center;width: auto; ">
+-0.008
+</td>
+<td style="text-align:center;width: auto; ">
+0.195
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Green
+</td>
+<td style="text-align:center;width: auto; ">
+-0.009
+</td>
+<td style="text-align:center;width: auto; ">
+0.994
+</td>
+<td style="text-align:center;width: auto; ">
+-0.006
+</td>
+<td style="text-align:center;width: auto; ">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Red
+</td>
+<td style="text-align:center;width: auto; ">
+-0.008
+</td>
+<td style="text-align:center;width: auto; ">
+0.962
+</td>
+<td style="text-align:center;width: auto; ">
+-0.008
+</td>
+<td style="text-align:center;width: auto; ">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Nir
+</td>
+<td style="text-align:center;width: auto; ">
+-0.017
+</td>
+<td style="text-align:center;width: auto; ">
+1.112
+</td>
+<td style="text-align:center;width: auto; ">
+-0.010
+</td>
+<td style="text-align:center;width: auto; ">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Swir1
+</td>
+<td style="text-align:center;width: auto; ">
+0.000
+</td>
+<td style="text-align:center;width: auto; ">
+0.774
+</td>
+<td style="text-align:center;width: auto; ">
+-0.005
+</td>
+<td style="text-align:center;width: auto; ">
+0.098
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_Swir2
+</td>
+<td style="text-align:center;width: auto; ">
+0.001
+</td>
+<td style="text-align:center;width: auto; ">
+0.719
+</td>
+<td style="text-align:center;width: auto; ">
+-0.006
+</td>
+<td style="text-align:center;width: auto; ">
+0.082
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: auto; ">
+med_SurfaceTemp
+</td>
+<td style="text-align:center;width: auto; ">
+-21.097
+</td>
+<td style="text-align:center;width: auto; ">
+1.078
+</td>
+<td style="text-align:center;width: auto; ">
+273.150
+</td>
+<td style="text-align:center;width: auto; ">
+313.030
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <p>Application of Roy-style handoffs is straightforward and is completed as simple
 application of a linear equation:</p>
 <p><span class="math display">\[
@@ -1291,8 +1281,7 @@ handoffs to the filtered lakeSR and siteSR data.</p>
 <summary>
 Roy Deming Handoff and Residual Figures
 </summary>
-<div id="roy-deming-correction-landsat-5-to-landsat-7" class="section level3 hasAnchor" number="8.4.1">
-<h3><span class="header-section-number">8.4.1</span> Roy Deming Correction Landsat 5 to Landsat 7<a href="define-handoff.html#roy-deming-correction-landsat-5-to-landsat-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Roy Deming Correction Landsat 5 to Landsat 7</strong></p>
 <p>For each of the handoff figures below, the blue line is the Deming (MLE)
 regression, the red dotted line is the OLS regression line, and the grey dashed
 line is the 1:1 line. Coefficients for the Deming regression are provided in
@@ -1309,9 +1298,7 @@ is a 0 intercept, 0 slope line visual aide.</p>
 <p><img src="images/roy/residuals/med_Nir_LS5_to_LS7_DSWE1_roy_deming_residuals.jpg" width="600" /></p>
 <p><img src="images/roy/handoffs/med_SurfaceTemp_LS5_to_LS7_DSWE1_roy_handoff.jpg" width="600" /></p>
 <p><img src="images/roy/residuals/med_SurfaceTemp_LS5_to_LS7_DSWE1_roy_deming_residuals.jpg" width="600" /></p>
-</div>
-<div id="roy-deming-correction-landsat-8-to-landsat-7" class="section level3 hasAnchor" number="8.4.2">
-<h3><span class="header-section-number">8.4.2</span> Roy Deming Correction Landsat 8 to Landsat 7<a href="define-handoff.html#roy-deming-correction-landsat-8-to-landsat-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Roy Deming Correction Landsat 8 to Landsat 7</strong></p>
 <p>For each of the handoff figures below, the blue solid line is the Deming (MLE)
 regression, the red line is the OLS regression line, and the grey dashed line is
 the 1:1 line. Coefficients for the Deming regression are provided in Table
@@ -1328,9 +1315,7 @@ intercept, 0 slope line visual aide.</p>
 <p><img src="images/roy/residuals/med_Nir_LS8_to_LS7_DSWE1_roy_deming_residuals.jpg" width="600" /></p>
 <p><img src="images/roy/handoffs/med_SurfaceTemp_LS8_to_LS7_DSWE1_roy_handoff.jpg" width="600" /></p>
 <p><img src="images/roy/residuals/med_SurfaceTemp_LS8_to_LS7_DSWE1_roy_deming_residuals.jpg" width="600" /></p>
-</div>
-<div id="roy-deming-correction-landsat-7-to-landsat-8" class="section level3 hasAnchor" number="8.4.3">
-<h3><span class="header-section-number">8.4.3</span> Roy Deming Correction Landsat 7 to Landsat 8<a href="define-handoff.html#roy-deming-correction-landsat-7-to-landsat-8" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Roy Deming Correction Landsat 7 to Landsat 8</strong></p>
 <p>For each of the handoff figures below, the blue solid line is the Deming (MLE)
 regression, the red dotted line is the OLS regression line, and the grey dashed
 line is the 1:1 line. Coefficients for the Deming regression are provided in
@@ -1348,7 +1333,6 @@ is a 0 intercept, 0 slope line visual aide.</p>
 <p><img src="images/roy/handoffs/med_SurfaceTemp_LS7_to_LS8_DSWE1_roy_handoff.jpg" width="600" /></p>
 <p><img src="images/roy/residuals/med_SurfaceTemp_LS7_to_LS8_DSWE1_roy_deming_residuals.jpg" width="600" /></p>
 </details>
-</div>
 </div>
 <div id="implementing-gardner-handoffs" class="section level2 hasAnchor" number="8.5">
 <h2><span class="header-section-number">8.5</span> Implementing Gardner Handoffs<a href="define-handoff.html#implementing-gardner-handoffs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -1398,7 +1382,7 @@ is a 0 intercept, 0 slope line visual aide.</p>
 <div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
 <table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:gard-coeff-corr7">Table 8.5: </span>Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Deming (MLE) regression
+<span id="tab:gard-coeff-corr7">Table 8.5: </span>Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Gardner polynomial method
 </caption>
 <thead>
 <tr>
@@ -1423,10 +1407,10 @@ Band
 DSWE type
 </th>
 <th style="text-align:center;">
-<span style="     ">Satellite<br>to Correct</span>
+<span>Satellite<br>to Correct</span>
 </th>
 <th style="text-align:center;">
-<span style="     ">Satellite<br>to Harmonize to</span>
+<span>Satellite<br>to Harmonize to</span>
 </th>
 <th style="text-align:center;">
 Intercept
@@ -1438,10 +1422,10 @@ B1
 B2
 </th>
 <th style="text-align:center;">
-<span style="     ">Minimum Value<br>in Handoff</span>
+<span>Minimum Value<br>in Handoff</span>
 </th>
 <th style="text-align:center;">
-<span style="     ">Maximum Value<br>in Handoff</span>
+<span>Maximum Value<br>in Handoff</span>
 </th>
 </tr>
 </thead>
@@ -2033,7 +2017,7 @@ med_SurfaceTemp
 <div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
 <table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:gard-coeff-corr8">Table 8.6: </span>Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Deming (MLE) regression
+<span id="tab:gard-coeff-corr8">Table 8.6: </span>Handoff coefficients for Landsat 5 and 8 to harmonize to Landsat 7 using the Gardner polynomial method
 </caption>
 <thead>
 <tr>
@@ -2058,10 +2042,10 @@ Band
 DSWE type
 </th>
 <th style="text-align:center;">
-<span style="     ">Satellite<br>to Correct</span>
+<span>Satellite<br>to Correct</span>
 </th>
 <th style="text-align:center;">
-<span style="     ">Satellite<br>to Harmonize to</span>
+<span>Satellite<br>to Harmonize to</span>
 </th>
 <th style="text-align:center;">
 Intercept
@@ -2073,10 +2057,10 @@ B1
 B2
 </th>
 <th style="text-align:center;">
-<span style="     ">Minimum Value<br>in Handoff</span>
+<span>Minimum Value<br>in Handoff</span>
 </th>
 <th style="text-align:center;">
-<span style="     ">Maximum Value<br>in Handoff</span>
+<span>Maximum Value<br>in Handoff</span>
 </th>
 </tr>
 </thead>
@@ -2393,8 +2377,7 @@ the filtered lakeSR and siteSR data.</p>
 <summary>
 Gardner Handoff and Residual Figures relative to Landsat 7
 </summary>
-<div id="gardner-correction-landsat-5-to-landsat-7" class="section level3 hasAnchor" number="8.5.1">
-<h3><span class="header-section-number">8.5.1</span> Gardner Correction Landsat 5 to Landsat 7<a href="define-handoff.html#gardner-correction-landsat-5-to-landsat-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Gardner Correction Landsat 5 to Landsat 7</strong></p>
 <p>For each of the handoff figures below, the red line is the second order
 polynomial regression and the grey dashed line is the 1:1 line. Coefficients for
 the second order polynomial regression are provided in Table
@@ -2411,9 +2394,7 @@ intercept, 0 slope line visual aide.</p>
 <p><img src="images/gardner/residuals/med_Nir_LS5_to_LS7_DSWE1_gard_residuals.jpg" width="600" /></p>
 <p><img src="images/gardner/handoffs/med_SurfaceTemp_LS5_to_LS7_DSWE1_gard_handoff.jpg" width="600" /></p>
 <p><img src="images/gardner/residuals/med_SurfaceTemp_LS5_to_LS7_DSWE1_gard_residuals.jpg" width="600" /></p>
-</div>
-<div id="gardner-correction-landsat-8-to-landsat-7" class="section level3 hasAnchor" number="8.5.2">
-<h3><span class="header-section-number">8.5.2</span> Gardner Correction Landsat 8 to Landsat 7<a href="define-handoff.html#gardner-correction-landsat-8-to-landsat-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Gardner Correction Landsat 8 to Landsat 7</strong></p>
 <p>For each of the handoff figures below, the red line is the second order
 polynomial regression and the grey dashed line is the 1:1 line. Coefficients for
 the second order polynomial regression are provided in Table
@@ -2430,9 +2411,7 @@ intercept, 0 slope line visual aide.</p>
 <p><img src="images/gardner/residuals/med_Nir_LS8_to_LS7_DSWE1_gard_residuals.jpg" width="600" /></p>
 <p><img src="images/gardner/handoffs/med_SurfaceTemp_LS8_to_LS7_DSWE1_gard_handoff.jpg" width="600" /></p>
 <p><img src="images/gardner/residuals/med_SurfaceTemp_LS8_to_LS7_DSWE1_gard_residuals.jpg" width="600" /></p>
-</div>
-<div id="gardner-correction-landsat-7-to-landsat-8" class="section level3 hasAnchor" number="8.5.3">
-<h3><span class="header-section-number">8.5.3</span> Gardner Correction Landsat 7 to Landsat 8<a href="define-handoff.html#gardner-correction-landsat-7-to-landsat-8" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Gardner Correction Landsat 7 to Landsat 8</strong></p>
 <p>For each of the handoff figures below, the red line is the second order
 polynomial regression and the grey dashed line is the 1:1 line. Coefficients for
 the second order polynomial regression are provided in Table
@@ -2450,8 +2429,298 @@ intercept, 0 slope line visual aide.</p>
 <p><img src="images/gardner/handoffs/med_SurfaceTemp_LS7_to_LS8_DSWE1_gard_handoff.jpg" width="600" /></p>
 <p><img src="images/gardner/residuals/med_SurfaceTemp_LS7_to_LS8_DSWE1_gard_residuals.jpg" width="600" /></p>
 </details>
-
 </div>
+<div id="examples-of-raw-rs-data-and-rs-with-handoffs-applied" class="section level2 hasAnchor" number="8.6">
+<h2><span class="header-section-number">8.6</span> Examples of Raw RS Data and RS with Handoffs Applied<a href="define-handoff.html#examples-of-raw-rs-data-and-rs-with-handoffs-applied" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The previous sections describe how the intermission handoff coefficients are
+calculated and provide the coefficient tables and diagnostic figures for each
+method. Here, we walk through what applying those coefficients actually looks
+like for a single, densely-sampled lakeSR record, across all seven bands and
+four Landsat missions used in this pipeline (Landsat 5, 7, 8, and 9). We
+use <code>lakeSR_id</code> <code>1102_668</code> (“Nee Noshe Reservoir”, CO) for this example: it has
+a long, well-populated record across missions (hundreds of observations per
+mission over multiple decades) and, unlike many small or narrow waterbodies in
+lakeSR, it passes the shoreline flags used to fit the handoff coefficients, so
+we can filter it exactly as described in Section
+<a href="define-handoff.html#additional-filtering-applied">8.1</a> without losing the whole record.</p>
+<p>First, we grab this site’s location and shoreline flag information from the
+lakeSR POI file:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="define-handoff.html#cb6-1" tabindex="-1"></a>dense_id <span class="ot">&lt;-</span> <span class="st">&quot;1102_668&quot;</span></span>
+<span id="cb6-2"><a href="define-handoff.html#cb6-2" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="define-handoff.html#cb6-3" tabindex="-1"></a>site_info <span class="ot">&lt;-</span> a_poi_with_flags <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="define-handoff.html#cb6-4" tabindex="-1"></a>  <span class="fu">filter</span>(lakeSR_id <span class="sc">==</span> dense_id)</span>
+<span id="cb6-5"><a href="define-handoff.html#cb6-5" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="define-handoff.html#cb6-6" tabindex="-1"></a>site_info <span class="sc">%&gt;%</span></span>
+<span id="cb6-7"><a href="define-handoff.html#cb6-7" tabindex="-1"></a>  <span class="fu">select</span>(lakeSR_id, gnis_name, areasqkm, poi_Latitude, poi_Longitude,</span>
+<span id="cb6-8"><a href="define-handoff.html#cb6-8" tabindex="-1"></a>         flag_optical_shoreline, flag_thermal_TM_shoreline,</span>
+<span id="cb6-9"><a href="define-handoff.html#cb6-9" tabindex="-1"></a>         flag_thermal_ETM_shoreline, flag_thermal_TIRS_shoreline) <span class="sc">%&gt;%</span></span>
+<span id="cb6-10"><a href="define-handoff.html#cb6-10" tabindex="-1"></a>  <span class="fu">kable</span>(</span>
+<span id="cb6-11"><a href="define-handoff.html#cb6-11" tabindex="-1"></a>    <span class="at">format =</span> <span class="st">&quot;html&quot;</span>,</span>
+<span id="cb6-12"><a href="define-handoff.html#cb6-12" tabindex="-1"></a>    <span class="at">digits =</span> <span class="dv">3</span>,</span>
+<span id="cb6-13"><a href="define-handoff.html#cb6-13" tabindex="-1"></a>    <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;lakeSR_id&quot;</span>, <span class="st">&quot;GNIS Name&quot;</span>, <span class="st">&quot;Area (sq. km)&quot;</span>, <span class="st">&quot;Latitude&quot;</span>,</span>
+<span id="cb6-14"><a href="define-handoff.html#cb6-14" tabindex="-1"></a>                  <span class="st">&quot;Longitude&quot;</span>, <span class="st">&quot;Optical Shoreline Flag&quot;</span>,</span>
+<span id="cb6-15"><a href="define-handoff.html#cb6-15" tabindex="-1"></a>                  <span class="st">&quot;TM Thermal Shoreline Flag&quot;</span>, <span class="st">&quot;ETM+ Thermal Shoreline Flag&quot;</span>,</span>
+<span id="cb6-16"><a href="define-handoff.html#cb6-16" tabindex="-1"></a>                  <span class="st">&quot;TIRS Thermal Shoreline Flag&quot;</span>),</span>
+<span id="cb6-17"><a href="define-handoff.html#cb6-17" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">&quot;Location and shoreline flag information for the example lakeSR_id, pulled from the lakeSR point-of-interest file.&quot;</span></span>
+<span id="cb6-18"><a href="define-handoff.html#cb6-18" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb6-19"><a href="define-handoff.html#cb6-19" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hover&quot;</span>, <span class="st">&quot;condensed&quot;</span>, <span class="st">&quot;responsive&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-20"><a href="define-handoff.html#cb6-20" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">&quot;100%&quot;</span>)</span></code></pre></div>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:dense-example-location">Table 8.7: </span>Location and shoreline flag information for the example lakeSR_id, pulled from the lakeSR point-of-interest file.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+lakeSR_id
+</th>
+<th style="text-align:left;">
+GNIS Name
+</th>
+<th style="text-align:right;">
+Area (sq. km)
+</th>
+<th style="text-align:right;">
+Latitude
+</th>
+<th style="text-align:right;">
+Longitude
+</th>
+<th style="text-align:right;">
+Optical Shoreline Flag
+</th>
+<th style="text-align:right;">
+TM Thermal Shoreline Flag
+</th>
+<th style="text-align:right;">
+ETM+ Thermal Shoreline Flag
+</th>
+<th style="text-align:right;">
+TIRS Thermal Shoreline Flag
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1102_668
+</td>
+<td style="text-align:left;">
+Nee Noshe Reservoir
+</td>
+<td style="text-align:right;">
+12.822
+</td>
+<td style="text-align:right;">
+38.339
+</td>
+<td style="text-align:right;">
+-102.694
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Next, we locate the DSWE1 feather files for Landsat 5, 7, 8, and 9 and pull
+the raw band data, QA columns, and scene id for this one site:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="define-handoff.html#cb7-1" tabindex="-1"></a>band_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;med_Blue&quot;</span>, <span class="st">&quot;med_Green&quot;</span>, <span class="st">&quot;med_Red&quot;</span>, <span class="st">&quot;med_Nir&quot;</span>,</span>
+<span id="cb7-2"><a href="define-handoff.html#cb7-2" tabindex="-1"></a>               <span class="st">&quot;med_Swir1&quot;</span>, <span class="st">&quot;med_Swir2&quot;</span>, <span class="st">&quot;med_SurfaceTemp&quot;</span>)</span>
+<span id="cb7-3"><a href="define-handoff.html#cb7-3" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="define-handoff.html#cb7-4" tabindex="-1"></a>dense_files <span class="ot">&lt;-</span> d_lakeSR_feather_files <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="define-handoff.html#cb7-5" tabindex="-1"></a>  <span class="fu">as.character</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="define-handoff.html#cb7-6" tabindex="-1"></a>  .[<span class="fu">grepl</span>(<span class="st">&quot;Landsat5|Landsat7|Landsat8|Landsat9&quot;</span>, .)] <span class="sc">%&gt;%</span></span>
+<span id="cb7-7"><a href="define-handoff.html#cb7-7" tabindex="-1"></a>  .[<span class="fu">grepl</span>(<span class="st">&quot;_DSWE1_&quot;</span>, .)]</span>
+<span id="cb7-8"><a href="define-handoff.html#cb7-8" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="define-handoff.html#cb7-9" tabindex="-1"></a>dense_raw <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(dense_files, <span class="cf">function</span>(fp) {</span>
+<span id="cb7-10"><a href="define-handoff.html#cb7-10" tabindex="-1"></a>  <span class="fu">read_feather</span>(<span class="fu">repo_path</span>(fp), <span class="at">as_data_frame =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-11"><a href="define-handoff.html#cb7-11" tabindex="-1"></a>    <span class="fu">filter</span>(lakeSR_id <span class="sc">==</span> dense_id) <span class="sc">%&gt;%</span></span>
+<span id="cb7-12"><a href="define-handoff.html#cb7-12" tabindex="-1"></a>    <span class="fu">select</span>(lakeSR_id, date, mission, sat_id, prop_clouds, flag_temp_min,</span>
+<span id="cb7-13"><a href="define-handoff.html#cb7-13" tabindex="-1"></a>           flag_temp_max, <span class="fu">all_of</span>(band_cols)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-14"><a href="define-handoff.html#cb7-14" tabindex="-1"></a>    <span class="fu">collect</span>()</span>
+<span id="cb7-15"><a href="define-handoff.html#cb7-15" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span></span>
+<span id="cb7-16"><a href="define-handoff.html#cb7-16" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sat_short =</span> <span class="fu">paste0</span>(<span class="st">&quot;LS&quot;</span>, <span class="fu">as.numeric</span>(<span class="fu">str_sub</span>(mission, <span class="dv">3</span>, <span class="dv">4</span>))),</span>
+<span id="cb7-17"><a href="define-handoff.html#cb7-17" tabindex="-1"></a>         <span class="co"># LS9 has no direct-to-LS7 coefficients; assume it shares LS8&#39;s</span></span>
+<span id="cb7-18"><a href="define-handoff.html#cb7-18" tabindex="-1"></a>         <span class="co"># coefficients for the lookup below, same as elsewhere in this document</span></span>
+<span id="cb7-19"><a href="define-handoff.html#cb7-19" tabindex="-1"></a>         <span class="at">sat_corr_key =</span> <span class="fu">if_else</span>(sat_short <span class="sc">==</span> <span class="st">&quot;LS9&quot;</span>, <span class="st">&quot;LS8&quot;</span>, sat_short))</span></code></pre></div>
+<p>Before applying the handoffs, we apply the same filtering used to calculate
+the coefficients themselves (see <code>calculate_roy_handoff()</code>,
+<code>calculate_gardner_handoff()</code>, and their upstream helpers <code>get_matches()</code> and
+<code>get_quantile_values()</code>, and Section <a href="define-handoff.html#additional-filtering-applied">8.1</a>):
+scenes with more than 50% cloud cover, any detected cloud in the buffered
+area, or a flagged minimum/maximum temperature are dropped, and optical or
+thermal band values are dropped entirely if this site is flagged for possible
+shoreline contamination in the relevant band group.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="define-handoff.html#cb8-1" tabindex="-1"></a>metadata_LS457 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(</span>
+<span id="cb8-2"><a href="define-handoff.html#cb8-2" tabindex="-1"></a>  <span class="fu">repo_path</span>(<span class="fu">paste0</span>(<span class="st">&quot;d_qa_filter_sort/sort/lakeSR_metadata_LS457_export_&quot;</span>,</span>
+<span id="cb8-3"><a href="define-handoff.html#cb8-3" tabindex="-1"></a>                    d_qa_version_identifier, <span class="st">&quot;.csv&quot;</span>)),</span>
+<span id="cb8-4"><a href="define-handoff.html#cb8-4" tabindex="-1"></a>  <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-5"><a href="define-handoff.html#cb8-5" tabindex="-1"></a>  <span class="fu">select</span>(sat_id, CLOUD_COVER)</span>
+<span id="cb8-6"><a href="define-handoff.html#cb8-6" tabindex="-1"></a>metadata_LS89 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(</span>
+<span id="cb8-7"><a href="define-handoff.html#cb8-7" tabindex="-1"></a>  <span class="fu">repo_path</span>(<span class="fu">paste0</span>(<span class="st">&quot;d_qa_filter_sort/sort/lakeSR_metadata_LS89_export_&quot;</span>,</span>
+<span id="cb8-8"><a href="define-handoff.html#cb8-8" tabindex="-1"></a>                    d_qa_version_identifier, <span class="st">&quot;.csv&quot;</span>)),</span>
+<span id="cb8-9"><a href="define-handoff.html#cb8-9" tabindex="-1"></a>  <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-10"><a href="define-handoff.html#cb8-10" tabindex="-1"></a>  <span class="fu">select</span>(sat_id, CLOUD_COVER)</span>
+<span id="cb8-11"><a href="define-handoff.html#cb8-11" tabindex="-1"></a>metadata_all <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(metadata_LS457, metadata_LS89)</span>
+<span id="cb8-12"><a href="define-handoff.html#cb8-12" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="define-handoff.html#cb8-13" tabindex="-1"></a><span class="co"># site-level shoreline flags, mapped per mission for the thermal band</span></span>
+<span id="cb8-14"><a href="define-handoff.html#cb8-14" tabindex="-1"></a>keep_optical <span class="ot">&lt;-</span> site_info<span class="sc">$</span>flag_optical_shoreline <span class="sc">==</span> <span class="dv">0</span></span>
+<span id="cb8-15"><a href="define-handoff.html#cb8-15" tabindex="-1"></a>thermal_flags <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">LT05 =</span> site_info<span class="sc">$</span>flag_thermal_TM_shoreline,</span>
+<span id="cb8-16"><a href="define-handoff.html#cb8-16" tabindex="-1"></a>                   <span class="at">LE07 =</span> site_info<span class="sc">$</span>flag_thermal_ETM_shoreline,</span>
+<span id="cb8-17"><a href="define-handoff.html#cb8-17" tabindex="-1"></a>                   <span class="at">LC08 =</span> site_info<span class="sc">$</span>flag_thermal_TIRS_shoreline,</span>
+<span id="cb8-18"><a href="define-handoff.html#cb8-18" tabindex="-1"></a>                   <span class="at">LC09 =</span> site_info<span class="sc">$</span>flag_thermal_TIRS_shoreline)</span>
+<span id="cb8-19"><a href="define-handoff.html#cb8-19" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="define-handoff.html#cb8-20" tabindex="-1"></a><span class="co"># scene- and row-level QA filters</span></span>
+<span id="cb8-21"><a href="define-handoff.html#cb8-21" tabindex="-1"></a>dense_qa <span class="ot">&lt;-</span> dense_raw <span class="sc">%&gt;%</span></span>
+<span id="cb8-22"><a href="define-handoff.html#cb8-22" tabindex="-1"></a>  <span class="fu">left_join</span>(metadata_all, <span class="at">by =</span> <span class="st">&quot;sat_id&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-23"><a href="define-handoff.html#cb8-23" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">thermal_flag_shoreline =</span> thermal_flags[mission]) <span class="sc">%&gt;%</span></span>
+<span id="cb8-24"><a href="define-handoff.html#cb8-24" tabindex="-1"></a>  <span class="fu">filter</span>(prop_clouds <span class="sc">==</span> <span class="dv">0</span>,</span>
+<span id="cb8-25"><a href="define-handoff.html#cb8-25" tabindex="-1"></a>         flag_temp_min <span class="sc">==</span> <span class="dv">0</span>,</span>
+<span id="cb8-26"><a href="define-handoff.html#cb8-26" tabindex="-1"></a>         flag_temp_max <span class="sc">==</span> <span class="dv">0</span>,</span>
+<span id="cb8-27"><a href="define-handoff.html#cb8-27" tabindex="-1"></a>         CLOUD_COVER <span class="sc">&lt;=</span> <span class="dv">50</span>)</span>
+<span id="cb8-28"><a href="define-handoff.html#cb8-28" tabindex="-1"></a></span>
+<span id="cb8-29"><a href="define-handoff.html#cb8-29" tabindex="-1"></a>qa_summary <span class="ot">&lt;-</span> dense_raw <span class="sc">%&gt;%</span></span>
+<span id="cb8-30"><a href="define-handoff.html#cb8-30" tabindex="-1"></a>  <span class="fu">count</span>(sat_short, <span class="at">name =</span> <span class="st">&quot;n_raw&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-31"><a href="define-handoff.html#cb8-31" tabindex="-1"></a>  <span class="fu">left_join</span>(dense_qa <span class="sc">%&gt;%</span> <span class="fu">count</span>(sat_short, <span class="at">name =</span> <span class="st">&quot;n_after_qa_filters&quot;</span>), <span class="at">by =</span> <span class="st">&quot;sat_short&quot;</span>)</span>
+<span id="cb8-32"><a href="define-handoff.html#cb8-32" tabindex="-1"></a></span>
+<span id="cb8-33"><a href="define-handoff.html#cb8-33" tabindex="-1"></a>qa_summary <span class="sc">%&gt;%</span></span>
+<span id="cb8-34"><a href="define-handoff.html#cb8-34" tabindex="-1"></a>  <span class="fu">kable</span>(</span>
+<span id="cb8-35"><a href="define-handoff.html#cb8-35" tabindex="-1"></a>    <span class="at">format =</span> <span class="st">&quot;html&quot;</span>,</span>
+<span id="cb8-36"><a href="define-handoff.html#cb8-36" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">&quot;Row counts per mission for lakeSR_id 1102_668 before and after the scene- and row-level QA filters.&quot;</span></span>
+<span id="cb8-37"><a href="define-handoff.html#cb8-37" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb8-38"><a href="define-handoff.html#cb8-38" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hover&quot;</span>, <span class="st">&quot;condensed&quot;</span>, <span class="st">&quot;responsive&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-39"><a href="define-handoff.html#cb8-39" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">&quot;100%&quot;</span>)</span></code></pre></div>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:dense-example-filter">Table 8.8: </span>Row counts per mission for lakeSR_id 1102_668 before and after the scene- and row-level QA filters.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+sat_short
+</th>
+<th style="text-align:right;">
+n_raw
+</th>
+<th style="text-align:right;">
+n_after_qa_filters
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+LS5
+</td>
+<td style="text-align:right;">
+784
+</td>
+<td style="text-align:right;">
+669
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LS7
+</td>
+<td style="text-align:right;">
+601
+</td>
+<td style="text-align:right;">
+518
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LS8
+</td>
+<td style="text-align:right;">
+334
+</td>
+<td style="text-align:right;">
+284
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LS9
+</td>
+<td style="text-align:right;">
+91
+</td>
+<td style="text-align:right;">
+71
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="define-handoff.html#cb9-1" tabindex="-1"></a><span class="co"># pivot long and apply the band-level shoreline flags</span></span>
+<span id="cb9-2"><a href="define-handoff.html#cb9-2" tabindex="-1"></a>dense_long <span class="ot">&lt;-</span> dense_qa <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="define-handoff.html#cb9-3" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">all_of</span>(band_cols), <span class="at">names_to =</span> <span class="st">&quot;band&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;value&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="define-handoff.html#cb9-4" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb9-5"><a href="define-handoff.html#cb9-5" tabindex="-1"></a>    (band <span class="sc">!=</span> <span class="st">&quot;med_SurfaceTemp&quot;</span> <span class="sc">&amp;</span> keep_optical) <span class="sc">|</span></span>
+<span id="cb9-6"><a href="define-handoff.html#cb9-6" tabindex="-1"></a>      (band <span class="sc">==</span> <span class="st">&quot;med_SurfaceTemp&quot;</span> <span class="sc">&amp;</span> thermal_flag_shoreline <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb9-7"><a href="define-handoff.html#cb9-7" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb9-8"><a href="define-handoff.html#cb9-8" tabindex="-1"></a>  <span class="fu">select</span>(lakeSR_id, date, mission, sat_short, sat_corr_key, band, value)</span></code></pre></div>
+<p>Finally, we apply the Gardner and Roy Deming handoff coefficients (harmonized
+to Landsat 7, DSWE1) to the filtered data, using the same application logic
+described earlier in this chapter:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="define-handoff.html#cb10-1" tabindex="-1"></a>gardner_coeffs <span class="ot">&lt;-</span> e_collated_handoffs <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="define-handoff.html#cb10-2" tabindex="-1"></a>  <span class="fu">filter</span>(dswe <span class="sc">==</span> <span class="st">&quot;DSWE1&quot;</span>, sat_to <span class="sc">==</span> <span class="st">&quot;LS7&quot;</span>, correction <span class="sc">==</span> <span class="st">&quot;Gardner&quot;</span>)</span>
+<span id="cb10-3"><a href="define-handoff.html#cb10-3" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="define-handoff.html#cb10-4" tabindex="-1"></a>roy_deming_coeffs <span class="ot">&lt;-</span> e_collated_handoffs <span class="sc">%&gt;%</span></span>
+<span id="cb10-5"><a href="define-handoff.html#cb10-5" tabindex="-1"></a>  <span class="fu">filter</span>(dswe <span class="sc">==</span> <span class="st">&quot;DSWE1&quot;</span>, sat_to <span class="sc">==</span> <span class="st">&quot;LS7&quot;</span>, correction <span class="sc">==</span> <span class="st">&quot;Roy&quot;</span>, method <span class="sc">==</span> <span class="st">&quot;deming&quot;</span>)</span>
+<span id="cb10-6"><a href="define-handoff.html#cb10-6" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="define-handoff.html#cb10-7" tabindex="-1"></a><span class="co"># Gardner: corrected = intercept + B1*raw + B2*raw^2</span></span>
+<span id="cb10-8"><a href="define-handoff.html#cb10-8" tabindex="-1"></a>apply_gardner <span class="ot">&lt;-</span> <span class="cf">function</span>(data, coeffs) {</span>
+<span id="cb10-9"><a href="define-handoff.html#cb10-9" tabindex="-1"></a>  data <span class="sc">%&gt;%</span></span>
+<span id="cb10-10"><a href="define-handoff.html#cb10-10" tabindex="-1"></a>    <span class="fu">left_join</span>(coeffs, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;band&quot;</span>, <span class="st">&quot;sat_corr_key&quot;</span> <span class="ot">=</span> <span class="st">&quot;sat_corr&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-11"><a href="define-handoff.html#cb10-11" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">if_else</span>(sat_short <span class="sc">==</span> <span class="st">&quot;LS7&quot;</span>,</span>
+<span id="cb10-12"><a href="define-handoff.html#cb10-12" tabindex="-1"></a>                           value,</span>
+<span id="cb10-13"><a href="define-handoff.html#cb10-13" tabindex="-1"></a>                           intercept <span class="sc">+</span> B1 <span class="sc">*</span> value <span class="sc">+</span> B2 <span class="sc">*</span> value<span class="sc">^</span><span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-14"><a href="define-handoff.html#cb10-14" tabindex="-1"></a>    <span class="fu">select</span>(lakeSR_id, date, mission, sat_short, band, value)</span>
+<span id="cb10-15"><a href="define-handoff.html#cb10-15" tabindex="-1"></a>}</span>
+<span id="cb10-16"><a href="define-handoff.html#cb10-16" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="define-handoff.html#cb10-17" tabindex="-1"></a><span class="co"># Roy Deming: corrected = intercept + slope*raw</span></span>
+<span id="cb10-18"><a href="define-handoff.html#cb10-18" tabindex="-1"></a>apply_roy_deming <span class="ot">&lt;-</span> <span class="cf">function</span>(data, coeffs) {</span>
+<span id="cb10-19"><a href="define-handoff.html#cb10-19" tabindex="-1"></a>  data <span class="sc">%&gt;%</span></span>
+<span id="cb10-20"><a href="define-handoff.html#cb10-20" tabindex="-1"></a>    <span class="fu">left_join</span>(coeffs, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;band&quot;</span>, <span class="st">&quot;sat_corr_key&quot;</span> <span class="ot">=</span> <span class="st">&quot;sat_corr&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-21"><a href="define-handoff.html#cb10-21" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">if_else</span>(sat_short <span class="sc">==</span> <span class="st">&quot;LS7&quot;</span>,</span>
+<span id="cb10-22"><a href="define-handoff.html#cb10-22" tabindex="-1"></a>                           value,</span>
+<span id="cb10-23"><a href="define-handoff.html#cb10-23" tabindex="-1"></a>                           intercept <span class="sc">+</span> slope <span class="sc">*</span> value)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-24"><a href="define-handoff.html#cb10-24" tabindex="-1"></a>    <span class="fu">select</span>(lakeSR_id, date, mission, sat_short, band, value)</span>
+<span id="cb10-25"><a href="define-handoff.html#cb10-25" tabindex="-1"></a>}</span>
+<span id="cb10-26"><a href="define-handoff.html#cb10-26" tabindex="-1"></a></span>
+<span id="cb10-27"><a href="define-handoff.html#cb10-27" tabindex="-1"></a>dense_plot_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb10-28"><a href="define-handoff.html#cb10-28" tabindex="-1"></a>  dense_long <span class="sc">%&gt;%</span></span>
+<span id="cb10-29"><a href="define-handoff.html#cb10-29" tabindex="-1"></a>    <span class="fu">select</span>(lakeSR_id, date, mission, sat_short, band, value) <span class="sc">%&gt;%</span></span>
+<span id="cb10-30"><a href="define-handoff.html#cb10-30" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">correction =</span> <span class="st">&quot;Raw&quot;</span>),</span>
+<span id="cb10-31"><a href="define-handoff.html#cb10-31" tabindex="-1"></a>  <span class="fu">apply_gardner</span>(dense_long, gardner_coeffs) <span class="sc">%&gt;%</span></span>
+<span id="cb10-32"><a href="define-handoff.html#cb10-32" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">correction =</span> <span class="st">&quot;Gardner&quot;</span>),</span>
+<span id="cb10-33"><a href="define-handoff.html#cb10-33" tabindex="-1"></a>  <span class="fu">apply_roy_deming</span>(dense_long, roy_deming_coeffs) <span class="sc">%&gt;%</span></span>
+<span id="cb10-34"><a href="define-handoff.html#cb10-34" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">correction =</span> <span class="st">&quot;Roy Deming&quot;</span>)</span>
+<span id="cb10-35"><a href="define-handoff.html#cb10-35" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-36"><a href="define-handoff.html#cb10-36" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">correction =</span> <span class="fu">factor</span>(correction, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Raw&quot;</span>, <span class="st">&quot;Gardner&quot;</span>, <span class="st">&quot;Roy Deming&quot;</span>)))</span></code></pre></div>
+<p>The figure below compares the raw band time series against the two
+harmonized-to-LS7 versions for this site. If the handoffs are working well,
+the mission-to-mission offsets visible in the “Raw” column should be reduced
+in the “Gardner” and “Roy Deming” columns.</p>
+<p><img src="AquaMatch_lakeSR_files/figure-html/dense-example-plot-1.png" alt="" width="960" /></p>
+
 </div>
 </div>
             </section>

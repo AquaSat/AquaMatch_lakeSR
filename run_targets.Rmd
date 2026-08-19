@@ -14,9 +14,10 @@ Collection 2 Surface Reflectance Product for the furthest point from shore
 and Territories greater than 1ha and all waterbodies deemed "intermittent" by
 the NHD greater than 4ha.
 
-This R Markdown document is not meant to be "knit" all at once. Rather, we suggest that the user 
-walks through the process of setting up and running this workflow chunk-by-chunk. Additional overview
-about the {targets} workflow is available in the README file.
+This R Markdown document is not meant to be "knit" all at once. Rather, we
+suggest that the user walks through the process of setting up and running this
+workflow chunk-by-chunk. Additional overview about the {targets} workflow is
+available in the README file.
 
 Anytime this workflow is run, you should start in a new R session, otherwise
 some of the {reticulate} settings may not function correctly, leading to error
@@ -46,6 +47,7 @@ present.
 ```{r walk_package_installer}
 packages <- c("arrow",
               "bookdown",
+              "config",
               "cowplot",
               "crew",
               "data.table",
