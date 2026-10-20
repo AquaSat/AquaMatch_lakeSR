@@ -233,11 +233,12 @@ used to describe any non-thermal band.
     still apply this mask to all Landsat mission data for continuity.
 
 -   `add_cf_mask`: Adds a mask band for any pixels obstructed by clouds and
-    snow/ice using the CLOUD_QA (cloud quality assessment) band. This is a
+    snow/ice using the QA_PIXEL (pixel quality assessment) band. This is a
     general QA band that describes clouds/snow/ice detected by algorithms
     defined by the atmospheric processing procedure. We have elected to only
-    include pixels that do not contain clouds, cloud shadows, dispersed clouds,
-    or snow/ice as defined by this band. In particular, we follow the
+    include pixels that do not contain dilated clouds, clouds, cloud shadows,
+    or snow/ice as defined by this band (QA_PIXEL bits 1, 3, 4, and 5); the
+    Landsat 8/9 cirrus flag (bit 2) is not used. In particular, we follow the
     suggestions in the product User Guide [@usgeologicalsurvey2021;
     @usgeologicalsurvey2024]
 
@@ -256,7 +257,7 @@ used to describe any non-thermal band.
     is greater than 0.3 in Landsat 4, 5, and 7 using the SR_ATMOS_OPACITY
     (surface reflectance product atmospheric opacity) band. For similar reasons
     as a more aggressive aerosol mask in Landsat 8 & 9, we use this mask in
-    addition to the cloud mask (`apply_cf_mask` function). The Landsat 4-7 User
+    addition to the cloud mask (`add_cf_mask` function). The Landsat 4-7 User
     Guide [@usgeologicalsurvey2021] states the following about the atmospheric
     opacity values:
 
@@ -274,13 +275,12 @@ used to describe any non-thermal band.
 -   `add_realistic_mask`: Adds a mask band where any optical band (Blue, Green,
     Red, NIR, SWIR1, SWIR2) is less than -0.01 after scaling, indicating
     overcorrection of SR product. The Landsat 8/9 Aerosol band is not included
-    in this mask, and Aerosol band summaries are provided for diagnostic use
-    only. In an assessment of Landsat surface reflectance over water,
+    in this mask. In an assessment of Landsat surface reflectance over water,
     @maciel2023 found the coastal aerosol band had the highest uncertainty of
     any visible band for both Landsat 8 (110%, vs. 27-48% for Blue, Green, and
-    Red) and Landsat 9 (32%, vs. 9-19%), and we do not recommend using the
-    Aerosol band as a measure of water-leaving reflectance. While the stated 
-    minimum value of the "valid range" for the SR
+    Red) and Landsat 9 (32%, vs. 9-19%), and we encourage users to treat
+    Aerosol band summaries as diagnostic rather than as a measure of
+    water-leaving reflectance. While the stated minimum value of the "valid range" for the SR
     product is 7273 prior to application of scaling factors (0.0000075 after
     scaling), we know that the Level-2 Surface Reflectance product has been
     fine-tuned on terrestrial data and small over-corrections of surface
@@ -289,8 +289,9 @@ used to describe any non-thermal band.
     not remove very deep, oligotrophic and/or high DOC water systems from our
     data set while implementing this QA filter.
 
--   `add_glint_mask`: Adds a mask band where any optical band is \> 0.2,
-    indicating likely sun glint artifacts.
+-   `add_sun_glint_mask`: Adds a mask band where any optical band other than
+    the Landsat 8/9 Aerosol band is greater than or equal to 0.2, indicating
+    likely sun glint artifacts.
 
 ### Defining water area {#dswe-implementation}
 
@@ -372,28 +373,76 @@ environments.
 
 ## Additional diagnostic data columns {#diagnostic-columns}
 
-During the masking and flagging step of the workflow, we tally pixels that met
-certain criteria for use as diagnostic tools, which are stored in the same file
-as the summary remote sensing data. This includes tallying of varying DSWE types
-(greater than 0 – water of some kind with any confidence `pCount_dswe_gt0`, 1
-high confidence water `pCount_dswe1`, 1a high confidence water with positive
-algal mask `pCount_dswe1a`, 3 high confidence vegetated water `pCount_dswe3`)
-within the buffered area. These tallies are of any pixel that meets the DSWE
-category and met the hillshade, cloud, opacity/aerosol, realistic, and glint
-thresholds within the set buffer. Columns for the proportion of pixels masked by
-clouds `prop_clouds` and shaded by terrain `prop_hillShadow` are also provided,
-no additive mask is used when tallying these pixels so the value represents the
-proportion of pixels masked from the data summary in the buffered area. These
-tallies are meant to be used as diagnostic tools for further quality control and
-modeling purposes, though we do not have recommended uses at this time. The
-Landsat 8/9 Aerosol band summaries (`med_Aerosol`, `mean_Aerosol`,
-`sd_Aerosol`) should likewise be treated as diagnostic only: they are not
-screened by the realistic value mask, and the coastal aerosol band has high
-uncertainty over water [@maciel2023].
+Alongside the summarized reflectance and temperature values, each output file
+includes columns that describe the pixels within a location's buffer at each
+step of the masking process. These columns are meant as diagnostic tools for
+quality control and modeling; we do not have recommended uses for them at this
+time.
 
-See the formal metadata for definitions of these flags, which are stored
+The masks are applied in layers, and each diagnostic column is tallied at a
+specific layer. The diagram below shows this layering for each product (DSWE1,
+DSWE1a, or DSWE3). Each branch includes only the pixels that passed every mask
+above it.
+
+```
+Buffered area around the location
+|-- prop_clouds        proportion of pixels flagged as cloud/snow (no other mask)
+|-- prop_hillShadow    proportion of pixels shaded by terrain (no other mask)
+|-- mean_hillShade     mean hillshade value (no other mask)
+`-- illuminated (hillshadow mask) AND cloud-free (cloud mask)
+    `-- DSWE water area for the product (DSWE1, DSWE1a, or DSWE3)
+        |-- pCount_high_opac (Landsat 4-7) / pCount_high_aero (Landsat 8/9)
+        |                  pixels removed by the opacity/aerosol mask
+        `-- passes opacity/aerosol mask
+            |-- pCount_unreal_val   pixels removed by the realistic value mask
+            |-- pCount_sun_glint    pixels removed by the sun glint mask
+            |-- pCount_ir_glint     pixels where NIR, SWIR1, and SWIR2 are all
+            |                       >= 0.1 (flag only, not a mask)
+            `-- passes realistic value AND sun glint masks
+                `-- pixels summarized in the med_, mean_, sd_, and
+                    min_SurfaceTemp columns
+```
+
+Working down the diagram:
+
+-   **Buffered area.** `prop_clouds` and `prop_hillShadow` are the proportions
+    of pixels in the buffer flagged as cloud or snow by the cloud mask and
+    shaded by terrain, respectively. `mean_hillShade` is the mean hillshade
+    value. No other masks are applied, so these columns describe the buffer as
+    a whole, including land.
+
+-   **Water area.** Among illuminated, cloud-free pixels that meet the
+    product's DSWE definition, `pCount_high_opac` (Landsat 4–7) or
+    `pCount_high_aero` (Landsat 8/9) counts the pixels removed by the opacity
+    or aerosol mask.
+
+-   **Pixels passing the opacity/aerosol mask.** `pCount_unreal_val` and
+    `pCount_sun_glint` count the pixels removed by the realistic value and sun
+    glint masks. A pixel can fail both, so these counts may overlap.
+    `pCount_ir_glint` counts pixels where NIR, SWIR1, and SWIR2 are all greater
+    than or equal to 0.1, which indicates possible sun glint in the infrared.
+    It is a flag only and is not used to mask pixels.
+
+-   **Summarized pixels.** Pixels that pass every mask are summarized in the
+    `med_`, `mean_`, `sd_`, and `min_SurfaceTemp` columns.
+
+The DSWE tallies are also counted after all masks are applied:
+`pCount_dswe_gt0` (water of any confidence), `pCount_dswe1` (high-confidence
+open water), `pCount_dswe1a` (high-confidence open water or algal threshold
+met), and `pCount_dswe3` (high-confidence vegetated water). Each uses its own
+DSWE definition rather than the product's, so the values are the same
+regardless of which product file they appear in. Within a product's file, the
+matching tally is the number of pixels summarized; for example, `pCount_dswe1`
+in a DSWE1 file.
+
+We encourage users to treat the Landsat 8/9 Aerosol band summaries
+(`med_Aerosol`, `mean_Aerosol`, `sd_Aerosol`) as diagnostic, because the coastal
+aerosol band has high uncertainty over water [@maciel2023] and is not screened
+by the realistic value mask.
+
+See the formal metadata for full definitions of these columns, which are stored
 alongside the remote sensing summaries in the lakeSR and siteSR output files
-(stored as one feather file per Landsat mission, e.g.
+(one feather file per Landsat mission, e.g.
 `lakeSR_Landsat9_DSWE1_2025-06-04.feather`,
 `siteSR_Landsat4_DSWE1_2025-06-06.feather`).
 

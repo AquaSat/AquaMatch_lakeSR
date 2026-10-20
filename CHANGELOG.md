@@ -42,6 +42,27 @@ repo's [GitHub releases](https://github.com/AquaSat/AquaMatch_lakeSR/releases).
   path-rows) raised an `IndexError` on its second chunk. `csv_to_eeFeat` now
   iterates over every row of the chunk it is given, with no offsets. The
   2025-02-12 GEE run predates this change and is not affected.
+- **`pCount_unreal_val` and `pCount_sun_glint` were always 0** (#58;
+  `run_GEE_per_pathrow.py`): `add_realistic_mask` and `add_sun_glint_mask`
+  applied `selfMask()`, so failing pixels were masked rather than 0 and could
+  never be counted. `selfMask()` was removed (masking of summarized pixels is
+  unchanged), and both tallies are now restricted to the DSWE water area for
+  each product (DSWE1, DSWE1a, DSWE3) after the hillshade, cloud and
+  opacity/aerosol masks. Both columns are documented in the bookdown
+  diagnostic columns section.
+- **`pCount_high_opac`, `pCount_high_aero` and `pCount_ir_glint` counted the
+  whole buffer** (`run_GEE_per_pathrow.py`): for consistency with the other
+  mask tallies, they are now restricted to the DSWE water area for each product
+  after the hillshade and cloud masks (`pCount_ir_glint` also after the
+  opacity/aerosol mask), and are documented in the bookdown diagnostic columns
+  section. Values are not comparable to previous releases.
+- **DSWE1a per-band `*_thresh` and `*_glint` tallies were always 0** (#57;
+  `ref_pull_457_DSWE1a`, `ref_pull_89_DSWE1a`): these tallies were restricted
+  to `d.eq(1).Or(alg.eq(1))`, but `alg` has the realistic value and sun glint
+  masks applied, so pixels below -0.01 or at/above 0.2 were always hidden (and
+  `*_ir_glint` was undercounted). The DSWE1a water area for the diagnostic
+  tallies is now defined from the algal thresholds directly (`water_1a`).
+  DSWE1 and DSWE3 tallies were not affected, and no summarized data change.
 
 ### Added
 - New worked example in `bookdown/07-intermission_handoffs.Rmd`: applies
@@ -49,6 +70,19 @@ repo's [GitHub releases](https://github.com/AquaSat/AquaMatch_lakeSR/releases).
   Noshe Reservoir, CO) across all bands and Landsat missions.
 
 ### Changed
+- `run_GEE_per_pathrow.py`: the `cloud_filter` config setting is now honored;
+  previously it was read but ignored, so the scene-level `CLOUD_COVER` filter
+  always ran. The filter is now applied after the per-mission collections are
+  merged. No data change with the lakeSR config (`cloud_filter: True`).
+- `run_GEE_per_pathrow.py`: corrected code comments and docstrings that did not
+  match the code (cloud mask values, algae threshold, `add_opac_mask` missions,
+  stale line numbers in the header). No change to the data.
+- `bookdown/05-lakeSR_LS_C2_SRST.Rmd`: the cloud mask is documented as using
+  `QA_PIXEL` (not `CLOUD_QA`) with the bits used; the sun glint mask is
+  documented as excluding the Landsat 8/9 Aerosol band; function names
+  corrected (`add_cf_mask`, `add_sun_glint_mask`). The diagnostic columns
+  section now includes a diagram of how the masks are layered and where each
+  diagnostic column is tallied.
 - `run_GEE_per_pathrow.py`: consolidated `add_realistic_mask_457` and the
   unused `add_realistic_mask_89` into a single `add_realistic_mask`. All
   missions were already using the Landsat 4-7 version, so the Landsat 8/9
