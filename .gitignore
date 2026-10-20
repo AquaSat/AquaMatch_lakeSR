@@ -34,6 +34,13 @@ e_calculate_handoffs/roy/*
 
 y_siteSR_targets/out/*
 
+# standalone aerosol spot check (track the sample, not inputs/exports)
+aerosol_spot_check/in/*
+aerosol_spot_check/mid/*
+aerosol_spot_check/down/*
+aerosol_spot_check/*.html
+aerosol_spot_check/04_analyze_aero_check_files/
+
 # stupid .DS_Store files
 **.DS_Store
 

@@ -10,34 +10,28 @@ import math
 # DSWE code begins ~ line 530
 # GEE pull code begins ~ line 1720
 
-def csv_to_eeFeat(df, proj, chunk, chunk_size):
+def csv_to_eeFeat(df, proj):
   """Function to create an eeFeature from the location data
 
   Args:
-      df: point locations .csv file with Latitude and Longitude
+      df: point locations .csv file with Latitude and Longitude; when chunking,
+        this is the chunk subset from process_dataframe_in_chunks
       proj: CRS projection of the points
-      chunk: iteration through the dataframe (defined in process chunks)
-      chunk_size: number of sites in chunk
 
   Returns:
-      ee.FeatureCollection of the points 
+      ee.FeatureCollection of the points
   """
   features=[]
-  # Calculate start and end indices for the current chunk
-  range_min = chunk_size * chunk
-  range_max = min(chunk_size * (chunk + 1), len(df)) + range_min
-  for i in range(range_min, range_max):
-    try:
-      row = df.iloc[i]
-      x, y = row['Longitude'], row['Latitude']
-      latlong = [x, y]
-      loc_properties = {'system:index': str(row['id']), 'id': str(row['id'])}
-      g = ee.Geometry.Point(latlong, proj)
-      feature = ee.Feature(g, loc_properties)
-      features.append(feature)
-    except KeyError as e:
-      print(f"KeyError at index {i}, skipping to next iteration")
-      continue  # skip to the next iteration
+  # iterate by position over every row of df (already subset to the chunk), so
+  # this works regardless of the row labels carried over from the full file
+  for i in range(len(df)):
+    row = df.iloc[i]
+    x, y = row['Longitude'], row['Latitude']
+    latlong = [x, y]
+    loc_properties = {'system:index': str(row['id']), 'id': str(row['id'])}
+    g = ee.Geometry.Point(latlong, proj)
+    feature = ee.Feature(g, loc_properties)
+    features.append(feature)
   return ee.FeatureCollection(features)
 
 
@@ -162,9 +156,11 @@ def apply_fill_mask_89(image):
 
 # This should be applied AFTER scaling factors
 # Mask values less than -0.01
-def add_realistic_mask_457(image):
-  """ mask out unrealistic SR values (those less than -0.01) in Landsat 4, 5, 7
-  
+def add_realistic_mask(image):
+  """ mask out unrealistic SR values (those less than -0.01) in Landsat 4-9.
+  The Landsat 8/9 Aerosol band is intentionally not screened; Aerosol band
+  summaries are provided for diagnostic use only.
+
   Args:
       image: ee.Image of an ee.ImageCollection
 
@@ -182,33 +178,6 @@ def add_realistic_mask_457(image):
     .And(b3_mask.eq(1))
     .And(b4_mask.eq(1))
     .And(b5_mask.eq(1))
-    .And(b7_mask.eq(1))
-    .selfMask()).rename('real')
-  return image.addBands(realistic)
-
-
-def add_realistic_mask_89(image):
-  """ mask out unrealistic SR values (those less than -0.01) in Landsat 8, 9
-  
-  Args:
-      image: ee.Image of an ee.ImageCollection
-
-  Returns:
-      an ee.Image with new band for realistic mask
-  """
-  b1_mask = image.select('Aerosol').gt(-0.01)
-  b2_mask = image.select('Blue').gt(-0.01)
-  b3_mask = image.select('Green').gt(-0.01)
-  b4_mask = image.select('Red').gt(-0.01)
-  b5_mask = image.select('Nir').gt(-0.01)
-  b6_mask = image.select('Swir1').gt(-0.01)
-  b7_mask = image.select('Swir2').gt(-0.01)
-  realistic = (b1_mask.eq(1)
-    .And(b2_mask.eq(1))
-    .And(b3_mask.eq(1))
-    .And(b4_mask.eq(1))
-    .And(b5_mask.eq(1))
-    .And(b6_mask.eq(1))
     .And(b7_mask.eq(1))
     .selfMask()).rename('real')
   return image.addBands(realistic)
@@ -319,11 +288,11 @@ def add_sr_aero_mask(image):
       image: ee.Image of an ee.ImageCollection
 
   Returns:
-      ee.Image with additional band called 'medHighAero', where pixels are given a value of 1
-      if the aerosol QA flag is medium or high and 0 otherwise
+      ee.Image with additional band called 'aero', where pixels are given a value of 1
+      if the aerosol QA flag is climatology or low (keep) and 0 if medium or high (mask)
   """
   aerosolQA = image.select('aerosol_qa')
-  # pull out mask out where aeorosol is med and high
+  # bit 7 is set where aerosol level (bits 6-7) is medium (10) or high (11)
   medHighAero = aerosolQA.bitwiseAnd(1 << 7)
   sr_aero_mask = medHighAero.eq(0).rename('aero')
   return image.addBands(sr_aero_mask)
@@ -548,7 +517,7 @@ def ref_pull_457_DSWE1(image, feat):
   clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
   # add mask FOR low opacity, realistic values, sun glint, ir glint
   opac = add_opac_mask(image).select('opac').eq(1).rename('low_opac')
-  real = add_realistic_mask_457(image).select('real').eq(1).rename('is_real')
+  real = add_realistic_mask(image).select('real').eq(1).rename('is_real')
   no_glint = add_sun_glint_mask(image).select('no_glint').eq(1)
   ir_glint = add_ir_glint_flag(image).select('ir_glint').eq(1)
   # calculate hillshade
@@ -697,7 +666,7 @@ def ref_pull_457_DSWE1(image, feat):
             .addBands(swir1_ir_glint)
             .addBands(swir2_ir_glint)
             .addBands(clouds) 
-            .addBands(hs)
+            .addBands(hs.eq(0).rename('hillShadow')) # invert so prop_hillShadow = proportion shaded
             .addBands(h)
             ) 
   combinedReducer = (ee.Reducer.median().unweighted()
@@ -754,7 +723,7 @@ def ref_pull_457_DSWE1a(image, feat):
   clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
   # add mask FOR low opacity, realistic values, sun glint, ir glint
   opac = add_opac_mask(image).select('opac').eq(1).rename('low_opac')
-  real = add_realistic_mask_457(image).select('real').eq(1).rename('is_real')
+  real = add_realistic_mask(image).select('real').eq(1).rename('is_real')
   no_glint = add_sun_glint_mask(image).select('no_glint').eq(1)
   ir_glint = add_ir_glint_flag(image).select('ir_glint').eq(1)
   # calculate hillshade
@@ -904,7 +873,7 @@ def ref_pull_457_DSWE1a(image, feat):
             .addBands(swir1_ir_glint)
             .addBands(swir2_ir_glint)
             .addBands(clouds) 
-            .addBands(hs)
+            .addBands(hs.eq(0).rename('hillShadow')) # invert so prop_hillShadow = proportion shaded
             .addBands(h)
             ) 
   combinedReducer = (ee.Reducer.median().unweighted()
@@ -958,7 +927,7 @@ def ref_pull_457_DSWE3(image, feat):
   clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
   # add mask FOR low opacity, realistic values, sun glint, ir glint
   opac = add_opac_mask(image).select('opac').eq(1).rename('low_opac')
-  real = add_realistic_mask_457(image).select('real').eq(1).rename('is_real')
+  real = add_realistic_mask(image).select('real').eq(1).rename('is_real')
   no_glint = add_sun_glint_mask(image).select('no_glint').eq(1)
   ir_glint = add_ir_glint_flag(image).select('ir_glint').eq(1)
   #calculate hillshade
@@ -1107,7 +1076,7 @@ def ref_pull_457_DSWE3(image, feat):
           .addBands(swir1_ir_glint)
           .addBands(swir2_ir_glint)
           .addBands(clouds) 
-          .addBands(hs)
+          .addBands(hs.eq(0).rename('hillShadow')) # invert so prop_hillShadow = proportion shaded
           .addBands(h)
           ) 
   combinedReducer = (ee.Reducer.median().unweighted()
@@ -1158,8 +1127,8 @@ def ref_pull_89_DSWE1(image, feat):
   # where the f mask is > 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
   clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
   # add mask FOR low aerosol, realistic values, sun glint, ir glint
-  aero = add_sr_aero_mask(image).select('aero').eq(0).rename('low_aero')
-  real = add_realistic_mask_457(image).select('real').eq(1).rename('is_real')
+  aero = add_sr_aero_mask(image).select('aero').eq(1).rename('low_aero')
+  real = add_realistic_mask(image).select('real').eq(1).rename('is_real')
   no_glint = add_sun_glint_mask(image).select('no_glint').eq(1)
   ir_glint = add_ir_glint_flag(image).select('ir_glint').eq(1)
   # calculate hillshade
@@ -1312,7 +1281,7 @@ def ref_pull_89_DSWE1(image, feat):
           .addBands(swir1_ir_glint)
           .addBands(swir2_ir_glint)
           .addBands(clouds) 
-          .addBands(hs)
+          .addBands(hs.eq(0).rename('hillShadow')) # invert so prop_hillShadow = proportion shaded
           .addBands(h)
           ) 
   
@@ -1364,8 +1333,8 @@ def ref_pull_89_DSWE1a(image, feat):
   # where the f mask is > 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
   clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
   # add mask FOR low aerosol, realistic values, sun glint, ir glint
-  aero = add_sr_aero_mask(image).select('aero').eq(0).rename('low_aero')
-  real = add_realistic_mask_457(image).select('real').eq(1).rename('is_real')
+  aero = add_sr_aero_mask(image).select('aero').eq(1).rename('low_aero')
+  real = add_realistic_mask(image).select('real').eq(1).rename('is_real')
   no_glint = add_sun_glint_mask(image).select('no_glint').eq(1)
   ir_glint = add_ir_glint_flag(image).select('ir_glint').eq(1)
   #calculate hillshade
@@ -1518,7 +1487,7 @@ def ref_pull_89_DSWE1a(image, feat):
           .addBands(swir1_ir_glint)
           .addBands(swir2_ir_glint)
           .addBands(clouds) 
-          .addBands(hs)
+          .addBands(hs.eq(0).rename('hillShadow')) # invert so prop_hillShadow = proportion shaded
           .addBands(h)
           ) 
   
@@ -1568,8 +1537,8 @@ def ref_pull_89_DSWE3(image, feat):
   # where the f mask is > 1 (clouds and cloud shadow), call that 1 (otherwise 0) and rename as clouds.
   clouds = add_cf_mask(image).select('cfmask').gte(1).rename('clouds')
   # add mask FOR low aerosol, realistic values, sun glint, ir glint
-  aero = add_sr_aero_mask(image).select('aero').eq(0).rename('low_aero')
-  real = add_realistic_mask_457(image).select('real').eq(1).rename('is_real')
+  aero = add_sr_aero_mask(image).select('aero').eq(1).rename('low_aero')
+  real = add_realistic_mask(image).select('real').eq(1).rename('is_real')
   no_glint = add_sun_glint_mask(image).select('no_glint').eq(1)
   ir_glint = add_ir_glint_flag(image).select('ir_glint').eq(1)
   #calculate hillshade
@@ -1722,7 +1691,7 @@ def ref_pull_89_DSWE3(image, feat):
           .addBands(swir1_ir_glint)
           .addBands(swir2_ir_glint)
           .addBands(clouds) 
-          .addBands(hs)
+          .addBands(hs.eq(0).rename('hillShadow')) # invert so prop_hillShadow = proportion shaded
           .addBands(h)
           ) 
   
@@ -1923,7 +1892,7 @@ def process_subset(df_subset, chunk, chunk_size):
   # it's more than 10, and keep checking to not overload the GEE server
   maximum_no_of_tasks(10, 120)
 
-  locs_feature = csv_to_eeFeat(df_subset, yml['location_crs'][0], chunk, chunk_size)
+  locs_feature = csv_to_eeFeat(df_subset, yml['location_crs'][0])
   
   geo = wrs.geometry()
   
