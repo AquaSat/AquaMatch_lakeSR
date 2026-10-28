@@ -1,66 +1,56 @@
-
 library(reticulate)
 
-# NOTE, IF YOU ALTER THIS SCRIPT, YOU WILL NEED TO DELETE THE "ENV" FOLDER
-# SO THAT CHANGES ARE REBUILT IN NEW VENV
+# NOTE, IF YOU ALTER THIS SCRIPT, YOU WILL NEED TO DELETE THE "env" FOLDER
+# SO THAT CHANGES ARE REBUILT IN A NEW ENVIRONMENT
 
-# activate conda env or create conda env and modules for the venv
-tryCatch({
-  use_condaenv(file.path(getwd(), "env/"))
-  print("conda environment activated")
-},
-warning = function(w) {
-  # if the warning is expected, go on with life
-  if (!grepl("failed to initialize requested version of Python", conditionMessage(w))) {
-    message("conda environment activated")
-  } else {
-    message(conditionMessage(w))
-    stop("There was an error initializing Python. Restart your R session and try running the pipeline again.")
+# Python and package versions for the conda environment. Leave a version as ""
+# to let conda choose the latest compatible version (only for a fresh install
+# when updating versions); otherwise pin every version so the environment is
+# reproducible. After an unpinned install, the installed versions are printed
+# in this format to copy back in here.
+py_versions <- c(
+  "python" = "3.12.15",
+  "earthengine-api" = "1.7.48",
+  "pandas" = "3.0.6",
+  "numpy" = "2.5.3",
+  "pyyaml" = "6.0.3"
+)
+
+env_path <- file.path(getwd(), "env/")
+
+# conda's single "=" matches as a prefix (e.g. "3.12" matches 3.12.x)
+py_specs <- ifelse(py_versions == "",
+                   names(py_versions),
+                   paste0(names(py_versions), "=", py_versions))
+
+# create the conda environment if needed
+if (!dir.exists(env_path)) {
+  try(install_miniconda(), silent = TRUE)
+  conda_create(envname = env_path, packages = py_specs[1],
+               channel = "conda-forge")
+}
+
+# activate the environment. reticulate can only bind to one Python per R
+# session, so this fails if a different Python has already been initialized
+tryCatch(
+  use_condaenv(env_path, required = TRUE),
+  error = function(e) {
+    message(conditionMessage(e))
+    stop("There was an error initializing Python. Restart your R session and try again.")
   }
-},
-error = function(e) {
-  # if there is an error, restart R (this won't drop any loaded packages, but
-  # will reset any reticulate settings)
-  .rs.restartR()
-  use_condaenv(file.path(getwd(), "env/"))
-  print("conda environment activated")
-},
-error = function(e) {
-  # if the error is "Unable to locate conda environment"
-  if (grepl("Unable to locate conda environment", conditionMessage(e))) {
-    # install miniconda if necessary
-    try(install_miniconda())
-    # create a conda environment named "mod_env" with the packages you need
-    conda_create(envname = file.path(getwd(), "env/"), 
-                 python_version = "3.10.13")
-    conda_install(envname = file.path(getwd(), "env/"),
-                  python_version = "3.10.13",  
-                  packages = c("earthengine-api==1.4.0", 
-                               "pandas==2.0.3", 
-                               "pyreadr==0.5.2", 
-                               "pyyaml==6.0.2",
-                               "numpy==1.24.4"))
-    # set the new python environment
-    use_condaenv(file.path(getwd(), "env/"))
-    print("conda environment created and activated")
-  } else if (grepl("Please restart the R session if you need to attach reticulate to a different version of Python.", conditionMessage(e))) {
-    stop("There was an error initializing Python. Restart your R session and try running the pipeline again.")
-  }
-},
-finally = function(f) {
-  # install miniconda if necessary
-  try(install_miniconda())
-  # create a conda environment named "mod_env" with the packages you need
-  conda_create(envname = file.path(getwd(), "env/"), 
-               python_version = "3.10.13")
-  conda_install(envname = file.path(getwd(), "env/"),
-                python_version = "3.10.13",  
-                packages = c("earthengine-api==1.4.0", 
-                             "pandas==2.0.3", 
-                             "pyreadr==0.5.2", 
-                             "pyyaml==6.0.2",
-                             "numpy==1.24.4"))
-  # set the new python environment
-  use_condaenv(file.path(getwd(), "env/"))
-  print("conda environment created and activated")
-})
+)
+
+# install packages if missing (this also catches an environment that was
+# created but never had its packages installed)
+if (!py_module_available("ee")) {
+  conda_install(envname = env_path, packages = py_specs[-1],
+                channel = "conda-forge")
+  # report installed versions so unpinned versions can be pinned above
+  installed <- py_list_packages(envname = env_path, type = "conda")
+  installed <- installed[installed$package %in% names(py_versions), ]
+  message("Installed versions (copy into py_versions in python/pySetup.R):\n",
+          paste0('  "', installed$package, '" = "', installed$version, '"',
+                 collapse = ",\n"))
+}
+
+message("conda environment activated")
